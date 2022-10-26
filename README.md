@@ -1,4 +1,4 @@
-#PyXAI v1 BETA (September 27, 2022)
+# PyXAI v1 BETA (September 27, 2022)
 
 PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from
 classifiers
