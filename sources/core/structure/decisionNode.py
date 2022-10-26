@@ -1,6 +1,6 @@
 import copy
 
-from pyxai.source.core.structure.type import OperatorCondition
+from pyxai.sources.core.structure.type import OperatorCondition
 
 
 class LeafNode:

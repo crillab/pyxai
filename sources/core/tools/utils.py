@@ -9,7 +9,7 @@ from termcolor import colored
 from time import time
 from typing import Iterable
 
-from pyxai.source.core.structure.type import PreferredReasonMethod
+from pyxai.sources.core.structure.type import PreferredReasonMethod
 
 
 class Stopwatch:

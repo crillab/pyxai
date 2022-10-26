@@ -2,10 +2,10 @@ import copy
 import numpy
 import os
 
-from pyxai.source.core.structure.binaryMapping import BinaryMapping
-from pyxai.source.core.structure.decisionNode import DecisionNode, LeafNode
-from pyxai.source.core.structure.type import TypeLeaf, Encoding, OperatorCondition
-from pyxai.source.core.tools.encoding import CNFencoding
+from pyxai.sources.core.structure.binaryMapping import BinaryMapping
+from pyxai.sources.core.structure.decisionNode import DecisionNode, LeafNode
+from pyxai.sources.core.structure.type import TypeLeaf, Encoding, OperatorCondition
+from pyxai.sources.core.tools.encoding import CNFencoding
 
 
 class DecisionTree(BinaryMapping):

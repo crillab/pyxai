@@ -1,13 +1,13 @@
 import time
 
-from pyxai.source.core.explainer.Explainer import Explainer
-from pyxai.source.core.structure.decisionTree import DecisionTree
-from pyxai.source.core.structure.type import PreferredReasonMethod
-from pyxai.source.core.tools.encoding import CNFencoding
-from pyxai.source.core.tools.utils import compute_weight
-from pyxai.source.solvers.COMPILER.D4Solver import D4Solver
-from pyxai.source.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
-from pyxai.source.solvers.SAT.glucoseSolver import GlucoseSolver
+from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.core.structure.decisionTree import DecisionTree
+from pyxai.sources.core.structure.type import PreferredReasonMethod
+from pyxai.sources.core.tools.encoding import CNFencoding
+from pyxai.sources.core.tools.utils import compute_weight
+from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
+from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
+from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 
 
 class ExplainerDT(Explainer):

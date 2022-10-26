@@ -1,7 +1,7 @@
 import os
 from pycsp3 import *
 
-from pyxai.source.core.tools.utils import flatten
+from pyxai.sources.core.tools.utils import flatten
 
 OpOverrider = protect()
 

@@ -1,5 +1,5 @@
-from pyxai.source.core.structure.type import OperatorCondition
-from pyxai.source.core.tools.encoding import CNFencoding
+from pyxai.sources.core.structure.type import OperatorCondition
+from pyxai.sources.core.tools.encoding import CNFencoding
 
 
 class BinaryMapping():

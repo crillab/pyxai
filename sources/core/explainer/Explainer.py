@@ -1,7 +1,7 @@
 import random
 from typing import Iterable
 
-from pyxai.source.core.tools.utils import count_dimensions
+from pyxai.sources.core.tools.utils import count_dimensions
 
 
 class Explainer:

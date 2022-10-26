@@ -5,10 +5,10 @@ import numpy
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 
-from pyxai.source.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
-from pyxai.source.core.structure.randomForest import RandomForest
-from pyxai.source.core.tools.utils import compute_accuracy
-from pyxai.source.learning.Classifier import Classifier, NoneData
+from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
+from pyxai.sources.core.structure.randomForest import RandomForest
+from pyxai.sources.core.tools.utils import compute_accuracy
+from pyxai.sources.learning.Classifier import Classifier, NoneData
 
 
 class Scikitlearn(Classifier):
