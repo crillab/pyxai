@@ -3,7 +3,7 @@ import time
 from pysat.examples.rc2 import RC2
 from pysat.pb import *
 
-from pyxai.source.solvers.MAXSAT.MAXSATSolver import MAXSATSolver
+from pyxai.sources.solvers.MAXSAT.MAXSATSolver import MAXSATSolver
 
 
 # from pysat.pb import PBEnc

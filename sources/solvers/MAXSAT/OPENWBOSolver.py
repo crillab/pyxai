@@ -4,8 +4,8 @@ import time
 import uuid
 
 from pyxai import Explainer
-from pyxai.source.core.tools.utils import get_os
-from pyxai.source.solvers.MAXSAT.MAXSATSolver import MAXSATSolver
+from pyxai.sources.core.tools.utils import get_os
+from pyxai.sources.solvers.MAXSAT.MAXSATSolver import MAXSATSolver
 
 OPENWBO_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep
 OPENWBO_EXEC = OPENWBO_DIRECTORY + "openwbo-" + get_os()

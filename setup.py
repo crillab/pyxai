@@ -9,8 +9,8 @@ def main():
           author_email="your_email@gmail.com",
           ext_modules=[Extension(
               "c_explainer",
-              ["source/solvers/GREEDY/src/bt_wrapper.cc", "source/solvers/GREEDY/src/Explainer.cc", "source/solvers/GREEDY/src/Tree.cc",
-               "source/solvers/GREEDY/src/Node.cc"],
+              ["sources/solvers/GREEDY/src/bt_wrapper.cc", "sources/solvers/GREEDY/src/Explainer.cc", "sources/solvers/GREEDY/src/Tree.cc",
+               "sources/solvers/GREEDY/src/Node.cc"],
               language="c++")])
 
 

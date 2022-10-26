@@ -3,15 +3,15 @@ import random
 import c_explainer
 import numpy
 
-from pyxai.source.core.explainer.Explainer import Explainer
-from pyxai.source.core.structure.type import Encoding, PreferredReasonMethod
-from pyxai.source.core.structure.type import ReasonExpressivity
-from pyxai.source.core.tools.encoding import CNFencoding
-from pyxai.source.core.tools.utils import compute_weight
-from pyxai.source.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
-from pyxai.source.solvers.MUS.MUSERSolver import MUSERSolver
-from pyxai.source.solvers.MUS.OPTUXSolver import OPTUXSolver
-from pyxai.source.solvers.SAT.glucoseSolver import GlucoseSolver
+from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod
+from pyxai.sources.core.structure.type import ReasonExpressivity
+from pyxai.sources.core.tools.encoding import CNFencoding
+from pyxai.sources.core.tools.utils import compute_weight
+from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
+from pyxai.sources.solvers.MUS.MUSERSolver import MUSERSolver
+from pyxai.sources.solvers.MUS.OPTUXSolver import OPTUXSolver
+from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 
 
 class ExplainerRF(Explainer):

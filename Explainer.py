@@ -13,14 +13,14 @@ Other model-specific functions are also available. Please see the docstring of E
 """
 from typing import TypeVar
 
-from pyxai.source.core.explainer.Explainer import Explainer
-from pyxai.source.core.explainer.explainerBT import ExplainerBT
-from pyxai.source.core.explainer.explainerDT import ExplainerDT
-from pyxai.source.core.explainer.explainerRF import ExplainerRF
-from pyxai.source.core.structure.boostedTrees import BoostedTrees
-from pyxai.source.core.structure.decisionTree import DecisionTree
-from pyxai.source.core.structure.randomForest import RandomForest
-from pyxai.source.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod
+from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.core.explainer.explainerBT import ExplainerBT
+from pyxai.sources.core.explainer.explainerDT import ExplainerDT
+from pyxai.sources.core.explainer.explainerRF import ExplainerRF
+from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+from pyxai.sources.core.structure.decisionTree import DecisionTree
+from pyxai.sources.core.structure.randomForest import RandomForest
+from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod
 
 
 def decision_tree(model, instance=None):

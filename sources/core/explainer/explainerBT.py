@@ -4,12 +4,12 @@ import time
 import c_explainer
 from pycsp3 import UNSAT, UNKNOWN
 
-from pyxai.source.core.explainer.Explainer import Explainer
-from pyxai.source.core.structure.type import ReasonExpressivity
-from pyxai.source.core.tools.utils import flatten
-from pyxai.source.solvers.CSP.AbductiveV1 import AbductiveModelV1
-from pyxai.source.solvers.CSP.TSMinimalV2 import TSMinimal
-from pyxai.source.solvers.GRAPH.TreeDecomposition import TreeDecomposition
+from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.core.structure.type import ReasonExpressivity
+from pyxai.sources.core.tools.utils import flatten
+from pyxai.sources.solvers.CSP.AbductiveV1 import AbductiveModelV1
+from pyxai.sources.solvers.CSP.TSMinimalV2 import TSMinimal
+from pyxai.sources.solvers.GRAPH.TreeDecomposition import TreeDecomposition
 
 
 class ExplainerBT(Explainer):

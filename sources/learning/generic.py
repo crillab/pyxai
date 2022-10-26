@@ -1,9 +1,9 @@
 import json
 
-from pyxai.source.core.structure.boostedTrees import BoostedTrees
-from pyxai.source.core.structure.decisionTree import DecisionTree, DecisionNode
-from pyxai.source.core.structure.randomForest import RandomForest
-from pyxai.source.learning.Classifier import Classifier, NoneData
+from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode
+from pyxai.sources.core.structure.randomForest import RandomForest
+from pyxai.sources.learning.Classifier import Classifier, NoneData
 
 
 class Generic(Classifier):

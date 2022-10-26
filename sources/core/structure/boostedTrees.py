@@ -3,10 +3,10 @@ import numpy
 import os
 from operator import index
 
-from pyxai.source.core.structure.decisionTree import DecisionTree
-from pyxai.source.core.structure.treeEnsembles import TreeEnsembles
-from pyxai.source.core.structure.type import Encoding
-from pyxai.source.core.tools.encoding import CNFencoding
+from pyxai.sources.core.structure.decisionTree import DecisionTree
+from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
+from pyxai.sources.core.structure.type import Encoding
+from pyxai.sources.core.tools.encoding import CNFencoding
 
 
 class BoostedTrees(TreeEnsembles):

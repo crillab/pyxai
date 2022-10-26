@@ -1,11 +1,11 @@
 import json
 from operator import index
 
-from pyxai.source.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat
-from pyxai.source.learning.Classifier import ClassifierInformation, Classifier
-from pyxai.source.learning.generic import Generic
-from pyxai.source.learning.scikitlearn import Scikitlearn
-from pyxai.source.learning.xgboost import Xgboost
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat
+from pyxai.sources.learning.Classifier import ClassifierInformation, Classifier
+from pyxai.sources.learning.generic import Generic
+from pyxai.sources.learning.scikitlearn import Scikitlearn
+from pyxai.sources.learning.xgboost import Xgboost
 
 HOLD_OUT = EvaluationMethod.HoldOut
 LEAVE_ONE_GROUP_OUT = EvaluationMethod.LeaveOneGroupOut

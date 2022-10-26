@@ -1,7 +1,7 @@
 import sys
 
-from pyxai.source.core.tools.option import Options
-from pyxai.source.core.tools.utils import set_verbose
+from pyxai.sources.core.tools.option import Options
+from pyxai.sources.core.tools.utils import set_verbose
 
 # from pyxai.solvers.ML.scikitlearn import Scikitlearn
 # from pyxai.solvers.ML.xgboost import Xgboost

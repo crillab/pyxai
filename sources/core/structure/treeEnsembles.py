@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from pyxai.source.core.structure.binaryMapping import BinaryMapping
-from pyxai.source.core.structure.decisionTree import DecisionTree
+from pyxai.sources.core.structure.binaryMapping import BinaryMapping
+from pyxai.sources.core.structure.decisionTree import DecisionTree
 
 
 class TreeEnsembles(BinaryMapping):

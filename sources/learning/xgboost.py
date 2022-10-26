@@ -4,10 +4,10 @@ import os
 from numpy.random import RandomState
 
 import xgboost
-from pyxai.source.core.structure.boostedTrees import BoostedTrees
-from pyxai.source.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
-from pyxai.source.core.tools.utils import compute_accuracy
-from pyxai.source.learning.Classifier import Classifier, ClassifierInformation, NoneData
+from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
+from pyxai.sources.core.tools.utils import compute_accuracy
+from pyxai.sources.learning.Classifier import Classifier, ClassifierInformation, NoneData
 
 
 class Xgboost(Classifier):

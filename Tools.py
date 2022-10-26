@@ -1,5 +1,5 @@
 from pyxai import Options
-from pyxai.source.core.tools.utils import Stopwatch
-from pyxai.source.core.tools.utils import verbose
+from pyxai.sources.core.tools.utils import Stopwatch
+from pyxai.sources.core.tools.utils import verbose
 
-from pyxai.source.core.tools.vizualisation import Vizualisation
+from pyxai.sources.core.tools.vizualisation import Vizualisation

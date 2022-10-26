@@ -2,9 +2,9 @@ import numpy
 import os
 from math import floor
 from pysat.card import CardEnc, EncType
-from pyxai.source.core.structure.treeEnsembles import TreeEnsembles
-from pyxai.source.core.structure.type import Encoding
-from pyxai.source.core.tools.encoding import CNFencoding
+from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
+from pyxai.sources.core.structure.type import Encoding
+from pyxai.sources.core.tools.encoding import CNFencoding
 
 
 class RandomForest(TreeEnsembles):
