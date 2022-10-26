@@ -11,7 +11,7 @@ from pyxai import Learning, Explainer, Tools
 
 # the location of the dataset
 path = ""
-dataset = "./examples/datasets/mnist49.csv"
+dataset = "./examples/datasets/ mnist49.csv"
 
 # Machine learning part
 machine_learning = Learning.Xgboost(dataset)
