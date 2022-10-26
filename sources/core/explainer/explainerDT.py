@@ -235,6 +235,7 @@ class ExplainerDT(Explainer):
 
 
     def is_reason(self, reason, *, n_samples=-1):
+        print("oco")
         return self._tree.is_implicant(reason, self.target_prediction)
 
 
