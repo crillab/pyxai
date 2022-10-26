@@ -113,7 +113,7 @@ class AbductiveModelV1():
         t = " -t=" + str(time_limit) + "s" if time_limit is not None else ""
         ace.setting("-ale=4 -di=0 -valh=Last" + t)
         instance = compile()
-        result = ace.solve(instance, verbose=True)
+        result = ace.solve(instance, verbose=False)
 
         # if result == OPTIMUM or result == SAT:
         #  return result, [value for i, value in enumerate(solution().values) if solution().variables[i] is not None and 's' in solution().variables[i].id]
