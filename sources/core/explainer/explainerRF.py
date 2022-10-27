@@ -188,7 +188,6 @@ class ExplainerRF(Explainer):
         muser_solver = MUSERSolver()
         muser_solver.write_gcnf(n_variables, hard_clauses, soft_clauses)
         model, status, self._elapsed_time = muser_solver.solve(time_limit)
-        print(model, status, self._elapsed_time)
         reason = [mapping[i] for i in model if i > 1]
         return Explainer.format(reason, 1)
 
