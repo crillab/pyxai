@@ -1,8 +1,13 @@
 # PyXAI - Python eXplainable AI
 
-PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from
-classifiers
-resulting of machine learning techniques  (Decision Tree, Random Forest, Boosted Tree).
+![PyXAI](http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai.png)
+
+Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
+
+Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
+
+PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from classifiers resulting of machine learning techniques  (Decision Tree, Random Forest, Boosted Tree).
+
 More precisely, several types of explanations for the classification task of a given instance X can be computed:
 
 <ul>
@@ -24,7 +29,7 @@ Note that it is quite possible to find explanations of models coming from other 
 </p>
 
 <p>
-As an illustration, below, you can find an example of use (coming from the <a href="http://www.cril.univ-artois.fr/documentation/quickstart">documentation</a>):
+As an illustration, below, you can find an example of use:
 </p>
 
 ```python
