@@ -11,10 +11,10 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 
 class BoostedTrees(TreeEnsembles):
 
-    def __init__(self, forest, n_classes=2, classifier_information=None):
-        super().__init__(forest, classifier_information)
+    def __init__(self, forest, n_classes=2, learner_information=None):
+        super().__init__(forest, learner_information)
         self.n_classes = n_classes
-        self.classifier_information = classifier_information
+        self.learner_information = learner_information
         # assert all(tree.type_tree is TypeTree.WEIGHT for tree in self.forest), "All trees in a boosted trees have to be of the type WEIGHT."
 
 

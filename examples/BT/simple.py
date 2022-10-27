@@ -1,9 +1,9 @@
 from pyxai import Learning, Explainer, Tools
 
 # Machine learning part
-machine_learning = Learning.Xgboost(Tools.Options.dataset)
-model = machine_learning.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instance, prediction = machine_learning.get_instances(model=model, n=1, correct=False)
+learner = Learning.Xgboost(Tools.Options.dataset)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
+instance, prediction = learner.get_instances(model=model, n=1, correct=False)
 
 # Explanation part
 print(instance)

@@ -4,20 +4,20 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 
 class BinaryMapping():
 
-    def __init__(self, map_id_binaries_to_features, map_features_to_id_binaries, classifier_information):
+    def __init__(self, map_id_binaries_to_features, map_features_to_id_binaries, learner_information):
         self.map_id_binaries_to_features = map_id_binaries_to_features
         self.map_features_to_id_binaries = map_features_to_id_binaries
-        self.classifier_information = classifier_information
+        self.learner_information = learner_information
 
 
     @property
     def accuracy(self):
-        return self.classifier_information.accuracy
+        return self.learner_information.accuracy
 
 
     @property
     def features_name(self):
-        return self.classifier_information.feature_names
+        return self.learner_information.feature_names
 
 
     def compute_id_binaries(self):
@@ -83,12 +83,12 @@ class BinaryMapping():
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
 
-            if self.classifier_information is None:
+            if self.learner_information is None:
                 feature["name"] = "f" + str(feature["id"])
-            elif self.classifier_information.feature_names is None:
+            elif self.learner_information.feature_names is None:
                 feature["name"] = "f" + str(feature["id"])
             else:
-                feature["name"] = self.classifier_information.feature_names[feature["id"] - 1]
+                feature["name"] = self.learner_information.feature_names[feature["id"] - 1]
 
             feature["operator"] = self.map_id_binaries_to_features[abs(lit)][1]
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]

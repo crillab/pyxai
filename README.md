@@ -30,9 +30,9 @@ As an illustration, below, you can find an example of use (coming from the <a hr
 ```python
 from pyxai import Learning, Explainer, Tools
 
-MLsolver = Learning.Scikitlearn("../dataset/iris.csv")
-model = MLsolver.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
-instance, prediction = MLsolver.get_instances(model, n=1, correct=True, predictions=[0])
+learner = Learning.Scikitlearn("../dataset/iris.csv")
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
+instance, prediction = learner.get_instances(model, n=1, correct=True, predictions=[0])
 
 explainer = Explainer.initialize(model, instance)
 print("instance:", instance)
@@ -42,7 +42,7 @@ sufficient_reason = explainer.sufficient_reason(n=1)
 print("sufficient_reason:", sufficient_reason)
 print("to_features:", explainer.to_features(sufficient_reason))
 
-instance, prediction = MLsolver.get_instances(model, n=1, correct=False)
+instance, prediction = learner.get_instances(model, n=1, correct=False)
 explainer.set_instance(instance)
 contrastive_reason = explainer.contrastive_reason()
 print("contrastive reason", contrastive_reason)

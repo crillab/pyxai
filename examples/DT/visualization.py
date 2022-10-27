@@ -13,9 +13,9 @@ from pyxai import Learning, Explainer, Tools
 dataset = "./examples/datasets/mnist49.csv"
 
 # Machine learning part
-classifier = Learning.Scikitlearn(dataset)
-model = classifier.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
-instance, prediction = classifier.get_instances(model, n=1, correct=True)
+learner = Learning.Scikitlearn(dataset)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
+instance, prediction = learner.get_instances(model, n=1, correct=True)
 
 print("instance:", instance)
 print("prediction:", prediction)

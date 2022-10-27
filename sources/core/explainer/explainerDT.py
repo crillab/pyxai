@@ -143,7 +143,7 @@ class ExplainerDT(Explainer):
         if len(cnf) == 0:  # TODO: test when this case append
             return [lit for lit in prime_implicant_cnf.necessary]
 
-        weights = compute_weight(method, self.instance, weights, self._tree.classifier_information, features_partition=features_partition)
+        weights = compute_weight(method, self.instance, weights, self._tree.learner_information, features_partition=features_partition)
         weights_per_feature = {i + 1: weight for i, weight in enumerate(weights)}
 
         soft = [lit for lit in prime_implicant_cnf.mapping_original_to_new if lit != 0]

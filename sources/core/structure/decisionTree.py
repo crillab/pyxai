@@ -10,7 +10,7 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 
 class DecisionTree(BinaryMapping):
 
-    def __init__(self, n_features, root, target_class=0, id_solver_results=0, classifier_information=None, force_features_equal_to_binaries=False):
+    def __init__(self, n_features, root, target_class=0, id_solver_results=0, learner_information=None, force_features_equal_to_binaries=False):
         """
 
         Args:
@@ -18,13 +18,13 @@ class DecisionTree(BinaryMapping):
             root (_type_): _description_
             target_class (int, optional): _description_. Defaults to 0.
             id_solver_results (int, optional): _description_. Defaults to 0.
-            classifier_information (_type_, optional): _description_. Defaults to None.
+            learner_information (_type_, optional): _description_. Defaults to None.
             force_features_equal_to_binaries (bool, optional): By default, the binaries id in the representation of implicants
             is not the same that the features id. This option allows to force that these two kinds of ids are the same. This is used to allows
             that variables directly represent the features. Defaults to False.
         """
         self.id_solver_results = id_solver_results
-        self.classifier_information = classifier_information
+        self.learner_information = learner_information
         self.n_features = n_features
         self.nodes = []
         self.root = root
@@ -33,7 +33,7 @@ class DecisionTree(BinaryMapping):
             self.define_parents(self.root)
         self.force_features_equal_to_binaries = force_features_equal_to_binaries
         self.map_id_binaries_to_features, self.map_features_to_id_binaries = self.compute_id_binaries(force_features_equal_to_binaries)
-        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, classifier_information)
+        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, learner_information)
 
         # assert isinstance(self.type_tree, TypeTree), "Please put the good type of the tree !"
 

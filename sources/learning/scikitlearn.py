@@ -8,10 +8,10 @@ from sklearn.tree import DecisionTreeClassifier
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.tools.utils import compute_accuracy
-from pyxai.sources.learning.Classifier import Classifier, NoneData
+from pyxai.sources.learning.Learner import Learner, NoneData
 
 
-class Scikitlearn(Classifier):
+class Scikitlearn(Learner):
     def __init__(self, data=NoneData):
         super().__init__(data)
 
@@ -49,27 +49,27 @@ class Scikitlearn(Classifier):
     """
 
 
-    def to_DT(self, classifier_information=None):
-        if classifier_information is not None: self.classifier_information = classifier_information
+    def to_DT(self, learner_information=None):
+        if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
-        for id_solver_results, _ in enumerate(self.classifier_information):
-            sk_tree = self.classifier_information[id_solver_results].raw_model
+        for id_solver_results, _ in enumerate(self.learner_information):
+            sk_tree = self.learner_information[id_solver_results].raw_model
             sk_raw_tree = sk_tree.tree_
             decision_trees.append(self.classifier_to_DT(sk_tree, sk_raw_tree, id_solver_results))
         return decision_trees
 
 
-    def to_RF(self, classifier_information=None):
-        if classifier_information is not None: self.classifier_information = classifier_information
+    def to_RF(self, learner_information=None):
+        if learner_information is not None: self.learner_information = learner_information
         random_forests = []
-        for id_solver_results, _ in enumerate(self.classifier_information):
-            random_forest = self.classifier_information[id_solver_results].raw_model
+        for id_solver_results, _ in enumerate(self.learner_information):
+            random_forest = self.learner_information[id_solver_results].raw_model
             decision_trees = []
             for sk_tree in random_forest:
                 sk_raw_tree = sk_tree.tree_
                 decision_trees.append(self.classifier_to_DT(sk_tree, sk_raw_tree, id_solver_results))
             random_forests.append(
-                RandomForest(decision_trees, n_classes=len(sk_tree.classes_), classifier_information=self.classifier_information[id_solver_results]))
+                RandomForest(decision_trees, n_classes=len(sk_tree.classes_), learner_information=self.learner_information[id_solver_results]))
         return random_forests
 
 
@@ -77,8 +77,8 @@ class Scikitlearn(Classifier):
         assert False, "TODO"
 
 
-    def save_model(self, classifier_information, filename):
-        pickle.dump(classifier_information.raw_model, open(filename + ".model", 'wb'))
+    def save_model(self, learner_information, filename):
+        pickle.dump(learner_information.raw_model, open(filename + ".model", 'wb'))
 
 
     """
@@ -98,7 +98,7 @@ class Scikitlearn(Classifier):
                 nodes[i].right = nodes[id_right] if id_right in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_right][0]))
         root = nodes[0] if 0 in nodes else DecisionNode(1, 0, sk_raw_tree.value[0][0])
         return DecisionTree(sk_tree.n_features_in_, root, sk_tree.classes_, id_solver_results=id_solver_results,
-                            classifier_information=self.classifier_information[id_solver_results])
+                            learner_information=self.learner_information[id_solver_results])
 
 
     def load_model(self, model_file):
