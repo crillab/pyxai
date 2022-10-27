@@ -379,7 +379,7 @@ class Classifier:
             models = [models]
 
         for i, trees in enumerate(models):
-            classifier_information = trees.ML_solver_information
+            classifier_information = trees.classifier_information
             filename = base_directory + os.sep + name + '.' + str(i)
             # model:
             if not generic:
@@ -700,4 +700,4 @@ class Classifier:
         Tools.verbose("----------------------------------------------")
         if len(instances) == 0 and n == 1:
             return None, None
-        return instances if n > 1 else instances[0]
+        return instances if n is None or n > 1 else instances[0]
