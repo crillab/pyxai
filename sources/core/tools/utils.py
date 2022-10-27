@@ -82,7 +82,7 @@ def display_observation(observation, size=28):
             print()
 
 
-def compute_weight(method, instance, weights, ML_solver_information, *, features_partition = None):
+def compute_weight(method, instance, weights, learner_information, *, features_partition = None):
     if method is None:
         raise ValueError(
             "The method parameter is not correct (possible choice: Minimal, Weights, Shapely, FeatureImportance, WordFrequency, WordFrequencyLayers")
@@ -95,7 +95,7 @@ def compute_weight(method, instance, weights, ML_solver_information, *, features
         if isinstance(weights, list):
             return [-weights[i] + 1 + max(weights) for i in range(len(weights))]
         if isinstance(weights, dict):
-            feature_names = ML_solver_information.feature_names
+            feature_names = learner_information.feature_names
             new_weights = [0 for _ in range(len(feature_names))]
             for i in weights.keys():
                 new_weights[abs(i)] = weights[i]
@@ -104,7 +104,7 @@ def compute_weight(method, instance, weights, ML_solver_information, *, features
 
     if method == PreferredReasonMethod.Shapley:
         # Shapely values for the model trained on data.
-        raw_model = ML_solver_information.raw_model
+        raw_model = learner_information.raw_model
 
         shapely_explainer = shap.TreeExplainer(raw_model, model_output='raw')
         shapely_values = shapely_explainer.shap_values(instance, check_additivity=False)
@@ -118,20 +118,20 @@ def compute_weight(method, instance, weights, ML_solver_information, *, features
     if method == PreferredReasonMethod.FeatureImportance:
         # Feature importance from sklearn
         # Decreasing monotonous affine transformation
-        raw_model = ML_solver_information.raw_model
+        raw_model = learner_information.raw_model
         feature_importances = raw_model.feature_importances_
         alpha = min([i for i in feature_importances if i != 0])  # the minimum value greater than zero
         feature_importances = -10 * feature_importances / alpha  # alpha = -10/a, b = 1
         return [round(feature_importances[i] - min(feature_importances) + 1) for i in range(len(feature_importances))]
 
     if method == PreferredReasonMethod.WordFrequency:
-        feature_names = ML_solver_information.feature_names
+        feature_names = learner_information.feature_names
         weights_feature = [int(wordfreq.zipf_frequency(name, 'en') * 100 * (wordfreq.zipf_frequency(name, 'en') > 0)
                                + (wordfreq.zipf_frequency(name, 'en') == 0)) for name in feature_names]
         return [-weights_feature[i] + 1 + max(weights_feature) for i in range(len(weights_feature))]
 
     if method == PreferredReasonMethod.WordFrequencyLayers:
-        feature_names = ML_solver_information.feature_names
+        feature_names = learner_information.feature_names
         weights = [0 for _ in range(len(feature_names))]
         a = [0 for _ in range(3)]  # number of layers - 1
         for i in range(len(feature_names)):
@@ -152,11 +152,11 @@ def compute_weight(method, instance, weights, ML_solver_information, *, features
         tmp = tmp2 = 1
         _dict = {}
         i = 0
-        weights = [0] * len(ML_solver_information.feature_names)
-        for f in ML_solver_information.feature_names:
+        weights = [0] * len(learner_information.feature_names)
+        for f in learner_information.feature_names:
             _dict[f] = i
             i = i + 1
-        if features_partition is None or len(_dict) != len(ML_solver_information.feature_names):
+        if features_partition is None or len(_dict) != len(learner_information.feature_names):
             raise ValueError("The partiion_features field must contain all features (as a partition)")
         for _set in features_partition:
             for f in _set:

@@ -14,9 +14,9 @@ path = ""
 dataset = "./examples/datasets/ mnist49.csv"
 
 # Machine learning part
-machine_learning = Learning.Xgboost(dataset)
-model = machine_learning.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instance, prediction = machine_learning.get_instances(model, n=1, correct=True)
+learner = Learning.Xgboost(dataset)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
+instance, prediction = learner.get_instances(model, n=1, correct=True)
 
 # Explanation part
 explainer = Explainer.initialize(model, instance)

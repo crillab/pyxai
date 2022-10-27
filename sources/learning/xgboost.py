@@ -7,10 +7,10 @@ import xgboost
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.tools.utils import compute_accuracy
-from pyxai.sources.learning.Classifier import Classifier, ClassifierInformation, NoneData
+from pyxai.sources.learning.Learner import Learner, LearnerInformation, NoneData
 
 
-class Xgboost(Classifier):
+class Xgboost(Learner):
     """
     Load the dataset, rename the attributes and separe the prediction from the data
     """
@@ -42,33 +42,33 @@ class Xgboost(Classifier):
         return (copy.deepcopy(xgb_classifier), compute_accuracy(result, labels_test))
 
 
-    def to_DT(self, classifier_information=None):
+    def to_DT(self, learner_information=None):
         assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
 
 
-    def to_RF(self, classifier_information=None):
+    def to_RF(self, learner_information=None):
         assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
 
 
-    def to_BT(self, classifier_information=None):
-        if classifier_information is not None: self.classifier_information = classifier_information
+    def to_BT(self, learner_information=None):
+        if learner_information is not None: self.learner_information = learner_information
         if self.n_features is None:
-            self.n_features = classifier_information[0].raw_model.n_features_in_
+            self.n_features = learner_information[0].raw_model.n_features_in_
         if self.n_labels is None:
-            self.n_labels = len(classifier_information[0].raw_model.classes_)
+            self.n_labels = len(learner_information[0].raw_model.classes_)
 
         self.id_features = {"f{}".format(i): i for i in range(self.n_features)}
-        BTs = [BoostedTrees(self.results_to_trees(id_solver_results), n_classes=self.n_labels, classifier_information=classifier_information) for
-               id_solver_results, classifier_information in enumerate(self.classifier_information)]
+        BTs = [BoostedTrees(self.results_to_trees(id_solver_results), n_classes=self.n_labels, learner_information=learner_information) for
+               id_solver_results, learner_information in enumerate(self.learner_information)]
         return BTs
 
 
-    def save_model(self, classifier_information, filename):
-        classifier_information.raw_model.save_model(filename + ".model")
+    def save_model(self, learner_information, filename):
+        learner_information.raw_model.save_model(filename + ".model")
 
 
     def results_to_trees(self, id_solver_results):
-        xgb_BT = self.classifier_information[id_solver_results].raw_model.get_booster()
+        xgb_BT = self.learner_information[id_solver_results].raw_model.get_booster()
         xgb_JSON = self.xgboost_BT_to_JSON(xgb_BT)
         decision_trees = []
         target_class = 0

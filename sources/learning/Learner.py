@@ -18,7 +18,7 @@ from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput
 from pyxai.sources.core.tools.utils import flatten, compute_accuracy
 
 
-class ClassifierInformation:
+class LearnerInformation:
     def __init__(self, raw_model, training_index=None, test_index=None, group=None, accuracy=None):
         self.raw_model = raw_model
         self.training_index = training_index
@@ -51,7 +51,7 @@ class NoneData:
     pass
 
 
-class Classifier:
+class Learner:
     """
     Load the dataset, rename the attributes and separe the prediction from the data
     instance = observation 
@@ -69,7 +69,7 @@ class Classifier:
         self.dataset_name = None
         self.n_instances = None
         self.feature_names = None
-        self.classifier_information = []
+        self.learner_information = []
         data, name = self.parse_data(data)
         if data is not None:
             self.load_data(data, name)
@@ -157,7 +157,7 @@ class Classifier:
 
         self.n_labels = len(set(self.labels))
         self.data = self.data.to_numpy()  # remove the first line (attributes) and now the first dimension represents the instances :)!
-        self.classifier_information = []
+        self.learner_information = []
         Tools.verbose("---------------   Information   ---------------")
         Tools.verbose("Dataset name:", self.dataset_name)
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
@@ -227,14 +227,14 @@ class Classifier:
         else:
             assert False, "Not implemented !"
 
-        for classifier_information in self.classifier_information:
-            classifier_information.set_solver_name(self.get_solver_name())
-            classifier_information.set_feature_names(self.feature_names)
-            classifier_information.set_evaluation_method(method)
-            classifier_information.set_evaluation_output(output)
+        for learner_information in self.learner_information:
+            learner_information.set_solver_name(self.get_solver_name())
+            learner_information.set_feature_names(self.feature_names)
+            learner_information.set_evaluation_method(method)
+            learner_information.set_evaluation_output(output)
 
         Tools.verbose("---------   Evaluation Information   ---------")
-        for i, result in enumerate(self.classifier_information):
+        for i, result in enumerate(self.learner_information):
             Tools.verbose("For the evaluation number " + str(i) + ":")
             Tools.verbose("accuracy:", result.accuracy)
             Tools.verbose("nTraining instances:", len(result.training_index))
@@ -244,11 +244,11 @@ class Classifier:
         Tools.verbose("---------------   Explainer   ----------------")
         result_output = None
         if output == EvaluationOutput.DT:
-            result_output = self.to_DT(self.classifier_information)
+            result_output = self.to_DT(self.learner_information)
         elif output == EvaluationOutput.RF:
-            result_output = self.to_RF(self.classifier_information)
+            result_output = self.to_RF(self.learner_information)
         elif output == EvaluationOutput.BT:
-            result_output = self.to_BT(self.classifier_information)
+            result_output = self.to_BT(self.learner_information)
         else:
             assert False, "Not implemented !"
         # elif output == EvaluationOutput.SAVE:
@@ -265,7 +265,7 @@ class Classifier:
         assert models_directory is not None and os.path.exists(models_directory), "The path of models_directory do not exist: " + str(
             models_directory)
 
-        self.classifier_information.clear()
+        self.learner_information.clear()
         # get the files
         files = []
         index = 0
@@ -326,17 +326,17 @@ class Classifier:
                 result = classifier.predict(instances_test)
                 accuracy = compute_accuracy(result, labels_test)
                 assert accuracy == accuracy_saved, "The accuracy between the model loaded and the one determined at its creation is not the same !"
-            self.classifier_information.append(ClassifierInformation(copy.deepcopy(classifier), training_index, test_index, None, accuracy_saved))
-            self.classifier_information[-1].set_solver_name(solver_name)
-            self.classifier_information[-1].set_evaluation_method(evaluation_method)
-            self.classifier_information[-1].set_evaluation_output(evaluation_output)
-            self.classifier_information[-1].set_feature_names(self.feature_names)
+            self.learner_information.append(LearnerInformation(copy.deepcopy(classifier), training_index, test_index, None, accuracy_saved))
+            self.learner_information[-1].set_solver_name(solver_name)
+            self.learner_information[-1].set_evaluation_method(evaluation_method)
+            self.learner_information[-1].set_evaluation_output(evaluation_output)
+            self.learner_information[-1].set_feature_names(self.feature_names)
 
-        assert all(classifier_information.evaluation_output == self.classifier_information[-1].evaluation_output for classifier_information in
-                   self.classifier_information), "All evaluation outputs have to be the same !"
+        assert all(learner_information.evaluation_output == self.learner_information[-1].evaluation_output for learner_information in
+                   self.learner_information), "All evaluation outputs have to be the same !"
 
         Tools.verbose("---------   Evaluation Information   ---------")
-        for i, result in enumerate(self.classifier_information):
+        for i, result in enumerate(self.learner_information):
             Tools.verbose("For the evaluation number " + str(i) + ":")
             Tools.verbose("accuracy:", result.accuracy)
             Tools.verbose("nTraining instances:", len(result.training_index))
@@ -344,15 +344,15 @@ class Classifier:
             Tools.verbose()
 
         Tools.verbose("---------------   Explainer   ----------------")
-        output = EvaluationOutput.from_str(self.classifier_information[-1].evaluation_output)
+        output = EvaluationOutput.from_str(self.learner_information[-1].evaluation_output)
         result_output = None
 
         if output == EvaluationOutput.DT:
-            result_output = self.to_DT(self.classifier_information)
+            result_output = self.to_DT(self.learner_information)
         elif output == EvaluationOutput.RF:
-            result_output = self.to_RF(self.classifier_information)
+            result_output = self.to_RF(self.learner_information)
         elif output == EvaluationOutput.BT:
-            result_output = self.to_BT(self.classifier_information)
+            result_output = self.to_BT(self.learner_information)
         else:
             assert False, "Not implemented !"
 
@@ -379,21 +379,21 @@ class Classifier:
             models = [models]
 
         for i, trees in enumerate(models):
-            classifier_information = trees.classifier_information
+            learner_information = trees.learner_information
             filename = base_directory + os.sep + name + '.' + str(i)
             # model:
             if not generic:
-                self.save_model(classifier_information, filename)
+                self.save_model(learner_information, filename)
             else:
 
                 self.save_model_generic(trees, filename)
             # map of indexes for training and test part
-            data = {"training_index": classifier_information.training_index.tolist(),
-                    "test_index": classifier_information.test_index.tolist(),
-                    "accuracy": classifier_information.accuracy,
-                    "solver_name": classifier_information.solver_name if not generic else "Generic",
-                    "evaluation_method": classifier_information.evaluation_method,
-                    "evaluation_output": classifier_information.evaluation_output,
+            data = {"training_index": learner_information.training_index.tolist(),
+                    "test_index": learner_information.test_index.tolist(),
+                    "accuracy": learner_information.accuracy,
+                    "solver_name": learner_information.solver_name if not generic else "Generic",
+                    "evaluation_method": learner_information.evaluation_method,
+                    "evaluation_output": learner_information.evaluation_output,
                     "format": str(format),
 
                     "n_features": self.n_features,
@@ -416,7 +416,7 @@ class Classifier:
 
 
     def hold_out_evaluation(self, output, *, seed=0, max_depth=None, test_size=0.3):
-        self.classifier_information.clear()
+        self.learner_information.clear()
         assert self.data is not None, "You have to put the dataset in the class parameters."
         # spliting
         indices = numpy.arange(len(self.data))
@@ -433,14 +433,14 @@ class Classifier:
             tree, accuracy = self.fit_and_predict_BT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth, seed=seed)
         else:
             assert False, "hold_out_evaluation: EvaluationOutput Not implemented !"
-        self.classifier_information.append(ClassifierInformation(tree, training_index, test_index, None, accuracy))
+        self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, accuracy))
         return self
 
 
     def k_folds_evaluation(self, output, *, n_models=10, max_depth=None, seed=0):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_models > 1, "This k_folds_evaluation() expects at least 2 parts. For just one tree, please use hold_out_evaluation()"
-        self.classifier_information.clear()
+        self.learner_information.clear()
 
         cross_validator = KFold(n_splits=n_models, random_state=seed, shuffle=True)
 
@@ -465,14 +465,14 @@ class Classifier:
                 assert False, "leave_one_group_out_evaluation: EvaluationOutput Not implemented !"
 
             # Save some information
-            self.classifier_information.append(ClassifierInformation(tree, training_index, test_index, None, accuracy))
+            self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, accuracy))
         return self
 
 
     def leave_one_group_out_evaluation(self, output, *, n_trees=10, max_depth=None, seed=0):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_trees > 1, "cross_validation() expects at least 2 trees. For just one tree, please use simple_validation()"
-        self.classifier_information.clear()
+        self.learner_information.clear()
 
         # spliting
         quotient, remainder = (self.n_instances // n_trees, self.n_instances % n_trees)
@@ -502,7 +502,7 @@ class Classifier:
                 assert False, "leave_one_group_out_evaluation: EvaluationOutput Not implemented !"
 
             # Save some information
-            self.classifier_information.append(ClassifierInformation(tree, training_index, test_index, groups, accuracy))
+            self.learner_information.append(LearnerInformation(tree, training_index, test_index, groups, accuracy))
         return self
 
 
@@ -566,16 +566,16 @@ class Classifier:
             # depending of the model
             if isinstance(model, BoostedTrees):
                 id_solver_results = model.forest[0].id_solver_results
-                classifier = self.classifier_information[id_solver_results].raw_model
-                results = self.classifier_information[id_solver_results]
+                classifier = self.learner_information[id_solver_results].raw_model
+                results = self.learner_information[id_solver_results]
             if isinstance(model, RandomForest):
                 id_solver_results = model.forest[0].id_solver_results
-                classifier = self.classifier_information[id_solver_results].raw_model
-                results = self.classifier_information[id_solver_results]
+                classifier = self.learner_information[id_solver_results].raw_model
+                results = self.learner_information[id_solver_results]
             if isinstance(model, DecisionTree):
                 id_solver_results = model.id_solver_results
-                classifier = self.classifier_information[id_solver_results].raw_model
-                results = self.classifier_information[id_solver_results]
+                classifier = self.learner_information[id_solver_results].raw_model
+                results = self.learner_information[id_solver_results]
 
         # 2: Get the correct indexes:
         possible_indexes = None

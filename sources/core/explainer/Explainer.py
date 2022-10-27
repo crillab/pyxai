@@ -75,11 +75,11 @@ class Explainer:
     def _set_specific_features(self, specific_features):  # TODO a changer en je veux ces features
         excluded = []
         if hasattr(self, 'tree'):
-            excluded = [f for f in self.tree.ML_solver_information.feature_names if f not in specific_features]
+            excluded = [f for f in self.tree.learner_information.feature_names if f not in specific_features]
         if hasattr(self, 'random_forest'):
-            excluded = [f for f in self.random_forest.ML_solver_information.feature_names if f not in specific_features]
+            excluded = [f for f in self.random_forest.learner_information.feature_names if f not in specific_features]
         if hasattr(self, 'boosted_tree'):
-            excluded = [f for f in self.boosted_tree.ML_solver_information.feature_names if f not in specific_features]
+            excluded = [f for f in self.boosted_tree.learner_information.feature_names if f not in specific_features]
 
         if excluded is None:
             raise NotImplementedError

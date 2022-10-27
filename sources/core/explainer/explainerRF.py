@@ -322,7 +322,7 @@ class ExplainerRF(Explainer):
         id_features = [feature["id"] for feature in
                        self._random_forest.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
 
-        weights = compute_weight(method, self.instance, weights, self._random_forest.forest[0].classifier_information,
+        weights = compute_weight(method, self.instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
 
         solver = OPENWBOSolver()

@@ -5,9 +5,9 @@ from pyxai import Learning, Explainer, Tools
 
 
 # Machine learning part
-machine_learning = Learning.Scikitlearn(Tools.Options.dataset)
-model = machine_learning.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
-instance, prediction = machine_learning.get_instances(n=1)
+learner = Learning.Scikitlearn(Tools.Options.dataset)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
+instance, prediction = learner.get_instances(n=1)
 
 print("instance:", instance)
 

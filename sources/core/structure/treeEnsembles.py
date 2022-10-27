@@ -12,7 +12,7 @@ class TreeEnsembles(BinaryMapping):
     """
 
 
-    def __init__(self, forest, classifier_information):
+    def __init__(self, forest, learner_information):
         self.forest = forest
         self.n_trees = len(forest)
         self.n_features = forest[0].n_features
@@ -32,7 +32,7 @@ class TreeEnsembles(BinaryMapping):
                    forest), "All trees in the forest have to have the same force_features_equal_to_binaries value."
 
         self.map_id_binaries_to_features, self.map_features_to_id_binaries = self.compute_id_binaries(self.force_features_equal_to_binaries)
-        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, classifier_information)
+        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, learner_information)
 
         # Change the encoding of each tree by these new encoding
         for tree in self.forest:
