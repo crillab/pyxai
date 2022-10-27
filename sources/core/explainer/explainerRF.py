@@ -188,6 +188,7 @@ class ExplainerRF(Explainer):
         muser_solver = MUSERSolver()
         muser_solver.write_gcnf(n_variables, hard_clauses, soft_clauses)
         model, status, self._elapsed_time = muser_solver.solve(time_limit)
+        print(model, status, self._elapsed_time)
         reason = [mapping[i] for i in model if i > 1]
         return Explainer.format(reason, 1)
 
@@ -379,9 +380,6 @@ class ExplainerRF(Explainer):
     def minimal_majoritary_reason(self, *, n=1, time_limit=None):
         return self.preferred_majoritary_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
-
-    def is_reason(self, reason, *, n_samples=1000):
-        return self.is_implicant(reason)
 
     def is_majoritary_reason(self, reason, n_samples=50):
         if not self.is_implicant(reason):
