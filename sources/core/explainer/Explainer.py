@@ -14,7 +14,16 @@ class Explainer:
         self._elapsed_time = 0
         self._excluded_literals = []
         self._excluded_features = []
-        self.instance = None
+        self._instance = None
+
+
+    @property
+    def instance(self):
+        """
+        The instance to be explained.
+        :return: the instance.
+        """
+        return self._instance
 
 
     @property
@@ -43,12 +52,12 @@ class Explainer:
             raise ValueError("The instance parameter should be an iterable of only one dimension (not " + str(count_dimensions(instance)) + ").")
 
         # The target observation.
-        self.instance = instance
+        self._instance = instance
         # A binary representation of self.tree (a term that implies the tree)
         self._binary_representation = self._to_binary_representation(instance)
 
         # The target prediction (0 or 1)
-        self.target_prediction = self.predict(self.instance)
+        self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
 
