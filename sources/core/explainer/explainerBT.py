@@ -87,31 +87,31 @@ class ExplainerBT(Explainer):
             if reason is not None:
                 reason_length = len(reason)
                 features_in_reason = self.to_features_indexes(reason)
-                reduction_features = round(float(100 - (len(features_in_reason) * 100) / len(self.instance)), 2)
+                reduction_features = round(float(100 - (len(features_in_reason) * 100) / len(self._instance)), 2)
                 reduction_conditions = round(float(100 - (len(reason) * 100) / len(self._binary_representation)), 2)
             else:
                 reason_length = len(self._binary_representation)
                 features_in_reason = []
                 reduction_features = round(float(0), 2)
                 reduction_conditions = round(float(0), 2)
-            return {"instance_length": len(self.instance),
+            return {"instance_length": len(self._instance),
                     "implicant_length": len(self._binary_representation),
                     "reason_length": reason_length,
                     "features_in_reason_length": len(features_in_reason),
-                    "features_not_in_reason_length": len(self.instance) - len(features_in_reason),
+                    "features_not_in_reason_length": len(self._instance) - len(features_in_reason),
                     "%_reduction_conditions": reduction_conditions,
                     "%_reduction_features": reduction_features}
         elif reason_expressivity == ReasonExpressivity.Features:
             if reason is not None:
                 reason_length = len(reason)
-                reduction_features = round(float(100 - (len(reason) * 100) / len(self.instance)), 2)
+                reduction_features = round(float(100 - (len(reason) * 100) / len(self._instance)), 2)
             else:
                 reason_length = 0
                 reduction_features = round(float(0), 2)
-            return {"instance_length": len(self.instance),
+            return {"instance_length": len(self._instance),
                     "reason_length": reason_length,
                     "features_in_reason_length": reason_length,
-                    "features_not_in_reason_length": len(self.instance) - reason_length,
+                    "features_not_in_reason_length": len(self._instance) - reason_length,
                     "%_reduction_features": reduction_features}
         else:
             assert True, "TODO"
@@ -127,7 +127,7 @@ class ExplainerBT(Explainer):
             list: indexes of the instance that are involved in the reason.
         """
         features = [feature["id"] for feature in self.to_features(reason, details=True)]
-        return [i for i, _ in enumerate(self.instance) if i + 1 in features]
+        return [i for i, _ in enumerate(self._instance) if i + 1 in features]
 
 
     def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False):
@@ -139,7 +139,7 @@ class ExplainerBT(Explainer):
 
 
     def compute_propabilities(self):
-        return self._boosted_trees.compute_probabilities(self.instance)
+        return self._boosted_trees.compute_probabilities(self._instance)
 
 
     def direct_reason(self):
@@ -150,7 +150,7 @@ class ExplainerBT(Explainer):
         """
         direct_reason = set()
         for tree in self._boosted_trees.forest:
-            direct_reason |= set(tree.direct_reason(self.instance))
+            direct_reason |= set(tree.direct_reason(self._instance))
 
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
