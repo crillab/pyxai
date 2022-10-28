@@ -87,9 +87,9 @@ class ExplainerRF(Explainer):
         self._elapsed_time = 0
         direct_reason = set()
         for tree in self._random_forest.forest:
-            local_target_prediction = tree.predict_instance(self.instance)
+            local_target_prediction = tree.predict_instance(self._instance)
             if local_target_prediction == self.target_prediction:
-                local_direct = tree.direct_reason(self.instance)
+                local_direct = tree.direct_reason(self._instance)
                 direct_reason |= set(local_direct)
 
         # remove excluded features
@@ -116,7 +116,7 @@ class ExplainerRF(Explainer):
         first_call = True
         time_limit = 0 if time_limit is None else time_limit
         best_score = 0
-        tree_cnf = self._random_forest.to_CNF(self.instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0)
+        tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0)
         max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
         MAXSATsolver = OPENWBOSolver()
         for lit in self._binary_representation:
@@ -165,7 +165,7 @@ class ExplainerRF(Explainer):
             (obj:`list` of :obj:`int`): Reason in the form of literals (binary form). The to_features() method allows to obtain the features of this
              reason.
         """
-        hard_clauses = self._random_forest.to_CNF(self.instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         # Check if excluded features produce a SAT problem => No sufficient reason
 
         if len(self._excluded_literals) > 0:
@@ -205,7 +205,7 @@ class ExplainerRF(Explainer):
             this reason.
         """
 
-        hard_clauses = self._random_forest.to_CNF(self.instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
 
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
@@ -262,7 +262,7 @@ class ExplainerRF(Explainer):
 
         n = n if type(n) == int else float('inf')
 
-        clauses = self._random_forest.to_CNF(self.instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
+        clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
         max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
         solver = GlucoseSolver()
 
@@ -317,12 +317,12 @@ class ExplainerRF(Explainer):
 
         n = n if type(n) == int else float('inf')
 
-        clauses = self._random_forest.to_CNF(self.instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
+        clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
         n_variables = CNFencoding.compute_n_variables(clauses)
         id_features = [feature["id"] for feature in
                        self._random_forest.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
 
-        weights = compute_weight(method, self.instance, weights, self._random_forest.forest[0].learner_information,
+        weights = compute_weight(method, self._instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
 
         solver = OPENWBOSolver()

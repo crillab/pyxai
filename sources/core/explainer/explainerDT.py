@@ -61,7 +61,7 @@ class ExplainerDT(Explainer):
             _type_: _description_
         """
         self._elapsed_time = 0
-        direct_reason = self._tree.direct_reason(self.instance)
+        direct_reason = self._tree.direct_reason(self._instance)
         if any(not self._is_specific(lit) for lit in direct_reason):
             return None  # The reason contains excluded features
         return Explainer.format(direct_reason)
@@ -69,7 +69,7 @@ class ExplainerDT(Explainer):
 
     def contrastive_reason(self, *, n=1):
         self._elapsed_time = 0
-        cnf = self._tree.to_CNF(self.instance)
+        cnf = self._tree.to_CNF(self._instance)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         core = [c for c in core if all(self._is_specific(lit) for lit in c)]  # remove excluded
         contrastives = sorted(core, key=lambda clause: len(clause))
@@ -78,7 +78,7 @@ class ExplainerDT(Explainer):
 
     def necessary_literals(self):
         self._elapsed_time = 0
-        cnf = self._tree.to_CNF(self.instance, target_prediction=self.target_prediction)
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         # DO NOT remove excluded features. If they appear, they explain why there is no sufficient
         return sorted({lit for _, clause in enumerate(core) if len(clause) == 1 for lit in clause})
@@ -86,7 +86,7 @@ class ExplainerDT(Explainer):
 
     def relevant_literals(self):
         self._elapsed_time = 0
-        cnf = self._tree.to_CNF(self.instance, target_prediction=self.target_prediction)
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         return [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
 
@@ -101,7 +101,7 @@ class ExplainerDT(Explainer):
     def sufficient_reason(self, *, n=1, time_limit=None):
         time_used = 0
         n = n if type(n) == int else float('inf')
-        cnf = self._tree.to_CNF(self.instance, target_prediction=self.target_prediction)
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         prime_implicant_cnf = CNFencoding.to_prime_implicant_CNF(cnf, self._binary_representation)
 
         if self._excluded_features_are_necesssary(prime_implicant_cnf):
@@ -130,7 +130,7 @@ class ExplainerDT(Explainer):
 
     def preferred_sufficient_reason(self, *, method, n=1, time_limit=None, weights=None, features_partition=None):
         n = n if type(n) == int else float('inf')
-        cnf = self._tree.to_CNF(self.instance)
+        cnf = self._tree.to_CNF(self._instance)
         self._elapsed_time = 0
 
         prime_implicant_cnf = CNFencoding.to_prime_implicant_CNF(cnf, self._binary_representation)
@@ -143,13 +143,13 @@ class ExplainerDT(Explainer):
         if len(cnf) == 0:  # TODO: test when this case append
             return [lit for lit in prime_implicant_cnf.necessary]
 
-        weights = compute_weight(method, self.instance, weights, self._tree.learner_information, features_partition=features_partition)
+        weights = compute_weight(method, self._instance, weights, self._tree.learner_information, features_partition=features_partition)
         weights_per_feature = {i + 1: weight for i, weight in enumerate(weights)}
 
         soft = [lit for lit in prime_implicant_cnf.mapping_original_to_new if lit != 0]
         weights_soft = []
         for lit in soft:  # soft clause
-            for i in range(len(self.instance)):
+            for i in range(len(self._instance)):
                 if self._tree.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
                     weights_soft.append(weights[i])
 
@@ -201,7 +201,7 @@ class ExplainerDT(Explainer):
 
 
     def n_sufficient_reasons_per_attribute(self, *, time_limit=None):
-        cnf = self._tree.to_CNF(self.instance)
+        cnf = self._tree.to_CNF(self._instance)
         prime_implicant_cnf = CNFencoding.to_prime_implicant_CNF(cnf, self._binary_representation)
 
         if self._excluded_features_are_necesssary(prime_implicant_cnf):
