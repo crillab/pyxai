@@ -539,12 +539,12 @@ class Learner:
 
 
     def get_instances(self, model=None, indexes=Indexes.All, *, dataset=None, n=None, correct=None, predictions=None, save_directory=None,
-                      instances_id=None, randomize=False):
+                      instances_id=None, seed=None):
 
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
-        Tools.verbose("Correctness of instances : ", correct)
-        Tools.verbose("Predictions of instances: ", predictions)
+        #Tools.verbose("Correctness of instances : ", correct)
+        #Tools.verbose("Predictions of instances : ", predictions)
         classifier = None
         id_solver_results = None
         results = None
@@ -621,9 +621,6 @@ class Learner:
         if isinstance(possible_indexes, numpy.ndarray):
             possible_indexes = possible_indexes.tolist()
 
-        if randomize and possible_indexes is not None:
-            random.shuffle(possible_indexes)
-
         # 3: Get the correct data (select only data that we need):
         if self.data is None:
             assert dataset is not None, "Data are not loaded yet. You have to put your dataset filename through the 'dataset' parameter !"
@@ -631,7 +628,6 @@ class Learner:
                 data, labels = self.load_data_limited(dataset, possible_indexes, n)
             else:
                 possible_indexes = [i for i in range(len(self.data))]
-                assert (not randomize)
                 data, name = self.parse_data(dataset)
                 if data is not None:
                     self.load_data(data, name)
@@ -640,13 +636,9 @@ class Learner:
         else:
             if possible_indexes is None:
                 possible_indexes = [i for i in range(len(self.data))]
-                if randomize:
-                    random.shuffle(possible_indexes)
                 data = [self.data[x] for x in possible_indexes]
                 labels = self.labels
             else:
-                if randomize:
-                    random.shuffle(possible_indexes)
                 data = numpy.array([self.data[x] for x in possible_indexes])
                 labels = numpy.array([self.labels[x] for x in possible_indexes])
 
@@ -654,15 +646,19 @@ class Learner:
         instances = []
         instances_indexes = []
 
+        original_indexes = list(range(len(data)))
+        if seed is not None:
+          random.Random(seed).shuffle(original_indexes)
+
         if model is None or self.get_solver_name() == "Generic":
-            for j in range(len(data)):
+            for j in original_indexes:
                 current_index = possible_indexes[j]
                 instances.append((data[j], None))
                 instances_indexes.append(current_index)
                 if isinstance(n, int) and len(instances) >= n:
                     break
         else:
-            for j in range(len(data)):
+            for j in original_indexes:
                 current_index = possible_indexes[j]
 
                 prediction_solver = classifier.predict(data[j].reshape(1, -1))[
