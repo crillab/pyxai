@@ -48,6 +48,9 @@ class Explainer:
 
         @param instance (list[float] | tuple[float]): the instance to be explained.
         """
+        if instance is None:
+            raise ValueError("The instance parameter is None.")
+
         if count_dimensions(instance) != 1:
             raise ValueError("The instance parameter should be an iterable of only one dimension (not " + str(count_dimensions(instance)) + ").")
 
