@@ -539,7 +539,7 @@ class Learner:
 
 
     def get_instances(self, model=None, indexes=Indexes.All, *, dataset=None, n=None, correct=None, predictions=None, save_directory=None,
-                      instances_id=None, seed=None):
+                      instances_id=None, seed=0):
 
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
@@ -649,6 +649,8 @@ class Learner:
         original_indexes = list(range(len(data)))
         if seed is not None:
           random.Random(seed).shuffle(original_indexes)
+        else:
+            random.shuffle(original_indexes)
 
         if model is None or self.get_solver_name() == "Generic":
             for j in original_indexes:
