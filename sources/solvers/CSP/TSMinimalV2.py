@@ -2,6 +2,7 @@ import os
 from pycsp3 import *
 
 from pyxai.sources.core.tools.utils import flatten
+from pycsp3.dashboard import options
 
 OpOverrider = protect()
 
@@ -181,6 +182,7 @@ class TSMinimal():
     def solve(self, time_limit=None, upper_bound=-1):
 
         ace = solver(ACE)
+        options.output = "/tmp"
         t = " -t=" + str(time_limit) + "s" if time_limit is not None else ""
         warm = " -warm=" + str(self.warm_start_file) if self.warm_start_file is not None else ""
         ub = "" if upper_bound == -1 else f" -ub={upper_bound}"
