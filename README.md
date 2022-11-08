@@ -61,7 +61,9 @@ print("to_features:", explainer.to_features(contrastive_reason))
 The Python Package Index (PyPi) is the easiest way of installing PyXAI.
 
 Note that you need first Python 3 (version 3.6, or later) to be installed.
-You can do it, for example, from [python.org](https://www.python.org/downloads/)
+You can do it, for example, from [python.org](https://www.python.org/downloads/).
+
+See the Virtual Environment section if you want to install PyXAI inside a Python virtual environment.
 
 ### Installing PyXAI (Linux)
 
@@ -85,12 +87,11 @@ python3 -m pip install pyxai
 
 ### Installing PyXAI (Mac OS)
 
-PyXAI is currently compatible with Mac OS but without PyPi, see the installation (alternative) by Cloning from GitHub section for more details.
-
+PyXAI is currently partially compatible with Mac OS but without PyPi (see this section). You can also use a docker container that runs a 
+jupyter notebook with all features.
 ### Installing PyXAI (Windows)
 
-PyXAI is currently not compatible with windows (work in progress).
-
+PyXAI is currently not compatible with Windows (work in progress). Instead, you can use a docker container with PyXAI inside.
 ### Updating the Version of PyXAI (for PyPi)
 
 For updating your version of PyXAI, simply execute:
@@ -162,6 +163,22 @@ Finally, you can test an example:
 ```console
 python3 examples/DT/BuilderOrchids.py 
 ```
+
+## Using a Docker Image
+
+We provide a docker container. 
+It launches a jupyter notebook with all features of pyxai enabled.
+
+Build the container:
+```
+docker build -t pyxai .
+```
+
+Run the container (the working directory is the current one):
+```
+docker run -it -p 8888:8888 -v $PWD:/data pyxai```
+```
+
 
 ## Virtual Environment
 
