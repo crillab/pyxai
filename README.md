@@ -87,11 +87,12 @@ python3 -m pip install pyxai
 
 ### Installing PyXAI (Mac OS)
 
-PyXAI is currently partially compatible with Mac OS but without PyPi (see this section). You can also use a docker container that runs a 
-jupyter notebook with all features.
+PyXAI is currently partially compatible with Mac OS but without PyPi (see this section). You can also use a docker container that runs a jupyter notebook with all features.
+
 ### Installing PyXAI (Windows)
 
 PyXAI is currently not compatible with Windows (work in progress). Instead, you can use a docker container with PyXAI inside.
+
 ### Updating the Version of PyXAI (for PyPi)
 
 For updating your version of PyXAI, simply execute:
@@ -166,19 +167,18 @@ python3 examples/DT/BuilderOrchids.py
 
 ## Using a Docker Image
 
-We provide a docker container. 
-It launches a jupyter notebook with all features of pyxai enabled.
+A docker container is available on Git ([https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)). 
+It launches a Jupyter notebook that supports all PyXAI features.
 
-Build the container:
+Below is the code line to build the container:
 ```
 docker build -t pyxai .
 ```
 
-Run the container (the working directory is the current one):
+And run the container (we consider that the working directory is the current one):
 ```
 docker run -it -p 8888:8888 -v $PWD:/data pyxai```
 ```
-
 
 ## Virtual Environment
 
