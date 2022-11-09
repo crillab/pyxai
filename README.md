@@ -76,7 +76,7 @@ sudo apt install python3-pip
 
 Or check if you have the last installed version:
 
-```
+```console
 python3 -m pip install --upgrade pip
 ```
 
@@ -172,12 +172,12 @@ A docker container is available on Git ([https://github.com/crillab/pyxai](https
 It launches a Jupyter notebook that supports all PyXAI features.
 
 Below is the code line to build the container:
-```
+```console
 docker build -t pyxai .
 ```
 
 And run the container (we consider that the working directory is the current one):
-```
+```console
 docker run -it -p 8888:8888 -v $PWD:/data pyxai```
 ```
 
