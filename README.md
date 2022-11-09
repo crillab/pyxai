@@ -1,92 +1,220 @@
-# private-pyxai
 
+# PyXAI - Python eXplainable AI
 
+![PyXAI](http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai.png)
 
-## Getting started
+Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from classifiers resulting of machine learning techniques  (Decision Tree, Random Forest, Boosted Tree).
 
-## Add your files
+More precisely, several types of explanations for the classification task of a given instance X can be computed:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+<ul>
+  <li>Abductive explanations for X are intended to explain why X has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question).</li>
+  <li>Contrastive explanations for X is to explain why X has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
+</ul>
+
+<p>
+In addition to finding explanations, PyXAI also contains methods that perform operations (production, saving, loading) on models and instances. 
+Currently, these helping methods are available using two ML libraries:
+</p>
+<ul>
+  <li><a href="https://scikit-learn.org/stable/">Scikit-learn</a>: a software machine learning library</li> 
+  <li><a href="https://xgboost.readthedocs.io/en/stable/">XGBoost</a>: an optimized distributed gradient boosting library</li>
+</ul> 
+
+<p>
+Note that it is quite possible to find explanations of models coming from other libraries.
+</p>
+
+<p>
+As an illustration, below, you can find an example of use:
+</p>
+
+```python
+from pyxai import Learning, Explainer, Tools
+
+learner = Learning.Scikitlearn("../dataset/iris.csv")
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
+instance, prediction = learner.get_instances(model, n=1, correct=True, predictions=[0])
+
+explainer = Explainer.initialize(model, instance)
+print("instance:", instance)
+print("implicant:", explainer.binary_representation)
+
+sufficient_reason = explainer.sufficient_reason(n=1)
+print("sufficient_reason:", sufficient_reason)
+print("to_features:", explainer.to_features(sufficient_reason))
+
+instance, prediction = learner.get_instances(model, n=1, correct=False)
+explainer.set_instance(instance)
+contrastive_reason = explainer.contrastive_reason()
+print("contrastive reason", contrastive_reason)
+print("to_features:", explainer.to_features(contrastive_reason))
+```
+
+# Installation
+
+## Installation from PyPi
+
+The Python Package Index (PyPi) is the easiest way of installing PyXAI.
+
+Note that you need first Python 3 (version 3.6, or later) to be installed.
+You can do it, for example, from [python.org](https://www.python.org/downloads/).
+
+See the Virtual Environment section if you want to install PyXAI inside a Python virtual environment.
+
+### Installing PyXAI (Linux)
+
+Check if 'python3-pip' is installed. If it is not the case, execute:
+
+```console
+sudo apt install python3-pip
+```
+
+Or check if you have the last installed version:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.univ-artois.fr/expekctation/private-pyxai.git
-git branch -M main
-git push -uf origin main
+python3 -m pip install --upgrade pip
 ```
 
-## Integrate with your tools
+Then, install PyXAI with the command 'pip3':
 
-- [ ] [Set up project integrations](https://gitlab.univ-artois.fr/expekctation/private-pyxai/-/settings/integrations)
+```console
+python3 -m pip install pyxai
+```
 
-## Collaborate with your team
+### Installing PyXAI (Mac OS)
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+PyXAI is currently partially compatible with Mac OS but without PyPi (see this section). You can also use a docker container that runs a jupyter notebook with all features.
 
-## Test and Deploy
+### Installing PyXAI (Windows)
 
-Use the built-in continuous integration in GitLab.
+PyXAI is currently not compatible with Windows (work in progress). Instead, you can use a docker container with PyXAI inside.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Updating the Version of PyXAI (for PyPi)
 
-***
+For updating your version of PyXAI, simply execute:
 
-# Editing this README
+For linux/Mac:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```console
+python3 -m pip install -U pyxai
+```
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Installation (alternative) by Cloning from GitHub
 
-## Name
-Choose a self-explaining name for your project.
+An alternative to PyPi is to clone the code from GitHub.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Here is an illustration for linux. We assume that Python 3 is installed, and consequently 'pip3' is also installed.
+In a console, type:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```console
+git clone https://gitlab.univ-artois.fr/expekctation/software/PyLearningExplanation.git
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You may need to update the environment variable 'PYTHONPATH', by typing for example:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```console
+export PYTHONPATH="${PYTHONPATH}:${PWD}/.."
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Get the last version of pip:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```console
+python3 -m pip install --upgrade pip
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+There are a few packages that PyXAI depends on that must be installed:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```console
+python3 -m pip install numpy
+python3 -m pip install wheel
+python3 -m pip install pandas
+python3 -m pip install termcolor
+python3 -m pip install shap
+python3 -m pip install wordfreq
+python3 -m pip install python-sat[pblib,aiger]
+python3 -m pip install xgboost
+python3 -m pip install lxml
+python3 -m pip install pycsp3
+python3 -m pip install matplotlib
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+To compile the c++ code (python C extensions):
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```console
+python3 setup.py install --user
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Of course, for this step, you need a C++ compiler.
 
-## License
-For open source projects, say how it is licensed.
+Unfortunately, the compiled C extensions are not take into account in a virtual environment, therefore you must type
+(we consider here that the virtual environment is in the 'env' directory and you are in the 'PyXAI' directory):
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```console
+cp build/lib.linux-x86_64-3.6/c_explainer.cpython-36m-x86_64-linux-gnu.so env/lib/python3.6/site-packages/.
+```
+
+This last command depend of your python version (here: 3.6).
+
+Finally, you can test an example:
+
+```console
+python3 examples/DT/BuilderOrchids.py 
+```
+
+## Using a Docker Image
+
+A docker container is available on Git ([https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)). 
+It launches a Jupyter notebook that supports all PyXAI features.
+
+Below is the code line to build the container:
+```
+docker build -t pyxai .
+```
+
+And run the container (we consider that the working directory is the current one):
+```
+docker run -it -p 8888:8888 -v $PWD:/data pyxai```
+```
+
+## Virtual Environment
+
+Create and activate a new virtual environment:
+
+```console
+sudo apt-get install python3.6-venv
+python3.6 -m venv env
+source env/bin/activate
+```
+
+Update pip:
+
+```console
+python3.6 -m pip install -U pip
+```
+
+With this new version of pip, it is possible that you have to clear the pip cache:
+
+```console
+python3 -m pip cache purge
+```
+
+Now you can do the "Installation from PyPi" or the "Installation (alternative) by Cloning from GitHub".
+
+Note that if you want install dependencies without internet connection, you can build a requirement.txt file:
+
+```console
+python3.6 -m pip freeze > requirements.txt 
+python3.6 -m pip download -r requirements.txt -d requirements-download/
+pip install -r requirements.txt --find-links=requirements-download --no-index
+```
+
+For deactivating the environment:
+
+```console
+deactivate
+```
