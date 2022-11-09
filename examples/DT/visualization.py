@@ -34,6 +34,7 @@ assert explainer.is_sufficient_reason(minimal), "This is not a sufficient reason
 
 sufficient_reasons_per_attribute = explainer.n_sufficient_reasons_per_attribute()
 print("\nsufficient_reasons_per_attribute:", sufficient_reasons_per_attribute)
+print("\nnumber of sufficient reasons:", explainer.n_sufficient_reasons())
 
 # Visualization part
 vizualisation = Tools.Vizualisation(28, 28, instance)
