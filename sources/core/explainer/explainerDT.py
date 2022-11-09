@@ -216,6 +216,7 @@ class ExplainerDT(Explainer):
 
         if self._excluded_features_are_necesssary(prime_implicant_cnf):
             self._elapsed_time = 0
+            self._n_sufficient_reasons = 0
             return None
 
         if len(prime_implicant_cnf.cnf) == 0:  # Special case where all in necessary
@@ -236,6 +237,9 @@ class ExplainerDT(Explainer):
         time_used += time.time()
 
         self._elapsed_time = Explainer.TIMEOUT if n_models[1] == -1 else time_used
+        if self._elapsed_time == Explainer.TIMEOUT:
+            self._n_sufficient_reasons = None
+            return {}
 
         n_necessary = n_models[0] if len(n_models) > 0 else 1
 
