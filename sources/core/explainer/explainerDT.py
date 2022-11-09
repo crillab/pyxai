@@ -30,6 +30,11 @@ class ExplainerDT(Explainer):
         return self._tree
 
 
+    def set_instance(self, instance):
+        super().set_instance(instance)
+        self._n_sufficient_reasons = None
+
+
     def _to_binary_representation(self, instance):
         return self._tree.instance_to_binaries(instance)
 
@@ -200,6 +205,11 @@ class ExplainerDT(Explainer):
         return self.preferred_sufficient_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
 
+    def n_sufficient_reasons(self, time_limit = None):
+        self.n_sufficient_reasons_per_attribute(time_limit=time_limit)
+        return self._n_sufficient_reasons
+
+
     def n_sufficient_reasons_per_attribute(self, *, time_limit=None):
         cnf = self._tree.to_CNF(self._instance)
         prime_implicant_cnf = CNFencoding.to_prime_implicant_CNF(cnf, self._binary_representation)
@@ -222,6 +232,7 @@ class ExplainerDT(Explainer):
 
         time_used = -time.time()
         n_models = compiler.solve(time_limit)
+        self._n_sufficient_reasons = n_models[0]
         time_used += time.time()
 
         self._elapsed_time = Explainer.TIMEOUT if n_models[1] == -1 else time_used
