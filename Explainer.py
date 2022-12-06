@@ -20,7 +20,7 @@ from pyxai.sources.core.explainer.explainerRF import ExplainerRF
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
-from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod
+from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod, Theory
 
 
 def decision_tree(model, instance=None):
@@ -83,3 +83,6 @@ WORD_FREQUENCY_LAYERS = PreferredReasonMethod.WordFrequencyLayers
 INCLUSION_PREFERRED = PreferredReasonMethod.InclusionPreferred
 
 TIMEOUT = Explainer.TIMEOUT
+
+ORDER = Theory.ORDER
+ORDER_NEW_VARIABLES = Theory.ORDER_NEW_VARIABLES

@@ -76,7 +76,7 @@ class RandomForest(TreeEnsembles):
         # atleast_clauses = [[l + ((1 if l > 0 else -1)*n_original_variables) for l in clause] for clause in atleast_clauses]
 
         # new_variables_atleast = [l for l in range(1+n_original_variables,1+n_original_variables+self.n_trees)]
-
+        print("to cnf prediction:", target_prediction)
         cnf.extend(atleast_clauses)
 
         # We secondly encode the trees
@@ -86,20 +86,30 @@ class RandomForest(TreeEnsembles):
             if tree_encoding == Encoding.COMPLEMENTARY:
                 clauses_for_l = current_tree.to_CNF(instance, target_prediction, format=False)
                 clauses_for_not_l = current_tree.to_CNF(instance, target_prediction, format=False, inverse_coding=True)
-                for clause in clauses_for_l:
-                    clause.append(-new_variable)
-                for clause in clauses_for_not_l:
-                    clause.append(new_variable)
+                if current_tree.root.is_leaf(): # special case when the tree is just a leaf value (clauses_for_l = [])
+                    clauses_for_l.append([new_variable] if current_tree.root.is_prediction(target_prediction) else [-new_variable])
+                else:
+                  for clause in clauses_for_l:
+                      clause.append(-new_variable)
+                  for clause in clauses_for_not_l:
+                      clause.append(new_variable)
                 cnf.extend(clauses_for_l + clauses_for_not_l)
             elif tree_encoding == Encoding.SIMPLE:
                 clauses_for_l = current_tree.to_CNF(instance, target_prediction, format=False)
-                for clause in clauses_for_l:
-                    clause.append(-new_variable)
+                if current_tree.root.is_leaf(): # special case when the tree is just a leaf value (clauses_for_l = [])
+                    clauses_for_l.append([new_variable] if current_tree.root.is_prediction(target_prediction) else [-new_variable])
+                else:
+                  for clause in clauses_for_l:
+                      clause.append(-new_variable)
                 cnf.extend(clauses_for_l)
             elif tree_encoding == Encoding.MUS:
                 clauses_for_l = current_tree.to_CNF(instance, target_prediction, format=False, inverse_coding=True)
-                for clause in clauses_for_l:
-                    clause.append(-new_variable)
+                if current_tree.root.is_leaf(): # special case when the tree is just a leaf value (clauses_for_l = [])
+                    clauses_for_l.append([-new_variable] if current_tree.root.is_prediction(target_prediction) else [new_variable])
+                else:
+                  for clause in clauses_for_l:
+                      clause.append(-new_variable)
+                print("clauses_for_l:",clauses_for_l)    
                 cnf.extend(clauses_for_l)
             else:
                 assert False, "Bad parameter for " + str(tree_encoding) + " !"
