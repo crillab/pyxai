@@ -182,3 +182,9 @@ class OperatorCondition(Enum):
 
     def __str__(self):
         return self.name
+
+class Theory(Enum):
+    ORDER, ORDER_NEW_VARIABLES = auto(2)
+
+    def __str__(self):
+        return self.name

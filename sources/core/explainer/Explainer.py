@@ -15,6 +15,7 @@ class Explainer:
         self._excluded_literals = []
         self._excluded_features = []
         self._instance = None
+        self._theory = None
 
 
     @property
@@ -63,6 +64,20 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
+    def set_theory(self, theory):
+        """
+        Add a theory in the resolution methods (at this time, only for contrastive explanations).
+        This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
+
+        @param theory (Explainer.ORDER | Explainer.IMPROVED_ORDER | Explainer.EQUAL): the theory selected.
+        """
+        self._theory = theory
+        
+    def unset_theory(self):
+        """
+        Unset the theory set with the set_theory method.
+        """
+        self._theory = None
 
     def set_excluded_features(self, excluded_features):
         """
@@ -100,7 +115,7 @@ class Explainer:
 
     def unset_specific_features(self):
         """
-        Unsets the features set with the set_excluded_features method.
+        Unset the features set with the set_excluded_features method.
         """
         self._excluded_literals = []
         self._excluded_features = []

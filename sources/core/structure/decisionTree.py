@@ -273,8 +273,8 @@ class DecisionTree(BinaryMapping):
         """
         Return a list of tuple representing the children of start_node
         """
-
         output = []
+        
         if node.left.is_leaf() or node.right.is_leaf():
             output.append(node)
         if not node.left.is_leaf():
@@ -331,6 +331,10 @@ class DecisionTree(BinaryMapping):
             target_prediction = self.predict_instance(instance)
         # Start to create the DNF according to the method TSEITIN or COMPLEMENTARY
         dnf = []
+        print("code_prediction:", code_prediction)
+        if self.root.is_leaf():
+            return []
+            
         for node in self.compute_nodes_with_leaves(self.root):
             if node.left.is_leaf() and \
                     ((code_prediction and node.left.is_prediction(target_prediction))

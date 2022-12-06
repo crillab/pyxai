@@ -4,8 +4,7 @@ import c_explainer
 import numpy
 
 from pyxai.sources.core.explainer.Explainer import Explainer
-from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod
-from pyxai.sources.core.structure.type import ReasonExpressivity
+from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod, Theory, ReasonExpressivity
 from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
@@ -116,14 +115,45 @@ class ExplainerRF(Explainer):
         first_call = True
         time_limit = 0 if time_limit is None else time_limit
         best_score = 0
-        tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0)
-        max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
-        MAXSATsolver = OPENWBOSolver()
-        for lit in self._binary_representation:
-            MAXSATsolver.add_soft_clause([lit], weight=1)
-        for clause in tree_cnf:
-            MAXSATsolver.add_hard_clause(clause)
+        tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0, tree_encoding=Encoding.SIMPLE)
 
+        print("tree_cnf:", tree_cnf)
+        max_id_binary_representation = CNFencoding.compute_max_id_variable(self._binary_representation)
+        print("max_id_binary_representation:", max_id_binary_representation)
+        
+        max_id_binary_cnf = CNFencoding.compute_max_id_variable(tree_cnf)
+        print("max_id_variable:", max_id_binary_cnf)
+        
+        MAXSATsolver = OPENWBOSolver()
+        
+        
+        if self._theory is None:
+            for lit in self._binary_representation:
+                MAXSATsolver.add_soft_clause([lit], weight=1)
+            for clause in tree_cnf:
+                MAXSATsolver.add_hard_clause(clause)
+        else:
+            # Hard clauses
+            for clause in tree_cnf:
+                MAXSATsolver.add_hard_clause(clause)
+            theory_cnf, theory_new_variables = self._random_forest.get_theory(self._binary_representation, self._theory, max_id_binary_cnf)
+            for clause in theory_cnf:
+                MAXSATsolver.add_hard_clause(clause)
+            
+            # Soft clauses
+            new_variables = [new_variable for new_variable, _ in theory_new_variables]
+            all_associated_literals = [associated_literal for _, associated_literals in theory_new_variables for associated_literal in associated_literals]
+            for lit in self._binary_representation:
+                if lit not in all_associated_literals:
+                    MAXSATsolver.add_soft_clause([lit], weight=1)
+            for new_variables,_ in theory_new_variables:
+                MAXSATsolver.add_soft_clause([new_variables], weight=1)
+        
+        soft = [a for l in MAXSATsolver.WCNF.soft for a in l]
+        
+        print("hard:", MAXSATsolver.WCNF.hard)
+        print("soft:", soft)
+        
         # Remove excluded features
         for lit in self._excluded_literals:
             MAXSATsolver.add_hard_clause([lit])
@@ -139,17 +169,44 @@ class ExplainerRF(Explainer):
                 break
             # We have to invert the reason :)
             true_reason = [-lit for lit in reason if -lit in self._binary_representation]
-            MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_variable])
+            
+            # Add a blocking clause to avoid this reason in the next steps
+            MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_binary_representation])
+
+            print("true_reason:", true_reason)
 
             # Compute the score
-            score = len(true_reason)
+            if self._theory is None:
+              score = len(true_reason)
+            elif self._theory == Theory.ORDER_NEW_VARIABLES:
+              score = 0
+              for lit in reason:
+                if -lit in soft:
+                  map_variable_to_literals = [t for t in theory_new_variables if t[0] == abs(lit)]
+                  if len(map_variable_to_literals) != 0:
+                    score_new_variable = 0
+                    map_variable_to_literals = map_variable_to_literals[0]
+                    for lit in map_variable_to_literals[1]:
+                      if lit in true_reason:
+                        score_new_variable+=1
+                    score += score_new_variable/len(map_variable_to_literals[1])
+                  else:
+                    score += 1 
+              # Before, it is: score = len([_ for lit in reason if -lit in soft])
+            else:
+              raise NotImplementedError("The theory " + str(self._theory) + " is not implemented here.")
+            print("score:", score)
+            # Stop or not due to score :)
             if first_call:
                 best_score = score
-            elif score != best_score:
+            elif score > best_score:
                 break
             first_call = False
 
+            # Add this contrastive
             results.append(true_reason)
+
+            # Stop or not due to time or n :)
             if (time_limit != 0 and time_used > time_limit) or len(results) == n:
                 break
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT

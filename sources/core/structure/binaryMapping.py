@@ -1,24 +1,99 @@
-from pyxai.sources.core.structure.type import OperatorCondition
+from pyxai.sources.core.structure.type import OperatorCondition, Theory
 from pyxai.sources.core.tools.encoding import CNFencoding
-
 
 class BinaryMapping():
 
     def __init__(self, map_id_binaries_to_features, map_features_to_id_binaries, learner_information):
         self.map_id_binaries_to_features = map_id_binaries_to_features
         self.map_features_to_id_binaries = map_features_to_id_binaries
+        self.map_numerical_features = {} #dict[id_feature] -> [id_binaries of the feature]
+        self.map_categorical_features = {} #dict[id_feature] -> [id_binaries of the feature]
         self.learner_information = learner_information
-
 
     @property
     def accuracy(self):
         return self.learner_information.accuracy
 
-
     @property
     def features_name(self):
         return self.learner_information.feature_names
 
+    @property
+    def numerical_features(self):
+        return self.map_numerical_features
+
+    @property
+    def categorical_features(self):
+        return self.map_categorical_features
+    
+    def add_numerical_feature(self, id_feature):
+        if id_feature in self.map_numerical_features:
+          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
+        if id_feature in self.map_categorical_features:
+          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical.")
+        
+        id_binaries_of_the_feature = []
+        for key in self.map_features_to_id_binaries.keys():
+          if key[0] == id_feature:
+            id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+
+        self.map_numerical_features[id_feature] = id_binaries_of_the_feature
+
+    def add_categorical_feature(self, id_feature):
+        if id_feature in self.map_numerical_features:
+          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
+        if id_feature in self.map_categorical_features:
+          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical.")
+        
+        id_binaries_of_the_feature = []
+        for key in self.map_features_to_id_binaries.keys():
+          if key[0] == id_feature:
+            id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+
+        self.map_categorical_features[id_feature] = id_binaries_of_the_feature
+
+    def get_theory(self, binary_representation, theory, max_id_binary_cnf):
+        clauses = []
+        new_variables = []
+        id_new_var = max_id_binary_cnf
+        if theory == Theory.ORDER or theory == Theory.ORDER_NEW_VARIABLES:
+            # The > and >= operators
+            for key in self.map_numerical_features.keys():
+                id_binaries = self.map_numerical_features[key]
+                conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.GE or self.map_id_binaries_to_features[id][1] == OperatorCondition.GT]
+                conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
+                for i, condition in enumerate(conditions):
+                    if i < len(conditions)-1:
+                        # we code a => b that is equivalent to not a or b (material implication)
+                        a = condition[3]
+                        b = conditions[i+1][3]
+                        clauses.append((-a, b))
+                if theory == Theory.ORDER_NEW_VARIABLES:
+                    id_new_var = id_new_var + 1
+                    associated_literals = []
+                    for condition in conditions:
+                        # we code not id_new_var or condition
+                        id_binary = condition[3]
+                        sign = 1 if id_binary in binary_representation else -1
+                        clauses.append((-id_new_var, sign*condition[3]))
+                        associated_literals.append(sign*condition[3])
+                    new_variables.append((id_new_var, associated_literals))
+            # The == and != operators: 1 == 10 => 1 > 5 (not possible), 1 == 20 => 1 != 30 ? (possible) 
+            for key in self.map_categorical_features.keys():  
+                id_binaries = self.map_categorical_features[key]
+                conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.EQ]
+                print("id_binaries:", id_binaries)
+                print("conditions:", conditions)
+                for i, condition_1 in enumerate(conditions):
+                    for j, condition_2 in enumerate(conditions):
+                        if i != j:
+                            # we code a => not b that is equivalent to not a or not b (material implication)
+                            a = condition_1[3]
+                            b = condition_2[3]
+                            clauses.append((-a, -b))
+
+        # The < and <= operators ? (not possible with xgboost but possible in the builder ...)
+        return clauses, new_variables
 
     def compute_id_binaries(self):
         assert False, "Have to be implemented in a child class."
@@ -172,15 +247,17 @@ class BinaryMapping():
             else:
                 no_done.append(lit)
         # Copy the new implicant without these redundant features
+
+        # Replace min(negative[(idx, operator)]))][0] by max(negative[(idx, operator)]))][0], to check !
         if not isinstance(binary_representation, dict):
             output = [self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]))][0] for (idx, operator) in positive.keys()]
-            output += [-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
+            output += [-self.map_features_to_id_binaries[(idx, operator, max(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
             output += no_done
             return tuple(output)
-
+        
         output = [(self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]))][0], positive_weights[(idx, operator)]) for
                   (idx, operator) in positive.keys()]
-        output += [(-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
+        output += [(-self.map_features_to_id_binaries[(idx, operator, max(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
                    (idx, operator) in negative.keys()]
         output += no_done
         output = {t[0]: t[1] for t in output}  # To dict
