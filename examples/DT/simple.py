@@ -3,11 +3,8 @@ import sys
 from pyxai import Learning, Explainer, Tools
 
 # Machine learning part
-
-
-# usage
-# python3 pyxai/examples/DT/Simple.py -dataset=path/to/dataset.csv
 learner = Learning.Scikitlearn(Tools.Options.dataset)
+
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
 instance, prediction = learner.get_instances(model, n=1, correct=True)
 

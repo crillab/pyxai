@@ -251,13 +251,13 @@ class BinaryMapping():
         # Replace min(negative[(idx, operator)]))][0] by max(negative[(idx, operator)]))][0], to check !
         if not isinstance(binary_representation, dict):
             output = [self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]))][0] for (idx, operator) in positive.keys()]
-            output += [-self.map_features_to_id_binaries[(idx, operator, max(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
+            output += [-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
             output += no_done
             return tuple(output)
         
         output = [(self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]))][0], positive_weights[(idx, operator)]) for
                   (idx, operator) in positive.keys()]
-        output += [(-self.map_features_to_id_binaries[(idx, operator, max(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
+        output += [(-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
                    (idx, operator) in negative.keys()]
         output += no_done
         output = {t[0]: t[1] for t in output}  # To dict

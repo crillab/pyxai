@@ -199,7 +199,7 @@ class ExplainerRF(Explainer):
             # Stop or not due to score :)
             if first_call:
                 best_score = score
-            elif score > best_score:
+            elif score != best_score:
                 break
             first_call = False
 
