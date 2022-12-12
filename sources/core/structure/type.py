@@ -188,3 +188,10 @@ class Theory(Enum):
 
     def __str__(self):
         return self.name
+
+
+class TypeFeature(Enum):
+    NUMERICAL, CATEGORICAL = auto(2)
+
+    def __str__(self):
+        return self.name

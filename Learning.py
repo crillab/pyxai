@@ -1,11 +1,13 @@
 import json
 from operator import index
 
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature
 from pyxai.sources.learning.Learner import LearnerInformation, Learner
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost
+from pyxai.sources.learning.converter import Converter
+
 
 HOLD_OUT = EvaluationMethod.HoldOut
 LEAVE_ONE_GROUP_OUT = EvaluationMethod.LeaveOneGroupOut
@@ -23,6 +25,9 @@ ALL = Indexes.All
 
 RAW_DATA = SaveFormat.RawData
 SOLVER_SPECIFIC = SaveFormat.SolverSpecific
+
+NUMERICAL = TypeFeature.NUMERICAL
+CATEGORICAL = TypeFeature.CATEGORICAL
 
 
 def load(models_directory):
