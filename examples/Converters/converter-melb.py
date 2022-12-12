@@ -6,7 +6,6 @@ from pyxai import Learning, Explainer, Tools
 import datetime
 
 # Machine learning part
-
 # NUMERICAL: with an order (Ordinal Encoding) 
 # CATEGORICAL: without an order 
 
@@ -32,11 +31,9 @@ converter.set_numerical_features({
   })
 
 #print(converter.get_types())
-
 converter.process()
 
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
 converter.export(dataset_name+".csv")
 
-
-#learner = Learning.Scikitlearn(converter.data, type="type.csv")
+learner = Learning.Xgboost(dataset_name+".csv", types=dataset_name+".types")
