@@ -167,7 +167,7 @@ class TypeStatus(Enum):
     def __str__(self):
         return self.name
 
-
+@unique
 class OperatorCondition(Enum):
     EQ, NEQ, LT, LE, GT, GE = auto(6)
 
@@ -183,15 +183,24 @@ class OperatorCondition(Enum):
     def __str__(self):
         return self.name
 
+@unique
 class Theory(Enum):
     ORDER, ORDER_NEW_VARIABLES = auto(2)
 
     def __str__(self):
         return self.name
 
-
+@unique
 class TypeFeature(Enum):
     NUMERICAL, CATEGORICAL = auto(2)
 
     def __str__(self):
         return self.name
+
+    def from_str(str):
+        if str == "CATEGORICAL":
+            return TypeFeature.CATEGORICAL
+        elif str == "NUMERICAL":
+            return TypeFeature.NUMERICAL
+        else:
+            assert False, "No TypeFeature for this string !"

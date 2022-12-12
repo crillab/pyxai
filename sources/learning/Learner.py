@@ -14,7 +14,7 @@ from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, TypeFeature
 from pyxai.sources.core.tools.utils import flatten, compute_accuracy
 
 
@@ -60,7 +60,7 @@ class Learner:
     """
 
 
-    def __init__(self, data=NoneData):
+    def __init__(self, data=NoneData, types=None):
         self.dict_labels = None
         self.data = None
         self.labels = None
@@ -69,12 +69,31 @@ class Learner:
         self.dataset_name = None
         self.n_instances = None
         self.feature_names = None
+        self.n_categorical = None
+        self.n_numerical = None
         self.learner_information = []
+        
+        
         data, name = self.parse_data(data)
-        if data is not None:
-            self.load_data(data, name)
+        if data is not None: self.load_data(data, name)
+        self.dict_types, self.types = self.parse_types(types)
 
-
+    def parse_types(self, types):
+        if types is None:
+            return None, None
+        # recuperate map
+        f = open(types)
+        dict_types = json.loads(json.load(f))
+        f.close()
+        types = [TypeFeature.from_str(dict_types[feature]["type:"]) for feature in self.feature_names]
+        self.n_numerical = len([None for c in types if c == TypeFeature.NUMERICAL])
+        self.n_categorical = len([None for c in types if c == TypeFeature.CATEGORICAL])
+        
+        Tools.verbose("nNumerical:", self.n_numerical)
+        Tools.verbose("nCategorical:", self.n_categorical)
+        
+        return dict_types, types
+        
     def parse_data(self, data=NoneData, skip=None, n=None):
         if data is NoneData:
             return None, None

@@ -12,8 +12,8 @@ from pyxai.sources.learning.Learner import Learner, NoneData
 
 
 class Scikitlearn(Learner):
-    def __init__(self, data=NoneData):
-        super().__init__(data)
+    def __init__(self, data=NoneData, types=None):
+        super().__init__(data, types)
 
 
     def get_solver_name(self):
