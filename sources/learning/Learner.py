@@ -73,11 +73,19 @@ class Learner:
         self.n_numerical = None
         self.learner_information = []
         
-        
-        data, name = self.parse_data(data)
-        if data is not None: self.load_data(data, name)
         self.dict_types, self.types = self.parse_types(types)
-
+      
+        data, name = self.parse_data(data)
+        if data is not None: 
+            self.load_data(data, name)
+            for i in range(self.n_features-1):
+                print("self.data[i]", self.data[:, i].dtype)
+        
+        
+    def load_types(self):
+        for i, t in enumerate(self.types):
+            self.data[self.feature_names[i]].astype("category")
+      
     def parse_types(self, types):
         if types is None:
             return None, None
@@ -85,7 +93,7 @@ class Learner:
         f = open(types)
         dict_types = json.loads(json.load(f))
         f.close()
-        types = [TypeFeature.from_str(dict_types[feature]["type:"]) for feature in self.feature_names]
+        types = [TypeFeature.from_str(dict_types[feature]["type:"]) for feature in dict_types.keys()]
         self.n_numerical = len([None for c in types if c == TypeFeature.NUMERICAL])
         self.n_categorical = len([None for c in types if c == TypeFeature.CATEGORICAL])
         
@@ -167,6 +175,8 @@ class Learner:
         Tools.verbose(self.data)
         self.n_instances, self.n_features = self.data.shape
         self.feature_names = self.data.columns.values.tolist()
+
+        if self.types is not None: self.load_types()
 
         self.rename_attributes(self.data)
 
@@ -277,6 +287,9 @@ class Learner:
         for i, result in enumerate(result_output):
             Tools.verbose("For the evaluation number " + str(i) + ":")
             Tools.verbose(result)
+
+        # Add the type of features
+        
         return result_output if len(result_output) != 1 else result_output[0]
 
 

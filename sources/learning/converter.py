@@ -1,5 +1,5 @@
 from pyxai.sources.learning.Learner import Learner
-from pyxai.sources.core.structure.type import TypeFeature
+from pyxai.sources.core.structure.type import TypeFeature, TypeLearner
 from pyxai import Tools
 
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
@@ -7,7 +7,7 @@ from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
 import numpy
 import json
 class Converter:
-    def __init__(self, dataset):
+    def __init__(self, dataset, target_feature, n_classes=2):
         learner = Learner()
         self.data, self.file = learner.parse_data(data=dataset)
         self.n_instances, self.n_features = self.data.shape
@@ -15,7 +15,38 @@ class Converter:
         self.dict_converters_numerical = None
         self.encoder = [None]*self.n_features
         self.original_types = [str(self.data[feature].dtype) for feature in self.features_name()]
-    
+        self.target_feature = None
+
+        # switch two feature to put the target_feature at the end
+        self.set_target_feature(target_feature)
+        features_name = list(self.features_name())
+        target_features_name = features_name[self.target_feature]
+        features_name[self.target_feature] = features_name[-1]
+        features_name[-1] = target_features_name
+        self.data=self.data[features_name]
+        
+        if self.data[target_features_name].nunique() > 2:
+            value_to_keep = self.data[target_features_name][0]
+            for value in self.data[target_features_name].unique():
+                if value == value_to_keep:
+                    self.data[target_features_name] = self.data[target_features_name].replace(value,1)
+                else:
+                    self.data[target_features_name] = self.data[target_features_name].replace(value,0)
+                  
+        #while self.data[target_features_name].nunique() > 2:
+        #    value_to_remove = self.data[target_features_name][0]
+        #    print("The number of classes is reduced by removing some instance with the label " + str#(value_to_remove) + ".")            
+        #    self.data.drop(self.data[self.data[target_features_name] == value_to_remove].index, inplace = True)
+
+        
+    def set_target_feature(self, feature):
+        features_name = self.features_name()
+        if feature in features_name: 
+            self.features_type[features_name.index(feature)] = TypeFeature.CATEGORICAL
+            self.target_feature = features_name.index(feature)
+        else:
+            raise ValueError("The feature called '" + feature + "' is not in the dataset.")
+
     def set_default_type(self, type):
         self.features_type = [type]*self.n_features
 
@@ -64,7 +95,11 @@ class Converter:
         #Save the global variable
         self.dict_converters_numerical = dict_converters
 
+    
+
+
     def process(self):
+      
       features_name = self.features_name()
       if None in self.features_type:
           no_type = [element for i,element in enumerate(features_name) if self.features_type[i] is None] 
@@ -97,6 +132,9 @@ class Converter:
       #Remove the NaN value in numerical features:
       features_to_encode = [features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL]
       self.data[features_to_encode] = self.data[features_to_encode].interpolate(method='linear').fillna(method="bfill")     
+
+      
+
       return self.data
 
     def export(self, filename):

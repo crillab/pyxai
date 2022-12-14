@@ -9,7 +9,7 @@ import datetime
 # NUMERICAL: with an order (Ordinal Encoding) 
 # CATEGORICAL: without an order 
 
-converter = Learning.Converter(Tools.Options.dataset) # class Converter
+converter = Learning.Converter(Tools.Options.dataset, target_feature="Type") # class Converter
 
 converter.set_categorical_features(columns_name=["Suburb", "Address", "Type", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
 
@@ -36,4 +36,10 @@ converter.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
 converter.export(dataset_name+".csv")
 
-learner = Learning.Xgboost(dataset_name+".csv", types=dataset_name+".types")
+
+learner = Learning.Scikitlearn(dataset_name+".csv", types=dataset_name+".types")
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
+instance, prediction = learner.get_instances(model=model, n=1, correct=False)
+
+
+explainer = Explainer.initialize(model, instance=instance)

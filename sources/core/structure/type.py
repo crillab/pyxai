@@ -204,3 +204,10 @@ class TypeFeature(Enum):
             return TypeFeature.NUMERICAL
         else:
             assert False, "No TypeFeature for this string !"
+
+@unique
+class TypeLearner(Enum):
+    CLASSIFICATION, REGRESSION = auto(2)
+
+    def __str__(self):
+        return self.name
