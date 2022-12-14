@@ -72,12 +72,17 @@ class Xgboost(Learner):
         xgb_JSON = self.xgboost_BT_to_JSON(xgb_BT)
         decision_trees = []
         target_class = 0
-        for _, tree_JSON in enumerate(xgb_JSON):
+        for i, tree_JSON in enumerate(xgb_JSON):
             tree_JSON = json.loads(tree_JSON)
+            if i == 99:
+                print("tree_JSON:", tree_JSON)
+        
             root = self.recuperate_nodes(tree_JSON)
+            
             decision_trees.append(DecisionTree(self.n_features, root, target_class=[target_class], id_solver_results=id_solver_results))
             if self.n_labels > 2:  # Special case for a 2-classes prediction !
                 target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
+            
         return decision_trees
 
 
