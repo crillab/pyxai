@@ -11,9 +11,7 @@ import datetime
 
 converter = Learning.Converter(Tools.Options.dataset, target_feature="Type", classification_type=Learning.BINARY_CLASS) # class Converter
 
-print(converter.data)
-exit(0)
-converter.set_categorical_features(columns_name=["Suburb", "Address", "Type", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
+converter.set_categorical_features(columns_name=["Suburb", "Address", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
 
 #datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
 converter.set_numerical_features({
@@ -36,12 +34,14 @@ converter.set_numerical_features({
 converter.process()
 
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name+".csv")
+converter.export(dataset_name)
 
+print(converter.data)
+exit(0)
 
 learner = Learning.Scikitlearn(dataset_name+".csv", types=dataset_name+".types")
+
+
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(model=model, n=1, correct=False)
-
-
 explainer = Explainer.initialize(model, instance=instance)
