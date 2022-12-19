@@ -1,7 +1,7 @@
 import json
 from operator import index
 
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification
 from pyxai.sources.learning.Learner import LearnerInformation, Learner
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
@@ -28,6 +28,13 @@ SOLVER_SPECIFIC = SaveFormat.SolverSpecific
 
 NUMERICAL = TypeFeature.NUMERICAL
 CATEGORICAL = TypeFeature.CATEGORICAL
+
+BINARY_CLASS = TypeClassification.BinaryClass
+MULTI_CLASS = TypeClassification.MultiClass
+
+ONE_VS_REST = MethodToBinaryClassification.OneVsRest
+ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
+
 
 
 def load(models_directory):

@@ -192,7 +192,7 @@ class Theory(Enum):
 
 @unique
 class TypeFeature(Enum):
-    NUMERICAL, CATEGORICAL = auto(2)
+    NUMERICAL, CATEGORICAL, TARGET = auto(3)
 
     def __str__(self):
         return self.name
@@ -202,12 +202,29 @@ class TypeFeature(Enum):
             return TypeFeature.CATEGORICAL
         elif str == "NUMERICAL":
             return TypeFeature.NUMERICAL
+        elif str == "TARGET":
+            return TypeFeature.TARGET
         else:
             assert False, "No TypeFeature for this string !"
 
 @unique
 class TypeLearner(Enum):
-    CLASSIFICATION, REGRESSION = auto(2)
+    Classification, Regression = auto(2)
+
+    def __str__(self):
+        return self.name
+
+
+@unique
+class TypeClassification(Enum):
+    BinaryClass, MultiClass = auto(2)
+
+    def __str__(self):
+        return self.name
+
+@unique
+class MethodToBinaryClassification(Enum):
+    OneVsRest, OneVsOne = auto(2)
 
     def __str__(self):
         return self.name
