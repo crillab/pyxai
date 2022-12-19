@@ -1,5 +1,5 @@
 from pyxai.sources.learning.Learner import Learner
-from pyxai.sources.core.structure.type import TypeFeature, TypeLearner
+from pyxai.sources.core.structure.type import TypeFeature, TypeLearner, TypeClassification, MethodToBinaryClassification
 from pyxai import Tools
 
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
@@ -7,31 +7,28 @@ from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
 import numpy
 import json
 class Converter:
-    def __init__(self, dataset, target_feature, n_classes=2):
+    def __init__(self, dataset, target_feature, classification_type, to_binary_classification=MethodToBinaryClassification.OneVsRest):
         learner = Learner()
         self.data, self.file = learner.parse_data(data=dataset)
         self.n_instances, self.n_features = self.data.shape
+        self.features_name = list(self.data.columns)
         self.features_type = [None]*self.n_features
         self.dict_converters_numerical = None
         self.encoder = [None]*self.n_features
-        self.original_types = [str(self.data[feature].dtype) for feature in self.features_name()]
-        self.target_feature = None
+        self.original_types = [str(self.data[feature].dtype) for feature in self.features_name]
 
-        # switch two feature to put the target_feature at the end
-        self.set_target_feature(target_feature)
-        features_name = list(self.features_name())
-        target_features_name = features_name[self.target_feature]
-        features_name[self.target_feature] = features_name[-1]
-        features_name[-1] = target_features_name
-        self.data=self.data[features_name]
+        self.target_feature = self.set_target_feature(target_feature)
+        self.process_target_feature()
+
+        print("self.original_types:", self.original_types)
         
-        if self.data[target_features_name].nunique() > 2:
-            value_to_keep = self.data[target_features_name][0]
-            for value in self.data[target_features_name].unique():
-                if value == value_to_keep:
-                    self.data[target_features_name] = self.data[target_features_name].replace(value,1)
-                else:
-                    self.data[target_features_name] = self.data[target_features_name].replace(value,0)
+        #if self.data[target_features_name].nunique() > 2:
+        #    value_to_keep = self.data[target_features_name][0]
+        #    for value in self.data[target_features_name].unique():
+        #        if value == value_to_keep:
+        #            self.data[target_features_name] = self.data[target_features_name].replace(value,1)
+        #        else:
+        #            self.data[target_features_name] = self.data[target_features_name].replace(value,0)
                   
         #while self.data[target_features_name].nunique() > 2:
         #    value_to_remove = self.data[target_features_name][0]
@@ -40,12 +37,29 @@ class Converter:
 
         
     def set_target_feature(self, feature):
-        features_name = self.features_name()
-        if feature in features_name: 
-            self.features_type[features_name.index(feature)] = TypeFeature.CATEGORICAL
-            self.target_feature = features_name.index(feature)
+        if feature in self.features_name: 
+            self.features_type[self.features_name.index(feature)] = TypeFeature.TARGET
+            return self.features_name.index(feature)
         else:
             raise ValueError("The feature called '" + feature + "' is not in the dataset.")
+    
+     
+    def process_target_feature(self):
+        # Switch two feature to put the target_feature at the end
+        target_features_name = self.features_name[self.target_feature]
+        self.features_name[self.target_feature] = self.features_name[-1]
+        self.features_name[-1] = target_features_name
+        self.data=self.data[self.features_name]
+        tmp = self.original_types[]
+
+
+        # Remove instance where the target feature is NaN
+        self.data=self.data.dropna(subset=[target_features_name])
+        
+        # Use the label encoder to encode this feature 
+        encoder = LabelEncoder()
+        self.data[target_features_name] = encoder.fit_transform(self.data[target_features_name])
+        self.label_encoder_classes = encoder.classes_
 
     def set_default_type(self, type):
         self.features_type = [type]*self.n_features
@@ -53,30 +67,25 @@ class Converter:
     def get_types(self):
         return self.features_type
 
-    def features_name(self):
-        return tuple(self.data.columns)
-
     def set_categorical_features(self, columns_id=None, columns_name=None):
         if columns_id is not None:
             for id in columns_id:
                 self.features_type[id] = TypeFeature.CATEGORICAL
         if columns_name is not None:
-            features_name = self.features_name()
             for name in columns_name:
-                if name in features_name: 
-                    self.features_type[features_name.index(name)] = TypeFeature.CATEGORICAL
+                if name in self.features_name: 
+                    self.features_type[self.features_name.index(name)] = TypeFeature.CATEGORICAL
                 else:
                     raise ValueError("The feature called '" + name + "' is not in the dataset.")
 
 
     def set_numerical_features(self, dict_converters):
-        features_name = self.features_name()
         #Convert the integer keys into string features
         new_dict_converters = dict() 
         for element in dict_converters.keys():
             if isinstance(element, str):
-                if element in features_name: 
-                    new_dict_converters[features_name.index(element)] = dict_converters[element]
+                if element in self.features_name: 
+                    new_dict_converters[self.features_name.index(element)] = dict_converters[element]
                 else:
                     raise ValueError("The feature called '" + element + "' is not in the dataset.")
             elif isinstance(element, int):
@@ -100,14 +109,13 @@ class Converter:
 
     def process(self):
       
-      features_name = self.features_name()
       if None in self.features_type:
-          no_type = [element for i,element in enumerate(features_name) if self.features_type[i] is None] 
+          no_type = [element for i,element in enumerate(self.features_name) if self.features_type[i] is None] 
           raise ValueError("The follow features have no type (please set a type):" + str(no_type))
       
       #process categorical features
       encoder = OrdinalEncoder(dtype=numpy.int)
-      features_to_encode = [features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.CATEGORICAL]
+      features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.CATEGORICAL]
       data_categorical = self.data[features_to_encode]      
       #Create a category NaN for missing value in categorical features
       data_categorical = data_categorical.fillna("NaN")
@@ -117,7 +125,7 @@ class Converter:
               self.encoder[i] = "OrdinalEncoder"
 
       #process numerical features
-      features_to_encode = [features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL and self.dict_converters_numerical[i] is not None]
+      features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL and self.dict_converters_numerical[i] is not None]
       converters_to_encode = [self.dict_converters_numerical[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL and self.dict_converters_numerical[i] is not None]
       for i, feature in enumerate(features_to_encode):
           self.data[feature] = self.data[feature].apply(converters_to_encode[i])      
@@ -130,11 +138,10 @@ class Converter:
                   self.encoder[i] = "None"
 
       #Remove the NaN value in numerical features:
-      features_to_encode = [features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL]
+      features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL]
       self.data[features_to_encode] = self.data[features_to_encode].interpolate(method='linear').fillna(method="bfill")     
 
-      
-
+    
       return self.data
 
     def export(self, filename):
@@ -150,8 +157,7 @@ class Converter:
       
       # the JSON file representing the types of features
       data_type = dict()
-      features_name = self.features_name()
-      for i, feature in enumerate(features_name):
+      for i, feature in enumerate(self.features_name):
           new_dict = dict()
           new_dict["type:"] = str(self.features_type[i])
           new_dict["encoder:"] = self.encoder[i]

@@ -9,8 +9,10 @@ import datetime
 # NUMERICAL: with an order (Ordinal Encoding) 
 # CATEGORICAL: without an order 
 
-converter = Learning.Converter(Tools.Options.dataset, target_feature="Type") # class Converter
+converter = Learning.Converter(Tools.Options.dataset, target_feature="Type", classification_type=Learning.BINARY_CLASS) # class Converter
 
+print(converter.data)
+exit(0)
 converter.set_categorical_features(columns_name=["Suburb", "Address", "Type", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
 
 #datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
