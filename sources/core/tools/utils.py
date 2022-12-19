@@ -22,6 +22,9 @@ class Stopwatch:
             self.initial_time = time()
         return "{:.2f}".format(elapsed_time)
 
+def switch_list(l, i1, i2):
+    l[i1], l[i2] = l[i2], l[i1]
+    return l
 
 def flatten(lit):
     return reduce(iconcat, lit, [])
