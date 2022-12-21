@@ -172,18 +172,37 @@ class Converter:
               for v1 in unique_values:
                   data = self.data.copy(deep=True)
                   others = [int(v2) for v2 in unique_values if v2 != v1]
-                  self.convert_labels.append({0: others, 1:[int(v1)]})
 
+                  #Save the encoding
+                  self.convert_labels.append({"Method":str(self.to_binary_classification), 0: others, 1:[int(v1)]})
+
+                  #First replaces
                   data[self.target_features_name] = data[self.target_features_name].replace(v1,new_value_true)
                   for other in others:
                       data[self.target_features_name] = data[self.target_features_name].replace(other,new_value_false)
 
+                  #Replace with 0 and 1
                   data[self.target_features_name] = data[self.target_features_name].replace(new_value_true, 1)
                   data[self.target_features_name] = data[self.target_features_name].replace(new_value_false, 0)
                   self.results.append(data)
               return self.results
-          elif self.to_binary_classification == MethodToBinaryClassification.OneVsOne:            
-              raise NotImplementedError()
+          elif self.to_binary_classification == MethodToBinaryClassification.OneVsOne:  
+              unique_values = self.data[self.target_features_name].unique()
+              for v1 in unique_values: 
+                  for v2 in unique_values:
+                      if v1 != v2:
+                          data = self.data.copy(deep=True)
+                          others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v1]
+                          #Save the encoding
+                          self.convert_labels.append({"Method":str(self.to_binary_classification), 0: [int(v2)], 1:[int(v1)]})
+                          #delete others
+                          for other in others:
+                              data.drop(data[data[self.target_features_name] == other].index, inplace = True)
+                          #replace
+                          data[self.target_features_name] = data[self.target_features_name].replace(v1, 1)
+                          data[self.target_features_name] = data[self.target_features_name].replace(v2, 0)
+                          self.results.append(data)
+              return self.results
           else:
               raise NotImplementedError()
 

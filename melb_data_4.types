@@ -111,10 +111,10 @@
     "binary_conversion:": {
       "Method": "OneVsOne",
       "0": [
-        2
+        0
       ],
       "1": [
-        0
+        1
       ]
     }
   }
