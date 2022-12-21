@@ -1,12 +1,18 @@
 {
   "Suburb": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "Address": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "Rooms": {
@@ -26,12 +32,18 @@
   },
   "Method": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "SellerG": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "Date": {
@@ -46,7 +58,10 @@
   },
   "Postcode": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "float64"
   },
   "Bedroom2": {
@@ -81,7 +96,10 @@
   },
   "CouncilArea": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "Lattitude": {
@@ -96,7 +114,10 @@
   },
   "Regionname": {
     "type:": "CATEGORICAL",
-    "encoder:": "OrdinalEncoder",
+    "encoder:": "OneHotEncoder",
+    "original_features:": [
+      "None"
+    ],
     "original_type:": "object"
   },
   "Type": {

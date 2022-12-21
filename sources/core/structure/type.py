@@ -228,3 +228,18 @@ class MethodToBinaryClassification(Enum):
 
     def __str__(self):
         return self.name
+
+@unique
+class TypeEncoder(Enum):
+    OrdinalEncoder, OneHotEncoder = auto(2)
+
+    def __str__(self):
+        return self.name
+    
+    def from_str(str):
+        if str == "OrdinalEncoder":
+            return TypeEncoder.OrdinalEncoder
+        elif str == "OneHotEncoder":
+            return TypeEncoder.OneHotEncoder
+        else:
+            assert False, "No TypeEncoder for this string !"

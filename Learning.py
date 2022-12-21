@@ -1,7 +1,7 @@
 import json
 from operator import index
 
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder
 from pyxai.sources.learning.Learner import LearnerInformation, Learner
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
@@ -35,7 +35,8 @@ MULTI_CLASS = TypeClassification.MultiClass
 ONE_VS_REST = MethodToBinaryClassification.OneVsRest
 ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
 
-
+ORDINAL = TypeEncoder.OrdinalEncoder
+ONE_HOT = TypeEncoder.OneHotEncoder
 
 def load(models_directory):
     learner = Learner()
