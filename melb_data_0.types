@@ -109,9 +109,9 @@
       "u"
     ],
     "binary_conversion:": {
+      "Method": "OneVsOne",
       "0": [
-        2,
-        1
+        2
       ],
       "1": [
         0

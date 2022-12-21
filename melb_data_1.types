@@ -109,12 +109,12 @@
       "u"
     ],
     "binary_conversion:": {
+      "Method": "OneVsOne",
       "0": [
-        0,
         1
       ],
       "1": [
-        2
+        0
       ]
     }
   }

@@ -9,14 +9,14 @@ import datetime
 # NUMERICAL: with an order (Ordinal Encoding) 
 # CATEGORICAL: without an order 
 
-converter = Learning.Converter(Tools.Options.dataset, target_feature="Type", classification_type=Learning.BINARY_CLASS) # class Converter
+converter = Learning.Converter(Tools.Options.dataset, target_feature="Type", classification_type=Learning.BINARY_CLASS, to_binary_classification=Learning.ONE_VS_ONE) # class Converter
 
 converter.set_categorical_features(columns_name=["Suburb", "Address", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
 
 #datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
 converter.set_numerical_features({
-  "Rooms":None, 
-  "Price":None,
+  "Rooms": None, 
+  "Price": None,
   "Date": lambda d: datetime.date(int(d.split("/")[2]), int(d.split("/")[1]), int(d.split("/")[0])).toordinal(), 
   "Distance": None,
   "Bedroom2": None,
