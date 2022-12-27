@@ -11,7 +11,9 @@ import datetime
 
 converter = Learning.Converter(Tools.Options.dataset, target_feature="Type", classification_type=Learning.BINARY_CLASS, to_binary_classification=Learning.ONE_VS_ONE) # class Converter
 
-converter.set_categorical_features(columns=["Suburb", "Address", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
+converter.unset_features(["Address"])
+
+converter.set_categorical_features(columns=["Suburb", "Method", "SellerG", "Postcode", "CouncilArea", "Regionname"])
 
 #datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
 converter.set_numerical_features({
