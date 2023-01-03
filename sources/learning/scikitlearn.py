@@ -34,7 +34,6 @@ class Scikitlearn(Learner):
         # Training phase
         decision_tree = RandomForestClassifier(max_depth=max_depth, random_state=seed)
         decision_tree.fit(instances_training, labels_training)
-
         # Test phase
         result = decision_tree.predict(instances_test)
         return (copy.deepcopy(decision_tree), compute_accuracy(result, labels_test))

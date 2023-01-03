@@ -169,7 +169,6 @@ class Converter:
             #print("index:", index)  
             #print("encoder:", self.encoder[index])
             if self.encoder[index] == TypeEncoder.OrdinalEncoder:
-                print("do ordinal")
                 encoder = OrdinalEncoder(dtype=numpy.int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
@@ -178,7 +177,6 @@ class Converter:
                 self.categories[index] = encoder.categories_
                 
             elif self.encoder[index] == TypeEncoder.OneHotEncoder:
-                print("do one hot:", feature)
                 encoder = OneHotEncoder(dtype=numpy.int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
@@ -276,8 +274,10 @@ class Converter:
               for v1 in unique_values: 
                   for v2 in unique_values:
                       if v1 != v2:
+                          print("for: ", v1, v2)
                           data = self.data.copy(deep=True)
-                          others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v1]
+                          others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v2]
+                          print("others:", others)
                           #Save the encoding
                           self.convert_labels.append({"Method":str(self.to_binary_classification), 0: [int(v2)], 1:[int(v1)]})
                           #delete others
@@ -287,6 +287,9 @@ class Converter:
                           data[self.target_features_name] = data[self.target_features_name].replace(v1, 1)
                           data[self.target_features_name] = data[self.target_features_name].replace(v2, 0)
                           self.results.append(data)
+                          last_column = data.iloc[: , -1:]
+
+                          print("last_column:", last_column.nunique())
               return self.results
           else:
               raise NotImplementedError()
