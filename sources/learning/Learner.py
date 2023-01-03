@@ -78,8 +78,8 @@ class Learner:
         data, name = self.parse_data(data)
         if data is not None: 
             self.load_data(data, name)
-            for i in range(self.n_features-1):
-                print("self.data[i]", self.data[:, i].dtype)
+            #for i in range(self.n_features-1):
+            #    print("self.data[i]", self.data[:, i].dtype)
         
         
     def load_types(self):
@@ -192,7 +192,8 @@ class Learner:
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
         Tools.verbose("nInstances (nObservations):", self.n_instances)
         Tools.verbose("nLabels:", self.n_labels)
-
+        if self.n_labels == 1:
+            raise ValueError("The prediction contains only one value: " + str(self.n_labels))
 
     """
     Rename attributes in self.data in string of integers from 0 to 'self.n_attributes'
