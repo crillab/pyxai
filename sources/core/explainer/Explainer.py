@@ -16,6 +16,7 @@ class Explainer:
         self._excluded_features = []
         self._instance = None
         self._theory = None
+        self._categorical_features = []
 
 
     @property
@@ -63,6 +64,44 @@ class Explainer:
         # The target prediction (0 or 1)
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
+
+    def set_categorical_features(self, features):
+        all_features = None
+        if hasattr(self, 'tree'):
+            all_features = self.tree.learner_information.feature_names
+        elif hasattr(self, 'random_forest'):
+            all_features = self.random_forest.learner_information.feature_names 
+        elif hasattr(self, 'boosted_tree'):
+            all_features = self.boosted_tree.learner_information.feature_names
+
+        self._map_categorical_feature_names = dict()
+        self._map_categorical_features = dict()
+        for feature in features:
+            if "*" in feature:
+                feature = feature.split("*")[0]
+                print("do:", feature)
+                associated_features = [f for f in all_features if f.startswith(feature)]
+                if associated_features == []:
+                    raise ValueError("No feature with the pattern " + feature + ".")
+                self._map_categorical_feature_names[feature]=associated_features
+                self._map_categorical_features[feature]=[]    
+            else:
+                if feature in all_features:
+                    self._map_categorical_feature_names[feature]=feature
+                    self._map_categorical_features[feature]=[]
+                else:
+                    raise ValueError("The feature " + feature + "do not exist.")    
+        
+        for lit in self._binary_representation:
+            name = self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name']
+            for c in self._map_categorical_feature_names.keys():
+                if name in self._map_categorical_feature_names[c]:
+                    self._map_categorical_features[c].append(lit)
+                
+        
+        print("_map_categorical_feature_names:", self._map_categorical_feature_names)
+        print("_map_categorical_features:", self._map_categorical_features)
+        
 
     def set_theory(self, theory):
         """

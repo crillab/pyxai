@@ -35,7 +35,7 @@ def boosted_trees(model, instance=None):
     return ExplainerBT(model, instance)
 
 
-def initialize(model, instance=None):
+def initialize(model, instance=None, categorical_features=None):
     """Return and initialize an explainer according to a model and optionally an instance.
 
     Args:
@@ -45,13 +45,16 @@ def initialize(model, instance=None):
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """
+    explainer = None
     if isinstance(model, DecisionTree):
-        return ExplainerDT(model, instance)
+        explainer = ExplainerDT(model, instance)
     if isinstance(model, RandomForest):
-        return ExplainerRF(model, instance)
+        explainer = ExplainerRF(model, instance)
     if isinstance(model, BoostedTrees):
-        return ExplainerBT(model, instance)
-    return None
+        explainer = ExplainerBT(model, instance)
+    if categorical_features is not None:
+        explainer.set_categorical_features(categorical_features)
+    return explainer
 
 
 UNSAT = TypeStatus.UNSAT
