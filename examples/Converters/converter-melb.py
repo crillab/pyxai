@@ -46,4 +46,6 @@ learner = Learning.Scikitlearn(dataset_name+"_0.csv")
 
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(model=model, n=1, correct=False)
-explainer = Explainer.initialize(model, instance=instance)
+explainer = Explainer.initialize(model, instance=instance, categorical_features=["Method*", "CouncilArea*", "Regionname*"])
+
+
