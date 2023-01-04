@@ -109,7 +109,6 @@ class RandomForest(TreeEnsembles):
                 else:
                   for clause in clauses_for_l:
                       clause.append(-new_variable)
-                print("clauses_for_l:",clauses_for_l)    
                 cnf.extend(clauses_for_l)
             else:
                 assert False, "Bad parameter for " + str(tree_encoding) + " !"

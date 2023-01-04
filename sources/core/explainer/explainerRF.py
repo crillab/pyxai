@@ -119,7 +119,7 @@ class ExplainerRF(Explainer):
         best_score = 0
         tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0, tree_encoding=Encoding.SIMPLE)
 
-        print("tree_cnf:", tree_cnf)
+        #print("tree_cnf:", tree_cnf)
         max_id_binary_representation = CNFencoding.compute_max_id_variable(self._binary_representation)
         print("max_id_binary_representation:", max_id_binary_representation)
         
@@ -135,6 +135,7 @@ class ExplainerRF(Explainer):
             for clause in tree_cnf:
                 MAXSATsolver.add_hard_clause(clause)
         else:
+            print("do theory")
             # Hard clauses
             for clause in tree_cnf:
                 MAXSATsolver.add_hard_clause(clause)
@@ -142,6 +143,7 @@ class ExplainerRF(Explainer):
             for clause in theory_cnf:
                 MAXSATsolver.add_hard_clause(clause)
             
+
             # Soft clauses
             new_variables = [new_variable for new_variable, _ in theory_new_variables]
             all_associated_literals = [associated_literal for _, associated_literals in theory_new_variables for associated_literal in associated_literals]
@@ -153,8 +155,8 @@ class ExplainerRF(Explainer):
         
         soft = [a for l in MAXSATsolver.WCNF.soft for a in l]
         
-        print("hard:", MAXSATsolver.WCNF.hard)
-        print("soft:", soft)
+        print("len hard:", len(MAXSATsolver.WCNF.hard))
+        print("len soft:", len(soft))
         
         # Remove excluded features
         for lit in self._excluded_literals:

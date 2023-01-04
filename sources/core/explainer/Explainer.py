@@ -2,7 +2,7 @@ import random
 from typing import Iterable
 
 from pyxai.sources.core.tools.utils import count_dimensions
-
+from pyxai.sources.core.structure.type import Theory
 
 class Explainer:
     TIMEOUT = -1
@@ -18,6 +18,13 @@ class Explainer:
         self._theory = None
         self._categorical_features = []
 
+    def get_model(self):
+        if hasattr(self, 'tree'):
+            return self.tree
+        elif hasattr(self, 'random_forest'):
+            return self.random_forest 
+        elif hasattr(self, 'boosted_tree'):
+            return self.boosted_tree
 
     @property
     def instance(self):
@@ -66,49 +73,61 @@ class Explainer:
         self.set_excluded_features(self._excluded_features)
 
     def set_categorical_features(self, features):
-        all_features = None
-        if hasattr(self, 'tree'):
-            all_features = self.tree.learner_information.feature_names
-        elif hasattr(self, 'random_forest'):
-            all_features = self.random_forest.learner_information.feature_names 
-        elif hasattr(self, 'boosted_tree'):
-            all_features = self.boosted_tree.learner_information.feature_names
-
-        self._map_categorical_feature_names = dict()
-        self._map_categorical_features = dict()
+        model = self.get_model()
+        all_feature_names = model.learner_information.feature_names
+        
+        self._categorical_features = dict() #dict[overall_feature_name]->[features representing the overall name of the feature that was one hot encoded]  
+        #self._map_categorical_features = dict() #dict[overall_feature_name]->[id_binaries of conditions of the feature that was one hot encoded]
+        self._numerical_features = [] #List of feature names of numerical_features
+        
+        # Build self._map_categorical_feature_names
+        all_associated_features = []
         for feature in features:
             if "*" in feature:
                 feature = feature.split("*")[0]
-                print("do:", feature)
-                associated_features = [f for f in all_features if f.startswith(feature)]
+                associated_features = [f for f in all_feature_names if f.startswith(feature)]
                 if associated_features == []:
                     raise ValueError("No feature with the pattern " + feature + ".")
-                self._map_categorical_feature_names[feature]=associated_features
-                self._map_categorical_features[feature]=[]    
+                self._categorical_features[feature]=associated_features
+                all_associated_features.extend(associated_features)
+                #self._map_categorical_features[feature]=[]    
             else:
-                if feature in all_features:
-                    self._map_categorical_feature_names[feature]=feature
-                    self._map_categorical_features[feature]=[]
+                if feature in all_feature_names:
+                    self._categorical_features[feature]=feature
+                    all_associated_features.extend([feature])
+                    #self._map_categorical_features[feature]=[]
                 else:
                     raise ValueError("The feature " + feature + "do not exist.")    
         
-        for lit in self._binary_representation:
-            name = self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name']
-            for c in self._map_categorical_feature_names.keys():
-                if name in self._map_categorical_feature_names[c]:
-                    self._map_categorical_features[c].append(lit)
-                
-        
-        print("_map_categorical_feature_names:", self._map_categorical_feature_names)
-        print("_map_categorical_features:", self._map_categorical_features)
-        
+        # Add literals from binary representation for each categorical feature in self._map_categorical_feature_names
+        #for lit in self._binary_representation:
+        #    name = self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name']
+        #    for c in self._map_categorical_feature_names.keys():
+        #        if name in self._map_categorical_feature_names[c]:
+        #            self._map_categorical_features[c].append(lit)
 
+        #Build self._numerical_features
+        self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in all_associated_features] #Without the last that is the label/prediction
+        
+        print("all_associated_features:", all_associated_features)
+        print("self._categorical_features:", self._categorical_features)
+        print("_self._numerical_features:", self._numerical_features)
+
+        #Activate the theory
+        self.set_theory(Theory.ORDER_NEW_VARIABLES)
+        for feature in self._numerical_features:
+            model.add_numerical_feature(all_feature_names.index(feature)+1) #Warning ids of features start from 1 to n (not 0), this is why there is +1. 
+        for overall_feature_name in self._categorical_features.keys():
+            model.add_categorical_feature_one_hot(overall_feature_name, [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]) 
+        
+        
+        
     def set_theory(self, theory):
         """
         Add a theory in the resolution methods (at this time, only for contrastive explanations).
         This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
 
-        @param theory (Explainer.ORDER | Explainer.IMPROVED_ORDER | Explainer.EQUAL): the theory selected.
+        @param theory (Explainer.ORDER_NEW_VARIABLES | Explainer.ORDER): the theory selected.
         """
         self._theory = theory
         

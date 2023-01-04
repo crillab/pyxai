@@ -43,9 +43,11 @@ print("dataset_name:", dataset_name)
 
 learner = Learning.Scikitlearn(dataset_name+"_0.csv")
 
-
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(model=model, n=1, correct=False)
 explainer = Explainer.initialize(model, instance=instance, categorical_features=["Method*", "CouncilArea*", "Regionname*"])
 
+contrastive = explainer.minimal_contrastive_reason()
+print("to_features:", explainer.to_features(contrastive))
+print("is_contrastive:", explainer.is_contrastive_reason(contrastive))
 

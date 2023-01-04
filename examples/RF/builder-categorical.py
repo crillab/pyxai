@@ -28,7 +28,7 @@ tree_3 = Builder.DecisionTree(3, Builder.LeafNode(1))
 
 forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2)
 forest.add_numerical_feature(1)
-forest.add_categorical_feature(3)
+#forest.add_categorical_feature(3) TODO maintenant c'est faux cela
 
 
 print("numerical_features:", forest.numerical_features)

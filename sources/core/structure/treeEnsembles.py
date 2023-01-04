@@ -7,7 +7,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree
 class TreeEnsembles(BinaryMapping):
     """
     Represent a set of trees. This class is used for the class RandomForest (RF) and BoostedTrees (BTs)
-    map_id_binaries_to_features: list[id_binary] -> (id_feature, threshold)
+    map_id_binaries_to_features: list[id_binary] -> (id_feature, op, threshold)
     map_features_to_id_binaries: dict[(id_feature, threshold)] -> [id_binary, n_appears, n_appears_per_tree]
     """
 
