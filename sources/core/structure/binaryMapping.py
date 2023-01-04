@@ -7,7 +7,8 @@ class BinaryMapping():
         self.map_id_binaries_to_features = map_id_binaries_to_features
         self.map_features_to_id_binaries = map_features_to_id_binaries
         self.map_numerical_features = {} #dict[id_feature] -> [id_binaries of the feature]
-        self.map_categorical_features = {} #dict[id_feature] -> [id_binaries of the feature]
+        self.map_categorical_features_ordinal = {} #dict[id_feature] -> [id_binaries of the feature]
+        self.map_categorical_features_one_hot = {} #dict[overall_name] -> [id_binaries of the set of features representing the overall name of the feature that was one hot encoded]
         self.learner_information = learner_information
 
     @property
@@ -23,14 +24,18 @@ class BinaryMapping():
         return self.map_numerical_features
 
     @property
-    def categorical_features(self):
-        return self.map_categorical_features
+    def categorical_features_ordinal(self):
+        return self.map_categorical_features_ordinal
+
+    @property
+    def categorical_features_one_hot(self):
+        return self.map_categorical_features_ordinal
     
     def add_numerical_feature(self, id_feature):
-        if id_feature in self.map_numerical_features:
+        if id_feature in self.map_numerical_features:  #".keys() ???? bug here"
           raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
-        if id_feature in self.map_categorical_features:
-          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical.")
+        if id_feature in self.map_categorical_features_ordinal:
+          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical ordinal.")
         
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
@@ -39,23 +44,35 @@ class BinaryMapping():
 
         self.map_numerical_features[id_feature] = id_binaries_of_the_feature
 
-    def add_categorical_feature(self, id_feature):
-        if id_feature in self.map_numerical_features:
-          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
-        if id_feature in self.map_categorical_features:
-          raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical.")
+    def add_categorical_feature_one_hot(self, overall_name, id_features):
+        print("overall_name:", overall_name)
+        print("id_features:", id_features)
+        id_binaries_of_the_feature = []
+        for key in self.map_features_to_id_binaries.keys():
+            for id_feature in id_features:
+                if key[0] == id_feature:
+                    id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+        self.map_categorical_features_one_hot[overall_name] = id_binaries_of_the_feature
+
+    def add_categorical_feature_ordinal(self, id_feature):
+        if id_feature in self.map_numerical_features: #".keys() ???? bug here"
+            raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
+        if id_feature in self.map_categorical_features_ordinal:
+            raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical ordinal.")
         
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
-          if key[0] == id_feature:
-            id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+            if key[0] == id_feature:
+                id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
 
-        self.map_categorical_features[id_feature] = id_binaries_of_the_feature
+        self.map_categorical_features_ordinal[id_feature] = id_binaries_of_the_feature
+
 
     def get_theory(self, binary_representation, theory, max_id_binary_cnf):
         clauses = []
         new_variables = []
         id_new_var = max_id_binary_cnf
+        print("self.map_numerical_features:", self.map_numerical_features)
         if theory == Theory.ORDER or theory == Theory.ORDER_NEW_VARIABLES:
             # The > and >= operators
             for key in self.map_numerical_features.keys():
@@ -79,8 +96,8 @@ class BinaryMapping():
                         associated_literals.append(sign*condition[3])
                     new_variables.append((id_new_var, associated_literals))
             # The == and != operators: 1 == 10 => 1 > 5 (not possible), 1 == 20 => 1 != 30 ? (possible) 
-            for key in self.map_categorical_features.keys():  
-                id_binaries = self.map_categorical_features[key]
+            for key in self.map_categorical_features_ordinal.keys(): 
+                id_binaries = self.map_categorical_features_ordinal[key]
                 conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.EQ]
                 print("id_binaries:", id_binaries)
                 print("conditions:", conditions)
@@ -91,6 +108,16 @@ class BinaryMapping():
                             a = condition_1[3]
                             b = condition_2[3]
                             clauses.append((-a, -b))
+            
+            # For catgorical features that was one hot encoded
+            for key in self.map_categorical_features_one_hot.keys(): 
+                id_binaries = self.map_categorical_features_one_hot[key]
+                for i, id_1 in enumerate(id_binaries):
+                    for j, id_2 in enumerate(id_binaries):
+                        if i != j:
+                            # we code a => not b that is equivalent to not a or not b (material implication)
+                            clauses.append((-id_1, -id_2))
+            
 
         # The < and <= operators ? (not possible with xgboost but possible in the builder ...)
         return clauses, new_variables

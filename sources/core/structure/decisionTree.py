@@ -331,7 +331,6 @@ class DecisionTree(BinaryMapping):
             target_prediction = self.predict_instance(instance)
         # Start to create the DNF according to the method TSEITIN or COMPLEMENTARY
         dnf = []
-        print("code_prediction:", code_prediction)
         if self.root.is_leaf():
             return []
             
