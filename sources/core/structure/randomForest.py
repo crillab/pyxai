@@ -76,7 +76,6 @@ class RandomForest(TreeEnsembles):
         # atleast_clauses = [[l + ((1 if l > 0 else -1)*n_original_variables) for l in clause] for clause in atleast_clauses]
 
         # new_variables_atleast = [l for l in range(1+n_original_variables,1+n_original_variables+self.n_trees)]
-        print("to cnf prediction:", target_prediction)
         cnf.extend(atleast_clauses)
 
         # We secondly encode the trees

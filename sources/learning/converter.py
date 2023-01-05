@@ -155,7 +155,7 @@ class Converter:
         for feature in features_to_delete:
             indexes_to_delete.append(self.features_name.index(feature))
             self.data.drop(feature, inplace=True, axis=1)
-            print("delete: ", feature)    
+            print("Feature deleted: ", feature)    
         
         for index in sorted(indexes_to_delete, reverse=True):
             self.delete_index(index)
@@ -220,6 +220,7 @@ class Converter:
         self.data[features_to_encode] = self.data[features_to_encode].interpolate(method='linear').fillna(method="bfill")  
 
     def process(self):
+      Tools.verbose("---------------    Converter    ---------------")
       
       if None in self.features_type:
           no_type = [element for i,element in enumerate(self.features_name) if self.features_type[i] is None] 
@@ -236,7 +237,7 @@ class Converter:
       
       #Lead with Multi or Binary classification
       n_classes = self.data[self.target_features_name].nunique()
-      print("n_classes:", n_classes)
+      Tools.verbose("Numbers of classes:", n_classes)
       if self.classification_type == TypeClassification.MultiClass:
           if n_classes < 3:
               print("Warning: you are chosen TypeClassification.MultiClass but there is "+n_classes+" classes.")
@@ -299,13 +300,14 @@ class Converter:
         #    print("The number of classes is reduced by removing some instance with the label " + str#(value_to_remove) + ".")            
         #    self.data.drop(self.data[self.data[target_features_name] == value_to_remove].index, inplace = True)
 
-    
+
       return self.data
 
     def export(self, filename, type="csv"):
       for i, dataset in enumerate(self.results):
           self._export(dataset, filename+"_"+str(i), i, type)
-
+      Tools.verbose("-----------------------------------------------")
+      
     def _export(self, dataset, filename, index, type):
       # the dataset
       filename = filename + "." + type
