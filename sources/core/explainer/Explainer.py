@@ -1,8 +1,9 @@
 import random
+import json
 from typing import Iterable
 
 from pyxai.sources.core.tools.utils import count_dimensions
-from pyxai.sources.core.structure.type import Theory
+from pyxai.sources.core.structure.type import Theory, TypeFeature
 
 class Explainer:
     TIMEOUT = -1
@@ -73,54 +74,68 @@ class Explainer:
         self.set_excluded_features(self._excluded_features)
 
     def set_categorical_features(self, features):
+
         model = self.get_model()
         all_feature_names = model.learner_information.feature_names
         
         self._categorical_features = dict() #dict[overall_feature_name]->[features representing the overall name of the feature that was one hot encoded]  
         #self._map_categorical_features = dict() #dict[overall_feature_name]->[id_binaries of conditions of the feature that was one hot encoded]
         self._numerical_features = [] #List of feature names of numerical_features
+        all_categorical_features = [] #List of feature names of categorical features
+
         
         # Build self._map_categorical_feature_names
-        all_associated_features = []
-        for feature in features:
-            if "*" in feature:
-                feature = feature.split("*")[0]
-                associated_features = [f for f in all_feature_names if f.startswith(feature)]
-                if associated_features == []:
-                    raise ValueError("No feature with the pattern " + feature + ".")
-                self._categorical_features[feature]=associated_features
-                all_associated_features.extend(associated_features)
-                #self._map_categorical_features[feature]=[]    
-            else:
-                if feature in all_feature_names:
-                    self._categorical_features[feature]=feature
-                    all_associated_features.extend([feature])
-                    #self._map_categorical_features[feature]=[]
+        if isinstance(features, str):
+            f = open(features)
+            dict_types = json.load(f)
+            f.close()
+            for feature in  dict_types.keys():
+                t = TypeFeature.from_str(dict_types[feature]["type:"])
+                encoder = dict_types[feature]["encoder:"]
+                if t == TypeFeature.CATEGORICAL and encoder == "OneHotEncoder":
+                    original_feature = dict_types[feature]["original_feature:"]
+                    if original_feature in self._categorical_features:
+                        self._categorical_features[original_feature].append(feature)
+                    else:
+                        self._categorical_features[original_feature] = [feature]
+                    all_categorical_features.append(feature)
+        elif isinstance(features, list):
+            for feature in features:
+                if "*" in feature:
+                    feature = feature.split("*")[0]
+                    associated_features = [f for f in all_feature_names if f.startswith(feature)]
+                    if associated_features == []:
+                        raise ValueError("No feature with the pattern " + feature + ".")
+                    self._categorical_features[feature]=associated_features
+                    all_categorical_features.extend(associated_features)
+                    #self._map_categorical_features[feature]=[]    
                 else:
-                    raise ValueError("The feature " + feature + "do not exist.")    
+                    if feature in all_feature_names:
+                        self._categorical_features[feature]=feature
+                        all_categorical_features.extend([feature])
+                        #self._map_categorical_features[feature]=[]
+                    else:
+                        raise ValueError("The feature " + feature + "do not exist.") 
+        else:
+            raise ValueError("The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
         
-        # Add literals from binary representation for each categorical feature in self._map_categorical_feature_names
-        #for lit in self._binary_representation:
-        #    name = self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name']
-        #    for c in self._map_categorical_feature_names.keys():
-        #        if name in self._map_categorical_feature_names[c]:
-        #            self._map_categorical_features[c].append(lit)
-
         #Build self._numerical_features
-        self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in all_associated_features] #Without the last that is the label/prediction
+        self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in all_categorical_features] #Without the last that is the label/prediction
         
-        print("all_associated_features:", all_associated_features)
-        print("self._categorical_features:", self._categorical_features)
-        print("_self._numerical_features:", self._numerical_features)
-
         #Activate the theory
         self.set_theory(Theory.ORDER_NEW_VARIABLES)
         for feature in self._numerical_features:
             model.add_numerical_feature(all_feature_names.index(feature)+1) #Warning ids of features start from 1 to n (not 0), this is why there is +1. 
         for overall_feature_name in self._categorical_features.keys():
             model.add_categorical_feature_one_hot(overall_feature_name, [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]) 
+        print("Theory activated." )
+        print("Number of numerical features:", len(self._numerical_features))
+        print("Number of categorical features:", len(self._categorical_features))
         
-        
+        #print("all_categorical_features:", all_categorical_features)
+        #print("self._categorical_features:", self._categorical_features)
+        #print("_self._numerical_features:", self._numerical_features)
+
         
     def set_theory(self, theory):
         """

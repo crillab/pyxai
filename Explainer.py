@@ -41,7 +41,7 @@ def initialize(model, instance=None, categorical_features=None):
     Args:
         model (BoostedTrees, RandomForest, DecisionTree): A model.
         instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated.. Defaults to None.
-
+        categorical_features (:obj:`list` of :obj:`String` | `String`, optional) Either a list of string as ["Method*", "CouncilArea*", "Regionname*"] or a filename of .types file. 
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """

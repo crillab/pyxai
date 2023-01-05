@@ -45,8 +45,8 @@ class BinaryMapping():
         self.map_numerical_features[id_feature] = id_binaries_of_the_feature
 
     def add_categorical_feature_one_hot(self, overall_name, id_features):
-        print("overall_name:", overall_name)
-        print("id_features:", id_features)
+        #print("overall_name:", overall_name)
+        #print("id_features:", id_features)
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
             for id_feature in id_features:
@@ -72,7 +72,7 @@ class BinaryMapping():
         clauses = []
         new_variables = []
         id_new_var = max_id_binary_cnf
-        print("self.map_numerical_features:", self.map_numerical_features)
+        #print("self.map_numerical_features:", self.map_numerical_features)
         if theory == Theory.ORDER or theory == Theory.ORDER_NEW_VARIABLES:
             # The > and >= operators
             for key in self.map_numerical_features.keys():
@@ -99,8 +99,8 @@ class BinaryMapping():
             for key in self.map_categorical_features_ordinal.keys(): 
                 id_binaries = self.map_categorical_features_ordinal[key]
                 conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.EQ]
-                print("id_binaries:", id_binaries)
-                print("conditions:", conditions)
+                #print("id_binaries:", id_binaries)
+                #print("conditions:", conditions)
                 for i, condition_1 in enumerate(conditions):
                     for j, condition_2 in enumerate(conditions):
                         if i != j:
