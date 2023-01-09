@@ -1,0 +1,648 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None",
+    "original_type:": "int64"
+  },
+  "workclass_ ?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Federal-gov": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Local-gov": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Never-worked": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Private": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Self-emp-inc": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Self-emp-not-inc": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ State-gov": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "workclass_ Without-pay": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "workclass",
+    "original_type:": "object"
+  },
+  "fnlwgt": {
+    "type:": "NUMERICAL",
+    "encoder:": "None",
+    "original_type:": "int64"
+  },
+  "education_ 10th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 11th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 12th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 1st-4th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 5th-6th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 7th-8th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ 9th": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Assoc-acdm": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Assoc-voc": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Bachelors": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Doctorate": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ HS-grad": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Masters": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Preschool": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Prof-school": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "education_ Some-college": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_type:": "object"
+  },
+  "marital-status_ Divorced": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Married-AF-spouse": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Married-civ-spouse": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Married-spouse-absent": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Never-married": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Separated": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "marital-status_ Widowed": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital-status",
+    "original_type:": "object"
+  },
+  "occupation_ ?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Adm-clerical": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Armed-Forces": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Craft-repair": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Exec-managerial": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Farming-fishing": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Handlers-cleaners": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Machine-op-inspct": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Other-service": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Priv-house-serv": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Prof-specialty": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Protective-serv": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Sales": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Tech-support": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "occupation_ Transport-moving": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_type:": "object"
+  },
+  "relationship_ Husband": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "relationship_ Not-in-family": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "relationship_ Other-relative": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "relationship_ Own-child": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "relationship_ Unmarried": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "relationship_ Wife": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "relationship",
+    "original_type:": "object"
+  },
+  "race_ Amer-Indian-Eskimo": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "race",
+    "original_type:": "object"
+  },
+  "race_ Asian-Pac-Islander": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "race",
+    "original_type:": "object"
+  },
+  "race_ Black": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "race",
+    "original_type:": "object"
+  },
+  "race_ Other": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "race",
+    "original_type:": "object"
+  },
+  "race_ White": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "race",
+    "original_type:": "object"
+  },
+  "sex_ Female": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "sex",
+    "original_type:": "object"
+  },
+  "sex_ Male": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "sex",
+    "original_type:": "object"
+  },
+  "capital-gain": {
+    "type:": "NUMERICAL",
+    "encoder:": "None",
+    "original_type:": "int64"
+  },
+  "capital-loss": {
+    "type:": "NUMERICAL",
+    "encoder:": "None",
+    "original_type:": "int64"
+  },
+  "hours-per-week": {
+    "type:": "NUMERICAL",
+    "encoder:": "None",
+    "original_type:": "int64"
+  },
+  "native-country_ ?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Cambodia": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Canada": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ China": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Columbia": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Cuba": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Dominican-Republic": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Ecuador": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ El-Salvador": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ England": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ France": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Germany": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Greece": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Guatemala": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Haiti": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Holand-Netherlands": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Honduras": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Hong": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Hungary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ India": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Iran": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Ireland": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Italy": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Jamaica": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Japan": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Laos": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Mexico": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Nicaragua": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Outlying-US(Guam-USVI-etc)": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Peru": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Philippines": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Poland": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Portugal": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Puerto-Rico": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Scotland": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ South": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Taiwan": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Thailand": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Trinadad&Tobago": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ United-States": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Vietnam": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "native-country_ Yugoslavia": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "native-country",
+    "original_type:": "object"
+  },
+  "salary": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "original_type:": "object",
+    "classes:": [
+      " <=50K",
+      " >50K"
+    ]
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "job_admin.": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_blue-collar": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_entrepreneur": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_housemaid": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_management": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_retired": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_self-employed": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_services": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_student": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_technician": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_unemployed": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "job_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job"
+  },
+  "marital_divorced": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital"
+  },
+  "marital_married": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital"
+  },
+  "marital_single": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital"
+  },
+  "education_primary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education"
+  },
+  "education_secondary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education"
+  },
+  "education_tertiary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education"
+  },
+  "education_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education"
+  },
+  "default_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "default"
+  },
+  "default_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "default"
+  },
+  "balance": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "housing_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "housing"
+  },
+  "housing_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "housing"
+  },
+  "loan_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "loan"
+  },
+  "loan_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "loan"
+  },
+  "contact_cellular": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact"
+  },
+  "contact_telephone": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact"
+  },
+  "contact_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact"
+  },
+  "day": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "month_apr": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_aug": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_dec": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_feb": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_jan": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_jul": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_jun": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_mar": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_may": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_nov": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_oct": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "month_sep": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month"
+  },
+  "duration": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "campaign": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "pdays": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "previous": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "poutcome_failure": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome"
+  },
+  "poutcome_other": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome"
+  },
+  "poutcome_success": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome"
+  },
+  "poutcome_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome"
+  },
+  "y": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "no",
+      "yes"
+    ]
+  }
+}
