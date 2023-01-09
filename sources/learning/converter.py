@@ -7,7 +7,7 @@ from pyxai.sources.core.tools.utils import switch_list
 
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder, OneHotEncoder
 
-
+import os
 import numpy
 import json
 class Converter:
@@ -104,6 +104,12 @@ class Converter:
             else:
                 raise ValueError("Wrong type for the key " + str(element) + ".")
 
+    def all_numerical_features(self):
+        for element in self.features_name[:-1]:
+            key = self.features_name.index(element)
+            self.features_type[key] = TypeFeature.NUMERICAL
+            self.numerical_converters[key] = None
+            self.encoder[key] = None
 
     def set_numerical_features(self, dict_converters):
         #Convert the integer keys into string features
@@ -165,9 +171,9 @@ class Converter:
         for feature in features_to_encode:
             index = self.features_name.index(feature)
             
-            #print("feature:", feature)
-            #print("index:", index)  
-            #print("encoder:", self.encoder[index])
+            print("feature:", feature)
+            print("index:", index)  
+            print("encoder:", self.encoder[index])
             if self.encoder[index] == TypeEncoder.OrdinalEncoder:
                 encoder = OrdinalEncoder(dtype=numpy.int)
                 data_categorical = self.data[[feature]]      
@@ -245,72 +251,78 @@ class Converter:
           return self.results
 
       #Binary classification
-      if n_classes > 2:
-          print("Warning: conversion from MultiClass to BinaryClass: the current dataset will be convert into several new datasets with the " + str(self.to_binary_classification) + " method.")
-          self.results = []
-          self.convert_labels = []
-          if self.to_binary_classification == MethodToBinaryClassification.OneVsRest:
-              unique_values = self.data[self.target_features_name].unique()
-              new_value_true = max(unique_values)+1
-              new_value_false = max(unique_values)+2
-              for v1 in unique_values:
-                  data = self.data.copy(deep=True)
-                  others = [int(v2) for v2 in unique_values if v2 != v1]
+      if self.classification_type == TypeClassification.BinaryClass:
+          if n_classes > 2:
+              print("Warning: conversion from MultiClass to BinaryClass: the current dataset will be convert into several new datasets with the " + str(self.to_binary_classification) + " method.")
+              self.results = []
+              self.convert_labels = []
+              if self.to_binary_classification == MethodToBinaryClassification.OneVsRest:
+                  unique_values = self.data[self.target_features_name].unique()
+                  new_value_true = max(unique_values)+1
+                  new_value_false = max(unique_values)+2
+                  for v1 in unique_values:
+                      data = self.data.copy(deep=True)
+                      others = [int(v2) for v2 in unique_values if v2 != v1]
 
-                  #Save the encoding
-                  self.convert_labels.append({"Method":str(self.to_binary_classification), 0: others, 1:[int(v1)]})
+                      #Save the encoding
+                      self.convert_labels.append({"Method":str(self.to_binary_classification), 0: others, 1:[int(v1)]})
 
-                  #First replaces
-                  data[self.target_features_name] = data[self.target_features_name].replace(v1,new_value_true)
-                  for other in others:
-                      data[self.target_features_name] = data[self.target_features_name].replace(other,new_value_false)
+                      #First replaces
+                      data[self.target_features_name] = data[self.target_features_name].replace(v1,new_value_true)
+                      for other in others:
+                          data[self.target_features_name] = data[self.target_features_name].replace(other,new_value_false)
 
-                  #Replace with 0 and 1
-                  data[self.target_features_name] = data[self.target_features_name].replace(new_value_true, 1)
-                  data[self.target_features_name] = data[self.target_features_name].replace(new_value_false, 0)
-                  self.results.append(data)
-              return self.results
-          elif self.to_binary_classification == MethodToBinaryClassification.OneVsOne:  
-              unique_values = self.data[self.target_features_name].unique()
-              for v1 in unique_values: 
-                  for v2 in unique_values:
-                      if v1 != v2:
-                          print("for: ", v1, v2)
-                          data = self.data.copy(deep=True)
-                          others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v2]
-                          print("others:", others)
-                          #Save the encoding
-                          self.convert_labels.append({"Method":str(self.to_binary_classification), 0: [int(v2)], 1:[int(v1)]})
-                          #delete others
-                          for other in others:
-                              data.drop(data[data[self.target_features_name] == other].index, inplace = True)
-                          #replace
-                          data[self.target_features_name] = data[self.target_features_name].replace(v1, 1)
-                          data[self.target_features_name] = data[self.target_features_name].replace(v2, 0)
-                          self.results.append(data)
-                          last_column = data.iloc[: , -1:]
+                      #Replace with 0 and 1
+                      data[self.target_features_name] = data[self.target_features_name].replace(new_value_true, 1)
+                      data[self.target_features_name] = data[self.target_features_name].replace(new_value_false, 0)
+                      self.results.append(data)
+                  return self.results
+              elif self.to_binary_classification == MethodToBinaryClassification.OneVsOne:  
+                  unique_values = self.data[self.target_features_name].unique()
+                  for v1 in unique_values: 
+                      for v2 in unique_values:
+                          if v1 != v2:
+                              print("for: ", v1, v2)
+                              data = self.data.copy(deep=True)
+                              others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v2]
+                              print("others:", others)
+                              #Save the encoding
+                              self.convert_labels.append({"Method":str(self.to_binary_classification), 0: [int(v2)], 1:[int(v1)]})
+                              #delete others
+                              for other in others:
+                                  data.drop(data[data[self.target_features_name] == other].index, inplace = True)
+                              #replace
+                              data[self.target_features_name] = data[self.target_features_name].replace(v1, 1)
+                              data[self.target_features_name] = data[self.target_features_name].replace(v2, 0)
+                              self.results.append(data)
+                              last_column = data.iloc[: , -1:]
 
-                          print("last_column:", last_column.nunique())
-              return self.results
+                              print("last_column:", last_column.nunique())
+                  return self.results
+              else:
+                  raise NotImplementedError()
           else:
-              raise NotImplementedError()
+              # It is already of the form of a binary class :) 
+              self.convert_labels = None
 
         #while self.data[target_features_name].nunique() > 2:
         #    value_to_remove = self.data[target_features_name][0]
         #    print("The number of classes is reduced by removing some instance with the label " + str#(value_to_remove) + ".")            
         #    self.data.drop(self.data[self.data[target_features_name] == value_to_remove].index, inplace = True)
+      self.results = [self.data]
+      return self.results
 
-
-      return self.data
-
-    def export(self, filename, type="csv"):
+    def export(self, filename, type="csv", output=None):
       for i, dataset in enumerate(self.results):
-          self._export(dataset, filename+"_"+str(i), i, type)
+          self._export(dataset, filename+"_"+str(i), i, type, output)
       Tools.verbose("-----------------------------------------------")
       
-    def _export(self, dataset, filename, index, type):
+    def _export(self, dataset, filename, index, type, output=None):
       # the dataset
-      filename = filename + "." + type
+      if output is None:
+          filename = filename + "." + type
+      else:
+          filename = output + os.sep + filename + "." + type
       if filename.endswith(".csv"):
           dataset.to_csv(filename, index=False)
           types_filenames = filename.replace(".csv", ".types")
@@ -325,18 +337,19 @@ class Converter:
       for i, feature in enumerate(self.features_name):
           new_dict = dict()
           new_dict["type:"] = str(self.features_type[i])
+          
           new_dict["encoder:"] = str(self.encoder[i])
-          #print("ess:", self.encoder[i])
           if self.encoder[i] == TypeEncoder.OrdinalEncoder:
               new_dict["categories:"] = list(self.categories[i][0]) 
           
           if self.encoder[i] == TypeEncoder.OneHotEncoder:
               new_dict["original_feature:"] = self.categories[i] 
 
-          new_dict["original_type:"] = self.original_types[i]
+          #new_dict["original_type:"] = self.original_types[i]
           if self.features_type[i] == TypeFeature.TARGET:
-              new_dict["classes:"] = list(self.label_encoder_classes)
-              new_dict["binary_conversion:"] = self.convert_labels[index]
+              new_dict["classes:"] = [str(v) for v in self.label_encoder_classes]
+              if self.convert_labels is not None:
+                  new_dict["binary_conversion:"] = self.convert_labels[index]
           data_type[feature] = new_dict
 
       with open(types_filenames, 'w') as outfile:

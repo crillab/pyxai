@@ -3,7 +3,7 @@ import json
 from typing import Iterable
 
 from pyxai.sources.core.tools.utils import count_dimensions
-from pyxai.sources.core.structure.type import Theory, TypeFeature
+from pyxai.sources.core.structure.type import Theory, TypeFeature, OperatorCondition
 
 class Explainer:
     TIMEOUT = -1
@@ -213,7 +213,7 @@ class Explainer:
         raise NotImplementedError
 
 
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False):
+    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, inverse=False):
         """
         Converts a binary representation of a reason into the features space.
         
@@ -315,6 +315,29 @@ class Explainer:
         for lit in reason:
             copy_binary_representation[copy_binary_representation.index(lit)] = -lit
         return not self.is_implicant(copy_binary_representation)
+
+
+    def is_contrastive_reason_instance(self, reason):
+        """
+        Checks if a reason is a contrastive one by changing the instance by the element of the reason.
+        @instance: the instance to change 
+        @param reason: the reason to be checked.
+        @return: True if it is a contrastive reason, False otherwise.
+        """
+        features = self.to_features(reason, eliminate_redundant_features=False, details=True)
+        copy_instance = list(self.instance).copy()
+        for feature in features:
+            id = feature["id"]-1
+            operator = feature["operator"]
+            threshold = feature["threshold"]
+            if operator == OperatorCondition.GE:
+                #print("copy_instance[id]:", copy_instance[id])
+                #assert copy_instance[id] < threshold, "We have to change that to apply the contrastive."
+                copy_instance[id] = threshold               
+            else:
+                raise NotImplementedError()
+        new_binary_representation = self._to_binary_representation(copy_instance)
+        return not self.is_implicant(new_binary_representation)
 
 
     def _extend_reason_to_complete_representation(self, reason):
