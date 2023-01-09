@@ -24,7 +24,7 @@ from pyxai.sources.core.tools.utils import set_verbose
 # SUFFICIENT = TypeReason.Sufficient
 # MINIMAL_SUFFICIENT = TypeReason.MinimalSufficient
 # ALL = TypeReason.All
-Options.set_values("dataset", "model_directory", "n_iterations", "time_limit", "verbose")
+Options.set_values("dataset", "model_directory", "n_iterations", "time_limit", "verbose", "types", "output")
 Options.set_flags("f")
 Options.parse(sys.argv[1:])
 if Options.verbose is not None: set_verbose(Options.verbose)

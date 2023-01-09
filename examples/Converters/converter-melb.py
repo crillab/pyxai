@@ -36,20 +36,5 @@ converter.set_numerical_features({
 #print(converter.get_types())
 converter.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name)
-
-
-n = "2"
-learner = Learning.Scikitlearn(dataset_name+"_"+n+".csv")
-
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
-instance, prediction = learner.get_instances(model=model, n=1, correct=False)
-explainer = Explainer.initialize(model, instance=instance, categorical_features=dataset_name+"_"+n+".types") # categorical_features=["Method*", "CouncilArea*", "Regionname*"])
-
-contrastive = explainer.minimal_contrastive_reason()
-
-#print("to_features:", explainer.to_features(contrastive, eliminate_redundant_features=False))
-
-print("to_features:", explainer.to_features(contrastive))
-print("is_contrastive:", explainer.is_contrastive_reason(contrastive))
+converter.export(dataset_name, output="examples/datasets_converted")
 

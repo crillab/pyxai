@@ -43,7 +43,7 @@ class ExplainerRF(Explainer):
         return self._random_forest
 
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False):
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, inverse=False):
         """
         Convert each literal of the implicant (representing a condition) to a tuple (``id_feature``, ``threshold``, ``sign``, ``weight``).
           - ``id_feature``: the feature identifier.
@@ -60,7 +60,7 @@ class ExplainerRF(Explainer):
             obj:`tuple` of :obj:`tuple` of size 4: Represent the reason in the form of features (with their respective thresholds, signs and possible
             weights)
         """
-        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details)
+        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details, inverse=inverse)
 
 
     def _to_binary_representation(self, instance):
@@ -187,7 +187,7 @@ class ExplainerRF(Explainer):
             # Compute the score
             if self._theory is None:
               score = len(true_reason)
-            elif self._theory == Theory.ORDER_NEW_VARIABLES:
+            elif self._theory == Theory.ORDER_NEW_VARIABLES or self._theory == Theory.ORDER:
               score = 0
               for lit in reason:
                 if -lit in soft:
@@ -219,6 +219,10 @@ class ExplainerRF(Explainer):
             if (time_limit != 0 and time_used > time_limit) or len(results) == n:
                 print("End by time_limit or 'n' reached.")
                 break
+        #Do that in the program: to change
+        #for i, contrastive in enumerate(results): 
+        #    results[i] = self._random_forest.eliminate_redundant_features(contrastive, inverse=True)
+
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
         return Explainer.format(results, n)
 
