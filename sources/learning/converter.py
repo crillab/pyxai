@@ -117,11 +117,12 @@ class Converter:
                 raise ValueError("Wrong type for the key " + str(element) + ".")
 
     def all_numerical_features(self):
-        for element in self.features_name[:-1]:
+        for element in self.features_name:
             key = self.features_name.index(element)
-            self.features_type[key] = TypeFeature.NUMERICAL
-            self.numerical_converters[key] = None
-            self.encoder[key] = None
+            if self.target_feature != key:
+                self.features_type[key] = TypeFeature.NUMERICAL
+                self.numerical_converters[key] = None
+                self.encoder[key] = None
 
     def set_numerical_features(self, dict_converters):
         #Convert the integer keys into string features
