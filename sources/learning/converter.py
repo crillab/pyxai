@@ -119,7 +119,7 @@ class Converter:
     def all_numerical_features(self):
         for element in self.features_name:
             key = self.features_name.index(element)
-            if self.target_feature != key:
+            if self.target_feature != key and self.features_type[key] != TypeFeature.TO_DELETE:
                 self.features_type[key] = TypeFeature.NUMERICAL
                 self.numerical_converters[key] = None
                 self.encoder[key] = None
