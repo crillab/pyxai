@@ -1,0 +1,64 @@
+{
+  "Misdemeanor": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Misdemeanor"
+  },
+  "Number_of_Priors": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "score_factor": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "score_factor"
+  },
+  "Age_Above_FourtyFive": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Age_Above_FourtyFive"
+  },
+  "Age_Below_TwentyFive": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Age_Below_TwentyFive"
+  },
+  "African_American": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic"
+  },
+  "Asian": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic"
+  },
+  "Hispanic": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic"
+  },
+  "Native_American": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic"
+  },
+  "Other": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic"
+  },
+  "Female": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Female"
+  },
+  "Two_yr_Recidivism": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}

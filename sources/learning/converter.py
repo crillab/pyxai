@@ -24,16 +24,18 @@ class Converter:
         self.encoder = [None]*self.n_features
         self.categories = [None]*self.n_features
         self.original_types = [str(self.data[feature].dtype) for feature in self.features_name]
+        self.already_encoded = [False]*self.n_features
 
         self.target_feature = self.set_target_feature(target_feature)
         
-    def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_type):
+    def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_type, already_enc):
         self.features_name.insert(index, feature_name)
         self.features_type.insert(index, feature_type)
         self.numerical_converters.insert(index, numerical_converter)
         self.encoder.insert(index, encoder)
         self.categories.insert(index, category)
         self.original_types.insert(index, original_type)
+        self.already_encoded.insert(index, already_enc)
 
     def delete_index(self, index):
         del self.features_name[index]
@@ -42,6 +44,7 @@ class Converter:
         del self.encoder[index]              
         del self.categories[index]              
         del self.original_types[index]
+        del self.already_encoded[index]
 
     def switch_indexes(self, index1, index2):
         self.features_name = switch_list(self.features_name, index1, index2)
@@ -50,7 +53,8 @@ class Converter:
         self.encoder = switch_list(self.encoder, index1, index2)
         self.categories = switch_list(self.categories, index1, index2)
         self.original_types = switch_list(self.original_types, index1, index2)
-        
+        self.already_encoded = switch_list(self.already_encoded, index1, index2)
+
     def set_target_feature(self, feature):
         if feature in self.features_name: 
             self.features_type[self.features_name.index(feature)] = TypeFeature.TARGET
@@ -83,6 +87,14 @@ class Converter:
             else:
                 raise ValueError("Wrong type for the key " + str(element) + ".")
 
+    def set_categorical_features_already_one_hot_encoded(self, name, features):
+        for element in features:
+            index_element = self.features_name.index(element)
+            self.features_type[index_element] = TypeFeature.CATEGORICAL
+            self.encoder[index_element] = TypeEncoder.OneHotEncoder
+            self.categories[index_element] = name
+            self.already_encoded[index_element] = True
+
 
     def set_categorical_features(self, columns=None, encoder=TypeEncoder.OneHotEncoder):
         for element in columns:
@@ -105,11 +117,12 @@ class Converter:
                 raise ValueError("Wrong type for the key " + str(element) + ".")
 
     def all_numerical_features(self):
-        for element in self.features_name[:-1]:
+        for element in self.features_name:
             key = self.features_name.index(element)
-            self.features_type[key] = TypeFeature.NUMERICAL
-            self.numerical_converters[key] = None
-            self.encoder[key] = None
+            if self.target_feature != key and self.features_type[key] != TypeFeature.TO_DELETE:
+                self.features_type[key] = TypeFeature.NUMERICAL
+                self.numerical_converters[key] = None
+                self.encoder[key] = None
 
     def set_numerical_features(self, dict_converters):
         #Convert the integer keys into string features
@@ -170,7 +183,8 @@ class Converter:
         features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.CATEGORICAL]
         for feature in features_to_encode:
             index = self.features_name.index(feature)
-            
+            if self.already_encoded[index] is True:
+                continue
             print("feature:", feature)
             print("index:", index)  
             print("encoder:", self.encoder[index])
@@ -198,12 +212,12 @@ class Converter:
                 save_encoder = self.encoder[index]
                 save_category = feature #we put in this variable the original feature :)
                 save_original_type = self.original_types[index]
-                
+                save_already_enc = self.already_encoded[index]
                 self.data.drop(feature, inplace=True, axis=1)
                 self.delete_index(index)
                 
                 for name in reversed(names):
-                    self.insert_index(index, name, save_features_type, save_numerical_converter, save_encoder, save_category, save_original_type)
+                    self.insert_index(index, name, save_features_type, save_numerical_converter, save_encoder, save_category, save_original_type, save_already_enc)
                     self.data.insert(index, name, transformed_df[name], True)
                 #print("index:", index)
                 #print("names:", names)
