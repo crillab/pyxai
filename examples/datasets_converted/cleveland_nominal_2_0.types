@@ -1,0 +1,134 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "sex_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "sex"
+  },
+  "sex_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "sex"
+  },
+  "cp_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "cp"
+  },
+  "cp_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "cp"
+  },
+  "cp_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "cp"
+  },
+  "cp_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "cp"
+  },
+  "trestbps": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "chol": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "fbs_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "fbs"
+  },
+  "fbs_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "fbs"
+  },
+  "restecg_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "restecg"
+  },
+  "restecg_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "restecg"
+  },
+  "restecg_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "restecg"
+  },
+  "thalach": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "exang_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "exang"
+  },
+  "exang_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "exang"
+  },
+  "oldpeak": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "slope_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "slope"
+  },
+  "slope_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "slope"
+  },
+  "slope_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "slope"
+  },
+  "ca": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "thal_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "thal"
+  },
+  "thal_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "thal"
+  },
+  "thal_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "thal"
+  },
+  "thal_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "thal"
+  },
+  "binaryClass": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}
