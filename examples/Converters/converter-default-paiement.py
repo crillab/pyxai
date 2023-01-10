@@ -8,7 +8,7 @@ converter = Learning.Converter(Tools.Options.dataset, target_feature="default.pa
 
 print("data:", converter.data)
 
-converter.unset_features(["id"])
+converter.unset_features(["ID"])
 
 #,LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6,default.payment.next.month
 converter.set_categorical_features(columns=["SEX", "EDUCATION", "MARRIAGE", "PAY_0", "PAY_2", "PAY_3", "PAY_4","PAY_5", "PAY_6"])
@@ -25,7 +25,7 @@ converter.set_numerical_features({
   "PAY_AMT1": None,
   "PAY_AMT2": None,
   "PAY_AMT3": None,
-  "PAY_AMT14": None,
+  "PAY_AMT4": None,
   "PAY_AMT5": None,
   "PAY_AMT6": None
 })
