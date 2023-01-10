@@ -1,0 +1,298 @@
+{
+  "V1_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V1"
+  },
+  "V1_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V1"
+  },
+  "V1_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V1"
+  },
+  "V1_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V1"
+  },
+  "V2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V3_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V3"
+  },
+  "V3_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V3"
+  },
+  "V3_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V3"
+  },
+  "V3_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V3"
+  },
+  "V3_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V3"
+  },
+  "V4_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V4_9": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V4"
+  },
+  "V5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V6_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V6"
+  },
+  "V6_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V6"
+  },
+  "V6_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V6"
+  },
+  "V6_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V6"
+  },
+  "V6_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V6"
+  },
+  "V7_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V7"
+  },
+  "V7_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V7"
+  },
+  "V7_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V7"
+  },
+  "V7_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V7"
+  },
+  "V7_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V7"
+  },
+  "V8": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V9_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V9"
+  },
+  "V9_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V9"
+  },
+  "V9_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V9"
+  },
+  "V9_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V9"
+  },
+  "V10_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V10"
+  },
+  "V10_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V10"
+  },
+  "V10_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V10"
+  },
+  "V11": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V12_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V12"
+  },
+  "V12_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V12"
+  },
+  "V12_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V12"
+  },
+  "V12_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V12"
+  },
+  "V13": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V14_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V14"
+  },
+  "V14_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V14"
+  },
+  "V14_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V14"
+  },
+  "V15_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V15"
+  },
+  "V15_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V15"
+  },
+  "V15_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V15"
+  },
+  "V16": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V17_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V17"
+  },
+  "V17_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V17"
+  },
+  "V17_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V17"
+  },
+  "V17_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V17"
+  },
+  "V18": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "V19_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V19"
+  },
+  "V19_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "V19"
+  },
+  "V20": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}
