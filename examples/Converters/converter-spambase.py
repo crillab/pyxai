@@ -6,7 +6,7 @@ import datetime
 
 
 import pandas
-data = pandas.read_csv(Tools.Options.dataset, names=["V"+i for i in range(58)])
+data = pandas.read_csv(Tools.Options.dataset, names=["V"+str(i) for i in range(58)])
 
 converter = Learning.Converter(data, target_feature="V57", classification_type=Learning.BINARY_CLASS) # class Converter
 
