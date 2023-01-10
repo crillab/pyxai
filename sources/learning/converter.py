@@ -185,9 +185,9 @@ class Converter:
             index = self.features_name.index(feature)
             if self.already_encoded[index] is True:
                 continue
-            print("feature:", feature)
-            print("index:", index)  
-            print("encoder:", self.encoder[index])
+            #print("feature:", feature)
+            #print("index:", index)  
+            #print("encoder:", self.encoder[index])
             if self.encoder[index] == TypeEncoder.OrdinalEncoder:
                 encoder = OrdinalEncoder(dtype=numpy.int)
                 data_categorical = self.data[[feature]]      
