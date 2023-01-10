@@ -1,0 +1,209 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "menopause_<40": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause"
+  },
+  "menopause_>=40": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause"
+  },
+  "menopause_premenopausal": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause"
+  },
+  "inv-nodes_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_9": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_10": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_11": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_13": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_14": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_15": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_16": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_17": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "inv-nodes_25": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes"
+  },
+  "node-caps_?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps"
+  },
+  "node-caps_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps"
+  },
+  "node-caps_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps"
+  },
+  "deg-malig_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig"
+  },
+  "deg-malig_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig"
+  },
+  "deg-malig_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig"
+  },
+  "breast_left": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast"
+  },
+  "breast_right": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast"
+  },
+  "breast-quad_?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "breast-quad_central": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "breast-quad_left-lower": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "breast-quad_left-upper": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "breast-quad_right-lower": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "breast-quad_right-upper": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad"
+  },
+  "irradiation_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "irradiation"
+  },
+  "irradiation_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "irradiation"
+  },
+  "recurrence_n": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "recurrence"
+  },
+  "recurrence_r": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "recurrence"
+  },
+  "binaryClass": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "N",
+      "P"
+    ]
+  }
+}
