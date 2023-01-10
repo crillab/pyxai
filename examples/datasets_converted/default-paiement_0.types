@@ -1,0 +1,451 @@
+{
+  "LIMIT_BAL": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "SEX_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "SEX"
+  },
+  "SEX_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "SEX"
+  },
+  "EDUCATION_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "EDUCATION_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION"
+  },
+  "MARRIAGE_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE"
+  },
+  "MARRIAGE_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE"
+  },
+  "MARRIAGE_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE"
+  },
+  "MARRIAGE_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE"
+  },
+  "AGE": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_0_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_0_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0"
+  },
+  "PAY_2_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_2_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2"
+  },
+  "PAY_3_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_3_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3"
+  },
+  "PAY_4_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_4_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4"
+  },
+  "PAY_5_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_5_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5"
+  },
+  "PAY_6_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "PAY_6_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6"
+  },
+  "BILL_AMT1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "default.payment.next.month": {
+    "type:": "TARGET",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}
