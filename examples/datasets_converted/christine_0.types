@@ -6547,8 +6547,8 @@
     "type:": "TARGET",
     "encoder:": "LabelEncoder",
     "classes:": [
-      0,
-      1
+      "0",
+      "1"
     ]
   }
 }
