@@ -17,7 +17,7 @@ class Converter:
         self.to_binary_classification = to_binary_classification
         self.data, self.file = learner.parse_data(data=dataset)
         self.n_instances, self.n_features = self.data.shape
-        
+        print(self.data.columns)
         self.features_name = list(self.data.columns)
         self.features_type = [None]*self.n_features
         self.numerical_converters = [None]*self.n_features
@@ -204,6 +204,7 @@ class Converter:
                 #print("data:", data_categorical)
                 matrix = encoder.fit_transform(data_categorical).toarray()
                 names = [element.replace("x0", feature) for element in encoder.get_feature_names()]
+                #print("names:", names)
                 print("One hot encoding new features for " + feature + ": " + str(len(names)))
                 transformed_df = pandas.DataFrame(matrix, columns=names)
                 
