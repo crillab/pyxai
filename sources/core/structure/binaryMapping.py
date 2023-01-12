@@ -68,46 +68,33 @@ class BinaryMapping():
         self.map_categorical_features_ordinal[id_feature] = id_binaries_of_the_feature
 
 
-    def get_theory(self, binary_representation, theory, max_id_binary_cnf):
+    def get_theory(self, map_id_binary_sign, map_is_represented_by_new_variables, theory, max_id_binary_cnf):
         clauses = []
         new_variables = []
         id_new_var = max_id_binary_cnf
+        
+
         #print("self.map_numerical_features:", self.map_numerical_features)
         if theory == Theory.ORDER or theory == Theory.ORDER_NEW_VARIABLES:
             # The > and >= operators
+            
             for key in self.map_numerical_features.keys():
                 id_binaries = self.map_numerical_features[key]
-                conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.GE or self.map_id_binaries_to_features[id][1] == OperatorCondition.GT]
+                conditions = [tuple(list(self.map_id_binaries_to_features[id])+[id]) for id in id_binaries]
                 conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
-                for i, condition in enumerate(conditions):
-                    if i < len(conditions)-1:
-                        # we code a => b that is equivalent to not a or b (material implication)
-                        a = condition[3]
-                        b = conditions[i+1][3]
-                        clauses.append((-a, b))
+                id_binaries_sorted = tuple(condition[3] for condition in conditions)
+                
+                for i in range(len(id_binaries_sorted)-1): #To not takes the last
+                    clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i+1]))
+
                 if theory == Theory.ORDER_NEW_VARIABLES:
                     id_new_var = id_new_var + 1
-                    associated_literals = []
-                    for condition in conditions:
-                        # we code not id_new_var or condition
-                        id_binary = condition[3]
-                        sign = 1 if id_binary in binary_representation else -1
-                        clauses.append((-id_new_var, sign*condition[3]))
-                        associated_literals.append(sign*condition[3])
-                    new_variables.append((id_new_var, associated_literals))
-            # The == and != operators: 1 == 10 => 1 > 5 (not possible), 1 == 20 => 1 != 30 ? (possible) 
-            for key in self.map_categorical_features_ordinal.keys(): 
-                id_binaries = self.map_categorical_features_ordinal[key]
-                conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.EQ]
-                #print("id_binaries:", id_binaries)
-                #print("conditions:", conditions)
-                for i, condition_1 in enumerate(conditions):
-                    for j, condition_2 in enumerate(conditions):
-                        if i != j:
-                            # we code a => not b that is equivalent to not a or not b (material implication)
-                            a = condition_1[3]
-                            b = condition_2[3]
-                            clauses.append((-a, -b))
+                    #associated_literals = []
+                    for id_binary in id_binaries_sorted:
+                        clauses.append((-id_new_var, map_id_binary_sign[id_binary]*id_binary))
+                        map_is_represented_by_new_variables[id_binary] = True
+                        # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
+                    new_variables.append(id_new_var)
             
             # For catgorical features that was one hot encoded
             for key in self.map_categorical_features_one_hot.keys(): 
@@ -116,11 +103,39 @@ class BinaryMapping():
                     for j, id_2 in enumerate(id_binaries):
                         if i != j:
                             # we code a => not b that is equivalent to not a or not b (material implication)
-                            clauses.append((-id_1, -id_2))
-            
+                            clauses.append((-id_1, -id_2))    
+                #for i, condition in enumerate(conditions):
+                #    if i < len(conditions)-1:
+                #        # we code a => b that is equivalent to not a or b (material implication)
+                #        a = condition[3]
+                #        b = conditions[i+1][3]
+                #        clauses.append((-a, b))
+                #if theory == Theory.ORDER_NEW_VARIABLES:
+                #    id_new_var = id_new_var + 1
+                #    associated_literals = []
+                #    for condition in conditions:
+                #        # we code not id_new_var or condition
+                #        id_binary = condition[3]
+                #        sign = 1 if id_binary in binary_representation else -1
+                #        clauses.append((-id_new_var, sign*condition[3]))
+                #        associated_literals.append(sign*condition[3])
+                #    new_variables.append((id_new_var, associated_literals))
+            # The == and != operators: 1 == 10 => 1 > 5 (not possible), 1 == 20 => 1 != 30 ? (possible) 
+            #for key in self.map_categorical_features_ordinal.keys(): 
+            #    id_binaries = self.map_categorical_features_ordinal[key]
+            #    conditions = [list(self.map_id_binaries_to_features[id])+[id] for id in #id_binaries if self.map_id_binaries_to_features[id][1] == OperatorCondition.EQ]
+                #print("id_binaries:", id_binaries)
+                #print("conditions:", conditions)
+             #   for i, condition_1 in enumerate(conditions):
+             #       for j, condition_2 in enumerate(conditions):
+             #           if i != j:
+                            # we code a => not b that is equivalent to not a or not b (material implication)
+             #               a = condition_1[3]
+             #               b = condition_2[3]
+             #               clauses.append((-a, -b))
 
         # The < and <= operators ? (not possible with xgboost but possible in the builder ...)
-        return clauses, new_variables
+        return clauses, new_variables, map_is_represented_by_new_variables
 
     def compute_id_binaries(self):
         assert False, "Have to be implemented in a child class."
