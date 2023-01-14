@@ -11,6 +11,8 @@ class BinaryMapping():
         self.map_categorical_features_one_hot = {} #dict[overall_name] -> [id_binaries of the set of features representing the overall name of the feature that was one hot encoded]
         self.learner_information = learner_information
 
+
+
     @property
     def accuracy(self):
         return self.learner_information.accuracy
@@ -31,6 +33,12 @@ class BinaryMapping():
     def categorical_features_one_hot(self):
         return self.map_categorical_features_ordinal
     
+    def get_used_features(self):
+        used_features = set()
+        for key in self.map_features_to_id_binaries.keys():
+            used_features.add(key[0])
+        return len(used_features)
+        
     def add_numerical_feature(self, id_feature):
         if id_feature in self.map_numerical_features:  #".keys() ???? bug here"
           raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")

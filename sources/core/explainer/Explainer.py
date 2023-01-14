@@ -128,9 +128,15 @@ class Explainer:
             model.add_numerical_feature(all_feature_names.index(feature)+1) #Warning ids of features start from 1 to n (not 0), this is why there is +1. 
         for overall_feature_name in self._categorical_features.keys():
             model.add_categorical_feature_one_hot(overall_feature_name, [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]) 
+
+        nComeFromCategorical = 0
+        for overall_feature_name in self._categorical_features.keys():
+          nComeFromCategorical += len(self._categorical_features[overall_feature_name])
+
         print("Theory activated." )
         print("Number of numerical features:", len(self._numerical_features))
         print("Number of categorical features:", len(self._categorical_features))
+        print("Number of features come from categorical:", nComeFromCategorical)
         
         #print("all_categorical_features:", all_categorical_features)
         #print("self._categorical_features:", self._categorical_features)
