@@ -11,6 +11,7 @@ models = learner.evaluate(method=Learning.LEAVE_ONE_GROUP_OUT, output=Learning.R
 for i, model in enumerate(models):
     instances = learner.get_instances(model=model, n=10)
     explainer = Explainer.initialize(model, categorical_features=Tools.Options.types) 
+    print("Used features:", model.get_used_features())
         
     for j, (instance, prediction) in enumerate(instances):
         print("Model:", i)
