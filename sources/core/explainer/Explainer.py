@@ -73,6 +73,13 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
+    def count_features_before_converting(self, features):
+        c = set()
+        for feature in features:
+          id = feature["id"]
+          c.add(self.map_indexes[id])
+        return len(c)
+
     def set_categorical_features(self, features):
 
         model = self.get_model()
@@ -124,19 +131,48 @@ class Explainer:
         
         #Activate the theory
         self.set_theory(Theory.ORDER_NEW_VARIABLES)
+        indexes_numerical_features = []
+        indexes_categorical_features = dict()
+        
+        self.map_indexes = dict()
         for feature in self._numerical_features:
-            model.add_numerical_feature(all_feature_names.index(feature)+1) #Warning ids of features start from 1 to n (not 0), this is why there is +1. 
-        for overall_feature_name in self._categorical_features.keys():
-            model.add_categorical_feature_one_hot(overall_feature_name, [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]) 
+            index = all_feature_names.index(feature)+1 #Warning ids of features start from 1 to n (not 0), this is why there is +1.
+            model.add_numerical_feature(index)  
+            indexes_numerical_features.append(index)
+            self.map_indexes[index] = index
 
+        for overall_feature_name in self._categorical_features.keys():
+            indexes = [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]
+            model.add_categorical_feature_one_hot(overall_feature_name, indexes) 
+            indexes_categorical_features[overall_feature_name] = indexes
+            for index in indexes:
+                self.map_indexes[index] = overall_feature_name
         nComeFromCategorical = 0
+        nBinaries = 0
+        nCategorical = 0
         for overall_feature_name in self._categorical_features.keys():
           nComeFromCategorical += len(self._categorical_features[overall_feature_name])
-
+          if len(self._categorical_features[overall_feature_name]) == 2:
+              nBinaries += 1
+          else:
+              nCategorical += 1
+        nNumerical = len(self._numerical_features)
         print("Theory activated." )
-        print("Number of numerical features:", len(self._numerical_features))
-        print("Number of categorical features:", len(self._categorical_features))
-        print("Number of features come from categorical:", nComeFromCategorical)
+        print("Number of numerical features (before converting):", nNumerical)
+        print("Number of categorical features (before converting):", nCategorical)
+        print("Number of binary features (before converting):", nBinaries)
+        print("Number of features (before converting):", nNumerical+nCategorical+nBinaries)
+        
+
+        used_features = set()
+        used_features_without_one_hot_encoded = set()
+        for key in model.map_features_to_id_binaries.keys():
+            used_features.add(key[0])
+            used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
+        print("Used features:", len(used_features))
+        print("Used features (before converting):", len(used_features_without_one_hot_encoded))
+        
+        #print("Number of features come from categorical:", nComeFromCategorical)
         
         #print("all_categorical_features:", all_categorical_features)
         #print("self._categorical_features:", self._categorical_features)

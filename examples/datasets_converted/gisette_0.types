@@ -20003,8 +20003,8 @@
     "type:": "TARGET",
     "encoder:": "LabelEncoder",
     "classes:": [
-      -1,
-      1
+      "-1",
+      "1"
     ]
   }
 }
