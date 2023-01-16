@@ -1,645 +1,537 @@
 {
   "age": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "workclass_ ?": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Federal-gov": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Local-gov": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Never-worked": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Private": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Self-emp-inc": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Self-emp-not-inc": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ State-gov": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "workclass_ Without-pay": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "workclass",
-    "original_type:": "object"
+    "original_feature:": "workclass"
   },
   "fnlwgt": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "education_ 10th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 11th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 12th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 1st-4th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 5th-6th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 7th-8th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ 9th": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Assoc-acdm": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Assoc-voc": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Bachelors": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Doctorate": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ HS-grad": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Masters": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Preschool": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Prof-school": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "education_ Some-college": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "education",
-    "original_type:": "object"
+    "original_feature:": "education"
   },
   "marital-status_ Divorced": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Married-AF-spouse": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Married-civ-spouse": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Married-spouse-absent": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Never-married": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Separated": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "marital-status_ Widowed": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "marital-status",
-    "original_type:": "object"
+    "original_feature:": "marital-status"
   },
   "occupation_ ?": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Adm-clerical": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Armed-Forces": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Craft-repair": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Exec-managerial": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Farming-fishing": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Handlers-cleaners": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Machine-op-inspct": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Other-service": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Priv-house-serv": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Prof-specialty": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Protective-serv": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Sales": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Tech-support": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "occupation_ Transport-moving": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "occupation",
-    "original_type:": "object"
+    "original_feature:": "occupation"
   },
   "relationship_ Husband": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "relationship_ Not-in-family": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "relationship_ Other-relative": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "relationship_ Own-child": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "relationship_ Unmarried": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "relationship_ Wife": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "relationship",
-    "original_type:": "object"
+    "original_feature:": "relationship"
   },
   "race_ Amer-Indian-Eskimo": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "race",
-    "original_type:": "object"
+    "original_feature:": "race"
   },
   "race_ Asian-Pac-Islander": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "race",
-    "original_type:": "object"
+    "original_feature:": "race"
   },
   "race_ Black": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "race",
-    "original_type:": "object"
+    "original_feature:": "race"
   },
   "race_ Other": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "race",
-    "original_type:": "object"
+    "original_feature:": "race"
   },
   "race_ White": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "race",
-    "original_type:": "object"
+    "original_feature:": "race"
   },
   "sex_ Female": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "sex",
-    "original_type:": "object"
+    "original_feature:": "sex"
   },
   "sex_ Male": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "sex",
-    "original_type:": "object"
+    "original_feature:": "sex"
   },
   "capital-gain": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "capital-loss": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "hours-per-week": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "native-country_ ?": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Cambodia": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Canada": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ China": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Columbia": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Cuba": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Dominican-Republic": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Ecuador": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ El-Salvador": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ England": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ France": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Germany": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Greece": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Guatemala": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Haiti": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Holand-Netherlands": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Honduras": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Hong": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Hungary": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ India": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Iran": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Ireland": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Italy": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Jamaica": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Japan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Laos": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Mexico": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Nicaragua": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Outlying-US(Guam-USVI-etc)": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Peru": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Philippines": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Poland": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Portugal": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Puerto-Rico": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Scotland": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ South": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Taiwan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Thailand": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Trinadad&Tobago": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ United-States": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Vietnam": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "native-country_ Yugoslavia": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "native-country",
-    "original_type:": "object"
+    "original_feature:": "native-country"
   },
   "salary": {
     "type:": "TARGET",
     "encoder:": "LabelEncoder",
-    "original_type:": "object",
     "classes:": [
       " <=50K",
       " >50K"
