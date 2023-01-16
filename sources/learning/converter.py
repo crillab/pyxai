@@ -13,6 +13,7 @@ import json
 class Converter:
     def __init__(self, dataset, target_feature, classification_type, to_binary_classification=MethodToBinaryClassification.OneVsRest):
         learner = Learner()
+        self.file = dataset
         self.classification_type = classification_type
         self.to_binary_classification = to_binary_classification
         self.data, self.file = learner.parse_data(data=dataset)
@@ -25,7 +26,7 @@ class Converter:
         self.categories = [None]*self.n_features
         self.original_types = [str(self.data[feature].dtype) for feature in self.features_name]
         self.already_encoded = [False]*self.n_features
-
+        self.n_bool = 0
         self.target_feature = self.set_target_feature(target_feature)
         
     def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_type, already_enc):
@@ -179,7 +180,7 @@ class Converter:
         for index in sorted(indexes_to_delete, reverse=True):
             self.delete_index(index)
 
-    def process_categorical_features(self):        
+    def process_categorical_features(self):     
         features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.CATEGORICAL]
         for feature in features_to_encode:
             index = self.features_name.index(feature)
@@ -206,6 +207,9 @@ class Converter:
                 names = [element.replace("x0", feature) for element in encoder.get_feature_names()]
                 #print("names:", names)
                 print("One hot encoding new features for " + feature + ": " + str(len(names)))
+                if len(names) == 2:
+                    self.n_bool += 1
+                    print("The feature " + feature + " is boolean!")    
                 transformed_df = pandas.DataFrame(matrix, columns=names)
                 
                 save_features_type = self.features_type[index]
@@ -259,6 +263,10 @@ class Converter:
       #Lead with Multi or Binary classification
       n_classes = self.data[self.target_features_name].nunique()
       Tools.verbose("Numbers of classes:", n_classes)
+      print("Number of boolean features:", self.n_bool)
+      file_stats = open("/home/nicolas/Bureau/bools.txt", "a") 
+      file_stats.write(self.n_bool)
+      file_stats.close()
       if self.classification_type == TypeClassification.MultiClass:
           if n_classes < 3:
               print("Warning: you are chosen TypeClassification.MultiClass but there is "+n_classes+" classes.")
