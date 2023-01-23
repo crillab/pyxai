@@ -264,9 +264,6 @@ class Converter:
       n_classes = self.data[self.target_features_name].nunique()
       Tools.verbose("Numbers of classes:", n_classes)
       print("Number of boolean features:", self.n_bool)
-      file_stats = open("/home/nicolas/Bureau/bools.txt", "a") 
-      file_stats.write(self.n_bool)
-      file_stats.close()
       if self.classification_type == TypeClassification.MultiClass:
           if n_classes < 3:
               print("Warning: you are chosen TypeClassification.MultiClass but there is "+n_classes+" classes.")
