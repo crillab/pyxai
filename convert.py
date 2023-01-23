@@ -18,4 +18,4 @@ for filename in os.listdir(dataset):
         print("name:", name)
         command = "python3 examples/Converters/converter-"+name+".py -dataset=" + completename
         os.system(command)
-        input("Press Enter to continue...")
+        #input("Press Enter to continue...")
