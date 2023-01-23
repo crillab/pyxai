@@ -9,10 +9,9 @@ learner = Learning.Scikitlearn(Tools.Options.dataset)
 models = learner.evaluate(method=Learning.LEAVE_ONE_GROUP_OUT, output=Learning.RF)
 
 for i, model in enumerate(models):
-    instances = learner.get_instances(model=model, n=10)
+    instances = learner.get_instances(model=model, indexes=Learning.MIXED, n=10)
     explainer = Explainer.initialize(model, categorical_features=Tools.Options.types) 
     
-        
     for j, (instance, prediction) in enumerate(instances):
         print("Model:", i)
         print("Instance:", j)
