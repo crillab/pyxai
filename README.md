@@ -112,7 +112,7 @@ Here is an illustration for linux. We assume that Python 3 is installed, and con
 In a console, type:
 
 ```console
-git clone https://gitlab.univ-artois.fr/expekctation/software/PyLearningExplanation.git
+git clone https://github.com/crillab/pyxai.git
 ```
 
 You may need to update the environment variable 'PYTHONPATH', by typing for example:
