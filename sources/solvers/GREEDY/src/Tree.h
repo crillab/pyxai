@@ -45,6 +45,12 @@ namespace PyLE {
             return root->is_implicant(instance, active_lits, prediction, used_lits);
         }
 
+        void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes) {
+            
+            return root->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+        }
+
+
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
         void update_used_lits() {

@@ -6,7 +6,8 @@
 #define CPP_CODE_NODE_H
 
 #include <iostream>
-#include<vector>
+#include <vector>
+#include <set>
 
 
 namespace PyLE {
@@ -49,6 +50,8 @@ namespace PyLE {
 
         // Methods onlu related to RF
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::vector<int> &used_lits);
+
+        void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes);
     };
 }
 
