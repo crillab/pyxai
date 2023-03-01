@@ -8,6 +8,8 @@ class LeafNode:
         self.value = value
         self.parent = None
 
+    def get_reachable_classes(self, reason, target_prediction, map_features_to_id_binaries):
+        return set([self.value])
 
     def is_implicant(self, reason, target_prediction, map_features_to_id_binaries):
         """_summary_
@@ -106,6 +108,17 @@ class DecisionNode:
     def __str__(self):
         return "f{}<{}".format(self.id_feature, self.threshold)
 
+
+    def get_reachable_classes(self, binary_representation, target_prediction, map_features_to_id_binaries):
+        id_variable = map_features_to_id_binaries[(self.id_feature, self.operator, self.threshold)][0]
+        if id_variable in binary_representation:
+            return self.right.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+        elif -id_variable in binary_representation:
+            return self.left.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+        else:
+            right = self.right.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+            left = self.left.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+            return right.union(left)
 
     def is_implicant(self, binary_representation, target_prediction, map_features_to_id_binaries):
         """_summary_

@@ -191,9 +191,12 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
 
 
 bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
-    if(_type == PyLE::BT)
-        return is_implicant_BT(instance, active_lits, prediction);
-    return is_implicant_RF(instance, active_lits, prediction);
+    if(_type == PyLE::BT){
+      return is_implicant_BT(instance, active_lits, prediction);
+    }
+    if (n_classes == 2)
+        return is_implicant_RF(instance, active_lits, prediction);
+    return is_implicant_RF_multiclasses(instance, active_lits, prediction);
 }
 
 
@@ -220,6 +223,38 @@ bool PyLE::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<b
     return true;
 }
 
+bool PyLE::Explainer::is_implicant_RF_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
+    assert(n_classes > 2);
+    std::set<unsigned int> reachable_classes;
+    std::fill(count_classes.begin(), count_classes.end(), 0);
+    
+    for(unsigned int i = 0; i < trees.size(); i++) {
+        reachable_classes.clear();
+        trees[i]->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+        if (reachable_classes.size() == 1 && *(reachable_classes.begin()) == prediction){
+            count_classes[prediction]++;
+        }else{
+            for (auto c: reachable_classes)
+                if (c != prediction) count_classes[c]++;
+        }
+    }
+
+    // Compute the best class
+    unsigned int best_position = 0;
+    for (unsigned int i = 0; i<count_classes.size(); i++){
+        if (count_classes[i] > count_classes[best_position])
+            best_position = i;  
+    }
+ 
+    if (best_position != prediction)
+        return false;
+    for (unsigned int i = 0; i<count_classes.size(); i++){
+        if (i != best_position && count_classes[i] == count_classes[best_position])
+            return false;
+    }
+
+    return true;
+}
 
 bool PyLE::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
     assert(n_classes == 2);
