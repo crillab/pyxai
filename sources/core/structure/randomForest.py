@@ -41,12 +41,18 @@ class RandomForest(TreeEnsembles):
 
 
     def is_implicant(self, implicant, prediction):
-        forest_implicant = [tree.is_implicant(implicant, prediction) for tree in self.forest]
-        n_trees = len(forest_implicant)
-        n_trues = len([element for element in forest_implicant if element])
-        return n_trues > int(n_trees / 2)
-
-
+        if self.n_classes == 2:
+          forest_implicant = [tree.is_implicant(implicant, prediction) for tree in self.forest]
+          n_trees = len(forest_implicant)
+          n_trues = len([element for element in forest_implicant if element])
+          return n_trues > int(n_trees / 2)
+        reachable_classes = [tree.get_reachable_classes(implicant, prediction) for tree in self.forest]
+        count_classes = [0]*self.n_classes
+        for s in reachable_classes:
+            for i in s:
+                count_classes[i] += 1
+        return all(count_classes[prediction] > count_classes[i] or i == prediction for i in range(self.n_classes))       
+    
     def to_CNF(self, instance, binary_representation, target_prediction=None, *, tree_encoding=Encoding.COMPLEMENTARY,
                cardinality_encoding=Encoding.SEQUENTIAL_COUNTER):
         """Generate a CNF encoding two things:
