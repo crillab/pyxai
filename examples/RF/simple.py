@@ -18,13 +18,15 @@ direct_reason = explainer.direct_reason()
 print("len direct:", len(direct_reason))
 print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
 
-majoritary = explainer.majoritary_reason(n=1)
+print("coucou")
+majoritary = explainer.majoritary_reason(n=1, n_iterations=1)
 # print("majoritary:", majoritary)
 
 print("\nlen majoritary: ", len(majoritary))
 
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(majoritary))
 
+exit(0)
 # can be costly
 sufficient_reason = explainer.sufficient_reason(time_limit=5)
 print("\nlen sufficient reason:", len(sufficient_reason))

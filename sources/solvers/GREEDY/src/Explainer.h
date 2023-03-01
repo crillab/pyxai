@@ -19,12 +19,16 @@ namespace PyLE {
         int n_iterations;
         int time_limit; //in seconds
         std::vector<double> weights; //useful only for multiclasses (BT)
+        std::vector<int> count_classes; //useful only for RF
         int try_to_remove;
         std::vector<double> excluded_features;
 
         Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0) {
-            if(n_classes > 2)
+            if(_type == PyLE::BT && n_classes > 2)
                 for(int i = 0; i < n_classes; i++) weights.push_back(0.0);
+            if(_type == PyLE::RF)
+                for(int i = 0; i < n_classes; i++) count_classes.push_back(0);
+                
         }
 
 
@@ -37,6 +41,7 @@ namespace PyLE {
 
         bool is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
         bool is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
+        bool is_implicant_RF_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
 
         inline void set_n_iterations(int _n_iterations){n_iterations = _n_iterations;}
         inline void set_time_limit(int _time_limit){time_limit = _time_limit;}

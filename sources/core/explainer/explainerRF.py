@@ -26,10 +26,7 @@ class ExplainerRF(Explainer):
             NotImplementedError: Currently, the explanations from a random forest are not available in the multi-class scenario (work in progress).
         """
         super().__init__()
-        if random_forest.n_classes > 2:
-            raise NotImplementedError(
-                "Currently, the explanations from a random forest are not available in the multi-class scenario (work in progress).")
-
+        
         self._random_forest = random_forest
         self.c_RF = None
         
@@ -69,7 +66,7 @@ class ExplainerRF(Explainer):
 
     def is_implicant(self, binary_representation):
         return self._random_forest.is_implicant(binary_representation, self.target_prediction)
-
+        
 
     def predict(self, instance):
         return self._random_forest.predict_instance(instance)

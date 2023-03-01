@@ -296,6 +296,8 @@ class DecisionTree(BinaryMapping):
     def is_implicant(self, reason, target_prediction):
         return self.root.is_implicant(reason, target_prediction, self.map_features_to_id_binaries)
 
+    def get_reachable_classes(self, reason, target_prediction):
+        return self.root.get_reachable_classes(reason, target_prediction, self.map_features_to_id_binaries)
 
     def predict_instance(self, instance):
         """
