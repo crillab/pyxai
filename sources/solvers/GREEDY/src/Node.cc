@@ -26,9 +26,11 @@ double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool>
 }
 
 void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes){
-    if(is_leaf())
+    if(is_leaf()){
         reachable_classes.insert(leaf_value.prediction);
-    
+        return;
+    }
+            
     if (active_lits[lit]) { // Literal in implicant
         if (instance[lit]){ // positive lit in instance
             true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
@@ -38,6 +40,7 @@ void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vec
             return;
         }
     }
+            
     false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
     true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
 }
