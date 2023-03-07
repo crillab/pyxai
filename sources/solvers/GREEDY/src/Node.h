@@ -24,12 +24,41 @@ namespace PyLE {
         double true_min, true_max; // The min and max possible values for true branch
         bool artificial_leaf;
 
-        Node(double w) : lit(0), false_branch(nullptr), true_branch(nullptr), artificial_leaf(false) {leaf_value.weight =w;}
-        Node(int p) : lit(0), false_branch(nullptr), true_branch(nullptr), artificial_leaf(false) {leaf_value.prediction = p;}
-        Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), artificial_leaf(false) {}
+        Node(double w) : 
+          lit(0), 
+          false_branch(nullptr), 
+          true_branch(nullptr),
+          true_min(0),
+          true_max(0),
+          artificial_leaf(false) 
+          {
+            leaf_value = {.weight=w};
+            //leaf_value.weight =w;
+          }
+        Node(int p) : 
+          lit(0), 
+          false_branch(nullptr), 
+          true_branch(nullptr), 
+          true_min(0),
+          true_max(0),
+          artificial_leaf(false) 
+          {
+            leaf_value = {.prediction=p};
+            //leaf_value.prediction = p;
+          }
+
+        Node(int l, Node *f, Node *t) : 
+          lit(l), 
+          false_branch(f), 
+          true_branch(t),
+          true_min(0),
+          true_max(0), 
+          artificial_leaf(false) {}
 
 
-        bool is_leaf() { return artificial_leaf || (false_branch == nullptr && true_branch == nullptr);}
+        bool is_leaf() { 
+          return artificial_leaf || (false_branch == nullptr && true_branch == nullptr);
+        }
         void display(Type _type) {
             if (is_leaf()){
               std::cout << "[" << (_type == BT ? leaf_value.weight : leaf_value.prediction) << "]";
