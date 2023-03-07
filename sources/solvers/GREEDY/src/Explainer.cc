@@ -107,14 +107,12 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
             order.push_back(l);
 
 
-
-
     unsigned int best_size = instance.size() + 1, current_size = instance.size();
     for (auto l: instance)
         polarity_instance[std::abs(l)] = l > 0;
 
-    int nb = 0;
-    for(Tree *tree: trees) nb+=tree->nb_nodes();
+    //int nb = 0;
+    //for(Tree *tree: trees) nb+=tree->nb_nodes();
 
     // FOR BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
@@ -126,8 +124,9 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
             for(auto l : instance) active_lits[abs(l)] = true; // Init
             tree->initialize_RF(polarity_instance, active_lits, prediction);
         }
-    int nb2 = 0;
-        for(Tree *tree: trees) nb2+=tree->nb_nodes();
+    
+    //int nb2 = 0;
+    //for(Tree *tree: trees) nb2+=tree->nb_nodes();
     //std::cout << "before: " << nb << " " << "after "<< nb2 << std::endl;
 
     // Try to remove excluded features
@@ -147,11 +146,10 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
 
     }
     std::default_random_engine rd = std::default_random_engine(seed == -1 ? std::chrono::steady_clock::now().time_since_epoch().count() : 1);
-
     while(true){
         std::shuffle(std::begin(order), std::end(order), rd);
-        //for(int l: order) std::cout << l << " ";
-        //std::cout << "\n";
+        for(int l: order) std::cout << l << " ";
+        std::cout << "\n";
         for(auto l : instance) active_lits[abs(l)] = true; // Init
         for(auto l : excluded_features) active_lits[abs(l)] = false; // Do not want them
         current_size = instance.size() - excluded_features.size();
@@ -231,6 +229,7 @@ bool PyLE::Explainer::is_implicant_RF_multiclasses(std::vector<bool> &instance, 
     for(unsigned int i = 0; i < trees.size(); i++) {
         reachable_classes.clear();
         trees[i]->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+        
         if (reachable_classes.size() == 1 && *(reachable_classes.begin()) == prediction){
             count_classes[prediction]++;
         }else{
