@@ -28,6 +28,7 @@ SOLVER_SPECIFIC = SaveFormat.SolverSpecific
 
 NUMERICAL = TypeFeature.NUMERICAL
 CATEGORICAL = TypeFeature.CATEGORICAL
+DEFAULT = TypeFeature.DEFAULT
 
 BINARY_CLASS = TypeClassification.BinaryClass
 MULTI_CLASS = TypeClassification.MultiClass
