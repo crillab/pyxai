@@ -119,32 +119,60 @@ class Explainer:
                         self._reg_exp_categorical_features[original_feature] = [feature]
                     self._categorical_features.append(feature)
                 elif t == TypeFeature.BINARY:
-                    print("t:", t)
                     self._binary_features.append(feature)
                 elif t == TypeFeature.NUMERICAL:
                     self._numerical_features.append(feature)
 
-        elif isinstance(features_types, list):
-            raise NotImplementedError
-            for feature in features_types:
-                if "*" in feature:
-                    feature = feature.split("*")[0]
-                    associated_features = [f for f in all_feature_names if f.startswith(feature)]
-                    if associated_features == []:
-                        raise ValueError("No feature with the pattern " + feature + ".")
-                    self._reg_exp_categorical_features[feature]=associated_features
-                    self._categorical_features.extend(associated_features)
-                else:
-                    if feature in all_feature_names:
-                        self._reg_exp_categorical_features[feature]=feature
-                        self._categorical_features.extend([feature])
-                    else:
-                        raise ValueError("The feature " + feature + "do not exist.") 
+        elif isinstance(features_types, dict):
+
+            default = None
+            for key in features_types.keys():
+                if key not in ["numerical", "categorical", "binary"]:
+                    raise ValueError("The keys have to be either 'numerical' or 'categorical' or 'binary'.")
+                
+                if features_types[key] == TypeFeature.DEFAULT:
+                    if default is not None:
+                        raise ValueError("TypeFeature.DEFAULT must appear only once.")
+                    default = key
+                    continue
+                elif key == "numerical":
+                    for feature in features_types[key]:
+                        if feature in feature_names:
+                            self._numerical_features.extend([feature])
+                        else:
+                            raise ValueError("The feature " + feature + "do not exist.")
+                elif key == "binary":
+                    for feature in features_types[key]:
+                        if feature in feature_names:
+                            self._binary_features.extend([feature])
+                        else:
+                            raise ValueError("The feature " + feature + "do not exist.")
+                elif key == "categorical":
+                    for feature in features_types[key]:
+                        if "*" in feature:
+                            feature = feature.split("*")[0]
+                            associated_features = [f for f in feature_names if f.startswith(feature)]
+                            if associated_features == []:
+                                raise ValueError("No feature with the pattern " + feature + ".")
+                            self._reg_exp_categorical_features[feature]=associated_features
+                            self._categorical_features.extend(associated_features)                
+                        else:
+                            if feature in feature_names:
+                                self._reg_exp_categorical_features[feature]=feature
+                                self._categorical_features.extend([feature])
+                            else:
+                                raise ValueError("The feature " + feature + "do not exist.")                
+                if default is not None:
+                    #Without the last that is the label/prediction
+                    if default == "numerical":
+                        self._numerical_features = [feature for feature in feature_names[:-1] if feature not in self._categorical_features and feature not in self._binary_features]
+                    elif default == "categorical":
+                        self._categorical_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._binary_features]
+                    elif default == "binary":
+                        self._binary_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._categorical_features]                       
         else:
             raise ValueError("The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
         
-        #Build self._numerical_features
-        #self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in self._categorical_features] #Without the last that is the label/prediction
         
         #Activate the theory
         self.set_theory(Theory.ORDER_NEW_VARIABLES)
@@ -186,6 +214,8 @@ class Explainer:
         used_features = set()
         used_features_without_one_hot_encoded = set()
         for key in model.map_features_to_id_binaries.keys():
+            if key[0] not in self.map_indexes.keys():
+                raise ValueError("The feature " + feature_names[key[0]-1] + " is missing in features_types.")        
             used_features.add(key[0])
             used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
         print("Used features:", len(used_features))

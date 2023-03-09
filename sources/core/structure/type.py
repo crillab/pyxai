@@ -192,7 +192,7 @@ class Theory(Enum):
 
 @unique
 class TypeFeature(Enum):
-    NUMERICAL, CATEGORICAL, BINARY, TARGET, TO_DELETE = auto(5)
+    NUMERICAL, CATEGORICAL, BINARY, TARGET, TO_DELETE, DEFAULT = auto(6)
 
     def __str__(self):
         return self.name
@@ -208,6 +208,8 @@ class TypeFeature(Enum):
             return TypeFeature.TARGET
         elif str == "TO_DELETE":
             return TypeFeature.TO_DELETE
+        elif str == "DEFAULT":
+            return TypeFeature.DEFAULT
         else:
             assert False, "No TypeFeature for this string !"
 
