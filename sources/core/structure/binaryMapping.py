@@ -69,8 +69,6 @@ class BinaryMapping():
 
     def add_categorical_feature_one_hot(self, reg_exp_feature_name, id_features): 
         id_binaries_of_the_feature = []
-        print("reg_exp_feature_name:", reg_exp_feature_name)
-        print("id_features:", id_features)
         for id_feature in id_features:
             if id_feature in self.map_check_already_used.keys():
                 raise ValueError("The feature id ("+str(id_feature)+") is already used as "+self.map_check_already_used[id_feature])
