@@ -80,90 +80,109 @@ class Explainer:
           c.add(self.map_indexes[id])
         return len(c)
 
-    def set_categorical_features(self, features):
+    """
+        Add a theory in the resolution methods.
+        This theory is built according to the features types.  
+
+        @param features_types (str | list): the theory selected.
+    """
+    def set_features_types(self, features_types):
 
         model = self.get_model()
-        all_feature_names = model.learner_information.feature_names
+        feature_names = model.learner_information.feature_names
         
-        self._categorical_features = dict() #dict[overall_feature_name]->[features representing the overall name of the feature that was one hot encoded]  
-        #self._map_categorical_features = dict() #dict[overall_feature_name]->[id_binaries of conditions of the feature that was one hot encoded]
-        self._numerical_features = [] #List of feature names of numerical_features
-        all_categorical_features = [] #List of feature names of categorical features
+        # reg_exp = regular expression 
+        # "A*" is the regular expression meaning that ["A1", "A2", "A3"] come from one initial categorical feature that is one hot encoded 
+        # to form 3 features. 
+          
+        self._reg_exp_categorical_features = dict() # dict[reg_exp_feature]->[feature matching with A]  
+        
+        self._numerical_features = [] # List of feature names of numerical_features
+        self._categorical_features = [] # List of feature names of categorical features
+        self._binary_features = [] # List of feature names of binary features
 
-        
-        # Build self._map_categorical_feature_names
-        if isinstance(features, str):
-            f = open(features)
+        # Build the lists
+        if isinstance(features_types, str):
+            f = open(features_types)
             dict_types = json.load(f)
             f.close()
             for feature in  dict_types.keys():
                 t = TypeFeature.from_str(dict_types[feature]["type:"])
                 encoder = dict_types[feature]["encoder:"]
-                if t == TypeFeature.CATEGORICAL and encoder == "OneHotEncoder":
+                if t == TypeFeature.CATEGORICAL:
+                    if encoder != "OneHotEncoder":
+                        raise NotImplementedError # A voir avec Gilles
                     original_feature = dict_types[feature]["original_feature:"]
-                    if original_feature in self._categorical_features:
-                        self._categorical_features[original_feature].append(feature)
+                    if original_feature in self._reg_exp_categorical_features:
+                        self._reg_exp_categorical_features[original_feature].append(feature)
                     else:
-                        self._categorical_features[original_feature] = [feature]
-                    all_categorical_features.append(feature)
-        elif isinstance(features, list):
-            for feature in features:
+                        self._reg_exp_categorical_features[original_feature] = [feature]
+                    self._categorical_features.append(feature)
+                elif t == TypeFeature.BINARY:
+                    print("t:", t)
+                    self._binary_features.append(feature)
+                elif t == TypeFeature.NUMERICAL:
+                    self._numerical_features.append(feature)
+
+        elif isinstance(features_types, list):
+            raise NotImplementedError
+            for feature in features_types:
                 if "*" in feature:
                     feature = feature.split("*")[0]
                     associated_features = [f for f in all_feature_names if f.startswith(feature)]
                     if associated_features == []:
                         raise ValueError("No feature with the pattern " + feature + ".")
-                    self._categorical_features[feature]=associated_features
-                    all_categorical_features.extend(associated_features)
-                    #self._map_categorical_features[feature]=[]    
+                    self._reg_exp_categorical_features[feature]=associated_features
+                    self._categorical_features.extend(associated_features)
                 else:
                     if feature in all_feature_names:
-                        self._categorical_features[feature]=feature
-                        all_categorical_features.extend([feature])
-                        #self._map_categorical_features[feature]=[]
+                        self._reg_exp_categorical_features[feature]=feature
+                        self._categorical_features.extend([feature])
                     else:
                         raise ValueError("The feature " + feature + "do not exist.") 
         else:
             raise ValueError("The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
         
         #Build self._numerical_features
-        self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in all_categorical_features] #Without the last that is the label/prediction
+        #self._numerical_features = [feature for feature in all_feature_names[:-1] if feature not in self._categorical_features] #Without the last that is the label/prediction
         
         #Activate the theory
         self.set_theory(Theory.ORDER_NEW_VARIABLES)
-        indexes_numerical_features = []
-        indexes_categorical_features = dict()
         
-        self.map_indexes = dict()
+        self.map_indexes = dict() #Used to count used_features_without_one_hot_encoded
+        
+        #Firstly, for the numerical one  
         for feature in self._numerical_features:
-            index = all_feature_names.index(feature)+1 #Warning ids of features start from 1 to n (not 0), this is why there is +1.
+            #Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
+            index = feature_names.index(feature)+1 
             model.add_numerical_feature(index)  
-            indexes_numerical_features.append(index)
             self.map_indexes[index] = index
 
-        for overall_feature_name in self._categorical_features.keys():
-            indexes = [all_feature_names.index(feature)+1 for feature in self._categorical_features[overall_feature_name]]
-            model.add_categorical_feature_one_hot(overall_feature_name, indexes) 
-            indexes_categorical_features[overall_feature_name] = indexes
-            for index in indexes:
-                self.map_indexes[index] = overall_feature_name
-        nComeFromCategorical = 0
-        nBinaries = 0
-        nCategorical = 0
-        for overall_feature_name in self._categorical_features.keys():
-          nComeFromCategorical += len(self._categorical_features[overall_feature_name])
-          if len(self._categorical_features[overall_feature_name]) == 2:
-              nBinaries += 1
-          else:
-              nCategorical += 1
-        nNumerical = len(self._numerical_features)
-        print("Theory activated." )
-        print("Number of numerical features (before converting):", nNumerical)
-        print("Number of categorical features (before converting):", nCategorical)
-        print("Number of binary features (before converting):", nBinaries)
-        print("Number of features (before converting):", nNumerical+nCategorical+nBinaries)
-        
+        #Secondly, for the binary one 
+        for feature in self._binary_features:
+            #Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
+            index = feature_names.index(feature)+1
+            model.add_binary_feature(index)  
+            self.map_indexes[index] = index
 
+        #Finaly, for the categorical one 
+        for reg_exp_feature_name in self._reg_exp_categorical_features.keys():
+            indexes = [feature_names.index(feature)+1 for feature in self._reg_exp_categorical_features[reg_exp_feature_name]]
+            model.add_categorical_feature_one_hot(reg_exp_feature_name, indexes) 
+            for index in indexes:
+                self.map_indexes[index] = reg_exp_feature_name
+
+        # Display some statistics
+        nNumerical = len(self._numerical_features)
+        nBinaries = len(self._binary_features)
+        nCategorical = len(self._reg_exp_categorical_features.keys())
+
+        print("Theory activated." )
+        print("Numerical features (before encoding):", nNumerical)
+        print("Categorical features (before encoding):", nCategorical)
+        print("Binary features (before encoding):", nBinaries)
+        print("Number of features (before encoding):", nNumerical+nCategorical+nBinaries)
+        
         used_features = set()
         used_features_without_one_hot_encoded = set()
         for key in model.map_features_to_id_binaries.keys():
@@ -172,11 +191,6 @@ class Explainer:
         print("Used features:", len(used_features))
         print("Used features (before converting):", len(used_features_without_one_hot_encoded))
         
-        #print("Number of features come from categorical:", nComeFromCategorical)
-        
-        #print("all_categorical_features:", all_categorical_features)
-        #print("self._categorical_features:", self._categorical_features)
-        #print("_self._numerical_features:", self._numerical_features)
 
         
     def set_theory(self, theory):

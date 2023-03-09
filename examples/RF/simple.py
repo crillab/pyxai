@@ -14,12 +14,14 @@ print("instance:", instance)
 # Explainer part
 explainer = Explainer.initialize(model, instance=instance)
 
-direct_reason = explainer.direct_reason()
-print("len direct:", len(direct_reason))
-print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
+#direct_reason = explainer.direct_reason()
+#print("len direct:", len(direct_reason))
+#print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
 
 majoritary = explainer.majoritary_reason(n=1, n_iterations=1)
 # print("majoritary:", majoritary)
+
+print("\nmajoritary: ", explainer.to_features(majoritary))
 
 print("\nlen majoritary: ", len(majoritary))
 

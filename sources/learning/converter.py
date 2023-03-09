@@ -204,12 +204,15 @@ class Converter:
                 #data_categorical = data_categorical.fillna("NaN")
                 #print("data:", data_categorical)
                 matrix = encoder.fit_transform(data_categorical).toarray()
-                names = [element.replace("x0", feature) for element in encoder.get_feature_names()]
-                #print("names:", names)
+                names = [element.replace("x0", feature) for element in encoder.get_feature_names_out()]
                 print("One hot encoding new features for " + feature + ": " + str(len(names)))
                 if len(names) == 2:
                     self.n_bool += 1
-                    print("The feature " + feature + " is boolean!")    
+                    self.features_type[index] = TypeFeature.BINARY
+                    self.encoder[index] = None
+                    print("The feature " + feature + " is boolean! Do not One Hot Encoding this features.") 
+                    continue   
+                    
                 transformed_df = pandas.DataFrame(matrix, columns=names)
                 
                 save_features_type = self.features_type[index]

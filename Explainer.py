@@ -35,13 +35,13 @@ def boosted_trees(model, instance=None):
     return ExplainerBT(model, instance)
 
 
-def initialize(model, instance=None, categorical_features=None):
+def initialize(model, instance=None, features_types=None):
     """Return and initialize an explainer according to a model and optionally an instance.
 
     Args:
         model (BoostedTrees, RandomForest, DecisionTree): A model.
-        instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated.. Defaults to None.
-        categorical_features (:obj:`list` of :obj:`String` | `String`, optional) Either a list of string as ["Method*", "CouncilArea*", "Regionname*"] or a filename of .types file. 
+        instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated. Defaults to None.
+        features_types (:obj:`dict` containing the keys `numerical`, `categorical` and `binary` | `String`, optional) Either a dict where each key contains a list (["Method*", "CouncilArea*", "Regionname*"]) or a .types file. 
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """
@@ -52,8 +52,8 @@ def initialize(model, instance=None, categorical_features=None):
         explainer = ExplainerRF(model, instance)
     if isinstance(model, BoostedTrees):
         explainer = ExplainerBT(model, instance)
-    if categorical_features is not None:
-        explainer.set_categorical_features(categorical_features)
+    if features_types is not None:
+        explainer.set_features_types(features_types)
     return explainer
 
 
