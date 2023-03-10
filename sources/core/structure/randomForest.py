@@ -41,7 +41,6 @@ class RandomForest(TreeEnsembles):
 
 
     def is_implicant(self, implicant, prediction):
-        print("prediction:", prediction)
         if self.n_classes == 2:
           forest_implicant = [tree.is_implicant(implicant, prediction) for tree in self.forest]
           n_trees = len(forest_implicant)
@@ -49,18 +48,13 @@ class RandomForest(TreeEnsembles):
           return n_trues > int(n_trees / 2)
         
         reachable_classes = [tree.get_reachable_classes(implicant, prediction) for tree in self.forest]
-        print("multi:", reachable_classes)
-        print("n_trees:", len(reachable_classes))
-        def_cal = (len(reachable_classes)/self.n_classes)+1
-        print("def calcul:", def_cal)
         
         count_classes = [0]*self.n_classes
         for s in reachable_classes:
             for i in s:
-                count_classes[i] += 1
-        print("count_classes:", count_classes)
+                if i != prediction or len(s) == 1:
+                    count_classes[i] += 1
         
-        print([count_classes[prediction] > count_classes[i] or i == prediction for i in range(self.n_classes)])
         return all(count_classes[prediction] > count_classes[i] or i == prediction for i in range(self.n_classes))       
     
     def to_CNF(self, instance, binary_representation, target_prediction=None, *, tree_encoding=Encoding.COMPLEMENTARY,
