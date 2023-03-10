@@ -84,7 +84,7 @@ class BinaryMapping():
 
 
     def add_categorical_feature_ordinal(self, id_feature):
-        raise NotImplementedError #See with Gilles
+        raise NotImplementedError #See with Gilles ? on laisse pour l'instant
         if id_feature in self.map_numerical_features: 
             raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
         if id_feature in self.map_categorical_features_ordinal:
@@ -118,7 +118,7 @@ class BinaryMapping():
                 for i in range(len(id_binaries_sorted)-1): #To not takes the last
                     clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i+1]))
 
-                if theory == Theory.ORDER_NEW_VARIABLES:
+                if theory == Theory.ORDER_NEW_VARIABLES: #Uniquement pour les contrastives, a prendre en compte.
                     id_new_var = id_new_var + 1
                     #associated_literals = []
                     for id_binary in id_binaries_sorted:
@@ -127,11 +127,7 @@ class BinaryMapping():
                         # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
                     new_variables.append(id_new_var)
 
-            # For binary feature => Je pense qu'il y a rien a faire Gilles
-            # for key in self.map_binary_features.keys(): 
-            #    print("key:", key)
-            #    id_binaries = self.map_binary_features[key]
-            #    print("id_binaries:", id_binaries)
+            # For binary feature, nothing to do.
                 
             # For categorical features that was one hot encoded
             for key in self.map_categorical_features_one_hot.keys(): 
