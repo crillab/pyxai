@@ -466,10 +466,8 @@ class ExplainerRF(Explainer):
 
 
     def is_majoritary_reason(self, reason, n_samples=50):
-        print(reason)
         
         if not self.is_implicant(reason):
-            print("here 1")
             return False
         
             
@@ -479,9 +477,7 @@ class ExplainerRF(Explainer):
         for lit in tmp:
             copy_reason = list(reason).copy()
             copy_reason.remove(lit)
-            print(copy_reason)
             if self.is_implicant(tuple(copy_reason)):
-                print("here 2")
                 return False
             nb += 1
             if nb > n_samples:
