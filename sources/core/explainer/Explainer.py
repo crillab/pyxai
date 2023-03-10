@@ -140,13 +140,13 @@ class Explainer:
                         if feature in feature_names:
                             self._numerical_features.extend([feature])
                         else:
-                            raise ValueError("The feature " + feature + "do not exist.")
+                            raise ValueError("The feature " + feature + "does not exist.")
                 elif key == "binary":
                     for feature in features_types[key]:
                         if feature in feature_names:
                             self._binary_features.extend([feature])
                         else:
-                            raise ValueError("The feature " + feature + "do not exist.")
+                            raise ValueError("The feature " + feature + "does not exist.")
                 elif key == "categorical":
                     for feature in features_types[key]:
                         if "*" in feature:
@@ -161,7 +161,7 @@ class Explainer:
                                 self._reg_exp_categorical_features[feature]=feature
                                 self._categorical_features.extend([feature])
                             else:
-                                raise ValueError("The feature " + feature + "do not exist.")                
+                                raise ValueError("The feature " + feature + "does not exist.")                
                 if default is not None:
                     #Without the last that is the label/prediction
                     if default == "numerical":
@@ -205,6 +205,7 @@ class Explainer:
         nBinaries = len(self._binary_features)
         nCategorical = len(self._reg_exp_categorical_features.keys())
 
+        # TODO: Add the verbose mode
         print("Theory activated." )
         print("Numerical features (before encoding):", nNumerical)
         print("Categorical features (before encoding):", nCategorical)
