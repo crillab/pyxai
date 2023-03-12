@@ -4,7 +4,7 @@ import c_explainer
 import numpy
 
 from pyxai.sources.core.explainer.Explainer import Explainer
-from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod, Theory, ReasonExpressivity
+from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod, TypeTheory, ReasonExpressivity
 from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
@@ -117,12 +117,8 @@ class ExplainerRF(Explainer):
         tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0, tree_encoding=Encoding.SIMPLE)
 
         #structure to help to do this method faster
-        map_id_binary_sign = dict()
-        map_is_represented_by_new_variables = dict()
         map_in_binary_representation = dict()
-        for id in self.binary_representation:
-            map_id_binary_sign[abs(id)] = 1 if id > 0 else -1
-            map_is_represented_by_new_variables[abs(id)] = False
+        for id in self._binary_representation:
             map_in_binary_representation[id] = True
             map_in_binary_representation[-id] = False
             
@@ -134,10 +130,10 @@ class ExplainerRF(Explainer):
         #print("max_id_variable:", max_id_binary_cnf)
         
         MAXSATsolver = OPENWBOSolver()
-        print("Length of the binary representation:", len(self._binary_representation))
-        print("Number of hard clauses in the CNF encoding the random forest:", len(tree_cnf))
+        #print("Length of the binary representation:", len(self._binary_representation))
+        #print("Number of hard clauses in the CNF encoding the random forest:", len(tree_cnf))
         
-        if self._theory is None:
+        if self._theory == False:
             for lit in self._binary_representation:
                 MAXSATsolver.add_soft_clause([lit], weight=1)
             for clause in tree_cnf:
@@ -146,12 +142,12 @@ class ExplainerRF(Explainer):
             # Hard clauses
             for clause in tree_cnf:
                 MAXSATsolver.add_hard_clause(clause)
-            theory_cnf, theory_new_variables, map_is_represented_by_new_variables = self._random_forest.get_theory(
-                map_id_binary_sign, 
-                map_is_represented_by_new_variables, 
-                self._theory, 
-                max_id_binary_cnf)
-            print("Number of hard clauses in the theory:", len(theory_cnf))
+            theory_cnf, theory_new_variables = self._random_forest.get_theory(
+                self._binary_representation,
+                theory_type=TypeTheory.NEW_VARIABLES, 
+                id_new_var=max_id_binary_cnf)
+            theory_new_variables, map_is_represented_by_new_variables = theory_new_variables
+            #print("Number of hard clauses in the theory:", len(theory_cnf))
             for clause in theory_cnf:
                 MAXSATsolver.add_hard_clause(clause)
             
@@ -165,15 +161,14 @@ class ExplainerRF(Explainer):
                 if map_is_represented_by_new_variables[abs(lit)] is False:
                     MAXSATsolver.add_soft_clause([lit], weight=1)
                     count+=1
-            print("Number of soft clauses due to binary representation:", count)
+            #print("Number of soft clauses due to binary representation:", count)
             for new_variable in theory_new_variables:
                 MAXSATsolver.add_soft_clause([new_variable], weight=1)
-            print("Number of new soft clauses with new variable due to the theory:", len(theory_new_variables))
+            #print("Number of new soft clauses with new variable due to the theory:", len(theory_new_variables))
 
-        soft = [a for l in MAXSATsolver.WCNF.soft for a in l]
-        
-        print("Total number of hard clauses:", len(MAXSATsolver.WCNF.hard))
-        print("Total number of soft clauses:", len(soft))
+        #soft = [a for l in MAXSATsolver.WCNF.soft for a in l]
+        #print("Total number of hard clauses:", len(MAXSATsolver.WCNF.hard))
+        #print("Total number of soft clauses:", len(soft))
         
         # Remove excluded features
         for lit in self._excluded_literals:
@@ -189,36 +184,14 @@ class ExplainerRF(Explainer):
             if reason is None:
                 break
             # We have to invert the reason :)
-            #true_reason = [-lit for lit in reason if -lit in self._binary_representation]
             true_reason = [-lit for lit in reason if abs(lit) < len(self._binary_representation) and map_in_binary_representation[-lit] == True]
-            #true_reason = [-lit for lit in reason if abs(lit) < len(self._binary_representation) and map_id_binary_sign[abs(lit)] == -1]
             
             # Add a blocking clause to avoid this reason in the next steps
             MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_binary_representation])
 
-            #print("true_reason:", true_reason)
-
             # Compute the score
-            if self._theory is None:
-              score = len(true_reason)
-            elif self._theory == Theory.ORDER_NEW_VARIABLES or self._theory == Theory.ORDER:
-              score = len(true_reason)
-              # for lit in reason:
-              #  if -lit in soft:
-              #    map_variable_to_literals = [t for t in theory_new_variables if t[0] == #abs(lit)]
-              #    if len(map_variable_to_literals) != 0:
-              #      score_new_variable = 0
-              #      map_variable_to_literals = map_variable_to_literals[0]
-              #      for lit in map_variable_to_literals[1]:
-              #        if lit in true_reason:
-              #          score_new_variable+=1
-              #      score += score_new_variable/len(map_variable_to_literals[1])
-              #    else:
-              #      score += 1 
-              # Before, it is: score = len([_ for lit in reason if -lit in soft])
-            else:
-              raise NotImplementedError("The theory " + str(self._theory) + " is not implemented here.")
-            print("score:", score)
+            score = len(true_reason)
+            
             # Stop or not due to score :)
             if first_call:
                 best_score = score
@@ -231,11 +204,8 @@ class ExplainerRF(Explainer):
 
             # Stop or not due to time or n :)
             if (time_limit != 0 and time_used > time_limit) or len(results) == n:
-                print("End by time_limit or 'n' reached.")
+                #print("End by time_limit or 'n' reached.")
                 break
-        #Do that in the program: to change
-        #for i, contrastive in enumerate(results): 
-        #    results[i] = self._random_forest.eliminate_redundant_features(contrastive, inverse=True)
 
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
         return Explainer.format(results, n)
