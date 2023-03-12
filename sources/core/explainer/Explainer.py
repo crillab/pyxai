@@ -2,8 +2,10 @@ import random
 import json
 from typing import Iterable
 
+
 from pyxai.sources.core.tools.utils import count_dimensions
-from pyxai.sources.core.structure.type import Theory, TypeFeature, OperatorCondition
+from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
+from pyxai import Tools
 
 class Explainer:
     TIMEOUT = -1
@@ -16,7 +18,7 @@ class Explainer:
         self._excluded_literals = []
         self._excluded_features = []
         self._instance = None
-        self._theory = None
+        self._theory = False
         self._categorical_features = []
 
     def get_model(self):
@@ -175,7 +177,7 @@ class Explainer:
         
         
         #Activate the theory
-        self.set_theory(Theory.ORDER_NEW_VARIABLES)
+        self.activate_theory()
         
         self.map_indexes = dict() #Used to count used_features_without_one_hot_encoded
         
@@ -205,12 +207,12 @@ class Explainer:
         nBinaries = len(self._binary_features)
         nCategorical = len(self._reg_exp_categorical_features.keys())
 
-        # TODO: Add the verbose mode
-        print("Theory activated." )
-        print("Numerical features (before encoding):", nNumerical)
-        print("Categorical features (before encoding):", nCategorical)
-        print("Binary features (before encoding):", nBinaries)
-        print("Number of features (before encoding):", nNumerical+nCategorical+nBinaries)
+        Tools.verbose("---------   Theory Feature Types   -----------")
+        Tools.verbose("Before the encoding (without one hot encoded features), we have:")
+        Tools.verbose("Numerical features:", nNumerical)
+        Tools.verbose("Categorical features:", nCategorical)
+        Tools.verbose("Binary features:", nBinaries)
+        Tools.verbose("Number of features:",nNumerical+nCategorical+nBinaries)
         
         used_features = set()
         used_features_without_one_hot_encoded = set()
@@ -219,25 +221,23 @@ class Explainer:
                 raise ValueError("The feature " + feature_names[key[0]-1] + " is missing in features_types.")        
             used_features.add(key[0])
             used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
-        print("Used features:", len(used_features))
-        print("Used features (before converting):", len(used_features_without_one_hot_encoded))
+        Tools.verbose("")
+        Tools.verbose("Number of used features in the model (before the encoding):", len(used_features_without_one_hot_encoded))
+        Tools.verbose("Number of used features in the model (after the encoding):", len(used_features))
+        Tools.verbose("----------------------------------------------")
         
-
-        
-    def set_theory(self, theory):
+    def activate_theory(self):
         """
         Add a theory in the resolution methods (at this time, only for contrastive explanations).
         This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
-
-        @param theory (Explainer.ORDER_NEW_VARIABLES | Explainer.ORDER): the theory selected.
         """
-        self._theory = theory
+        self._theory = True
         
-    def unset_theory(self):
+    def deactivate_theory(self):
         """
-        Unset the theory set with the set_theory method.
+        Unset the theory set with the activate_theory method.
         """
-        self._theory = None
+        self._theory = False
 
     def set_excluded_features(self, excluded_features):
         """
