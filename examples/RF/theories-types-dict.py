@@ -9,7 +9,7 @@ learner = Learning.Scikitlearn(Tools.Options.dataset)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(n=1)
 
-print("instance:", instance)
+#print("instance:", instance)
 
 
 # Explainer part

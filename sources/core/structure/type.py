@@ -184,8 +184,8 @@ class OperatorCondition(Enum):
         return self.name
 
 @unique
-class Theory(Enum):
-    ORDER, ORDER_NEW_VARIABLES = auto(2)
+class TypeTheory(Enum):
+    SIMPLE, NEW_VARIABLES = auto(2)
 
     def __str__(self):
         return self.name
