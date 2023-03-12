@@ -1,4 +1,4 @@
-from pyxai.sources.core.structure.type import OperatorCondition, Theory
+from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
 
 class BinaryMapping():
@@ -98,51 +98,58 @@ class BinaryMapping():
         self.map_categorical_features_ordinal[id_feature] = id_binaries_of_the_feature
 
 
-    def get_theory(self, map_id_binary_sign, map_is_represented_by_new_variables, theory, max_id_binary_cnf):
+
+    """
+        
+    """
+    def get_theory(self, binary_representation, *, theory_type=TypeTheory.SIMPLE, id_new_var=0):
+        #structure to help to do this method faster
+        map_id_binary_sign = dict()
+        map_is_represented_by_new_variables = dict()
+        for id in binary_representation:
+            map_id_binary_sign[abs(id)] = 1 if id > 0 else -1
+            map_is_represented_by_new_variables[abs(id)] = False
+        
         clauses = []
         new_variables = []
-        id_new_var = max_id_binary_cnf
-        
-
-        #print("self.map_numerical_features:", self.map_numerical_features)
-        if theory == Theory.ORDER or theory == Theory.ORDER_NEW_VARIABLES:
-            # Warning: work with the > and >= operators
+             
+        # For numerical features
+        for key in self.map_numerical_features.keys():
+            id_binaries = self.map_numerical_features[key]
+            conditions = [tuple(list(self.map_id_binaries_to_features[id])+[id]) for id in id_binaries]
+            conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
+            id_binaries_sorted = tuple(condition[3] for condition in conditions)
             
-            # For numerical features
-            for key in self.map_numerical_features.keys():
-                id_binaries = self.map_numerical_features[key]
-                conditions = [tuple(list(self.map_id_binaries_to_features[id])+[id]) for id in id_binaries]
-                conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
-                id_binaries_sorted = tuple(condition[3] for condition in conditions)
-                
-                for i in range(len(id_binaries_sorted)-1): #To not takes the last
-                    clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i+1]))
+            for i in range(len(id_binaries_sorted)-1): #To not takes the last
+                clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i+1]))
 
-                if theory == Theory.ORDER_NEW_VARIABLES: #Uniquement pour les contrastives, a prendre en compte.
-                    id_new_var = id_new_var + 1
-                    #associated_literals = []
-                    for id_binary in id_binaries_sorted:
-                        clauses.append((-id_new_var, map_id_binary_sign[id_binary]*id_binary))
-                        map_is_represented_by_new_variables[id_binary] = True
-                        # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
-                    new_variables.append(id_new_var)
+            if theory_type == TypeTheory.NEW_VARIABLES: 
+                id_new_var = id_new_var + 1
+                #associated_literals = []
+                for id_binary in id_binaries_sorted:
+                    clauses.append((-id_new_var, map_id_binary_sign[id_binary]*id_binary))
+                    map_is_represented_by_new_variables[id_binary] = True
+                    # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
+                new_variables.append(id_new_var)
+    
+        # For categorical features that was one hot encoded
+        for key in self.map_categorical_features_one_hot.keys(): 
+            id_binaries = self.map_categorical_features_one_hot[key]
+            for i, id_1 in enumerate(id_binaries):
+                for j, id_2 in enumerate(id_binaries):
+                    if i != j:
+                        # we code a => not b that is equivalent to not a or not b (material implication)
+                        clauses.append((-id_1, -id_2))   
 
-            # For binary feature, nothing to do.
-                
-            # For categorical features that was one hot encoded
-            for key in self.map_categorical_features_one_hot.keys(): 
-                id_binaries = self.map_categorical_features_one_hot[key]
-                for i, id_1 in enumerate(id_binaries):
-                    for j, id_2 in enumerate(id_binaries):
-                        if i != j:
-                            # we code a => not b that is equivalent to not a or not b (material implication)
-                            clauses.append((-id_1, -id_2))   
+        # For binary feature, nothing to do.
 
-     
-                
-
-        # The < and <= operators ? (not possible with xgboost but possible in the builder ...)
-        return clauses, new_variables, map_is_represented_by_new_variables
+        if theory_type == TypeTheory.SIMPLE:    
+            return clauses
+        elif theory_type == TypeTheory.NEW_VARIABLES:
+            return clauses, (new_variables, map_is_represented_by_new_variables)
+        else:
+            raise NotImplementedError
+        
 
     def compute_id_binaries(self):
         assert False, "Have to be implemented in a child class."

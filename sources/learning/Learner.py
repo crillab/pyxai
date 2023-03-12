@@ -187,7 +187,7 @@ class Learner:
         self.n_labels = len(set(self.labels))
         self.data = self.data.to_numpy()  # remove the first line (attributes) and now the first dimension represents the instances :)!
         self.learner_information = []
-        Tools.verbose("---------------   Information   ---------------")
+        Tools.verbose("--------------   Information   ---------------")
         Tools.verbose("Dataset name:", self.dataset_name)
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
         Tools.verbose("nInstances (nObservations):", self.n_instances)
