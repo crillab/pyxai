@@ -145,30 +145,53 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
             return; // It is not possible to remove excluded features
 
     }
+    if (theory.size() != 0){
+        for (const auto& [key, value] : theory)
+            std::cout << '[' << key << "] = " << value << std::endl;        
+    }
     std::default_random_engine rd = std::default_random_engine(seed == -1 ? std::chrono::steady_clock::now().time_since_epoch().count() : 1);
     while(true){
         std::shuffle(std::begin(order), std::end(order), rd);
-        for(int l: order) std::cout << l << " ";
-        std::cout << "\n";
         for(auto l : instance) active_lits[abs(l)] = true; // Init
         for(auto l : excluded_features) active_lits[abs(l)] = false; // Do not want them
         current_size = instance.size() - excluded_features.size();
 
         if(_type == RF) {
-        for(Tree *tree : trees) {
-            if(tree->status != WRONG)
-                tree->status = GOOD;
-            if(tree->status == GOOD)
-                tree->initialize_RF(polarity_instance, active_lits, prediction); // remember to reinit useful lits
-            }
+            for(Tree *tree : trees) {
+                if(tree->status != WRONG)
+                    tree->status = GOOD;
+                if(tree->status == GOOD)
+                    tree->initialize_RF(polarity_instance, active_lits, prediction); // remember to reinit useful lits
+                }
         }
         for(int l: order) {
             active_lits[abs(l)] = false;
-            try_to_remove = l;
-            if(is_implicant(polarity_instance, active_lits, prediction) == false)
-                active_lits[abs(l)] = true;
-            else
-                current_size--;
+            std::cout << "do:" << l << std::endl;
+            if (theory.size() != 0){
+                if (theory.find(-l)!=theory.end()){
+                    //I am found this in the theory
+                    std::cout << "in the theory:" << -l << " or " << theory[-l] << std::endl;
+                    exit(0); 
+                }else{
+                    try_to_remove = l;
+                    if(is_implicant(polarity_instance, active_lits, prediction) == false){
+                        //Je le garde
+                        active_lits[abs(l)] = true;
+                    }else{
+                        //Je ne le garde pas
+                        current_size--;
+                    }
+                }   
+            }else{
+                try_to_remove = l;
+                if(is_implicant(polarity_instance, active_lits, prediction) == false){
+                    //Je le garde
+                    active_lits[abs(l)] = true;
+                }else{
+                    //Je ne le garde pas
+                    current_size--;
+                }
+            }
         }
 
         if(current_size < best_size) {

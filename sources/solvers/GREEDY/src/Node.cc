@@ -58,6 +58,9 @@ bool PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
             return false_branch->is_implicant(instance, active_lits, prediction, used_lits);
     }
 
+    
+
+
     bool pf = false_branch->is_implicant(instance, active_lits, prediction, used_lits);
     if(!pf) return false;
     return true_branch->is_implicant(instance, active_lits, prediction, used_lits);
