@@ -11,7 +11,8 @@
 #include<algorithm>
 #include "Tree.h"
 #include "utils/TimerHelper.h"
-
+#include "bcp/Propagator.h"
+#include "bcp/Problem.h.h"
 namespace PyLE {
     class Explainer {
       public:
@@ -23,7 +24,7 @@ namespace PyLE {
         std::vector<int> count_classes; //useful only for RF
         int try_to_remove;
         std::vector<double> excluded_features;
-        std::map<int, int> theory;
+        Propagator::Propagator *theory_propagator;
 
         Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0) {
             if(_type == PyLE::BT && n_classes > 2)
