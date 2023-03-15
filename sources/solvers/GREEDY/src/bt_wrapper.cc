@@ -29,6 +29,7 @@ static PyObject *void_to_pyobject(void *ptr) {
     return PyCapsule_New(ptr, NULL, NULL);
 }
 
+
 static void *pyobject_to_void(PyObject *obj) {
     return PyCapsule_GetPointer(obj, NULL);
 }
@@ -116,20 +117,28 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
     // Convert the vector of the instance
 
     Py_ssize_t size_theory = PyTuple_Size(vector_theory);
-    
-    
+
+    std::vector<std::vector<Lit> > clauses;
+    int max = 0;
     for(int i = 0; i < size_theory; i++) {
+        std::vector<Lit> c;
         PyObject *value_obj = PyTuple_GetItem(vector_theory, i);
         Py_ssize_t size_obj = PyTuple_Size(value_obj);
-        if (size_obj != 2){
+        if (size_obj != 2)
             throw std::logic_error("The clauses of the theory must be of size 2 (binary).");
+        for(int i = 0; i < size_obj; i++) {
+            long l = PyLong_AsLong(PyTuple_GetItem(value_obj, i));
+            if(max < std::abs(l)) max = std::abs(l);
+            c.push_back((l > 0) ? Lit::makeLit(l, false) : Lit::makeLit(-l, true));
         }
-        explainer->theory[PyLong_AsLong(PyTuple_GetItem(value_obj, 0))] = PyLong_AsLong(PyTuple_GetItem(value_obj, 1));
-        
+        clauses.push_back(c);
     }
-
+    Propagator::Problem problem(clauses, max, std::cout, true);
+    explainer->theory_propagator = new Propagator::Propagator(problem, true);
     Py_RETURN_NONE;
 }
+
+
 static PyObject *compute_reason(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_instance_obj;

@@ -30,19 +30,47 @@ void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vec
         reachable_classes.insert(leaf_value.prediction);
         return;
     }
-            
+
     if (active_lits[lit]) { // Literal in implicant
+        Node *branch;
         if (instance[lit]){ // positive lit in instance
-            true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-            return;
+            propagator->uncheckedEnqueue(mkLitTrue(lit));
+            branch = true_branch;
         } else {
-            false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-            return;
+            propagator->uncheckedEnqueue(mkLitFalse(lit));
+            branch = false_branch;
         }
+
+        bool ret = propagator->propagate();
+        assert(ret == true);
+        branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+        propagator->cancel....
+        return;
     }
-            
-    false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-    true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+
+    Node *normal_branch, out_branch;
+    Lit normal_lit;
+    if (instance[lit]){ // positive lit in instance
+        normal_lit = mkLitTrue(lit);
+        normal_branch = true_branch;
+        out_branch = false_branch;
+    } else {
+        normal_lit = mkLitTrue(lit);
+        normal_branch = false_branch;
+        out_branch = true_branch;
+    }
+    propagator->uncheckedEnqueue(normal_lit);
+    bool ret = propagator->propagate();
+    normal_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+    assert(ret == true);
+    propagator->uncheckedEnqueue(~normal_lit);
+    bool ret = propagator->propagate();
+    if(ret)
+        out_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+
+
+    //false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+    //true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
 }
 
 bool PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::vector<int> &used_lits) {
@@ -65,6 +93,9 @@ bool PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
     if(!pf) return false;
     return true_branch->is_implicant(instance, active_lits, prediction, used_lits);
 }
+
+
+
 
 void PyLE::Node::reduce_with_instance(std::vector<bool> &instance, bool get_min) {
     if(is_leaf()) return; // Nothing to do
