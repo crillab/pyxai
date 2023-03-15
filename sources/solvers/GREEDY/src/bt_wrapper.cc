@@ -99,6 +99,37 @@ static PyObject *set_excluded(PyObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
+static PyObject *set_theory(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    PyObject *vector_theory;
+    if (!PyArg_ParseTuple(args, "OO", &class_obj, &vector_theory)) {
+        return NULL;
+    }
+    if (!PyTuple_Check(vector_theory)) {
+        PyErr_Format(PyExc_TypeError,
+                     "The second argument must be a tuple reprenting the theory !");
+        return NULL;
+    }
+
+    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    
+    // Convert the vector of the instance
+
+    Py_ssize_t size_theory = PyTuple_Size(vector_theory);
+    
+    
+    for(int i = 0; i < size_theory; i++) {
+        PyObject *value_obj = PyTuple_GetItem(vector_theory, i);
+        Py_ssize_t size_obj = PyTuple_Size(value_obj);
+        if (size_obj != 2){
+            throw std::logic_error("The clauses of the theory must be of size 2 (binary).");
+        }
+        explainer->theory[PyLong_AsLong(PyTuple_GetItem(value_obj, 0))] = PyLong_AsLong(PyTuple_GetItem(value_obj, 1));
+        
+    }
+
+    Py_RETURN_NONE;
+}
 static PyObject *compute_reason(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_instance_obj;
@@ -172,7 +203,8 @@ static PyMethodDef module_methods[] = {
         {"new_BT",         new_BT,         METH_VARARGS, "Create a BT explainer."},
         {"new_RF",         new_RF,         METH_VARARGS, "Create a RF explainer."},
         {"add_tree",       add_tree,       METH_VARARGS, "Add a tree."},
-        {"set_excluded",   set_excluded,   METH_VARARGS, "set excluded features"},
+        {"set_excluded",   set_excluded,   METH_VARARGS, "Set excluded features"},
+        {"set_theory",     set_theory,   METH_VARARGS,   "Set the theory"},
         {"compute_reason", compute_reason, METH_VARARGS, "Compute a reason"},
         {NULL,             NULL,           0,            NULL}
 };

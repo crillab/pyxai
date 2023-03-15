@@ -164,14 +164,14 @@ class Explainer:
                                 self._categorical_features.extend([feature])
                             else:
                                 raise ValueError("The feature " + feature + "does not exist.")                
-                if default is not None:
-                    #Without the last that is the label/prediction
-                    if default == "numerical":
-                        self._numerical_features = [feature for feature in feature_names[:-1] if feature not in self._categorical_features and feature not in self._binary_features]
-                    elif default == "categorical":
-                        self._categorical_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._binary_features]
-                    elif default == "binary":
-                        self._binary_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._categorical_features]                       
+            if default is not None:
+                #Without the last that is the label/prediction
+                if default == "numerical":
+                    self._numerical_features = [feature for feature in feature_names[:-1] if feature not in self._categorical_features and feature not in self._binary_features]
+                elif default == "categorical":
+                    self._categorical_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._binary_features]
+                elif default == "binary":
+                    self._binary_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._categorical_features]                       
         else:
             raise ValueError("The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
         

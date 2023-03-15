@@ -305,6 +305,9 @@ class ExplainerRF(Explainer):
                 time_limit = 0
             implicant_id_features = ()  # FEATURES : TODO
             c_explainer.set_excluded(self.c_RF, tuple(self._excluded_literals))
+            if self._theory == True:
+                c_explainer.set_theory(self.c_RF, tuple(self._random_forest.get_theory(self._binary_representation)))
+                
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,
                                                 time_limit, int(reason_expressivity), seed)
             if reason_expressivity == ReasonExpressivity.Conditions:
