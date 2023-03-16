@@ -21,8 +21,8 @@
 #include <iostream>
 #include <vector>
 
-#include "src/bcp/Problem.hpp"
-#include "src/bcp/ProblemTypes.hpp"
+#include "./Problem.h"
+#include "./ProblemTypes.h"
 
 namespace Propagator {
 struct Imply {

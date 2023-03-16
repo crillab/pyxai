@@ -19,7 +19,7 @@
 
 #include <vector>
 
-#include "src/bcp/ProblemTypes.hpp"
+#include "./ProblemTypes.h"
 
 namespace Propagator {
 class Problem {

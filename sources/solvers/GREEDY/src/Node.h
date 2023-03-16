@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include "bcp/Propagator.h"
 
 
 namespace PyLE {
@@ -80,7 +81,7 @@ namespace PyLE {
         // Methods onlu related to RF
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::vector<int> &used_lits);
 
-        void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes);
+        void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes, Propagator::Propagator *theory_propagator);
     };
 }
 
