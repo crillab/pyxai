@@ -3,7 +3,8 @@
 //
 
 #include "Node.h"
-
+#include "bcp/ProblemTypes.h"
+using namespace Propagator;
 double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
     if (is_leaf())
         return leaf_value.weight;
@@ -25,48 +26,50 @@ double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool>
     return std::max(wf, wt);
 }
 
-void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes){
+void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes, Propagator::Propagator *propagator){
     if(is_leaf()){
         reachable_classes.insert(leaf_value.prediction);
         return;
     }
-
+    unsigned pos = propagator->getTrailSize();
     if (active_lits[lit]) { // Literal in implicant
         Node *branch;
         if (instance[lit]){ // positive lit in instance
-            propagator->uncheckedEnqueue(mkLitTrue(lit));
+            propagator->uncheckedEnqueue(Lit::makeLitTrue(lit));
             branch = true_branch;
         } else {
-            propagator->uncheckedEnqueue(mkLitFalse(lit));
+            propagator->uncheckedEnqueue(Lit::makeLitFalse(lit));
             branch = false_branch;
         }
 
         bool ret = propagator->propagate();
         assert(ret == true);
-        branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-        propagator->cancel....
+        branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
+        propagator->cancelUntilPos(pos);
         return;
     }
 
-    Node *normal_branch, out_branch;
+    Node *normal_branch, *out_branch;
     Lit normal_lit;
     if (instance[lit]){ // positive lit in instance
-        normal_lit = mkLitTrue(lit);
+        normal_lit = Lit::makeLitTrue(lit);
         normal_branch = true_branch;
         out_branch = false_branch;
     } else {
-        normal_lit = mkLitTrue(lit);
+        normal_lit = Lit::makeLitFalse(lit);
         normal_branch = false_branch;
         out_branch = true_branch;
     }
     propagator->uncheckedEnqueue(normal_lit);
     bool ret = propagator->propagate();
-    normal_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+    normal_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
     assert(ret == true);
+    propagator->cancelUntilPos(pos);
     propagator->uncheckedEnqueue(~normal_lit);
-    bool ret = propagator->propagate();
+    ret = propagator->propagate();
     if(ret)
-        out_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
+        out_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
+    propagator->cancelUntilPos(pos);
 
 
     //false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);

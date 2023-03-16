@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "Propagator.hpp"
+#include "Propagator.h"
 
 #include <cassert>
 
@@ -187,6 +187,7 @@ void Propagator::addClause(std::vector<Lit> &clause) {
  * @brief uncheckedEnqueue implementation.
  */
 void Propagator::uncheckedEnqueue(Lit l) {
+  //if (m_verbose) m_out << "propagate" << l << "\n";
   assert(m_assign[l.var()] == l_Undef);
   m_trail[m_trailSize++] = l;
   m_assign[l.var()] = l.sign();

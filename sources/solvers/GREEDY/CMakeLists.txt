@@ -14,7 +14,7 @@ find_package(pybind11 REQUIRED)
 include_directories(${FOO})
 find_package(pybind11 REQUIRED)
 
-set(src/MajoritaryExplainerBT.cc src/majoritary_bt_wrapper.c)
+set(src/MajoritaryExplainer.cc src/majoritary_bt_wrapper.c)
 
 #include_directories()
 

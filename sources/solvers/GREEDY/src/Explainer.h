@@ -12,7 +12,7 @@
 #include "Tree.h"
 #include "utils/TimerHelper.h"
 #include "bcp/Propagator.h"
-#include "bcp/Problem.h.h"
+#include "bcp/Problem.h"
 namespace PyLE {
     class Explainer {
       public:

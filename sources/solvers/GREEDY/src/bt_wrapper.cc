@@ -9,7 +9,7 @@
 #include "Node.h"
 #include "Explainer.h"
 
-
+using namespace Propagator;
 static PyObject* vectorToTuple_Int(const std::vector<int> &data) {
     PyObject* tuple = PyTuple_New( data.size() );
     if (!tuple) throw std::logic_error("Unable to allocate memory for Python tuple");

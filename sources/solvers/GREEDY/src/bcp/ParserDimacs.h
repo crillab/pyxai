@@ -26,9 +26,9 @@
 #include <limits>
 #include <vector>
 
-#include "BufferRead.hpp"
-#include "Problem.hpp"
-#include "ProblemTypes.hpp"
+#include "BufferRead.h"
+#include "Problem.h"
+#include "ProblemTypes.h"
 
 namespace Propagator {
 class ParserDimacs {
