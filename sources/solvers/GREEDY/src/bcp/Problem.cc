@@ -16,10 +16,10 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "Problem.hpp"
+#include "Problem.h"
 
-#include "ParserDimacs.hpp"
-#include "Problem.hpp"
+#include "ParserDimacs.h"
+#include "Problem.h"
 
 namespace Propagator {
 
