@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "ProblemTypes.hpp"
+#include "ProblemTypes.h"
 
 namespace Propagator {
 /**
