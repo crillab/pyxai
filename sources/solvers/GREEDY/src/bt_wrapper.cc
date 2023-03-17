@@ -135,6 +135,9 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
     }
     Propagator::Problem problem(clauses, max, std::cout, true);
     explainer->theory_propagator = new Propagator::Propagator(problem, true);
+    for(Tree *t : trees)
+        t->propagator = explainer->theory_propagator;
+
     Py_RETURN_NONE;
 }
 

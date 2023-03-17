@@ -41,7 +41,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (size_obj == 1){
       // it is a tree with only one leaf value !
       PyObject *value_obj = PyTuple_GetItem(tree_obj, 0);
-      Node *tmp = _type == PyLE::BT ? new Node(PyFloat_AsDouble(value_obj)) : new Node((int)PyLong_AsLong(value_obj));
+      Node *tmp = _type == PyLE::BT ? new Node(PyFloat_AsDouble(value_obj), *this) : new Node((int)PyLong_AsLong(value_obj), *this);
       all_nodes.push_back(tmp);
       return tmp;
     }
@@ -58,7 +58,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(left_obj)) {
         left_node = parse_recurrence(left_obj, _type);
     } else if (PyFloat_Check(left_obj) || PyLong_Check(left_obj)) {
-        left_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(left_obj)) : new Node((int)PyLong_AsLong(left_obj));
+        left_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(left_obj), *this) : new Node((int)PyLong_AsLong(left_obj), *this);
         all_nodes.push_back(left_node);
     } else {
         const char* p = Py_TYPE(left_obj)->tp_name;
@@ -72,7 +72,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(right_obj)) {
         right_node = parse_recurrence(right_obj, _type);
     } else if (PyFloat_Check(right_obj) || PyLong_Check(right_obj)) {
-        right_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(right_obj)) : new Node((int)PyLong_AsLong(right_obj));
+        right_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(right_obj), *this) : new Node((int)PyLong_AsLong(right_obj), *this);
         all_nodes.push_back(right_node);
     } else {
         const char* p = Py_TYPE(right_obj)->tp_name;
@@ -104,7 +104,7 @@ void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &a
         used_to_explain.resize( instance.size(), false);
     std::fill(used_to_explain.begin(), used_to_explain.end(), false);
     if(is_implicant(instance, active_lits, prediction) == false) // Do not try this tree : always wrong
-        status = PyLE::WRONG;
+        status = PyLE::DEFINITIVELY_WRONG;
     else
         update_used_lits();
 
