@@ -11,11 +11,13 @@
 #include <Python.h>
 
 namespace PyLE {
-    enum Kind_of_Tree_RF { WRONG, GOOD, CURRENTLY_WRONG};
+    enum Kind_of_Tree_RF { DEFINITIVELY_WRONG, GOOD, CURRENTLY_WRONG};
+    class Node;
 
     class Tree {
     public :
-
+        Type _type;
+        unsigned int n_classes;
         unsigned int target_class;
         u_char *memory = nullptr;
         Node *root = nullptr;
@@ -23,6 +25,18 @@ namespace PyLE {
         Kind_of_Tree_RF status; // Useful only with RF : this tree hasn't the good class
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
+        Propagator::Propagator *propagator = nullptr;
+
+
+        // Variables used to stored the comutation value during common is_impicant function
+        // FOR BT
+        bool get_min;
+        double current_weight;
+        bool firstLeaf;
+
+        std::set<unsigned int> reachable_classes; // FOR Multiclasses RF
+
+
         Tree(PyObject *tree_obj, Type _type){
           root = parse(tree_obj, _type);
         }
@@ -33,24 +47,17 @@ namespace PyLE {
         Node* parse_recurrence(PyObject *tree_obj, Type _type);
         int nb_nodes() { return root->nb_nodes();}
 
-        // BT functions
-        double compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
-            return root->compute_weight(instance, active_lits, get_min);
-        }
+
+
         void initialize_BT(std::vector<bool> &instance, bool get_min);
 
 
-        // RF functions
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
             used_lits.clear();
-
-            return root->is_implicant(instance, active_lits, prediction, used_lits);
+            root->is_implicant(instance, active_lits, prediction);
         }
 
-        void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes, Propagator::Propagator *theory_propagator) {
-            
-            return root->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, theory_propagator);
-        }
+
 
 
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
