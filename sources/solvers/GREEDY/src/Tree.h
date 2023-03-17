@@ -7,7 +7,7 @@
 
 #include "Node.h"
 #include "bcp/Propagator.h"
-
+#include "constants.h"
 #include <Python.h>
 
 namespace PyLE {
@@ -41,21 +41,18 @@ namespace PyLE {
           root = parse(tree_obj, _type);
         }
 
-        void display(Type _type) { root->display(_type); std::cout << std::endl;}
+        void display(Type _type);
         ~Tree();
         Node* parse(PyObject *tree_obj, Type _type);
         Node* parse_recurrence(PyObject *tree_obj, Type _type);
-        int nb_nodes() { return root->nb_nodes();}
+        int nb_nodes();
 
 
 
         void initialize_BT(std::vector<bool> &instance, bool get_min);
 
 
-        bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
-            used_lits.clear();
-            root->is_implicant(instance, active_lits, prediction);
-        }
+        bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
 
 

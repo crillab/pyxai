@@ -5,16 +5,17 @@
 #ifndef CPP_CODE_NODE_H
 #define CPP_CODE_NODE_H
 
+
 #include <iostream>
 #include <vector>
 #include <set>
 #include "bcp/Propagator.h"
 #include "Tree.h"
+#include "constants.h"
 
 
 
 namespace PyLE {
-     typedef enum {BT, RF} Type;
 
     class Tree;
     class Node {

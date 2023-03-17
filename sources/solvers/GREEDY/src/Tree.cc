@@ -41,7 +41,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (size_obj == 1){
       // it is a tree with only one leaf value !
       PyObject *value_obj = PyTuple_GetItem(tree_obj, 0);
-      Node *tmp = _type == PyLE::BT ? new Node(PyFloat_AsDouble(value_obj), *this) : new Node((int)PyLong_AsLong(value_obj), *this);
+      Node *tmp = _type == PyLE::BT ? new Node(PyFloat_AsDouble(value_obj), this) : new Node((int)PyLong_AsLong(value_obj), this);
       all_nodes.push_back(tmp);
       return tmp;
     }
@@ -58,7 +58,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(left_obj)) {
         left_node = parse_recurrence(left_obj, _type);
     } else if (PyFloat_Check(left_obj) || PyLong_Check(left_obj)) {
-        left_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(left_obj), *this) : new Node((int)PyLong_AsLong(left_obj), *this);
+        left_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(left_obj), this) : new Node((int)PyLong_AsLong(left_obj), this);
         all_nodes.push_back(left_node);
     } else {
         const char* p = Py_TYPE(left_obj)->tp_name;
@@ -72,7 +72,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(right_obj)) {
         right_node = parse_recurrence(right_obj, _type);
     } else if (PyFloat_Check(right_obj) || PyLong_Check(right_obj)) {
-        right_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(right_obj), *this) : new Node((int)PyLong_AsLong(right_obj), *this);
+        right_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(right_obj), this) : new Node((int)PyLong_AsLong(right_obj), this);
         all_nodes.push_back(right_node);
     } else {
         const char* p = Py_TYPE(right_obj)->tp_name;
@@ -110,4 +110,11 @@ void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &a
 
 }
 
+bool PyLE::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
+    used_lits.clear();
+    root->is_implicant(instance, active_lits, prediction);
+}
 
+void PyLE::Tree::display(Type _type) { root->display(_type); std::cout << std::endl;}
+
+int PyLE::Tree::nb_nodes() { return root->nb_nodes();}
