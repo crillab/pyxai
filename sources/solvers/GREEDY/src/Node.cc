@@ -26,11 +26,34 @@ double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool>
     return std::max(wf, wt);
 }
 
-void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::set<unsigned int> &reachable_classes, Propagator::Propagator *propagator){
-    if(is_leaf()){
-        reachable_classes.insert(leaf_value.prediction);
+
+void PyLE::Node::performOnLeaf() {
+    if(tree->_type == RF) {
+        tree->reachable_classes.insert(leaf_value.prediction);
         return;
     }
+    if(tree->_type == BT) {
+        if(tree->firstLeaf) {
+            tree->current_weight = leaf_value.weight;
+        } else {
+            if(tree->get_min)
+                tree->current_weight = std::min(tree->current_weight, leaf_value.weight);
+            else
+                tree->current_weight = std::max(tree->current_weight, leaf_value.weight);
+        }
+        tree->firstLeaf = false;
+    }
+}
+
+void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction){
+    if(is_leaf()){
+        performOnLeaf();
+        return;
+    }
+
+    auto *propagator = tree->propagator;
+    tree->used_lits.push_back(lit); // literal useful for prediction
+
     unsigned pos = propagator->getTrailSize();
     if (active_lits[lit]) { // Literal in implicant
         Node *branch;
@@ -44,7 +67,7 @@ void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vec
 
         bool ret = propagator->propagate();
         assert(ret == true);
-        branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
+        branch->is_implicant(instance, active_lits, prediction);
         propagator->cancelUntilPos(pos);
         return;
     }
@@ -62,41 +85,15 @@ void PyLE::Node::is_implicant_multiclasses(std::vector<bool> &instance, std::vec
     }
     propagator->uncheckedEnqueue(normal_lit);
     bool ret = propagator->propagate();
-    normal_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
+    normal_branch->is_implicant(instance, active_lits, prediction);
     assert(ret == true);
     propagator->cancelUntilPos(pos);
     propagator->uncheckedEnqueue(~normal_lit);
     ret = propagator->propagate();
     if(ret)
-        out_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes, propagator);
+        out_branch->is_implicant(instance, active_lits, prediction);
     propagator->cancelUntilPos(pos);
-
-
-    //false_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-    //true_branch->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
 }
-
-bool PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction, std::vector<int> &used_lits) {
-    if(is_leaf())
-        return leaf_value.prediction == prediction;
-
-    used_lits.push_back(lit); // literal useful for prediction
-
-    if (active_lits[lit]) { // Literal in implicant
-        if (instance[lit]) // positive lit in instance
-            return true_branch->is_implicant(instance, active_lits, prediction, used_lits);
-        else
-            return false_branch->is_implicant(instance, active_lits, prediction, used_lits);
-    }
-
-    
-
-
-    bool pf = false_branch->is_implicant(instance, active_lits, prediction, used_lits);
-    if(!pf) return false;
-    return true_branch->is_implicant(instance, active_lits, prediction, used_lits);
-}
-
 
 
 
