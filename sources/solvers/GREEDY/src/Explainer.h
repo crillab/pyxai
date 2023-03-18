@@ -22,7 +22,7 @@ namespace PyLE {
         int time_limit; //in seconds
         int try_to_remove;
         std::vector<double> excluded_features;
-        Propagator::Propagator *theory_propagator;
+        Propagator::Propagator *theory_propagator = nullptr;
 
         Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0) {}
 

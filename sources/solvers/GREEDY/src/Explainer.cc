@@ -38,6 +38,12 @@ void PyLE::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instanc
 void
 PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason,
                                            long seed) {
+    if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
+        theory_propagator = new Propagator::Propagator();
+        for(PyLE::Tree *t : trees)
+            t->propagator = theory_propagator;
+    }
+
     int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     reason.clear();
     int n_current_iterations = 0;
