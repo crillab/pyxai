@@ -100,14 +100,13 @@ void PyLE::Tree::initialize_BT(std::vector<bool> &instance, bool get_min) {
 
 void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
     status = PyLE::GOOD;
-    if(used_to_explain.size() == 0)
+    if(used_to_explain.empty())
         used_to_explain.resize( instance.size(), false);
     std::fill(used_to_explain.begin(), used_to_explain.end(), false);
     if(is_implicant(instance, active_lits, prediction) == false) // Do not try this tree : always wrong
         status = PyLE::DEFINITIVELY_WRONG;
     else
         update_used_lits();
-
 }
 
 bool PyLE::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
