@@ -21,6 +21,11 @@
 #include <cassert>
 
 namespace Propagator {
+
+    // This propagator does nothing
+    Propagator::Propagator() : m_out(std::cout), m_verbose(false) {
+        m_nbVar = 0;
+    }
 /**
  * @brief constructor implementation.
  */
@@ -116,6 +121,8 @@ namespace Propagator {
  * @brief destructor implementation.
  */
     Propagator::~Propagator() {
+        if(m_nbVar == 0)
+            return;
         delete[] m_data;
         delete[] m_trail;
         delete[] m_assign;
@@ -187,6 +194,8 @@ namespace Propagator {
  * @brief uncheckedEnqueue implementation.
  */
     void Propagator::uncheckedEnqueue(Lit l) {
+        if(m_nbVar == 0)
+            return;
         //if (m_verbose) m_out << "propagate" << l << "\n";
         assert(m_assign[l.var()] == l_Undef);
         m_trail[m_trailSize++] = l;
@@ -197,6 +206,8 @@ namespace Propagator {
  * @brief propagate implementation.
  */
     bool Propagator::propagate() {
+        if(m_nbVar == 0)
+            return true;
         while (m_trailPos < m_trailSize) {
             Lit l = m_trail[m_trailPos++];
             // propagate the binary clauses.
@@ -356,6 +367,8 @@ namespace Propagator {
     }  // restart
 
     void Propagator::cancelUntilPos(unsigned pos) {
+        if(m_nbVar == 0)
+            return;
         while (m_trailSize > pos) m_assign[m_trail[--m_trailSize].var()] = l_Undef;
         if (m_trailPos > m_trailSize) m_trailPos = m_trailSize;
     }  // cancelUntilPos
