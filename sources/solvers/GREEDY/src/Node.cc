@@ -48,6 +48,7 @@ void PyLE::Node::performOnLeaf() {
 void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction){
     if(is_leaf()){
         performOnLeaf();
+        std::cout<< "ZEAZ\n";
         return;
     }
 
