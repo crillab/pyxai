@@ -103,15 +103,16 @@ void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &a
     if(used_to_explain.empty())
         used_to_explain.resize( instance.size(), false);
     std::fill(used_to_explain.begin(), used_to_explain.end(), false);
-    if(is_implicant(instance, active_lits, prediction) == false) // Do not try this tree : always wrong
-        status = PyLE::DEFINITIVELY_WRONG;
-    else
+    if(is_implicant(instance, active_lits, prediction)) // Do not try this tree : always wrong
         update_used_lits();
+    else
+        status = PyLE::DEFINITIVELY_WRONG;
 }
 
 bool PyLE::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
     used_lits.clear();
     root->is_implicant(instance, active_lits, prediction);
+    return true;
 }
 
 void PyLE::Tree::display(Type _type) { root->display(_type); std::cout << std::endl;}
