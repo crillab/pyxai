@@ -54,6 +54,8 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
 
     auto *propagator = tree->propagator;
     tree->used_lits.push_back(lit); // literal useful for prediction
+    //if(lit == 3 || lit == 36 || lit == 47)
+    //    std::cout << " ici " << instance[lit] << " " << active_lits[lit] << " " << Lit::makeLitTrue(lit)  << " " << (propagator->value(Lit::makeLitTrue(lit)) == l_True) << (propagator->value(Lit::makeLitTrue(lit)) == l_False    )<< std::endl;
 
     unsigned pos = propagator->getTrailSize();
     if (active_lits[lit]) { // Literal in implicant
@@ -84,12 +86,14 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
         normal_branch = false_branch;
         out_branch = true_branch;
     }
+    //std::cout << "here check " << normal_lit<<std::endl;
     propagator->uncheckedEnqueue(normal_lit);
     bool ret = propagator->propagate();
     normal_branch->is_implicant(instance, active_lits, prediction);
     assert(ret == true);
     propagator->cancelUntilPos(pos);
-    propagator->uncheckedEnqueue(~normal_lit);
+    //std::cout << "And now check " << ~normal_lit<<std::endl;
+    propagator->uncheckedEnqueue(normal_lit.neg());
     ret = propagator->propagate();
     if(ret)
         out_branch->is_implicant(instance, active_lits, prediction);
