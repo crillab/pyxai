@@ -32,6 +32,7 @@ void PyLE::Node::performOnLeaf() {
         tree->reachable_classes.insert(leaf_value.prediction);
         return;
     }
+
     if(tree->_type == BT) {
         if(tree->firstLeaf) {
             tree->current_weight = leaf_value.weight;
@@ -48,7 +49,6 @@ void PyLE::Node::performOnLeaf() {
 void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction){
     if(is_leaf()){
         performOnLeaf();
-        std::cout<< "ZEAZ\n";
         return;
     }
 
@@ -93,6 +93,7 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
     ret = propagator->propagate();
     if(ret)
         out_branch->is_implicant(instance, active_lits, prediction);
+    else std::cout <<" impossible\n";
     propagator->cancelUntilPos(pos);
 }
 

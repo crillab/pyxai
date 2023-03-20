@@ -37,8 +37,8 @@ namespace PyLE {
         std::set<unsigned int> reachable_classes; // FOR Multiclasses RF
 
 
-        Tree(PyObject *tree_obj, Type _type){
-          root = parse(tree_obj, _type);
+        Tree(PyObject *tree_obj, Type _t): _type(_t) {
+          root = parse(tree_obj, _t);
         }
 
         void display(Type _type);
