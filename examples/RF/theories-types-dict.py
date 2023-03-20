@@ -18,9 +18,21 @@ australian_types = {
     "categorical": ["A4*", "A5*", "A6*", "A12*"],
     "binary": ["A1", "A8", "A9", "A11"],
 }
+explainer = Explainer.initialize(model, instance=instance)
+print("No theory")
+majoritary_reason = explainer.majoritary_reason(n_iterations=10)
+print("\nlen tree_specific: ", len(majoritary_reason))
+print("\ntree_specific: ", explainer.to_features(majoritary_reason, eliminate_redundant_features=True))
+print("is a tree specific", explainer.is_majoritary_reason(majoritary_reason))
 
+
+print("Theory")
 explainer = Explainer.initialize(model, instance=instance, features_types=australian_types)
-
+print("OK")
+majoritary_reason = explainer.majoritary_reason(n_iterations=10)
+print("\nlen tree_specific: ", len(majoritary_reason))
+print("\ntree_specific: ", explainer.to_features(majoritary_reason, eliminate_redundant_features=True))
+print("is a tree specific", explainer.is_majoritary_reason(majoritary_reason))
 
 contrastive = explainer.minimal_contrastive_reason(time_limit=100)
 features = explainer.to_features(contrastive, eliminate_redundant_features=True, inverse=True)
