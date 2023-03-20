@@ -63,6 +63,7 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
 
     //int nb = 0;
     //for(Tree *tree: trees) nb+=tree->nb_nodes();
+    for (auto l: instance) active_lits[abs(l)] = true;
 
     // FOR BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
@@ -71,7 +72,7 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
             tree->initialize_BT(polarity_instance,
                                 (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
         else {
-            for (auto l: instance) active_lits[abs(l)] = true; // Init
+
             tree->initialize_RF(polarity_instance, active_lits, prediction);
         }
 
@@ -102,10 +103,10 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
-            if (is_implicant(polarity_instance, active_lits, prediction) == false)
-                active_lits[abs(l)] = true;
-            else
+            if (is_implicant(polarity_instance, active_lits, prediction))
                 current_size--;
+            else
+                active_lits[abs(l)] = true;
         }
 
         // We improve the best sol.
@@ -129,7 +130,7 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
 bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                    unsigned int prediction) {
     std::vector<unsigned int> new_wrong_trees;
-    for (auto &tree: trees) {
+    for (auto tree: trees) {
         // Init for RF
         tree->reachable_classes.clear(); // Update for RF
         // Init for BT
@@ -138,7 +139,9 @@ bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool
 
         if (tree->status != GOOD)
             continue;
-        if (tree->used_to_explain[abs(try_to_remove)] == false)
+
+        // TODO : Fix this trick to reduce the number of calls to is_implicant (only usefull for RF with 2 classes).
+        //if (tree->used_to_explain[abs(try_to_remove)])
             tree->is_implicant(instance, active_lits, prediction);
     }
 
@@ -146,6 +149,7 @@ bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool
         return is_implicant_RF(instance, active_lits, prediction);
     if (_type == BT)
         return is_implicant_BT(instance, active_lits, prediction);
+
 }
 
 
@@ -173,6 +177,7 @@ bool PyLE::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<b
 
 bool PyLE::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                       unsigned int prediction) {
+
     std::vector<unsigned int> new_wrong_trees;
     if (n_classes == 2) {
         unsigned int nb = 0,  i = 0;
