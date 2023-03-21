@@ -296,6 +296,7 @@ class ExplainerRF(Explainer):
                 self.c_RF = c_explainer.new_RF(self._random_forest.n_classes)
                 for tree in self._random_forest.forest:
                     try:
+                        print("et 1")
                         c_explainer.add_tree(self.c_RF, tree.raw_data_for_CPP())
                     except Exception as e:
                         print("Erreur", str(e))

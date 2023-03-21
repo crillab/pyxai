@@ -104,16 +104,14 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
             active_lits[abs(l)] = false;
             try_to_remove = l;
             int lit = try_to_remove;
-            if(abs(lit) == 3 || abs(lit) == 36 || abs(lit) == 47)
-                std::cout << "Try to remove " << lit ;
+            std::cout << "Try to remove " << lit<<"\n";
             if (is_implicant(polarity_instance, active_lits, prediction)) {
-                if(abs(lit) == 3 || abs(lit) == 36 || abs(lit) == 47) std::cout << "ok\n";
                 current_size--;
+                std::cout << "ok\n";
             }
             else {
                 active_lits[abs(l)] = true;
-                if(abs(lit) == 3 || abs(lit) == 36 || abs(lit) == 47)
-                    std::cout << "impossible \n";
+                std::cout << " NO\n";
             }
         }
 

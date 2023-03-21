@@ -6,7 +6,7 @@ from pyxai import Learning, Explainer, Tools
 # Machine learning part
 learner = Learning.Scikitlearn(Tools.Options.dataset)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
-instance, prediction = learner.get_instances(n=1, correct=True)
+instance, prediction = learner.get_instances(n=1)
 
 print("instance:", instance)
 

@@ -133,6 +133,8 @@ namespace Propagator {
          * @return 0 if SAT, 1 if UNSAT and >1 otherwise.
          */
         inline lbool value(const Lit l) {
+            if(l.var() > ((int)m_nbVar))
+                return l_Undef;
             return ((u_int8_t) l.sign()) ^ m_assign[l.var()];
         }
 
@@ -166,6 +168,12 @@ namespace Propagator {
          */
         void display(std::ostream &out);
 
+        void displayTrail() {
+            std::cout << "  [";
+            for(int i = 0; i < m_trailSize; i++)
+                std::cout << m_trail[i] << " ";
+            std::cout << "]" << std::endl;
+        }
         /**
          * @brief Attach a clause regarding its CRef.
          *
