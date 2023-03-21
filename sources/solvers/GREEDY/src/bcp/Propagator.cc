@@ -196,9 +196,9 @@ namespace Propagator {
  * @brief uncheckedEnqueue implementation.
  */
     void Propagator::uncheckedEnqueue(Lit l) {
-        if(m_nbVar == 0)
+        if(m_nbVar == 0 || l.var() > ((int)m_nbVar))
             return;
-        //if (m_verbose) m_out << "propagate" << l << "\n";
+        //if(m_verbose) m_out << "propagate" << l << "\n";
         if(m_assign[l.var()] != l_Undef)
             std::cout <<"ok...\n";
         assert(m_assign[l.var()] == l_Undef);
@@ -214,7 +214,7 @@ namespace Propagator {
             return true;
         while (m_trailPos < m_trailSize) {
             Lit l = m_trail[m_trailPos++];
-            //std::cout << m_trailPos << " => propagate " << l << std::endl;
+               //std::cout << m_trailPos << " => propagate " << l << std::endl;
             // propagate the binary clauses.
             Imply &imply = *m_binListRefs[l.intern()];
 

@@ -55,46 +55,44 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
     auto *propagator = tree->propagator;
     tree->used_lits.push_back(lit); // literal useful for prediction
     //if(lit == 3 || lit == 36 || lit == 47)
-    //    std::cout << " ici " << instance[lit] << " " << active_lits[lit] << " " << Lit::makeLitTrue(lit)  << " " << (propagator->value(Lit::makeLitTrue(lit)) == l_True) << (propagator->value(Lit::makeLitTrue(lit)) == l_False    )<< std::endl;
-
+    Lit normalLit = instance[lit] ? Lit::makeLitTrue(lit) : Lit::makeLitFalse(lit);
+    std::cout << " ici " <<  lit << " " << normalLit << " " << active_lits[lit] << " "  << " " << (propagator->value(normalLit) == l_True) << (propagator->value(normalLit) == l_False    )<< std::endl;
     unsigned pos = propagator->getTrailSize();
-    if (active_lits[lit]) { // Literal in implicant
+    if (active_lits[lit] || propagator->value(normalLit) == l_True) { // Literal in implicant
         Node *branch;
         if (instance[lit]){ // positive lit in instance
-            propagator->uncheckedEnqueue(Lit::makeLitTrue(lit));
             branch = true_branch;
         } else {
-            propagator->uncheckedEnqueue(Lit::makeLitFalse(lit));
             branch = false_branch;
         }
 
-        bool ret = propagator->propagate();
-        assert(ret == true);
+        if( propagator->value(normalLit) != l_True) {
+            propagator->uncheckedEnqueue(normalLit);
+            bool ret = propagator->propagate();
+            assert(ret == true);
+        }
         branch->is_implicant(instance, active_lits, prediction);
         propagator->cancelUntilPos(pos);
         return;
     }
 
     Node *normal_branch, *out_branch;
-    Lit normal_lit;
     if (instance[lit]){ // positive lit in instance
-        normal_lit = Lit::makeLitTrue(lit);
         normal_branch = true_branch;
         out_branch = false_branch;
     } else {
-        normal_lit = Lit::makeLitFalse(lit);
         normal_branch = false_branch;
         out_branch = true_branch;
     }
-    //std::cout << "here check " << normal_lit<<std::endl;
-    propagator->uncheckedEnqueue(normal_lit);
+    propagator->uncheckedEnqueue(normalLit);
     bool ret = propagator->propagate();
+    propagator->displayTrail();
     normal_branch->is_implicant(instance, active_lits, prediction);
-    assert(ret == true);
+    //assert(ret == true);
     propagator->cancelUntilPos(pos);
-    //std::cout << "And now check " << ~normal_lit<<std::endl;
-    propagator->uncheckedEnqueue(normal_lit.neg());
+    propagator->uncheckedEnqueue(normalLit.neg());
     ret = propagator->propagate();
+    propagator->displayTrail();
     if(ret)
         out_branch->is_implicant(instance, active_lits, prediction);
     else std::cout <<" impossible\n";
