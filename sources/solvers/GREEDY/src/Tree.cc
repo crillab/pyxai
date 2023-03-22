@@ -111,7 +111,6 @@ void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &a
 
 bool PyLE::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
     used_lits.clear();
-    std::cout << "start with a tree\n";
     root->is_implicant(instance, active_lits, prediction);
     return true;
 }
