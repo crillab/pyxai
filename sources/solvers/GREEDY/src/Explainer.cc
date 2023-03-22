@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include "Tree.h"
+#include "bcp/ProblemTypes.h"
 
 static bool abs_compare(int a, int b) { return (std::abs(a) < std::abs(b)); }
 
@@ -103,8 +104,9 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
-            int lit = try_to_remove;
-            std::cout << "Try to remove " << lit<<"\n";
+            std::cout << "Try to remove " << l<<"\n";
+            propagateActiveLits(order, polarity_instance, active_lits);
+
             if (is_implicant(polarity_instance, active_lits, prediction)) {
                 current_size--;
                 std::cout << "ok\n";
@@ -113,6 +115,7 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
                 active_lits[abs(l)] = true;
                 std::cout << " NO\n";
             }
+            theory_propagator->restart();
         }
 
         // We improve the best sol.
@@ -132,6 +135,19 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
     }
 }
 
+void PyLE::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
+    for(int l : order) {
+        Propagator::Lit lit = polarity_instance[l] ? Propagator::Lit::makeLitTrue(l) : Propagator::Lit::makeLitFalse(l);
+        if(active_lits[l] && theory_propagator->value(lit) != Propagator::l_True) {
+            theory_propagator->uncheckedEnqueue(lit);
+            bool ret = theory_propagator->propagate();
+            if(ret == false) {
+                std::cout << "Error\n";
+                exit(1);
+            }
+        }
+    }
+}
 
 bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                    unsigned int prediction) {
