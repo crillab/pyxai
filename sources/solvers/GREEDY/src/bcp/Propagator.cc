@@ -51,9 +51,6 @@ namespace Propagator {
         for (unsigned i = 0; i < (m_nbVar + 1) << 1; i++) m_assign[i] = l_Undef;
 
         for (auto &cl: p.getClauses()) {
-            for(Lit l : cl)
-                std::cout << l << " " ;
-            std::cout << std::endl;
             if (cl.size() == 1)
                 continue;
             else if (cl.size() == 2) {
@@ -200,10 +197,8 @@ namespace Propagator {
             return;
         //if(m_verbose) m_out << "propagate" << l << "\n";
         //m_out << "propagate" << l << "\n";
-        if(m_assign[l.var()] == l_True ||m_assign[l.var()] == l_False) {
-            std::cout << "ok...\n";
-            exit(1);
-        }
+        if(m_assign[l.var()] == l_True ||m_assign[l.var()] == l_False)
+            throw std::runtime_error("An error occurs in uncheckenqueue");
         //assert(m_assign[l.var()] == l_Undef);
         m_trail[m_trailSize++] = l;
         m_assign[l.var()] = l.sign();
@@ -217,7 +212,7 @@ namespace Propagator {
             return true;
         while (m_trailPos < m_trailSize) {
             Lit l = m_trail[m_trailPos++];
-               std::cout << m_trailPos << " => propagate " << l << std::endl;
+            //std::cout << m_trailPos << " => propagate " << l << std::endl;
             // propagate the binary clauses.
             Imply &imply = *m_binListRefs[l.intern()];
 
@@ -369,6 +364,8 @@ namespace Propagator {
     }  // extractFormula
 
     void Propagator::restart() {
+        if(m_nbVar == 0)
+            return;
         for (unsigned i = m_trailLimUnit; i < m_trailSize; i++)
             m_assign[m_trail[i].var()] = l_Undef;
         m_trailPos = m_trailSize = m_trailLimUnit;

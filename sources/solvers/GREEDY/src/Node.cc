@@ -52,10 +52,9 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
         return;
     }
 
-    auto *propagator = tree->propagator;
     tree->used_lits.push_back(lit); // literal useful for prediction
     Lit normalLit = instance[lit] ? Lit::makeLitTrue(lit) : Lit::makeLitFalse(lit);
-    if (active_lits[lit] || propagator->value(normalLit) == l_True) { // Literal in implicant
+    if (active_lits[lit] || tree->propagator->value(normalLit) == l_True) { // Literal in implicant
         if (instance[lit]) // positive lit in instance
             true_branch->is_implicant(instance, active_lits, prediction);
         else
