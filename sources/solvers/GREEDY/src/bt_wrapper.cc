@@ -133,8 +133,8 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
         }
         clauses.push_back(c);
     }
-    Propagator::Problem problem(clauses, max, std::cout, true);
-    explainer->theory_propagator = new Propagator::Propagator(problem, true);
+    Propagator::Problem problem(clauses, max, std::cout, false);
+    explainer->theory_propagator = new Propagator::Propagator(problem, false);
     for(PyLE::Tree *t : explainer->trees)
         t->propagator = explainer->theory_propagator;
 
