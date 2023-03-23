@@ -170,7 +170,7 @@ namespace Propagator {
 
         void displayTrail() {
             std::cout << "  [";
-            for(int i = 0; i < m_trailSize; i++)
+            for(unsigned int i = 0; i < m_trailSize; i++)
                 std::cout << m_trail[i] << " ";
             std::cout << "]" << std::endl;
         }
