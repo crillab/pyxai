@@ -82,10 +82,11 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
     initializeBeforeOneRun(polarity_instance, active_lits, prediction);
     for (int l: excluded_features) {
         active_lits[abs(l)] = false;
+        propagateActiveLits(excluded_features, polarity_instance, active_lits);
         try_to_remove = l;
         if (is_implicant(polarity_instance, active_lits, prediction) == false)
             return; // It is not possible to remove excluded features
-
+        theory_propagator->restart();
     }
 
     // Start to remove conditions
@@ -104,16 +105,13 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
-            std::cout << "Try to remove " << l<<"\n";
             propagateActiveLits(order, polarity_instance, active_lits);
 
             if (is_implicant(polarity_instance, active_lits, prediction)) {
                 current_size--;
-                std::cout << "ok\n";
             }
             else {
                 active_lits[abs(l)] = true;
-                std::cout << " NO\n";
             }
             theory_propagator->restart();
         }
@@ -136,15 +134,19 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
 }
 
 void PyLE::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
+    if(theory_propagator->getNbVar() == 0)
+        return;
     for(int l : order) {
-        Propagator::Lit lit = polarity_instance[l] ? Propagator::Lit::makeLitTrue(l) : Propagator::Lit::makeLitFalse(l);
-        if(active_lits[l] && theory_propagator->value(lit) != Propagator::l_True) {
+        Propagator::Lit lit = l > 0 ? Propagator::Lit::makeLitTrue(l) : Propagator::Lit::makeLitFalse(-l);
+        if(theory_propagator->value(lit) == Propagator::l_False)
+            throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
+
+        if(active_lits[abs(l)] && theory_propagator->value(lit) != Propagator::l_True) {
             theory_propagator->uncheckedEnqueue(lit);
             bool ret = theory_propagator->propagate();
-            if(ret == false) {
-                std::cout << "Error\n";
-                exit(1);
-            }
+            if(ret == false)
+                throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
+
         }
     }
 }
@@ -171,7 +173,7 @@ bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool
         return is_implicant_RF(instance, active_lits, prediction);
     if (_type == BT)
         return is_implicant_BT(instance, active_lits, prediction);
-
+    return true; // Impossible But do not want a stupid warning. Keep in this form because new _type will arrive
 }
 
 
