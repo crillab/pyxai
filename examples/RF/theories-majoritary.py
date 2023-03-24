@@ -11,6 +11,19 @@ instance, prediction = learner.get_instances(n=1)
 print("instance:", instance)
 
 # Explainer part
+print("No theory")
+explainer = Explainer.initialize(model, instance=instance)
+majoritary_reason = explainer.majoritary_reason(n_iterations=10)
+print("majoritary:", majoritary_reason)
+
+print("\nlen majoritary: ", len(majoritary_reason))
+print("\nmajoritary: ", explainer.to_features(majoritary_reason, eliminate_redundant_features=False))
+print("is a majoritary", explainer.is_majoritary_reason(majoritary_reason))
+
+print("instance: ", instance)
+print("Theory")
+
+
 explainer = Explainer.initialize(model, instance=instance, features_types={"numerical": Learning.DEFAULT})
 
 direct_reason = explainer.direct_reason()
