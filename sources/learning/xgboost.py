@@ -4,9 +4,11 @@ import os
 from numpy.random import RandomState
 
 import xgboost
+import numpy
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees, BoostedTreesRegression
+from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, LearnerInformation, NoneData
@@ -32,7 +34,6 @@ class Xgboost(Learner):
 
     def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         raise NotImplementedError("Xgboost does not have a Random Forest Classifier.")
-
 
     def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         if "eval_metric" not in learner_options.keys():
@@ -83,12 +84,12 @@ class Xgboost(Learner):
         return (copy.deepcopy(xgb_regressor), metrics, extras)
 
     def to_DT_CLS(self, learner_information=None):
-        assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
-
+        raise NotImplementedError("Decision Tree with classification is not implemented for XGBoost.")
+        
 
     def to_RF_CLS(self, learner_information=None):
-        assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
-
+        raise NotImplementedError("Random Forest with classification is not implemented for XGBoost.")
+        
 
     def to_BT_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
@@ -116,7 +117,7 @@ class Xgboost(Learner):
             self.n_features = learner_information[0].raw_model.n_features_in_
         
         self.id_features = {"f{}".format(i): i for i in range(self.n_features)}
-        BTs = [BoostedTreesRegression(self.results_to_trees2(id_solver_results), learner_information=learner_information) for
+        BTs = [BoostedTreesRegression(self.results_to_trees(id_solver_results), learner_information=learner_information) for
                id_solver_results, learner_information in enumerate(self.learner_information)]
         return BTs
 
@@ -128,6 +129,7 @@ class Xgboost(Learner):
         dataframe = self.learner_information[id_solver_results].raw_model.get_booster().trees_to_dataframe()
         n_trees = self.learner_information[id_solver_results].raw_model.n_estimators
         #print("dataframe:", dataframe)
+        #dataframe.info()
         #print("n_trees:", n_trees)
         decision_trees = []
         target_class = 0
@@ -145,7 +147,7 @@ class Xgboost(Learner):
         else:
             id_feature = self.id_features[dataframe_tree["Feature"][id]]
             
-            threshold = round(dataframe_tree["Split"][id],2)
+            threshold = dataframe_tree["Split"][id]
             #print("kiki", dataframe_tree["Split"][id].options.display.precision)
             #exit(0)
             decision_node = DecisionNode(int(id_feature + 1), threshold=threshold, operator=OperatorCondition.LT, left=None, right=None)
@@ -167,6 +169,7 @@ class Xgboost(Learner):
         target_class = 0
         for i, tree_JSON in enumerate(xgb_JSON):
             #print(tree_JSON)
+            #exit(0)
             tree_JSON = json.loads(tree_JSON)
             
             root = self.recuperate_nodes(tree_JSON)
@@ -201,7 +204,7 @@ class Xgboost(Learner):
     def xgboost_BT_to_JSON(self, xgboost_BT):
         save_names = xgboost_BT.feature_names
         xgboost_BT.feature_names = None
-        xgboost_JSON = xgboost_BT.get_dump(with_stats=True)
+        xgboost_JSON = xgboost_BT.get_dump(with_stats=True, dump_format="json")
         xgboost_BT.feature_names = save_names
         return xgboost_JSON
 
