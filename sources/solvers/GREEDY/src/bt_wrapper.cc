@@ -56,12 +56,7 @@ PyObject *new_classifier_BT(PyObject *self, PyObject *args) {
 }
 
 PyObject *new_regression_BT(PyObject *self, PyObject *args) {
-    long val;
-    if (!PyArg_ParseTuple(args, "L", &val))
-        PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
-    //std::cout << "n_classes" << val << std::endl;
-
-    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Regression_BT);
+    pyxai::Explainer *explainer = new pyxai::Explainer(0, pyxai::Regression_BT); // 0 because don't care number of classes
     return void_to_pyobject(explainer);
 }
 
@@ -86,6 +81,35 @@ static PyObject *add_tree(PyObject *self, PyObject *args) {
     return Py_True;
 }
 
+
+static PyObject *set_base_score(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    double bs;
+    if (!PyArg_ParseTuple(args, "Od", &class_obj, &bs))
+        return NULL;
+
+
+    // Get pointer to the class
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
+    std::cout << "BASE "  << bs << std::endl;
+    explainer->base_score = bs;
+    Py_RETURN_NONE;
+}
+
+static PyObject *set_interval(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    double lower_bound, upper_bound;
+    //std::cout << "add_tree" << std::endl;
+    if (!PyArg_ParseTuple(args, "Odd", &class_obj, &lower_bound, &upper_bound))
+        return NULL;
+
+
+    // Get pointer to the class
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
+    explainer->set_interval(lower_bound, upper_bound);
+    Py_RETURN_NONE;
+}
+
 static PyObject *set_excluded(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_excluded_obj;
@@ -94,7 +118,7 @@ static PyObject *set_excluded(PyObject *self, PyObject *args) {
     }
     if (!PyTuple_Check(vector_excluded_obj)) {
         PyErr_Format(PyExc_TypeError,
-                     "The second argument must be a tuple reprenting the excluded features !");
+                     "The second argument must be a tuple representing the excluded features !");
         return NULL;
     }
 
@@ -174,7 +198,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
 
     if (!PyTuple_Check(vector_features_obj)) {
         PyErr_Format(PyExc_TypeError,
-                     "The third argument must be a tuple represeting the features !");
+                     "The third argument must be a tuple representing the features !");
         return NULL;
     }
 
@@ -230,6 +254,8 @@ static PyMethodDef module_methods[] = {
         {"set_excluded",      set_excluded,      METH_VARARGS, "Set excluded features"},
         {"set_theory",        set_theory,        METH_VARARGS, "Set the theory"},
         {"compute_reason",    compute_reason,    METH_VARARGS, "Compute a reason"},
+        {"set_interval",      set_interval,      METH_VARARGS, "Set the interval (useful for regression)"},
+        {"set_base_score",      set_base_score,  METH_VARARGS, "Set the base score (useful for regression)"},
         {NULL,             NULL,                 0,            NULL}
 };
 
