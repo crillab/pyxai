@@ -105,13 +105,16 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
+            //std::cout << "try " << l << " ";
             propagateActiveLits(order, polarity_instance, active_lits);
 
             if (is_implicant(polarity_instance, active_lits, prediction)) {
                 current_size--;
+                //std::cout << "ok\n";
             }
             else {
                 active_lits[abs(l)] = true;
+                //std::cout << "impossible\n";
             }
             theory_propagator->restart();
         }
@@ -173,6 +176,9 @@ bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<boo
         return is_implicant_RF(instance, active_lits, prediction);
     if (_type == Classifier_BT)
         return is_implicant_BT(instance, active_lits, prediction);
+    if (_type == Regression_BT)
+        return is_implicant_regression_BT(instance, active_lits, prediction);
+
     return true; // Impossible But do not want a stupid warning. Keep in this form because new _type will arrive
 }
 
@@ -196,6 +202,20 @@ bool pyxai::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<
             return false;
     }
     return true;
+}
+
+
+
+bool pyxai::Explainer::is_implicant_regression_BT(std::vector<bool> &instance, std::vector<bool> &active_lits,
+                                       unsigned int prediction) {
+    double weight = base_score;
+    for (Tree *tree: trees) {
+        //std::cout << tree->current_weight << "\n";
+        weight += tree->current_weight;
+    }
+
+    //std::cout << lower_bound << " " << weight << " " << upper_bound << std::endl;
+    return weight >= lower_bound && weight <= upper_bound;
 }
 
 

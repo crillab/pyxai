@@ -243,7 +243,7 @@ class ExplainerBT(Explainer):
                 c_explainer.add_tree(self.c_BT, tree.raw_data_for_CPP())
         c_explainer.set_excluded(self.c_BT, tuple(self._excluded_literals))
         if self._theory:
-            c_explainer.set_theory(self.c_RF, tuple(self._boosted_trees.get_theory(self._binary_representation)))
+            c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
 
         reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations, time_limit,
                                             int(reason_expressivity), seed)
