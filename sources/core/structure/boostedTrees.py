@@ -125,6 +125,7 @@ class BoostedTrees(TreeEnsembles):
         """
         return numpy.argmax(self.compute_probabilities_instance(instance))
 
+
 class BoostedTreesRegression(BoostedTrees):
     def __init__(self, forest, learner_information=None):
         super().__init__(forest, None, learner_information)

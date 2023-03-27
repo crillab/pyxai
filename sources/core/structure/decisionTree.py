@@ -363,3 +363,12 @@ class DecisionTree(BinaryMapping):
             previous = parent
             parent = parent.parent
         return cube
+
+
+    def _get_leaves(self, node) :
+        if node.is_leaf() :
+            return [node]
+        return self._get_leaves(node.left) + self._get_leaves(node.right)
+
+    def get_leaves(self):
+        return self._get_leaves(self.root)
