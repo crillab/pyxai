@@ -20,9 +20,9 @@ class Scikitlearn(Learner):
         return str(self.__class__.__name__)
 
 
-    def fit_and_predict_DT(self, instances_training, instances_test, labels_training, labels_test, max_depth=None, seed=0):
+    def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         # Training phase
-        decision_tree = DecisionTreeClassifier(max_depth=max_depth, random_state=seed)
+        decision_tree = DecisionTreeClassifier(max_depth=learner_options["max_depth"], random_state=learner_options["seed"])
         decision_tree.fit(instances_training, labels_training)
 
         # Test phase
@@ -30,14 +30,21 @@ class Scikitlearn(Learner):
         return (copy.deepcopy(decision_tree), compute_accuracy(result, labels_test))
 
 
-    def fit_and_predict_RF(self, instances_training, instances_test, labels_training, labels_test, max_depth=None, seed=0):
+    def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         # Training phase
+<<<<<<< HEAD
         decision_tree = RandomForestClassifier(max_depth=max_depth, random_state=seed   )
+=======
+        decision_tree = RandomForestClassifier(max_depth=learner_options["max_depth"], random_state=learner_options["seed"])
+>>>>>>> features
         decision_tree.fit(instances_training, labels_training)
         # Test phase
         result = decision_tree.predict(instances_test)
-        return (copy.deepcopy(decision_tree), compute_accuracy(result, labels_test))
-
+        metrics = {
+            "accuracy": compute_accuracy(result, labels_test)
+        }
+        return (copy.deepcopy(decision_tree), metrics)
+    
 
     def fit_and_predict_BT(self, instances_training, instances_test, labels_training, labels_test, max_depth=None, seed=0):
         assert False, "Scikitlearn is not able to produce BT !"
@@ -48,7 +55,7 @@ class Scikitlearn(Learner):
     """
 
 
-    def to_DT(self, learner_information=None):
+    def to_DT_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
@@ -58,7 +65,7 @@ class Scikitlearn(Learner):
         return decision_trees
 
 
-    def to_RF(self, learner_information=None):
+    def to_RF_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
         random_forests = []
         for id_solver_results, _ in enumerate(self.learner_information):
