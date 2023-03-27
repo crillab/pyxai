@@ -251,7 +251,7 @@ class ExplainerBT(Explainer):
 
 
     def compute_weights_class(self, implicant, cls, king="worst"):
-        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if tree.target_class == cls]
+        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if tree.target_class[0] == cls]
         weights = [min(weights_per_tree) if king == "worst" else max(weights_per_tree) for weights_per_tree in weights]
         return sum(weights)
 
