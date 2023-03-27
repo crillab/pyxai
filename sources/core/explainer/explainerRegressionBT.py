@@ -71,5 +71,10 @@ class ExplainerRegressionBT(ExplainerBT) :
 
 
     def extremum_range(self):
-        pass
-
+        minimum = []
+        maximum = []
+        for tree in self._boosted_trees.forest:
+            leaves = tree.get_leaves()
+            minimum.append(min([l.value for l in leaves]))
+            maximum.append(max([l.value for l in leaves]))
+        return (sum(minimum), sum(maximum))
