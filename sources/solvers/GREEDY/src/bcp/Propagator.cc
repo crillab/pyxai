@@ -51,9 +51,9 @@ namespace pyxai {
         for (unsigned i = 0; i < (m_nbVar + 1) << 1; i++) m_assign[i] = l_Undef;
 
         for (auto &cl: p.getClauses()) {
-            for(Lit l : cl)
-                std::cout << l << " " ;
-            std::cout << std::endl;
+            //for(Lit l : cl)
+            //    std::cout << l << " " ;
+            //std::cout << std::endl;
             if (cl.size() == 1)
                 continue;
             else if (cl.size() == 2) {

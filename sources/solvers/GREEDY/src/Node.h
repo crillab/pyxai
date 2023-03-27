@@ -48,7 +48,7 @@ namespace pyxai {
 
         void display(Type _type) {
             if (is_leaf()) {
-                std::cout << "[" << (_type == BT ? leaf_value.weight : leaf_value.prediction) << "]";
+                std::cout << "[" << (_type == Classifier_BT ? leaf_value.weight : leaf_value.prediction) << "]";
             } else {
                 std::cout << "[" << lit << ",";
                 false_branch->display(_type);
@@ -61,14 +61,14 @@ namespace pyxai {
 
         int nb_nodes();
 
-        // Methods only related to BT
+        // Methods only related to Classifier_BT
         double compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min);
 
         void reduce_with_instance(std::vector<bool> &instance, bool get_min);
 
         double extremum_true_branch(bool get_min); // The extremum value (min or max) of the true branch
 
-        // Methods onlu related to RF
+        // Methods onlu related to Classifier_RF
         void is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
         void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction,

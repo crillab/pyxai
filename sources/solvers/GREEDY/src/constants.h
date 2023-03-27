@@ -5,6 +5,6 @@
 #ifndef CMAKE_EXAMPLE_CONSTANTS_H
 #define CMAKE_EXAMPLE_CONSTANTS_H
 namespace pyxai {
-    typedef enum tdtype {BT, RF} Type;
+    typedef enum tdtype {Classifier_BT, Classifier_RF, Regression_BT} Type;
 }
 #endif //CMAKE_EXAMPLE_CONSTANTS_H

@@ -35,25 +35,36 @@ static void *pyobject_to_void(PyObject *obj) {
 }
 
 
-PyObject *new_RF(PyObject *self, PyObject *args) {
+PyObject *new_classifier_RF(PyObject *self, PyObject *args) {
     long val;
     if (!PyArg_ParseTuple(args, "L", &val))
         PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
     //std::cout << "n_classes" << val << std::endl;
 
-    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::RF);
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Classifier_RF);
     return void_to_pyobject(explainer);
 }
 
-PyObject *new_BT(PyObject *self, PyObject *args) {
+PyObject *new_classifier_BT(PyObject *self, PyObject *args) {
     long val;
     if (!PyArg_ParseTuple(args, "L", &val))
         PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
     //std::cout << "n_classes" << val << std::endl;
 
-    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::BT);
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Classifier_BT);
     return void_to_pyobject(explainer);
 }
+
+PyObject *new_regression_BT(PyObject *self, PyObject *args) {
+    long val;
+    if (!PyArg_ParseTuple(args, "L", &val))
+        PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
+    //std::cout << "n_classes" << val << std::endl;
+
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Regression_BT);
+    return void_to_pyobject(explainer);
+}
+
 
 static PyObject *add_tree(PyObject *self, PyObject *args) {
     PyObject *class_obj;
@@ -212,13 +223,14 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
 // ml_doc:  Contents of this method's docstring
 
 static PyMethodDef module_methods[] = {
-        {"new_BT",         new_BT,         METH_VARARGS, "Create a BT explainer."},
-        {"new_RF",         new_RF,         METH_VARARGS, "Create a RF explainer."},
-        {"add_tree",       add_tree,       METH_VARARGS, "Add a tree."},
-        {"set_excluded",   set_excluded,   METH_VARARGS, "Set excluded features"},
-        {"set_theory",     set_theory,   METH_VARARGS,   "Set the theory"},
-        {"compute_reason", compute_reason, METH_VARARGS, "Compute a reason"},
-        {NULL,             NULL,           0,            NULL}
+        {"new_classifier_BT", new_classifier_BT, METH_VARARGS, "Create a Classifier_BT explainer."},
+        {"new_classifier_RF", new_classifier_RF, METH_VARARGS, "Create a Classifier_RF explainer."},
+        {"new_regression_BT", new_regression_BT, METH_VARARGS, "Create a regression BT explainer."},
+        {"add_tree",          add_tree,          METH_VARARGS, "Add a tree."},
+        {"set_excluded",      set_excluded,      METH_VARARGS, "Set excluded features"},
+        {"set_theory",        set_theory,        METH_VARARGS, "Set the theory"},
+        {"compute_reason",    compute_reason,    METH_VARARGS, "Compute a reason"},
+        {NULL,             NULL,                 0,            NULL}
 };
 
 
