@@ -17,7 +17,9 @@ from pyxai.sources.core.explainer.Explainer import Explainer
 from pyxai.sources.core.explainer.explainerBT import ExplainerBT
 from pyxai.sources.core.explainer.explainerDT import ExplainerDT
 from pyxai.sources.core.explainer.explainerRF import ExplainerRF
+from pyxai.sources.core.explainer.explainerRegressionBT import ExplainerRegressionBT
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+from pyxai.sources.core.structure.boostedTrees import BoostedTreesRegression
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod, TypeTheory
@@ -52,8 +54,11 @@ def initialize(model, instance=None, features_types=None):
         explainer = ExplainerRF(model, instance)
     if isinstance(model, BoostedTrees):
         explainer = ExplainerBT(model, instance)
+    if isinstance(model, BoostedTreesRegression):
+        explainer = ExplainerRegressionBT(model, instance)
     if features_types is not None:
         explainer.set_features_types(features_types)
+
     return explainer
 
 

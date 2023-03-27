@@ -23,8 +23,11 @@ namespace pyxai {
         int try_to_remove;
         std::vector<int> excluded_features;
         Propagator *theory_propagator = nullptr;
+        double lower_bound; // Useful for regression only
+        double upper_bound;
+        double base_score;
 
-        Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0) {}
+        Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0), base_score(0.5) {}
 
 
         void addTree(PyObject *tree_obj);
@@ -39,10 +42,16 @@ namespace pyxai {
 
         bool is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
         bool is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
+        bool is_implicant_regression_BT(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
 
         inline void set_n_iterations(int _n_iterations){n_iterations = _n_iterations;}
         inline void set_time_limit(int _time_limit){time_limit = _time_limit;}
         inline bool is_specific(int l) {return std::find(excluded_features.begin(), excluded_features.end(), l) == excluded_features.end();}
+        inline void set_interval(double lb, double ub) {
+            lower_bound = lb;
+            upper_bound = ub;
+        }
+
     };
 }
 
