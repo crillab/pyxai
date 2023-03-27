@@ -10,6 +10,8 @@ print("instance", instance)
 print("prediction", prediction)
 
 explainer = Explainer.initialize(model, instance)
+print("extremum range: ",explainer.extremum_range())
+
 direct_reason = explainer.direct_reason()
 print("len direct: ", len(direct_reason))
 print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
