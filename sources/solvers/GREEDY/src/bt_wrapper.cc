@@ -91,7 +91,6 @@ static PyObject *set_base_score(PyObject *self, PyObject *args) {
 
     // Get pointer to the class
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
-    std::cout << "BASE "  << bs << std::endl;
     explainer->base_score = bs;
     Py_RETURN_NONE;
 }
@@ -146,9 +145,8 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
                      "The second argument must be a tuple reprenting the theory !");
         return NULL;
     }
-
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
-    
+
     // Convert the vector of the instance
 
     Py_ssize_t size_theory = PyTuple_Size(vector_theory);
@@ -172,7 +170,6 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
     explainer->theory_propagator = new pyxai::Propagator(problem, false);
     for(pyxai::Tree *t : explainer->trees)
         t->propagator = explainer->theory_propagator;
-
     Py_RETURN_NONE;
 }
 

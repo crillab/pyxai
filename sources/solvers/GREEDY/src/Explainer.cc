@@ -77,7 +77,6 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
             tree->initialize_RF(polarity_instance, active_lits, prediction);
         }
 
-
     // Try to remove excluded features
     initializeBeforeOneRun(polarity_instance, active_lits, prediction);
     for (int l: excluded_features) {
@@ -99,18 +98,20 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
         for (auto l: excluded_features) active_lits[abs(l)] = false; // Do not want them
         current_size = instance.size() - excluded_features.size();
 
+        std::cout << "A\n";
         initializeBeforeOneRun(polarity_instance, active_lits, prediction);
+        std::cout << "B\n";
 
         // Try to remove literals
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
-            //std::cout << "try " << l << " ";
+            std::cout << "try " << l << " ";
             propagateActiveLits(order, polarity_instance, active_lits);
 
             if (is_implicant(polarity_instance, active_lits, prediction)) {
                 current_size--;
-                //std::cout << "ok\n";
+                std::cout << "ok\n";
             }
             else {
                 active_lits[abs(l)] = true;
@@ -139,11 +140,13 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
 void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
     if(theory_propagator->getNbVar() == 0)
         return;
+    std::cout << "mvar = " << theory_propagator->getNbVar()<<"\n";
     for(int l : order) {
+        std::cout << l << "\n";
         Lit lit = l > 0 ? Lit::makeLitTrue(l) : Lit::makeLitFalse(-l);
         if(theory_propagator->value(lit) == l_False)
             throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
-
+        std::cout << "C\n";
         if(active_lits[abs(l)] && theory_propagator->value(lit) != l_True) {
             theory_propagator->uncheckedEnqueue(lit);
             bool ret = theory_propagator->propagate();
@@ -152,6 +155,7 @@ void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<
 
         }
     }
+    std::cout << "done\n";
 }
 
 bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,

@@ -25,10 +25,11 @@ class Explainer:
         if hasattr(self, 'tree'):
             return self.tree
         elif hasattr(self, 'random_forest'):
-            return self.random_forest 
-        elif hasattr(self, 'boosted_tree'):
+            return self.random_forest
+        elif hasattr(self, 'regression_boosted_trees'):
+            return self.regression_boosted_trees
+        elif hasattr(self, 'boosted_trees'):
             return self.boosted_tree
-
     @property
     def instance(self):
         """
@@ -91,6 +92,8 @@ class Explainer:
     def set_features_types(self, features_types):
 
         model = self.get_model()
+
+        print(model.learner_information)
         feature_names = model.learner_information.feature_names
         
         # reg_exp = regular expression 
