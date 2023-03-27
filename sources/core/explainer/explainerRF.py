@@ -132,7 +132,7 @@ class ExplainerRF(Explainer):
         #print("Length of the binary representation:", len(self._binary_representation))
         #print("Number of hard clauses in the CNF encoding the random forest:", len(tree_cnf))
         
-        if self._theory == False:
+        if self._theory is False:
             for lit in self._binary_representation:
                 MAXSATsolver.add_soft_clause([lit], weight=1)
             for clause in tree_cnf:
@@ -220,8 +220,8 @@ class ExplainerRF(Explainer):
              reason.
         """
         hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
-        # Check if excluded features produce a SAT problem => No sufficient reason
 
+        # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
             SATSolver.add_clauses(hard_clauses)
@@ -292,7 +292,7 @@ class ExplainerRF(Explainer):
         if isinstance(n, int) and n == 1:
             if self.c_RF is None:
                 # Preprocessing to give all trees in the c++ library
-                self.c_RF = c_explainer.new_RF(self._random_forest.n_classes)
+                self.c_RF = c_explainer.new_classifier_RF(self._random_forest.n_classes)
                 for tree in self._random_forest.forest:
                     try:
                         c_explainer.add_tree(self.c_RF, tree.raw_data_for_CPP())
@@ -304,7 +304,7 @@ class ExplainerRF(Explainer):
                 time_limit = 0
             implicant_id_features = ()  # FEATURES : TODO
             c_explainer.set_excluded(self.c_RF, tuple(self._excluded_literals))
-            if self._theory == True:
+            if self._theory:
                 c_explainer.set_theory(self.c_RF, tuple(self._random_forest.get_theory(self._binary_representation)))
                 
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,

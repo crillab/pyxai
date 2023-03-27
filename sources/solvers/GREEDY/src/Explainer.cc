@@ -11,99 +11,50 @@
 #include <random>
 #include <iostream>
 #include <chrono>
-static bool abs_compare(int a, int b) {return (std::abs(a) < std::abs(b));}
+#include "Tree.h"
+#include "bcp/ProblemTypes.h"
 
-void PyLE::Explainer::addTree(PyObject *tree_obj) {
-  //std::cout << "add_tree2" << std::endl;
-  Tree* tree = new Tree(tree_obj, _type);
-  trees.push_back(tree);
+static bool abs_compare(int a, int b) { return (std::abs(a) < std::abs(b)); }
+
+void pyxai::Explainer::addTree(PyObject *tree_obj) {
+    Tree *tree = new Tree(tree_obj, _type);
+    trees.push_back(tree);
 }
 
-void PyLE::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction, std::vector<int> &reason) {
-    assert(false);
-    // TODO CHECK FOR FEATURES : V2......
-    if(_type != PyLE::BT)
-        assert(false);
-    int max  = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
-    int n_current_iterations = 0;
-    PyLE::TimerHelper::initializeTime();
-    std::vector<bool> polarity_instance(max + 1, true);
-    std::vector<bool> active_lits (max + 1, false);
-    
-    std::set<int> possible_features(features.begin(), features.end());
-    std::vector<int> order(possible_features.begin(), possible_features.end());
-    std::map<int, std::vector<int> > features_to_lits;
-    
-    for(auto it_order = order.begin(); it_order != order.end(); it_order++){
-      std::vector<int> elements;
-      int feature = *it_order;
-      for(unsigned int i = 0; i < instance.size(); i++){
-        if (features[i] == feature) elements.push_back(instance[i]);
-      }
-      features_to_lits[feature] = elements;;
-    }
-
-    unsigned int best_size = order.size() + 1;
-    unsigned int current_size = order.size();
-
-    for (auto l: instance)
-        polarity_instance[std::abs(l)] = l > 0;
-
-    // FOR BT ONLY.
-    // Before computing a reason, reduce the size of the tree wrt considered instance
-    if(_type == PyLE::BT)
-        for(Tree *tree : trees)
-            tree->initialize_BT(polarity_instance, (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
-
-    while(true){
-        std::shuffle(std::begin(order), std::end(order), std::default_random_engine());
-        for(auto l : instance) active_lits[abs(l)] = true; // Init
-        current_size = order.size();
-
-        for(int feature: order) {
-            std::vector<int>& lits = features_to_lits[feature]; 
-            for(auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++){
-              active_lits[abs(*it_lits)] = false;
-            }
-            if(is_implicant(polarity_instance, active_lits, prediction) == false){
-              // not a implicant
-              for(auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++){
-                active_lits[abs(*it_lits)] = true;
-              }
-            }else{
-              // alway a implicant
-              current_size--;
-            }
+void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instance, std::vector<bool> &active_lits,
+                                             int prediction) {
+    if (_type == Classifier_RF) {
+        for (Tree *tree: trees) {
+            if (tree->status != DEFINITIVELY_WRONG)
+                tree->status = GOOD;
+            if (tree->status == GOOD)
+                tree->initialize_RF(polarity_instance, active_lits, prediction); // remember to reinit useful lits
         }
-        
-        if(current_size < best_size) {
-          //We are find a better reason :)
-          best_size = current_size;
-          //Save this new reason
-          reason.clear();
-          for(auto l : instance)
-            if(active_lits[abs(l)])
-              reason.push_back(l);
-        }
-        n_current_iterations++;
-        
-        if ((time_limit != 0 && PyLE::TimerHelper::realTime() > time_limit)
-            || (time_limit == 0 && n_current_iterations > n_iterations)) 
-            return;
+    } else {
+        for (Tree *tree: trees)
+            tree->status = GOOD;
     }
 }
 
-void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed) {
-    int max  = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
+void
+pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason,
+                                           long seed) {
+    if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
+        theory_propagator = new Propagator();
+        for(pyxai::Tree *t : trees)
+            t->propagator = theory_propagator;
+    }
+
+    int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     reason.clear();
     int n_current_iterations = 0;
-    PyLE::TimerHelper::initializeTime();
+    pyxai::TimerHelper::initializeTime();
     std::vector<bool> polarity_instance(max + 1, true);
-    std::vector<bool> active_lits (max + 1, false);
+    std::vector<bool> active_lits(max + 1, false);
 
     std::vector<int> order;
-    for(auto l : instance)
-        if(is_specific(l))
+    for (auto l: instance)
+        if (is_specific(l))
             order.push_back(l);
 
 
@@ -113,203 +64,269 @@ void PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int 
 
     //int nb = 0;
     //for(Tree *tree: trees) nb+=tree->nb_nodes();
+    for (auto l: instance) active_lits[abs(l)] = true;
 
-    // FOR BT ONLY.
+    // FOR Classifier_BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
-
-    for(Tree *tree : trees)
-        if(_type == PyLE::BT)
-            tree->initialize_BT(polarity_instance, (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
+    for (Tree *tree: trees)
+        if (_type == pyxai::Classifier_BT)
+            tree->initialize_BT(polarity_instance,
+                                (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
         else {
-            for(auto l : instance) active_lits[abs(l)] = true; // Init
+
             tree->initialize_RF(polarity_instance, active_lits, prediction);
         }
-    
-    //int nb2 = 0;
-    //for(Tree *tree: trees) nb2+=tree->nb_nodes();
-    //std::cout << "before: " << nb << " " << "after "<< nb2 << std::endl;
+
 
     // Try to remove excluded features
-    if(_type == RF) {
-        for(Tree *tree : trees) {
-            if(tree->status != WRONG)
-                tree->status = GOOD;
-            if(tree->status == GOOD)
-                tree->initialize_RF(polarity_instance, active_lits, prediction); // remember to reinit useful lits
-        }
-    }
-    for(int l : excluded_features) {
+    initializeBeforeOneRun(polarity_instance, active_lits, prediction);
+    for (int l: excluded_features) {
         active_lits[abs(l)] = false;
+        propagateActiveLits(excluded_features, polarity_instance, active_lits);
         try_to_remove = l;
-        if(is_implicant(polarity_instance, active_lits, prediction) == false)
+        if (is_implicant(polarity_instance, active_lits, prediction) == false)
             return; // It is not possible to remove excluded features
+        theory_propagator->restart();
+    }
 
-    }
-    if (theory.size() != 0){
-        for (const auto& [key, value] : theory)
-            std::cout << '[' << key << "] = " << value << std::endl;        
-    }
-    std::default_random_engine rd = std::default_random_engine(seed == -1 ? std::chrono::steady_clock::now().time_since_epoch().count() : 1);
-    while(true){
+    // Start to remove conditions
+    std::default_random_engine rd = std::default_random_engine(
+            seed == -1 ? std::chrono::steady_clock::now().time_since_epoch().count() : 1);
+    while (true) {
+        // Create an order
         std::shuffle(std::begin(order), std::end(order), rd);
-        for(auto l : instance) active_lits[abs(l)] = true; // Init
-        for(auto l : excluded_features) active_lits[abs(l)] = false; // Do not want them
+        for (auto l: instance) active_lits[abs(l)] = true; // Init
+        for (auto l: excluded_features) active_lits[abs(l)] = false; // Do not want them
         current_size = instance.size() - excluded_features.size();
 
-        if(_type == RF) {
-            for(Tree *tree : trees) {
-                if(tree->status != WRONG)
-                    tree->status = GOOD;
-                if(tree->status == GOOD)
-                    tree->initialize_RF(polarity_instance, active_lits, prediction); // remember to reinit useful lits
-                }
-        }
-        for(int l: order) {
+        initializeBeforeOneRun(polarity_instance, active_lits, prediction);
+
+        // Try to remove literals
+        for (int l: order) {
             active_lits[abs(l)] = false;
-            std::cout << "do:" << l << std::endl;
-            if (theory.size() != 0){
-                if (theory.find(-l)!=theory.end()){
-                    //I am found this in the theory
-                    std::cout << "in the theory:" << -l << " or " << theory[-l] << std::endl;
-                    exit(0); 
-                }else{
-                    try_to_remove = l;
-                    if(is_implicant(polarity_instance, active_lits, prediction) == false){
-                        //Je le garde
-                        active_lits[abs(l)] = true;
-                    }else{
-                        //Je ne le garde pas
-                        current_size--;
-                    }
-                }   
-            }else{
-                try_to_remove = l;
-                if(is_implicant(polarity_instance, active_lits, prediction) == false){
-                    //Je le garde
-                    active_lits[abs(l)] = true;
-                }else{
-                    //Je ne le garde pas
-                    current_size--;
-                }
+            try_to_remove = l;
+            propagateActiveLits(order, polarity_instance, active_lits);
+
+            if (is_implicant(polarity_instance, active_lits, prediction)) {
+                current_size--;
             }
+            else {
+                active_lits[abs(l)] = true;
+            }
+            theory_propagator->restart();
         }
 
-        if(current_size < best_size) {
-          //std::cout << "current_size:" << current_size << std::endl;
+        // We improve the best sol.
+        if (current_size < best_size) {
+            //std::cout << "current_size:" << current_size << std::endl;
             best_size = current_size;
             reason.clear();
-            for(auto l : instance)
-                if(active_lits[abs(l)])
+            for (auto l: instance)
+                if (active_lits[abs(l)])
                     reason.push_back(l);
         }
         n_current_iterations++;
-        
-        if ((time_limit != 0 && PyLE::TimerHelper::realTime() > time_limit)
-            || (time_limit == 0 && n_current_iterations > n_iterations)) 
+
+        if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
+            || (time_limit == 0 && n_current_iterations > n_iterations))
             return;
     }
 }
 
+void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
+    if(theory_propagator->getNbVar() == 0)
+        return;
+    for(int l : order) {
+        Lit lit = l > 0 ? Lit::makeLitTrue(l) : Lit::makeLitFalse(-l);
+        if(theory_propagator->value(lit) == l_False)
+            throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
 
-bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
-    if(_type == PyLE::BT){
-      return is_implicant_BT(instance, active_lits, prediction);
+        if(active_lits[abs(l)] && theory_propagator->value(lit) != l_True) {
+            theory_propagator->uncheckedEnqueue(lit);
+            bool ret = theory_propagator->propagate();
+            if(ret == false)
+                throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
+
+        }
     }
-    if (n_classes == 2)
+}
+
+bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
+                                   unsigned int prediction) {
+    std::vector<unsigned int> new_wrong_trees;
+    for (auto tree: trees) {
+        // Init for Classifier_RF
+        tree->reachable_classes.clear(); // Update for Classifier_RF
+        // Init for Classifier_BT
+        tree->get_min = n_classes == 2 ? (prediction == 1) : tree->target_class == prediction;
+        tree->firstLeaf = true;
+
+        if (tree->status != GOOD)
+            continue;
+
+        // TODO : Fix this trick to reduce the number of calls to is_implicant (only usefull for Classifier_RF with 2 classes).
+        //if (tree->used_to_explain[abs(try_to_remove)])
+            tree->is_implicant(instance, active_lits, prediction);
+    }
+
+    if (_type == Classifier_RF)
         return is_implicant_RF(instance, active_lits, prediction);
-    return is_implicant_RF_multiclasses(instance, active_lits, prediction);
+    if (_type == Classifier_BT)
+        return is_implicant_BT(instance, active_lits, prediction);
+    return true; // Impossible But do not want a stupid warning. Keep in this form because new _type will arrive
 }
 
 
-bool PyLE::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
-    if(n_classes == 2) {
+bool pyxai::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits,
+                                      unsigned int prediction) {
+    if (n_classes == 2) {
         double weight = 0;
-        for(Tree *tree : trees)
-            weight += tree->compute_weight(instance, active_lits, prediction == 1);
-
+        for (Tree *tree: trees)
+            weight += tree->current_weight;
         return prediction == (weight > 0);
     }
-
     // Multi classes case
-    std::fill(weights.begin(), weights.end(), 0.0);
     std::vector<double> weights(n_classes, 0.0);
-    for(Tree *tree : trees)
-        weights[tree->target_class] += tree->compute_weight(instance, active_lits, tree->target_class == prediction);
+    for (Tree *tree: trees)
+        weights[tree->target_class] += tree->current_weight;
 
     double target = weights[prediction];
-    for(unsigned int i = 0; i < weights.size(); i++) {
-        if(i != prediction && target < weights[i])
+    for (unsigned int i = 0; i < weights.size(); i++) {
+        if (i != prediction && target < weights[i])
             return false;
     }
     return true;
 }
 
-bool PyLE::Explainer::is_implicant_RF_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
-    assert(n_classes > 2);
-    std::set<unsigned int> reachable_classes;
+
+bool pyxai::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits,
+                                      unsigned int prediction) {
+
+    std::vector<unsigned int> new_wrong_trees;
+    if (n_classes == 2) {
+        unsigned int nb = 0,  i = 0;
+        for (Tree *tree: trees) {
+            if (tree->reachable_classes.size() == 1 && *(tree->reachable_classes.begin()) == prediction)
+                nb++;
+            else new_wrong_trees.push_back(i);
+            i++;
+        }
+
+        if (nb > trees.size() / 2) {
+            for (auto i: new_wrong_trees)
+                trees[i]->status = CURRENTLY_WRONG;
+
+            for (Tree *tree: trees)
+                tree->update_used_lits();
+            return true;
+        }
+        return false;
+    }
+    // Multiclasses
+    std::vector<int> count_classes(n_classes, 0);
+
     std::fill(count_classes.begin(), count_classes.end(), 0);
-    
-    for(unsigned int i = 0; i < trees.size(); i++) {
-        reachable_classes.clear();
-        trees[i]->is_implicant_multiclasses(instance, active_lits, prediction, reachable_classes);
-        
-        if (reachable_classes.size() == 1 && *(reachable_classes.begin()) == prediction){
+    for (Tree *tree: trees)
+        if (tree->reachable_classes.size() == 1 && *(tree->reachable_classes.begin()) == prediction) {
             count_classes[prediction]++;
-        }else{
-            for (auto c: reachable_classes)
+        } else {
+            for (auto c: tree->reachable_classes)
                 if (c != prediction) count_classes[c]++;
         }
+
+
+// Compute the best class
+    unsigned int best_position = 0;
+    for (unsigned int i = 0; i < count_classes.size(); i++) {
+        if (count_classes[i] > count_classes[best_position])
+            best_position = i;
     }
 
-    // Compute the best class
-    unsigned int best_position = 0;
-    for (unsigned int i = 0; i<count_classes.size(); i++){
-        if (count_classes[i] > count_classes[best_position])
-            best_position = i;  
-    }
- 
     if (best_position != prediction)
         return false;
-    for (unsigned int i = 0; i<count_classes.size(); i++){
+    for (unsigned int i = 0; i < count_classes.size(); i++) {
         if (i != best_position && count_classes[i] == count_classes[best_position])
             return false;
     }
-
     return true;
 }
 
-bool PyLE::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction) {
-    assert(n_classes == 2);
 
-    unsigned int nb = 0;
-    std::vector<unsigned int> new_wrong_trees;
-    for(unsigned int i = 0; i < trees.size(); i++) {
-        if(trees[i]->status != GOOD)
-            continue;
-        if(trees[i]->used_to_explain[abs(try_to_remove)] == false || trees[i]->is_implicant(instance, active_lits, prediction))
-            nb++;
-        else
-            new_wrong_trees.push_back(i);
+void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
+                                              std::vector<int> &reason) {
+    assert(false);
+    // TODO CHECK FOR FEATURES : V2......
+    if (_type != pyxai::Classifier_BT)
+        assert(false);
+    int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
+    int n_current_iterations = 0;
+    pyxai::TimerHelper::initializeTime();
+    std::vector<bool> polarity_instance(max + 1, true);
+    std::vector<bool> active_lits(max + 1, false);
+
+    std::set<int> possible_features(features.begin(), features.end());
+    std::vector<int> order(possible_features.begin(), possible_features.end());
+    std::map<int, std::vector<int> > features_to_lits;
+
+    for (auto it_order = order.begin(); it_order != order.end(); it_order++) {
+        std::vector<int> elements;
+        int feature = *it_order;
+        for (unsigned int i = 0; i < instance.size(); i++) {
+            if (features[i] == feature) elements.push_back(instance[i]);
+        }
+        features_to_lits[feature] = elements;;
     }
-    if(nb > trees.size() / 2) {
-        for(unsigned int i : new_wrong_trees)
-            trees[i]->status = CURRENTLY_WRONG;
 
-        for(Tree *tree : trees)
-            tree->update_used_lits();
+    unsigned int best_size = order.size() + 1;
+    unsigned int current_size = order.size();
 
-        return true;
+    for (auto l: instance)
+        polarity_instance[std::abs(l)] = l > 0;
+
+    // FOR Classifier_BT ONLY.
+    // Before computing a reason, reduce the size of the tree wrt considered instance
+    if (_type == pyxai::Classifier_BT)
+        for (Tree *tree: trees)
+            tree->initialize_BT(polarity_instance,
+                                (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
+
+    while (true) {
+        std::shuffle(std::begin(order), std::end(order), std::default_random_engine());
+        for (auto l: instance) active_lits[abs(l)] = true; // Init
+        current_size = order.size();
+
+        for (int feature: order) {
+            std::vector<int> &lits = features_to_lits[feature];
+            for (auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++) {
+                active_lits[abs(*it_lits)] = false;
+            }
+            if (is_implicant(polarity_instance, active_lits, prediction) == false) {
+                // not a implicant
+                for (auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++) {
+                    active_lits[abs(*it_lits)] = true;
+                }
+            } else {
+                // alway a implicant
+                current_size--;
+            }
+        }
+
+        if (current_size < best_size) {
+            //We are find a better reason :)
+            best_size = current_size;
+            //Save this new reason
+            reason.clear();
+            for (auto l: instance)
+                if (active_lits[abs(l)])
+                    reason.push_back(l);
+        }
+        n_current_iterations++;
+
+        if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
+            || (time_limit == 0 && n_current_iterations > n_iterations))
+            return;
     }
-    return false;
-
 }
-
-
-
-
-
-
-
 
 
 
