@@ -27,12 +27,12 @@ double pyxai::Node::compute_weight(std::vector<bool> &instance, std::vector<bool
 
 
 void pyxai::Node::performOnLeaf() {
-    if(tree->_type == RF) {
+    if(tree->_type == Classifier_RF) {
         tree->reachable_classes.insert(leaf_value.prediction);
         return;
     }
 
-    if(tree->_type == BT) {
+    if(tree->_type == Classifier_BT) {
         if(tree->firstLeaf) {
             tree->current_weight = leaf_value.weight;
         } else {

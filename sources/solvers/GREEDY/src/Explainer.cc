@@ -23,7 +23,7 @@ void pyxai::Explainer::addTree(PyObject *tree_obj) {
 
 void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instance, std::vector<bool> &active_lits,
                                              int prediction) {
-    if (_type == RF) {
+    if (_type == Classifier_RF) {
         for (Tree *tree: trees) {
             if (tree->status != DEFINITIVELY_WRONG)
                 tree->status = GOOD;
@@ -66,10 +66,10 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
     //for(Tree *tree: trees) nb+=tree->nb_nodes();
     for (auto l: instance) active_lits[abs(l)] = true;
 
-    // FOR BT ONLY.
+    // FOR Classifier_BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
     for (Tree *tree: trees)
-        if (_type == pyxai::BT)
+        if (_type == pyxai::Classifier_BT)
             tree->initialize_BT(polarity_instance,
                                 (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
         else {
@@ -155,23 +155,23 @@ bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<boo
                                    unsigned int prediction) {
     std::vector<unsigned int> new_wrong_trees;
     for (auto tree: trees) {
-        // Init for RF
-        tree->reachable_classes.clear(); // Update for RF
-        // Init for BT
+        // Init for Classifier_RF
+        tree->reachable_classes.clear(); // Update for Classifier_RF
+        // Init for Classifier_BT
         tree->get_min = n_classes == 2 ? (prediction == 1) : tree->target_class == prediction;
         tree->firstLeaf = true;
 
         if (tree->status != GOOD)
             continue;
 
-        // TODO : Fix this trick to reduce the number of calls to is_implicant (only usefull for RF with 2 classes).
+        // TODO : Fix this trick to reduce the number of calls to is_implicant (only usefull for Classifier_RF with 2 classes).
         //if (tree->used_to_explain[abs(try_to_remove)])
             tree->is_implicant(instance, active_lits, prediction);
     }
 
-    if (_type == RF)
+    if (_type == Classifier_RF)
         return is_implicant_RF(instance, active_lits, prediction);
-    if (_type == BT)
+    if (_type == Classifier_BT)
         return is_implicant_BT(instance, active_lits, prediction);
     return true; // Impossible But do not want a stupid warning. Keep in this form because new _type will arrive
 }
@@ -256,7 +256,7 @@ void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::
                                               std::vector<int> &reason) {
     assert(false);
     // TODO CHECK FOR FEATURES : V2......
-    if (_type != pyxai::BT)
+    if (_type != pyxai::Classifier_BT)
         assert(false);
     int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     int n_current_iterations = 0;
@@ -283,9 +283,9 @@ void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::
     for (auto l: instance)
         polarity_instance[std::abs(l)] = l > 0;
 
-    // FOR BT ONLY.
+    // FOR Classifier_BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
-    if (_type == pyxai::BT)
+    if (_type == pyxai::Classifier_BT)
         for (Tree *tree: trees)
             tree->initialize_BT(polarity_instance,
                                 (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
