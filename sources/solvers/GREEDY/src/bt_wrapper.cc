@@ -9,7 +9,7 @@
 #include "Node.h"
 #include "Explainer.h"
 
-
+using namespace pyxai;
 static PyObject* vectorToTuple_Int(const std::vector<int> &data) {
     PyObject* tuple = PyTuple_New( data.size() );
     if (!tuple) throw std::logic_error("Unable to allocate memory for Python tuple");
@@ -29,30 +29,42 @@ static PyObject *void_to_pyobject(void *ptr) {
     return PyCapsule_New(ptr, NULL, NULL);
 }
 
+
 static void *pyobject_to_void(PyObject *obj) {
     return PyCapsule_GetPointer(obj, NULL);
 }
 
 
-PyObject *new_RF(PyObject *self, PyObject *args) {
-    long val;
-    if (!PyArg_ParseTuple(args, "L", &val))
-        PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
-    //std::cout << "n_classes" << val << std::endl;
-    
-    PyLE::Explainer *explainer = new PyLE::Explainer(val, PyLE::RF);
-    return void_to_pyobject(explainer);
-}
-
-PyObject *new_BT(PyObject *self, PyObject *args) {
+PyObject *new_classifier_RF(PyObject *self, PyObject *args) {
     long val;
     if (!PyArg_ParseTuple(args, "L", &val))
         PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
     //std::cout << "n_classes" << val << std::endl;
 
-    PyLE::Explainer *explainer = new PyLE::Explainer(val, PyLE::BT);
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Classifier_RF);
     return void_to_pyobject(explainer);
 }
+
+PyObject *new_classifier_BT(PyObject *self, PyObject *args) {
+    long val;
+    if (!PyArg_ParseTuple(args, "L", &val))
+        PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
+    //std::cout << "n_classes" << val << std::endl;
+
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Classifier_BT);
+    return void_to_pyobject(explainer);
+}
+
+PyObject *new_regression_BT(PyObject *self, PyObject *args) {
+    long val;
+    if (!PyArg_ParseTuple(args, "L", &val))
+        PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
+    //std::cout << "n_classes" << val << std::endl;
+
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::Regression_BT);
+    return void_to_pyobject(explainer);
+}
+
 
 static PyObject *add_tree(PyObject *self, PyObject *args) {
     PyObject *class_obj;
@@ -69,7 +81,7 @@ static PyObject *add_tree(PyObject *self, PyObject *args) {
     }
 
     // Get pointer to the class
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->addTree(tree_obj);
     return Py_True;
 }
@@ -86,7 +98,7 @@ static PyObject *set_excluded(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->excluded_features.clear();
     // Convert the vector of the instance
 
@@ -111,25 +123,36 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     
     // Convert the vector of the instance
 
     Py_ssize_t size_theory = PyTuple_Size(vector_theory);
-    
-    
+
+    std::vector<std::vector<Lit> > clauses;
+    int max = 0;
     for(int i = 0; i < size_theory; i++) {
+        std::vector<Lit> c;
         PyObject *value_obj = PyTuple_GetItem(vector_theory, i);
         Py_ssize_t size_obj = PyTuple_Size(value_obj);
-        if (size_obj != 2){
+        if (size_obj != 2)
             throw std::logic_error("The clauses of the theory must be of size 2 (binary).");
+        for(int i = 0; i < size_obj; i++) {
+            long l = PyLong_AsLong(PyTuple_GetItem(value_obj, i));
+            if(max < std::abs(l)) max = std::abs(l);
+            c.push_back((l > 0) ? Lit::makeLit(l, false) : Lit::makeLit(-l, true));
         }
-        explainer->theory[PyLong_AsLong(PyTuple_GetItem(value_obj, 0))] = PyLong_AsLong(PyTuple_GetItem(value_obj, 1));
-        
+        clauses.push_back(c);
     }
+    pyxai::Problem problem(clauses, max, std::cout, false);
+    explainer->theory_propagator = new pyxai::Propagator(problem, false);
+    for(pyxai::Tree *t : explainer->trees)
+        t->propagator = explainer->theory_propagator;
 
     Py_RETURN_NONE;
 }
+
+
 static PyObject *compute_reason(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_instance_obj;
@@ -174,7 +197,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     }
 
     // Get pointer to the class
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->set_n_iterations(n_iterations);
     explainer->set_time_limit(time_limit);
     if (features_expressivity == 1)
@@ -200,13 +223,14 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
 // ml_doc:  Contents of this method's docstring
 
 static PyMethodDef module_methods[] = {
-        {"new_BT",         new_BT,         METH_VARARGS, "Create a BT explainer."},
-        {"new_RF",         new_RF,         METH_VARARGS, "Create a RF explainer."},
-        {"add_tree",       add_tree,       METH_VARARGS, "Add a tree."},
-        {"set_excluded",   set_excluded,   METH_VARARGS, "Set excluded features"},
-        {"set_theory",     set_theory,   METH_VARARGS,   "Set the theory"},
-        {"compute_reason", compute_reason, METH_VARARGS, "Compute a reason"},
-        {NULL,             NULL,           0,            NULL}
+        {"new_classifier_BT", new_classifier_BT, METH_VARARGS, "Create a Classifier_BT explainer."},
+        {"new_classifier_RF", new_classifier_RF, METH_VARARGS, "Create a Classifier_RF explainer."},
+        {"new_regression_BT", new_regression_BT, METH_VARARGS, "Create a regression BT explainer."},
+        {"add_tree",          add_tree,          METH_VARARGS, "Add a tree."},
+        {"set_excluded",      set_excluded,      METH_VARARGS, "Set excluded features"},
+        {"set_theory",        set_theory,        METH_VARARGS, "Set the theory"},
+        {"compute_reason",    compute_reason,    METH_VARARGS, "Compute a reason"},
+        {NULL,             NULL,                 0,            NULL}
 };
 
 
