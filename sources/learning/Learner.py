@@ -14,17 +14,18 @@ from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, TypeFeature
+from pyxai.sources.core.structure.type import EvaluationMethod, LearnerType, EvaluationOutput, Indexes, TypeFeature
 from pyxai.sources.core.tools.utils import flatten, compute_accuracy
 
 
 class LearnerInformation:
-    def __init__(self, raw_model, training_index=None, test_index=None, group=None, accuracy=None):
+    def __init__(self, raw_model, training_index=None, test_index=None, group=None, metrics=None, extras=None):
         self.raw_model = raw_model
         self.training_index = training_index
         self.test_index = test_index
         self.group = group
-        self.accuracy = accuracy
+        self.metrics = metrics
+        self.extras = extras
         self.solver_name = None
         self.feature_names = None
         self.evaluation_method = None
@@ -236,24 +237,24 @@ class Learner:
         data = data.drop(columns=[str(n_features - 1)])
         return data, prediction
 
-
-    """
-    Method:
-
-    """
-
-
-    def evaluate(self, *, method, output, n_models=10, test_size=0.3, max_depth=None, seed=0, model_directory=None):
+    def evaluate(self, *, method, output, learner_type=LearnerType.Classification, n_models=10, test_size=0.3, **learner_options):
+        if "seed" not in learner_options.keys():
+            learner_options["seed"] = 0
+        if "max_depth" not in learner_options.keys():
+            learner_options["max_depth"] = None
+        
+        
         Tools.verbose("---------------   Evaluation   ---------------")
         Tools.verbose("method:", str(method))
         Tools.verbose("output:", str(output))
+        Tools.verbose("learner_type:", str(learner_type))
 
         if method == EvaluationMethod.HoldOut:
-            self.hold_out_evaluation(output, test_size=test_size, max_depth=max_depth, seed=seed)
+            self.hold_out_evaluation(output, learner_type, test_size=test_size, learner_options=learner_options)
         elif method == EvaluationMethod.LeaveOneGroupOut:
-            self.leave_one_group_out_evaluation(output, n_trees=n_models, max_depth=max_depth, seed=seed)
+            self.leave_one_group_out_evaluation(output, learner_type, n_trees=n_models, learner_options=learner_options)
         elif method == EvaluationMethod.KFolds:
-            self.k_folds_evaluation(output, n_models=n_models, max_depth=max_depth, seed=seed)
+            self.k_folds_evaluation(output, learner_type, n_models=n_models, learner_options=learner_options)
         else:
             assert False, "Not implemented !"
 
@@ -266,21 +267,16 @@ class Learner:
         Tools.verbose("---------   Evaluation Information   ---------")
         for i, result in enumerate(self.learner_information):
             Tools.verbose("For the evaluation number " + str(i) + ":")
-            Tools.verbose("accuracy:", result.accuracy)
+            Tools.verbose("metrics:")
+            for key in result.metrics.keys():
+                Tools.verbose("   " + key + ": " +str(result.metrics[key]))
+                
             Tools.verbose("nTraining instances:", len(result.training_index))
             Tools.verbose("nTest instances:", len(result.test_index))
             Tools.verbose()
 
         Tools.verbose("---------------   Explainer   ----------------")
-        result_output = None
-        if output == EvaluationOutput.DT:
-            result_output = self.to_DT(self.learner_information)
-        elif output == EvaluationOutput.RF:
-            result_output = self.to_RF(self.learner_information)
-        elif output == EvaluationOutput.BT:
-            result_output = self.to_BT(self.learner_information)
-        else:
-            assert False, "Not implemented !"
+        result_output = self.convert_model(output, learner_type)
         # elif output == EvaluationOutput.SAVE:
         #  self.save_model(model_directory)
         #  result_output = self.to_BT()
@@ -293,6 +289,27 @@ class Learner:
         
         return result_output if len(result_output) != 1 else result_output[0]
 
+    def convert_model(self, output, learner_type):
+        if learner_type == LearnerType.Classification:
+            if output == EvaluationOutput.DT:
+                return self.to_DT_CLS(self.learner_information)
+            elif output == EvaluationOutput.RF:
+                return self.to_RF_CLS(self.learner_information)
+            elif output == EvaluationOutput.BT:
+                return self.to_BT_CLS(self.learner_information)
+            else:
+                raise NotImplementedError(str(output) + " not implemented.")
+        elif learner_type == LearnerType.Regression:
+            if output == EvaluationOutput.DT:
+                return self.to_DT_REG(self.learner_information)
+            elif output == EvaluationOutput.RF:
+                return self.to_RF_REG(self.learner_information)
+            elif output == EvaluationOutput.BT:
+                return self.to_BT_REG(self.learner_information)
+            else:
+                raise NotImplementedError(str(output) + " not implemented.")
+        else:
+            raise NotImplementedError(str(learner_type) + " not implemented.")
 
     def load_get_files(self, models_directory):
         assert models_directory is not None and os.path.exists(models_directory), "The path of models_directory do not exist: " + str(
@@ -447,35 +464,50 @@ class Learner:
         with open(filename + ".model", 'w') as outfile:
             json.dump(json_string, outfile)
 
+    def fit_and_predict(self, output, learner_type, instances_training, instances_test, labels_training, labels_test, learner_options):
+        if learner_type == LearnerType.Classification:
+            if output == EvaluationOutput.DT:
+                return self.fit_and_predict_DT_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
+            elif output == EvaluationOutput.RF:
+                return self.fit_and_predict_RF_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
+            elif output == EvaluationOutput.BT:
+                return self.fit_and_predict_BT_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
+            else:
+                raise NotImplementedError(str(output) + " not implemented.")
+        elif learner_type == LearnerType.Regression:
+            if output == EvaluationOutput.DT:
+                return self.fit_and_predict_DT_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
+            elif output == EvaluationOutput.RF:
+                return self.fit_and_predict_RF_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
+            elif output == EvaluationOutput.BT:
+                return self.fit_and_predict_BT_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
+            else:
+                raise NotImplementedError(str(output) + " not implemented.")
+        else:
+            raise NotImplementedError(str(learner_type) + " not implemented.")
+    
 
-    def hold_out_evaluation(self, output, *, seed=0, max_depth=None, test_size=0.3):
+    def hold_out_evaluation(self, output, learner_type, *, test_size=0.3, learner_options):
         self.learner_information.clear()
         assert self.data is not None, "You have to put the dataset in the class parameters."
         # spliting
         indices = numpy.arange(len(self.data))
         instances_training, instances_test, labels_training, labels_test, training_index, test_index = train_test_split(self.data, self.labels,
                                                                                                                         indices, test_size=test_size,
-                                                                                                                        random_state=seed)
+                                                                                                                        random_state=learner_options["seed"])
+        models, metrics, extras = self.fit_and_predict(output, learner_type, instances_training, instances_test, labels_training, labels_test, learner_options)
+        
+        self.learner_information.append(LearnerInformation(models, training_index, test_index, None, metrics, extras))
 
-        # solving
-        if output == EvaluationOutput.DT:
-            tree, accuracy = self.fit_and_predict_DT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth, seed=seed)
-        elif output == EvaluationOutput.RF:
-            tree, accuracy = self.fit_and_predict_RF(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth, seed=seed)
-        elif output == EvaluationOutput.BT:
-            tree, accuracy = self.fit_and_predict_BT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth, seed=seed)
-        else:
-            assert False, "hold_out_evaluation: EvaluationOutput Not implemented !"
-        self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, accuracy))
         return self
 
 
-    def k_folds_evaluation(self, output, *, n_models=10, max_depth=None, seed=0):
+    def k_folds_evaluation(self, output, learner_type, *, n_models=10, learner_options):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_models > 1, "This k_folds_evaluation() expects at least 2 parts. For just one tree, please use hold_out_evaluation()"
         self.learner_information.clear()
 
-        cross_validator = KFold(n_splits=n_models, random_state=seed, shuffle=True)
+        cross_validator = KFold(n_splits=n_models, random_state=learner_options["seed"], shuffle=True)
 
         for training_index, test_index in cross_validator.split(self.data):
             # Select good observations for each of the 'n_trees' experiments.
@@ -483,26 +515,15 @@ class Learner:
             labels_training = [self.labels[i] for i in training_index]
             instances_test = [self.data[i] for i in test_index]
             labels_test = [self.labels[i] for i in test_index]
-
-            # solving
-            if output == EvaluationOutput.DT:
-                tree, accuracy = self.fit_and_predict_DT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            elif output == EvaluationOutput.RF:
-                tree, accuracy = self.fit_and_predict_RF(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            elif output == EvaluationOutput.BT:
-                tree, accuracy = self.fit_and_predict_BT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            else:
-                assert False, "leave_one_group_out_evaluation: EvaluationOutput Not implemented !"
-
+            
+            tree, metrics, extras = self.fit_and_predict(output, learner_type, instances_training, instances_test, labels_training, labels_test, learner_options)
+            
             # Save some information
-            self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, accuracy))
+            self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, metrics, extras))
         return self
 
 
-    def leave_one_group_out_evaluation(self, output, *, n_trees=10, max_depth=None, seed=0):
+    def leave_one_group_out_evaluation(self, output, learner_type, *, n_trees=10, learner_options):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_trees > 1, "cross_validation() expects at least 2 trees. For just one tree, please use simple_validation()"
         self.learner_information.clear()
@@ -510,7 +531,7 @@ class Learner:
         # spliting
         quotient, remainder = (self.n_instances // n_trees, self.n_instances % n_trees)
         groups = flatten([quotient * [i] for i in range(1, n_trees + 1)]) + [i for i in range(1, remainder + 1)]
-        random.Random(seed).shuffle(groups)
+        random.Random(learner_options["seed"]).shuffle(groups)
         cross_validator = LeaveOneGroupOut()
 
         for training_index, test_index in cross_validator.split(self.data, self.labels, groups):
@@ -521,21 +542,10 @@ class Learner:
             labels_test = [self.labels[i] for i in test_index]
 
             # solving
-            # solving
-            if output == EvaluationOutput.DT:
-                tree, accuracy = self.fit_and_predict_DT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            elif output == EvaluationOutput.RF:
-                tree, accuracy = self.fit_and_predict_RF(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            elif output == EvaluationOutput.BT:
-                tree, accuracy = self.fit_and_predict_BT(instances_training, instances_test, labels_training, labels_test, max_depth=max_depth,
-                                                         seed=seed)
-            else:
-                assert False, "leave_one_group_out_evaluation: EvaluationOutput Not implemented !"
-
+            tree, metrics, extras = self.fit_and_predict(output, learner_type, instances_training, instances_test, labels_training, labels_test, learner_options)
+            
             # Save some information
-            self.learner_information.append(LearnerInformation(tree, training_index, test_index, groups, accuracy))
+            self.learner_information.append(LearnerInformation(tree, training_index, test_index, groups, metrics, extras))
         return self
 
 
@@ -695,9 +705,9 @@ class Learner:
         else:
             for j in original_indexes:
                 current_index = possible_indexes[j]
-
-                prediction_solver = classifier.predict(data[j].reshape(1, -1))[
-                    0]  # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
+                prediction_solver = classifier.predict(data[j].reshape(1, -1))[0]
+                # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
+                # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
                 label = labels[j]
                 if (correct and prediction_solver == label) \
                         or (not correct and prediction_solver != label) \
