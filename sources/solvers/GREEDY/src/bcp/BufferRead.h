@@ -22,7 +22,7 @@
 
 #define BUFFER_SIZE 65536
 
-namespace Propagator {
+namespace pyxai {
 class BufferRead {
   int pos;
   int size;

@@ -16,12 +16,12 @@
 
 static bool abs_compare(int a, int b) { return (std::abs(a) < std::abs(b)); }
 
-void PyLE::Explainer::addTree(PyObject *tree_obj) {
+void pyxai::Explainer::addTree(PyObject *tree_obj) {
     Tree *tree = new Tree(tree_obj, _type);
     trees.push_back(tree);
 }
 
-void PyLE::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instance, std::vector<bool> &active_lits,
+void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instance, std::vector<bool> &active_lits,
                                              int prediction) {
     if (_type == RF) {
         for (Tree *tree: trees) {
@@ -37,18 +37,18 @@ void PyLE::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instanc
 }
 
 void
-PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason,
+pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason,
                                            long seed) {
     if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
-        theory_propagator = new Propagator::Propagator();
-        for(PyLE::Tree *t : trees)
+        theory_propagator = new Propagator();
+        for(pyxai::Tree *t : trees)
             t->propagator = theory_propagator;
     }
 
     int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     reason.clear();
     int n_current_iterations = 0;
-    PyLE::TimerHelper::initializeTime();
+    pyxai::TimerHelper::initializeTime();
     std::vector<bool> polarity_instance(max + 1, true);
     std::vector<bool> active_lits(max + 1, false);
 
@@ -69,7 +69,7 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
     // FOR BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
     for (Tree *tree: trees)
-        if (_type == PyLE::BT)
+        if (_type == pyxai::BT)
             tree->initialize_BT(polarity_instance,
                                 (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
         else {
@@ -127,21 +127,21 @@ PyLE::Explainer::compute_reason_conditions(std::vector<int> &instance, int predi
         }
         n_current_iterations++;
 
-        if ((time_limit != 0 && PyLE::TimerHelper::realTime() > time_limit)
+        if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
             || (time_limit == 0 && n_current_iterations > n_iterations))
             return;
     }
 }
 
-void PyLE::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
+void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
     if(theory_propagator->getNbVar() == 0)
         return;
     for(int l : order) {
-        Propagator::Lit lit = l > 0 ? Propagator::Lit::makeLitTrue(l) : Propagator::Lit::makeLitFalse(-l);
-        if(theory_propagator->value(lit) == Propagator::l_False)
+        Lit lit = l > 0 ? Lit::makeLitTrue(l) : Lit::makeLitFalse(-l);
+        if(theory_propagator->value(lit) == l_False)
             throw std::runtime_error("An error occurs here. The instance seems not valid with the theory");
 
-        if(active_lits[abs(l)] && theory_propagator->value(lit) != Propagator::l_True) {
+        if(active_lits[abs(l)] && theory_propagator->value(lit) != l_True) {
             theory_propagator->uncheckedEnqueue(lit);
             bool ret = theory_propagator->propagate();
             if(ret == false)
@@ -151,7 +151,7 @@ void PyLE::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<b
     }
 }
 
-bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
+bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                    unsigned int prediction) {
     std::vector<unsigned int> new_wrong_trees;
     for (auto tree: trees) {
@@ -177,7 +177,7 @@ bool PyLE::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool
 }
 
 
-bool PyLE::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits,
+bool pyxai::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                       unsigned int prediction) {
     if (n_classes == 2) {
         double weight = 0;
@@ -199,7 +199,7 @@ bool PyLE::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<b
 }
 
 
-bool PyLE::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits,
+bool pyxai::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<bool> &active_lits,
                                       unsigned int prediction) {
 
     std::vector<unsigned int> new_wrong_trees;
@@ -252,15 +252,15 @@ bool PyLE::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<b
 }
 
 
-void PyLE::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
+void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
                                               std::vector<int> &reason) {
     assert(false);
     // TODO CHECK FOR FEATURES : V2......
-    if (_type != PyLE::BT)
+    if (_type != pyxai::BT)
         assert(false);
     int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     int n_current_iterations = 0;
-    PyLE::TimerHelper::initializeTime();
+    pyxai::TimerHelper::initializeTime();
     std::vector<bool> polarity_instance(max + 1, true);
     std::vector<bool> active_lits(max + 1, false);
 
@@ -285,7 +285,7 @@ void PyLE::Explainer::compute_reason_features(std::vector<int> &instance, std::v
 
     // FOR BT ONLY.
     // Before computing a reason, reduce the size of the tree wrt considered instance
-    if (_type == PyLE::BT)
+    if (_type == pyxai::BT)
         for (Tree *tree: trees)
             tree->initialize_BT(polarity_instance,
                                 (n_classes == 2 ? prediction == 1 : int(tree->target_class) == prediction));
@@ -322,7 +322,7 @@ void PyLE::Explainer::compute_reason_features(std::vector<int> &instance, std::v
         }
         n_current_iterations++;
 
-        if ((time_limit != 0 && PyLE::TimerHelper::realTime() > time_limit)
+        if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
             || (time_limit == 0 && n_current_iterations > n_iterations))
             return;
     }

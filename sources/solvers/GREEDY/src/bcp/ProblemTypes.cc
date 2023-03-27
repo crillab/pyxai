@@ -18,7 +18,7 @@
 
 #include "ProblemTypes.h"
 
-namespace Propagator {
+namespace pyxai {
 /**
    Redefinition of the toString method.
  */
