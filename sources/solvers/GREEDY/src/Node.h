@@ -15,7 +15,7 @@
 
 
 
-namespace PyLE {
+namespace pyxai {
 
     class Tree;
     class Node {
@@ -73,7 +73,7 @@ namespace PyLE {
 
         void is_implicant_multiclasses(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction,
                                        std::set<unsigned int> &reachable_classes,
-                                       Propagator::Propagator *theory_propagator);
+                                       Propagator *theory_propagator);
 
         void performOnLeaf();
 

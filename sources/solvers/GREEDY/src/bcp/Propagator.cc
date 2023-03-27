@@ -20,7 +20,7 @@
 
 #include <cassert>
 
-namespace Propagator {
+namespace pyxai {
 
     // This propagator does nothing
     Propagator::Propagator() : m_out(std::cout), m_verbose(false) {

@@ -30,7 +30,7 @@
 #include "Problem.h"
 #include "ProblemTypes.h"
 
-namespace Propagator {
+namespace pyxai {
 class ParserDimacs {
  private:
   int parse_DIMACS_main(BufferRead &in, Problem *problemManager);

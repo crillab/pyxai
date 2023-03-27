@@ -9,7 +9,7 @@
 #include "Node.h"
 #include "Explainer.h"
 
-using namespace Propagator;
+using namespace pyxai;
 static PyObject* vectorToTuple_Int(const std::vector<int> &data) {
     PyObject* tuple = PyTuple_New( data.size() );
     if (!tuple) throw std::logic_error("Unable to allocate memory for Python tuple");
@@ -40,8 +40,8 @@ PyObject *new_RF(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "L", &val))
         PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
     //std::cout << "n_classes" << val << std::endl;
-    
-    PyLE::Explainer *explainer = new PyLE::Explainer(val, PyLE::RF);
+
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::RF);
     return void_to_pyobject(explainer);
 }
 
@@ -51,7 +51,7 @@ PyObject *new_BT(PyObject *self, PyObject *args) {
         PyErr_Format(PyExc_TypeError, "The argument must be a integer representing the number of classes");
     //std::cout << "n_classes" << val << std::endl;
 
-    PyLE::Explainer *explainer = new PyLE::Explainer(val, PyLE::BT);
+    pyxai::Explainer *explainer = new pyxai::Explainer(val, pyxai::BT);
     return void_to_pyobject(explainer);
 }
 
@@ -70,7 +70,7 @@ static PyObject *add_tree(PyObject *self, PyObject *args) {
     }
 
     // Get pointer to the class
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->addTree(tree_obj);
     return Py_True;
 }
@@ -87,7 +87,7 @@ static PyObject *set_excluded(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->excluded_features.clear();
     // Convert the vector of the instance
 
@@ -112,7 +112,7 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     
     // Convert the vector of the instance
 
@@ -133,9 +133,9 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
         }
         clauses.push_back(c);
     }
-    Propagator::Problem problem(clauses, max, std::cout, false);
-    explainer->theory_propagator = new Propagator::Propagator(problem, false);
-    for(PyLE::Tree *t : explainer->trees)
+    pyxai::Problem problem(clauses, max, std::cout, false);
+    explainer->theory_propagator = new pyxai::Propagator(problem, false);
+    for(pyxai::Tree *t : explainer->trees)
         t->propagator = explainer->theory_propagator;
 
     Py_RETURN_NONE;
@@ -186,7 +186,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     }
 
     // Get pointer to the class
-    PyLE::Explainer *explainer = (PyLE::Explainer *) pyobject_to_void(class_obj);
+    pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->set_n_iterations(n_iterations);
     explainer->set_time_limit(time_limit);
     if (features_expressivity == 1)

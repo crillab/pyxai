@@ -5,7 +5,7 @@
 #include "Tree.h"
 #include<vector>
 
-PyLE::Node *PyLE::Tree::parse(PyObject *tree_obj, Type _type) {
+pyxai::Node *pyxai::Tree::parse(PyObject *tree_obj, Type _type) {
     //std::cout << "parse" << std::endl;
 
     Py_ssize_t size_obj = PyTuple_Size(tree_obj);
@@ -29,7 +29,7 @@ PyLE::Node *PyLE::Tree::parse(PyObject *tree_obj, Type _type) {
     return parse_recurrence(PyTuple_GetItem(tree_obj, 1), _type);
 }
 
-PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
+pyxai::Node *pyxai::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     Py_ssize_t size_obj = PyTuple_Size(tree_obj);
 
     if (size_obj != 3 && size_obj != 1) {
@@ -41,7 +41,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (size_obj == 1){
       // it is a tree with only one leaf value !
       PyObject *value_obj = PyTuple_GetItem(tree_obj, 0);
-      Node *tmp = _type == PyLE::BT ? new Node(PyFloat_AsDouble(value_obj), this) : new Node((int)PyLong_AsLong(value_obj), this);
+      Node *tmp = _type == pyxai::BT ? new Node(PyFloat_AsDouble(value_obj), this) : new Node((int)PyLong_AsLong(value_obj), this);
       all_nodes.push_back(tmp);
       return tmp;
     }
@@ -58,7 +58,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(left_obj)) {
         left_node = parse_recurrence(left_obj, _type);
     } else if (PyFloat_Check(left_obj) || PyLong_Check(left_obj)) {
-        left_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(left_obj), this) : new Node((int)PyLong_AsLong(left_obj), this);
+        left_node = _type == pyxai::BT ? new Node(PyFloat_AsDouble(left_obj), this) : new Node((int)PyLong_AsLong(left_obj), this);
         all_nodes.push_back(left_node);
     } else {
         const char* p = Py_TYPE(left_obj)->tp_name;
@@ -72,7 +72,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     if (PyTuple_Check(right_obj)) {
         right_node = parse_recurrence(right_obj, _type);
     } else if (PyFloat_Check(right_obj) || PyLong_Check(right_obj)) {
-        right_node = _type == PyLE::BT ? new Node(PyFloat_AsDouble(right_obj), this) : new Node((int)PyLong_AsLong(right_obj), this);
+        right_node = _type == pyxai::BT ? new Node(PyFloat_AsDouble(right_obj), this) : new Node((int)PyLong_AsLong(right_obj), this);
         all_nodes.push_back(right_node);
     } else {
         const char* p = Py_TYPE(right_obj)->tp_name;
@@ -87,7 +87,7 @@ PyLE::Node *PyLE::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
 }
 
 
-void PyLE::Tree::initialize_BT(std::vector<bool> &instance, bool get_min) {
+void pyxai::Tree::initialize_BT(std::vector<bool> &instance, bool get_min) {
     for(Node *n : all_nodes)
         n->artificial_leaf = false;
     root->reduce_with_instance(instance, get_min);
@@ -98,23 +98,23 @@ void PyLE::Tree::initialize_BT(std::vector<bool> &instance, bool get_min) {
 }
 
 
-void PyLE::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
-    status = PyLE::GOOD;
+void pyxai::Tree::initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
+    status = pyxai::GOOD;
     if(used_to_explain.empty())
         used_to_explain.resize( instance.size(), false);
     std::fill(used_to_explain.begin(), used_to_explain.end(), false);
     if(is_implicant(instance, active_lits, prediction)) // Do not try this tree : always wrong
         update_used_lits();
     else
-        status = PyLE::DEFINITIVELY_WRONG;
+        status = pyxai::DEFINITIVELY_WRONG;
 }
 
-bool PyLE::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
+bool pyxai::Tree::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
     used_lits.clear();
     root->is_implicant(instance, active_lits, prediction);
     return true;
 }
 
-void PyLE::Tree::display(Type _type) { root->display(_type); std::cout << std::endl;}
+void pyxai::Tree::display(Type _type) { root->display(_type); std::cout << std::endl;}
 
-int PyLE::Tree::nb_nodes() { return root->nb_nodes();}
+int pyxai::Tree::nb_nodes() { return root->nb_nodes();}

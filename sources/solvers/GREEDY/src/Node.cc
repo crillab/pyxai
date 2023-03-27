@@ -4,8 +4,7 @@
 
 #include "Node.h"
 #include "bcp/ProblemTypes.h"
-using namespace Propagator;
-double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
+double pyxai::Node::compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
     if (is_leaf())
         return leaf_value.weight;
     if (active_lits[lit]) { // Literal in implicant
@@ -27,7 +26,7 @@ double PyLE::Node::compute_weight(std::vector<bool> &instance, std::vector<bool>
 }
 
 
-void PyLE::Node::performOnLeaf() {
+void pyxai::Node::performOnLeaf() {
     if(tree->_type == RF) {
         tree->reachable_classes.insert(leaf_value.prediction);
         return;
@@ -46,7 +45,7 @@ void PyLE::Node::performOnLeaf() {
     }
 }
 
-void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
+void pyxai::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
     if (is_leaf()) {
         performOnLeaf();
         return;
@@ -68,7 +67,7 @@ void PyLE::Node::is_implicant(std::vector<bool> &instance, std::vector<bool> &ac
 
 
 
-void PyLE::Node::reduce_with_instance(std::vector<bool> &instance, bool get_min) {
+void pyxai::Node::reduce_with_instance(std::vector<bool> &instance, bool get_min) {
     if(is_leaf()) return; // Nothing to do
 
     false_branch->reduce_with_instance(instance, get_min);
@@ -84,7 +83,7 @@ void PyLE::Node::reduce_with_instance(std::vector<bool> &instance, bool get_min)
     }
 }
 
-double PyLE::Node::extremum_true_branch(bool get_min) {
+double pyxai::Node::extremum_true_branch(bool get_min) {
     if(is_leaf()) return leaf_value.weight;
 
     double wf = false_branch->extremum_true_branch(get_min);
@@ -96,7 +95,7 @@ double PyLE::Node::extremum_true_branch(bool get_min) {
     return get_min ? std::min(wf, tf) : std::max(wf, tf);
 }
 
-int PyLE::Node::nb_nodes() {
+int pyxai::Node::nb_nodes() {
     if(is_leaf()) return 1;
     return 1 + true_branch->nb_nodes() + false_branch->nb_nodes();
 }

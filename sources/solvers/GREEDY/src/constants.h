@@ -4,7 +4,7 @@
 
 #ifndef CMAKE_EXAMPLE_CONSTANTS_H
 #define CMAKE_EXAMPLE_CONSTANTS_H
-namespace PyLE {
+namespace pyxai {
     typedef enum tdtype {BT, RF} Type;
 }
 #endif //CMAKE_EXAMPLE_CONSTANTS_H

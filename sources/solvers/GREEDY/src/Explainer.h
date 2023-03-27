@@ -13,7 +13,7 @@
 #include "utils/TimerHelper.h"
 #include "bcp/Propagator.h"
 #include "bcp/Problem.h"
-namespace PyLE {
+namespace pyxai {
     class Explainer {
       public:
         int n_classes;
@@ -22,7 +22,7 @@ namespace PyLE {
         int time_limit; //in seconds
         int try_to_remove;
         std::vector<int> excluded_features;
-        Propagator::Propagator *theory_propagator = nullptr;
+        Propagator *theory_propagator = nullptr;
 
         Explainer(int _n_classes, Type t) : n_classes(_n_classes), _type(t), n_iterations(50), time_limit(0) {}
 
