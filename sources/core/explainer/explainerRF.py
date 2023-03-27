@@ -30,7 +30,6 @@ class ExplainerRF(Explainer):
         self._random_forest = random_forest
         self.c_RF = None
         
-
         if instance is not None:
             self.set_instance(instance)
 

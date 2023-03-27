@@ -8,7 +8,6 @@ from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
 from pyxai.sources.core.structure.type import Encoding
 from pyxai.sources.core.tools.encoding import CNFencoding
 
-
 class BoostedTrees(TreeEnsembles):
 
     def __init__(self, forest, n_classes=2, learner_information=None):
@@ -125,3 +124,24 @@ class BoostedTrees(TreeEnsembles):
         Return the prediction (the classification) of an instance according to the trees
         """
         return numpy.argmax(self.compute_probabilities_instance(instance))
+
+class BoostedTreesRegression(BoostedTrees):
+    def __init__(self, forest, learner_information=None):
+        super().__init__(forest, None, learner_information)
+
+    def predict_implicant(self, implicant):
+        """
+        Return the prediction of an implicant according to the trees
+        """
+        base_score = self.learner_information.extras["base_score"]
+        sum_trees = sum([tree.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries) for tree in self.forest])
+        return sum_trees + base_score
+    
+    def predict_instance(self, instance):
+        """
+        Return the prediction of an instance according to the trees
+        """
+        base_score = self.learner_information.extras["base_score"]
+        sum_trees = sum(tree.predict_instance(instance) for tree in self.forest)
+        
+        return sum_trees + base_score
