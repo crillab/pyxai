@@ -16,7 +16,7 @@
 #endif
 
 
-namespace PyLE {
+namespace pyxai {
 
     static double initRealTime = 0;
     static double initCpuTime = 0;

@@ -10,7 +10,7 @@
 #include "constants.h"
 #include <Python.h>
 
-namespace PyLE {
+namespace pyxai {
     enum Kind_of_Tree_RF { DEFINITIVELY_WRONG, GOOD, CURRENTLY_WRONG};
     class Node;
 
@@ -25,7 +25,7 @@ namespace PyLE {
         Kind_of_Tree_RF status; // Useful only with RF : this tree hasn't the good class
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
-        Propagator::Propagator *propagator = nullptr;
+        Propagator *propagator = nullptr;
 
 
         // Variables used to stored the comutation value during common is_impicant function

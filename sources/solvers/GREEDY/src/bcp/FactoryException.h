@@ -22,7 +22,7 @@
 #include <sstream>
 #include <string>
 
-namespace Propagator {
+namespace pyxai {
 class FactoryException : public std::exception {
  private:
   std::string m_error_message;
