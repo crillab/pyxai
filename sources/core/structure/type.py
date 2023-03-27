@@ -76,6 +76,26 @@ class EvaluationMethod(Enum):
         return self.name
 
 
+class LearnerType(Enum):
+    Classification, Regression = auto(2)
+
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+
+    def __str__(self):
+        return self.name
+
+
+    def from_str(str):
+        if str == "Classification":
+            return LearnerType.Classification
+        elif str == "Regression":
+            return LearnerType.Regression
+        else:
+            assert False, "No EvaluationOutput for this string !"
+
 @unique
 class EvaluationOutput(Enum):
     DT, RF, BT, SAVE = auto(4)
@@ -212,13 +232,6 @@ class TypeFeature(Enum):
             return TypeFeature.DEFAULT
         else:
             assert False, "No TypeFeature for this string !"
-
-@unique
-class TypeLearner(Enum):
-    Classification, Regression = auto(2)
-
-    def __str__(self):
-        return self.name
 
 
 @unique

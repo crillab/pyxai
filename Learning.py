@@ -1,11 +1,12 @@
 import json
 from operator import index
 
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder
+from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
 from pyxai.sources.learning.Learner import LearnerInformation, Learner
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost
+from pyxai.sources.learning.lightgbm import LightGBM
 from pyxai.sources.learning.converter import Converter
 
 
@@ -17,6 +18,9 @@ DT = EvaluationOutput.DT
 RF = EvaluationOutput.RF
 BT = EvaluationOutput.BT
 SAVE = EvaluationOutput.SAVE
+
+CLASSIFICATION = LearnerType.Classification
+REGRESSION = LearnerType.Regression
 
 TRAINING = Indexes.Training
 TEST = Indexes.Test
