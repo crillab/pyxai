@@ -22,19 +22,19 @@ namespace pyxai {
         u_char *memory = nullptr;
         Node *root = nullptr;
         std::vector<Node *> all_nodes;
-        Kind_of_Tree_RF status; // Useful only with RF : this tree hasn't the good class
+        Kind_of_Tree_RF status; // Useful only with Classifier_RF : this tree hasn't the good class
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
         Propagator *propagator = nullptr;
 
 
         // Variables used to stored the comutation value during common is_impicant function
-        // FOR BT
+        // FOR Classifier_BT
         bool get_min;
         double current_weight;
         bool firstLeaf;
 
-        std::set<unsigned int> reachable_classes; // FOR Multiclasses RF
+        std::set<unsigned int> reachable_classes; // FOR Multiclasses Classifier_RF
 
 
         Tree(PyObject *tree_obj, Type _t): _type(_t) {
