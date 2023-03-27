@@ -9,6 +9,12 @@ class ExplainerRegressionBT(ExplainerBT) :
         self._lower_bound = None
         self._upper_bound = None
 
+
+    @property
+    def regression_boosted_trees(self):
+        return self._boosted_trees
+
+
     def set_range(self, lower_bound, upper_bound):
         self._lower_bound = lower_bound
         self._upper_bound = upper_bound
