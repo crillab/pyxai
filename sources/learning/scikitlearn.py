@@ -32,7 +32,11 @@ class Scikitlearn(Learner):
 
     def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         # Training phase
+<<<<<<< HEAD
+        decision_tree = RandomForestClassifier(max_depth=max_depth, random_state=seed   )
+=======
         decision_tree = RandomForestClassifier(max_depth=learner_options["max_depth"], random_state=learner_options["seed"])
+>>>>>>> features
         decision_tree.fit(instances_training, labels_training)
         # Test phase
         result = decision_tree.predict(instances_test)
