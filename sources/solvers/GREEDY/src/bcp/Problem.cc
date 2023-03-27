@@ -21,7 +21,7 @@
 #include "ParserDimacs.h"
 #include "Problem.h"
 
-namespace Propagator {
+namespace pyxai {
 
 Problem::Problem(const std::string &nameFile, std::ostream &out, bool verbose) {
   if (verbose) out << "c [rfx PROBLEM] Constructor from file.\n";

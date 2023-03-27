@@ -21,7 +21,7 @@
 
 #include "./ProblemTypes.h"
 
-namespace Propagator {
+namespace pyxai {
 class Problem {
  private:
   std::vector<std::vector<Lit>> m_clauses;

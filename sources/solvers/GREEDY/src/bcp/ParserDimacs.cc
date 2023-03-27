@@ -22,7 +22,7 @@
 
 #include "Problem.h"
 
-namespace Propagator {
+namespace pyxai {
 
 /**
  * @brief Read the next integer in the given stream while the value 0 is not

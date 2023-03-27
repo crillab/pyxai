@@ -22,7 +22,7 @@
 #include <iostream>
 #include <vector>
 
-namespace Propagator {
+namespace pyxai {
 
 typedef int Var;
 typedef uint8_t lbool;

@@ -24,7 +24,7 @@
 #include "./Problem.h"
 #include "./ProblemTypes.h"
 
-namespace Propagator {
+namespace pyxai {
     struct Imply {
         unsigned size;
         Lit lits[0];
@@ -169,6 +169,8 @@ namespace Propagator {
         void display(std::ostream &out);
 
         void displayTrail() {
+            if(getNbVar() == 0)
+                return;
             std::cout << "  [";
             for(unsigned int i = 0; i < m_trailSize; i++)
                 std::cout << m_trail[i] << " ";
