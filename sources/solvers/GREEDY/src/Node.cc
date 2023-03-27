@@ -32,7 +32,7 @@ void pyxai::Node::performOnLeaf() {
         return;
     }
 
-    if(tree->_type == Classifier_BT) {
+    if(tree->_type == Classifier_BT || tree->_type == Regression_BT) {
         if(tree->firstLeaf) {
             tree->current_weight = leaf_value.weight;
         } else {
