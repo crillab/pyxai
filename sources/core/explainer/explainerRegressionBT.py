@@ -5,10 +5,17 @@ from pyxai.sources.core.structure.type import ReasonExpressivity
 
 class ExplainerRegressionBT(ExplainerBT) :
     def __init__(self, boosted_trees, instance=None):
-        super().__init__(boosted_trees, instance)
         self._lower_bound = None
         self._upper_bound = None
+        super().__init__(boosted_trees, instance)
 
+
+
+
+    def set_instance(self, instance):
+        super().set_instance(instance)
+        self._lower_bound = self.predict(instance)
+        self._upper_bound = self._lower_bound
 
     @property
     def regression_boosted_trees(self):
@@ -40,14 +47,6 @@ class ExplainerRegressionBT(ExplainerBT) :
         return self._boosted_trees.predict_instance(instance)
 
 
-    def extremum_range(self) :
-        lb = float('inf')
-        ub = float('-inf')
-        for tree in self._boosted_trees:
-            leaves = tree.get_leaves()
-
-        return (lb, ub)
-
 
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
         reason_expressivity = ReasonExpressivity.Conditions
@@ -77,10 +76,23 @@ class ExplainerRegressionBT(ExplainerBT) :
 
 
     def extremum_range(self):
-        minimum = []
-        maximum = []
+        min_weights = []
+        max_weights = []
         for tree in self._boosted_trees.forest:
             leaves = tree.get_leaves()
-            minimum.append(min([l.value for l in leaves]))
-            maximum.append(max([l.value for l in leaves]))
-        return (sum(minimum), sum(maximum))
+            min_weights.append(min([l.value for l in leaves]))
+            max_weights.append(max([l.value for l in leaves]))
+        return (sum(min_weights), sum(max_weights))
+
+
+    def is_implicant(self, abductive):
+        min_weights = []
+        max_weights = []
+        base_score = self.regression_boosted_trees.learner_information.extras["base_score"]
+
+        for tree in self._boosted_trees.forest:
+            weights = self.compute_weights(tree, tree.root, abductive)
+            min_weights.append(min(weights))
+            max_weights.append(max(weights))
+        return base_score + sum(min_weights) >= self._lower_bound and base_score + sum(max_weights) <= self._upper_bound
+
