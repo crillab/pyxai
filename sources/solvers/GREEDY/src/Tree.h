@@ -33,6 +33,7 @@ namespace pyxai {
         bool get_min;
         double current_weight;
         bool firstLeaf;
+        double current_min_weight, current_max_weight; // For regression BT
 
         std::set<unsigned int> reachable_classes; // FOR Multiclasses Classifier_RF
 

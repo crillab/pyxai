@@ -35,11 +35,15 @@ void pyxai::Node::performOnLeaf() {
     if(tree->_type == Classifier_BT || tree->_type == Regression_BT) {
         if(tree->firstLeaf) {
             tree->current_weight = leaf_value.weight;
+            tree->current_min_weight = leaf_value.weight;
+            tree->current_max_weight = leaf_value.weight;
         } else {
             if(tree->get_min)
                 tree->current_weight = std::min(tree->current_weight, leaf_value.weight);
             else
                 tree->current_weight = std::max(tree->current_weight, leaf_value.weight);
+            tree->current_min_weight =  std::min(tree->current_min_weight, leaf_value.weight);
+            tree->current_max_weight =  std::max(tree->current_max_weight, leaf_value.weight);
         }
         tree->firstLeaf = false;
     }
