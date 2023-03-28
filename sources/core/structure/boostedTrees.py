@@ -7,6 +7,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
 from pyxai.sources.core.structure.type import Encoding
 from pyxai.sources.core.tools.encoding import CNFencoding
+from pyxai.sources.learning.Learner import LearnerInformation
 
 class BoostedTrees(TreeEnsembles):
 
@@ -129,6 +130,10 @@ class BoostedTrees(TreeEnsembles):
 class BoostedTreesRegression(BoostedTrees):
     def __init__(self, forest, learner_information=None):
         super().__init__(forest, None, learner_information)
+        if learner_information is None:
+            self.learner_information = LearnerInformation(None, None, None, None, None, extras={"base_score": 0})
+
+
 
     def predict_implicant(self, implicant):
         """

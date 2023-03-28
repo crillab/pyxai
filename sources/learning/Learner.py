@@ -11,7 +11,7 @@ import pandas
 from sklearn.model_selection import LeaveOneGroupOut, train_test_split, KFold
 
 from pyxai import Tools
-from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+#from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import EvaluationMethod, LearnerType, EvaluationOutput, Indexes, TypeFeature
