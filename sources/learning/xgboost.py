@@ -124,6 +124,55 @@ class Xgboost(Learner):
 
     def save_model(self, learner_information, filename):
         learner_information.raw_model.save_model(filename + ".model")
+        
+    def results_to_trees(self, id_solver_results):
+        xgb_BT = self.learner_information[id_solver_results].raw_model.get_booster()
+        xgb_JSON = self.xgboost_BT_to_JSON(xgb_BT)
+        decision_trees = []
+        target_class = 0
+        for i, tree_JSON in enumerate(xgb_JSON):
+            #print(tree_JSON)
+            #exit(0)
+            tree_JSON = json.loads(tree_JSON)
+            
+            root = self.recuperate_nodes(tree_JSON)
+            
+            decision_trees.append(DecisionTree(self.n_features, root, target_class=[target_class], id_solver_results=id_solver_results))
+            if self.n_labels > 2:  # Special case for a 2-classes prediction !
+                target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
+            
+        return decision_trees
+
+    def recuperate_nodes(self, tree_JSON):
+        if "children" in tree_JSON:
+            assert tree_JSON["split"] in self.id_features, "A feature is not correct during the parsing from xgb_JSON to DT !"
+            id_feature = self.id_features[tree_JSON["split"]]
+            threshold = round(tree_JSON["split_condition"],6)
+            decision_node = DecisionNode(int(id_feature + 1), threshold=threshold, left=None, right=None)
+            id_right = tree_JSON["no"]  # It is the inverse here, right for no, left for yes
+            for child in tree_JSON["children"]:
+                if child["nodeid"] == id_right:
+                    decision_node.right = self.recuperate_nodes(child)
+                else:
+                    decision_node.left = self.recuperate_nodes(child)
+            return decision_node
+        elif "leaf" in tree_JSON:
+            # Special case when the tree is just a leaf, this append when no split is realized by the solver, but the weight have to be take into account
+            return LeafNode(tree_JSON["leaf"])
+
+
+    def xgboost_BT_to_JSON(self, xgboost_BT):
+        save_names = xgboost_BT.feature_names
+        xgboost_BT.feature_names = None
+        xgboost_JSON = xgboost_BT.get_dump(with_stats=True, dump_format="json")
+        xgboost_BT.feature_names = save_names
+        return xgboost_JSON
+
+
+    def load_model(self, model_file):
+        classifier = xgboost.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss')
+        classifier.load_model(model_file)
+        return classifier
 
     def results_to_trees2(self, id_solver_results):
         dataframe = self.learner_information[id_solver_results].raw_model.get_booster().trees_to_dataframe()
@@ -140,7 +189,7 @@ class Xgboost(Learner):
             if self.n_labels > 2:  # Special case for a 2-classes prediction !
                 target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
         return decision_trees
-        
+
     def recuperate_nodes2(self, dataframe_tree, id):
         if dataframe_tree["Feature"][id] == "Leaf":
             return LeafNode(dataframe_tree["Gain"][id])
@@ -160,56 +209,3 @@ class Xgboost(Learner):
             decision_node.right = LeafNode(dataframe_tree["Gain"][id_right]) if dataframe_tree["Feature"][id_right] == "Leaf" else self.recuperate_nodes2(dataframe_tree, id_right)
             decision_node.left = LeafNode(dataframe_tree["Gain"][id_left]) if dataframe_tree["Feature"][id_left] == "Leaf" else self.recuperate_nodes2(dataframe_tree, id_left)
             return decision_node
-        
-    def results_to_trees(self, id_solver_results):
-        
-        xgb_BT = self.learner_information[id_solver_results].raw_model.get_booster()
-        xgb_JSON = self.xgboost_BT_to_JSON(xgb_BT)
-        decision_trees = []
-        target_class = 0
-        for i, tree_JSON in enumerate(xgb_JSON):
-            #print(tree_JSON)
-            #exit(0)
-            tree_JSON = json.loads(tree_JSON)
-            
-            root = self.recuperate_nodes(tree_JSON)
-            
-            decision_trees.append(DecisionTree(self.n_features, root, target_class=[target_class], id_solver_results=id_solver_results))
-            if self.n_labels > 2:  # Special case for a 2-classes prediction !
-                target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
-            
-        return decision_trees
-
-
-
-
-    def recuperate_nodes(self, tree_JSON):
-        if "children" in tree_JSON:
-            assert tree_JSON["split"] in self.id_features, "A feature is not correct during the parsing from xgb_JSON to DT !"
-            id_feature = self.id_features[tree_JSON["split"]]
-            threshold = tree_JSON["split_condition"]
-            decision_node = DecisionNode(int(id_feature + 1), threshold=threshold, left=None, right=None)
-            id_right = tree_JSON["no"]  # It is the inverse here, right for no, left for yes
-            for child in tree_JSON["children"]:
-                if child["nodeid"] == id_right:
-                    decision_node.right = LeafNode(child["leaf"]) if "leaf" in child else self.recuperate_nodes(child)
-                else:
-                    decision_node.left = LeafNode(child["leaf"]) if "leaf" in child else self.recuperate_nodes(child)
-            return decision_node
-        elif "leaf" in tree_JSON:
-            # Special case when the tree is just a leaf, this append when no split is realized by the solver, but the weight have to be take into account
-            return LeafNode(tree_JSON["leaf"])
-
-
-    def xgboost_BT_to_JSON(self, xgboost_BT):
-        save_names = xgboost_BT.feature_names
-        xgboost_BT.feature_names = None
-        xgboost_JSON = xgboost_BT.get_dump(with_stats=True, dump_format="json")
-        xgboost_BT.feature_names = save_names
-        return xgboost_JSON
-
-
-    def load_model(self, model_file):
-        classifier = xgboost.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss')
-        classifier.load_model(model_file)
-        return classifier
