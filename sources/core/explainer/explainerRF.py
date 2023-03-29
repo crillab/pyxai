@@ -38,6 +38,8 @@ class ExplainerRF(Explainer):
     def random_forest(self):
         return self._random_forest
 
+    def _theory_clauses(self):
+        return self._random_forest.get_theory(self._binary_representation)
 
     def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, inverse=False):
         """
@@ -437,12 +439,11 @@ class ExplainerRF(Explainer):
         return self.preferred_majoritary_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
 
+
     def is_majoritary_reason(self, reason, n_samples=50):
-        
-        if not self.is_implicant(reason):
+        extended_reason = self._extend_reason_with_theory(reason)
+        if not self.is_implicant(extended_reason):
             return False
-        
-            
         tmp = list(reason)
         random.shuffle(tmp)
         nb = 0
