@@ -29,3 +29,6 @@ class GlucoseSolver:
             result = self.glucose.solve()
         time_used += time.time()
         return None if not result else self.glucose.get_model(), time_used
+
+    def propagate(self, reason):
+        return self.glucose.propagate(reason)
