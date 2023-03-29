@@ -8,6 +8,27 @@ import unittest
 class TestXGBoost(unittest.TestCase):
     PRECISION = 1
 
+    def test_parameters(self):
+        learner = Learning.Xgboost("tests/dermatology.csv")
+        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, test_size=0.2, max_depth=6, base_score=0.5)
+        self.assertEqual(model.raw_model.get_xgb_params()["max_depth"],6)
+        self.assertEqual(model.raw_model.get_xgb_params()["base_score"],0.5)
+
+        models = learner.evaluate(method=Learning.K_FOLDS, output=Learning.BT, test_size=0.2, max_depth=6, base_score=0.5)
+        for model in models:
+            self.assertEqual(model.raw_model.get_xgb_params()["max_depth"],6)
+            self.assertEqual(model.raw_model.get_xgb_params()["base_score"],0.5)
+
+        models = learner.evaluate(method=Learning.LEAVE_ONE_GROUP_OUT, output=Learning.BT, test_size=0.2, max_depth=6, base_score=0.5)
+        for model in models:
+            self.assertEqual(model.raw_model.get_xgb_params()["max_depth"],6)
+            self.assertEqual(model.raw_model.get_xgb_params()["base_score"],0.5)
+    
+        models = learner.evaluate(method=Learning.K_FOLDS, output=Learning.BT, test_size=0.2, learner_type=Learning.REGRESSION, base_score=0, n_estimators=5)
+        for model in models:
+            self.assertEqual(len(model.raw_model.get_booster().get_dump()),5) # for n_estimators
+            self.assertEqual(model.raw_model.get_xgb_params()["base_score"],0)
+
     def test_binary_class(self):
         learner = Learning.Xgboost("tests/dermatology.csv")
         models = learner.evaluate(method=Learning.K_FOLDS, output=Learning.BT, test_size=0.2)

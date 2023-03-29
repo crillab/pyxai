@@ -82,7 +82,9 @@ class Learner:
             #for i in range(self.n_features-1):
             #    print("self.data[i]", self.data[:, i].dtype)
         
-        
+    def get_raw_models(self):
+        return [learner_information.raw_model for learner_information in self.learner_information]
+    
     def load_types(self):
         for i, t in enumerate(self.types):
             self.data[self.feature_names[i]].astype("category")

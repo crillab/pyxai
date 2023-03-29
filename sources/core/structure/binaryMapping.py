@@ -15,7 +15,9 @@ class BinaryMapping():
 
         self.learner_information = learner_information
 
-
+    @property
+    def raw_model(self):
+        return self.learner_information.raw_model
 
     @property
     def accuracy(self):
