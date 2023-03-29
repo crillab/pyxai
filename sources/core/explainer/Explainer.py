@@ -89,7 +89,7 @@ class Explainer:
 
         @param features_types (str | list): the theory selected.
     """
-    def set_features_types(self, features_types):
+    def set_features_type(self, features_types):
 
         model = self.get_model()
 
