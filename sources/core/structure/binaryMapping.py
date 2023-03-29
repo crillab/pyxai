@@ -115,7 +115,7 @@ class BinaryMapping():
         clauses = []
         new_variables = []
              
-        # For numerical features
+        # For numerical features
         for key in self.map_numerical_features.keys():
             id_binaries = self.map_numerical_features[key]
             conditions = [tuple(list(self.map_id_binaries_to_features[id])+[id]) for id in id_binaries]
@@ -134,7 +134,7 @@ class BinaryMapping():
                     # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
                 new_variables.append(id_new_var)
     
-        # For categorical features that was one hot encoded
+        # For categorical features that was one hot encoded
         for key in self.map_categorical_features_one_hot.keys(): 
             id_binaries = self.map_categorical_features_one_hot[key]
             for i, id_1 in enumerate(id_binaries):
