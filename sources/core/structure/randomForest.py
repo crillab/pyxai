@@ -30,7 +30,15 @@ class RandomForest(TreeEnsembles):
             n_votes[tree.predict_instance(instance)] += 1
         return numpy.argmax(n_votes)
 
-
+    def predict_implicant(self, implicant):
+        """
+        Return the prediction (the classification) of an instance according to the trees
+        """
+        n_votes = numpy.zeros(self.n_classes)
+        for tree in self.forest:
+            n_votes[tree.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries)] += 1
+        return numpy.argmax(n_votes)
+    
     def __str__(self):
         s = "**Random Forest Model**" + os.linesep
         s += "nClasses: " + str(self.n_classes) + os.linesep

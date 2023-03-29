@@ -305,14 +305,16 @@ class DecisionTree(BinaryMapping):
         """
         return self.root.take_decisions_instance(instance)
 
+    def predict_implicant(self, implicant, map_features_to_id_binaries=None):
+        return self.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries)
 
-    def take_decisions_binary_representation(self, binary_representation, map_id_binaries_to_features=None):
+    def take_decisions_binary_representation(self, binary_representation, map_features_to_id_binaries=None):
         """
         Return the prediction (the classification) of an binary representation according to this tree
         """
-        if map_id_binaries_to_features is None:
-            map_id_binaries_to_features = self.map_id_binaries_to_features
-        return self.root.take_decisions_binary_representation(binary_representation, map_id_binaries_to_features)
+        if map_features_to_id_binaries is None:
+            map_features_to_id_binaries = self.map_features_to_id_binaries
+        return self.root.take_decisions_binary_representation(binary_representation, map_features_to_id_binaries)
 
 
     def to_CNF(self, instance, target_prediction=None, *, tree_encoding=Encoding.COMPLEMENTARY, format=True, inverse_coding=False):

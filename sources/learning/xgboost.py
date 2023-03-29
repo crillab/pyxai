@@ -22,28 +22,31 @@ class Xgboost(Learner):
 
     def __init__(self, data=NoneData, types=None):
         super().__init__(data, types)
+        self.has_to_display_parameters = True
 
+    def display_parameters(self, learner_options):
+        if self.has_to_display_parameters is True:
+            Tools.verbose("learner_options:", learner_options)
+            self.has_to_display_parameters = False
 
     def get_solver_name(self):
         return str(self.__class__.__name__)
 
-
     def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Xgboost does not have a Decision Tree Classifier.")
+        raise NotImplementedError("Decision Tree with classification is not implemented for XGBoost.")
         
-
     def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Xgboost does not have a Random Forest Classifier.")
+        raise NotImplementedError("Random Forest with classification is not implemented for XGBoost.")
 
     def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         if "eval_metric" not in learner_options.keys():
             learner_options["eval_metric"] = "mlogloss"
-        # Training phase
-        Tools.verbose("learner_options:", learner_options)
-        xgb_classifier = xgboost.XGBClassifier(**learner_options)
-        xgb_classifier.fit(instances_training, labels_training)
-        # Test phase
-        result = xgb_classifier.predict(instances_test)
+        self.display_parameters(learner_options)
+        
+        learner = xgboost.XGBClassifier(**learner_options)
+        learner.fit(instances_training, labels_training)
+        
+        result = learner.predict(instances_test)
         metrics = {
             "accuracy": compute_accuracy(result, labels_test)
         }
@@ -51,26 +54,20 @@ class Xgboost(Learner):
         extras = {
             "base_score": None
         }
-
-        return (copy.deepcopy(xgb_classifier), metrics, extras)
+        return (copy.deepcopy(learner), metrics, extras)
 
     def fit_and_predict_DT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Xgboost does not have a Decision Tree Regressor.")
+        raise NotImplementedError("Decision Tree with regression is not implemented for XGBoost.")
         
     def fit_and_predict_RF_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Xgboost does not have a Random Forest Regressor.")
+        raise NotImplementedError("Random Forest with regression is not implemented for XGBoost.")
 
     def fit_and_predict_BT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        #if "eval_metric" not in learner_options.keys():
-        #    learner_options["eval_metric"] = "mlogloss"
-        # Training phase
-        Tools.verbose("learner_options:", learner_options)
-        xgb_regressor = xgboost.XGBRegressor(**learner_options)
+        self.display_parameters(learner_options)
+        learner = xgboost.XGBRegressor(**learner_options)
+        learner.fit(instances_training, labels_training)
         
-        xgb_regressor.fit(instances_training, labels_training)
-        # Test phase
-        
-        result = xgb_regressor.predict(instances_test)
+        result = learner.predict(instances_test)
         metrics = {
             "mean_squared_error": mean_squared_error(labels_test, result),
             "root_mean_squared_error": mean_squared_error(labels_test, result, squared=False),
@@ -78,10 +75,10 @@ class Xgboost(Learner):
         }
 
         extras = {
-            "base_score": float(0.5) if xgb_regressor.base_score is None else xgb_regressor.base_score,
+            "base_score": float(0.5) if learner.base_score is None else learner.base_score,
         }
         
-        return (copy.deepcopy(xgb_regressor), metrics, extras)
+        return (copy.deepcopy(learner), metrics, extras)
 
     def to_DT_CLS(self, learner_information=None):
         raise NotImplementedError("Decision Tree with classification is not implemented for XGBoost.")
@@ -104,11 +101,11 @@ class Xgboost(Learner):
         return BTs
 
     def to_DT_REG(self, learner_information=None):
-        assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
+        raise NotImplementedError("Decision Tree with regression is not implemented for XGBoost.")
 
 
     def to_RF_REG(self, learner_information=None):
-        assert True, "Xgboost is only able to evaluate a classifier in the form of boosted trees"
+        raise NotImplementedError("Random Forest with regression is not implemented for XGBoost.")
 
     
     def to_BT_REG(self, learner_information=None):
