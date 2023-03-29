@@ -6,7 +6,7 @@ from typing import Iterable
 from pyxai.sources.core.tools.utils import count_dimensions
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
 from pyxai import Tools
-
+from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 class Explainer:
     TIMEOUT = -1
 
@@ -228,10 +228,14 @@ class Explainer:
         Tools.verbose("Number of used features in the model (before the encoding):", len(used_features_without_one_hot_encoded))
         Tools.verbose("Number of used features in the model (after the encoding):", len(used_features))
         Tools.verbose("----------------------------------------------")
-        
+
+    def _theory_clauses(self):
+        raise NotImplementedError
+
+
     def activate_theory(self):
         """
-        Add a theory in the resolution methods (at this time, only for contrastive explanations).
+        Add a theory in the resolution method.
         This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
         """
         self._theory = True
@@ -344,6 +348,14 @@ class Explainer:
         raise NotImplementedError
 
 
+    def _extend_reason_with_theory(self, reason):
+        if self._theory is False:
+            return reason
+        glucose = GlucoseSolver()
+        glucose.add_clauses(self._theory_clauses())
+        return glucose.propagate(reason)[1]
+
+
     def is_reason(self, reason, *, n_samples=1000):
         """
         Return if the reason given in parameter is really a reason. Since the process can be time consuming, one limits the
@@ -353,8 +365,9 @@ class Explainer:
         @param n_samples: (int) the number of tests to be done.
         @return: True if the reason is really one reason, False otherwise.
         """
+        extended_reason = self._extend_reason_with_theory(reason)
         for _ in range(n_samples):
-            binary_representation = self._extend_reason_to_complete_representation(reason)
+            binary_representation = self._extend_reason_to_complete_representation(extended_reason)
             if not self.is_implicant(binary_representation):
                 return False
         return True
