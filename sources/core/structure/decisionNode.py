@@ -32,6 +32,7 @@ class LeafNode:
 
 
     def take_decisions_instance(self, instance=None):
+        print("value:", self.value)
         return self.value
 
 
@@ -163,14 +164,17 @@ class DecisionNode:
         This return value is either 0 or 1: 0 for the first (boolean) prediction value, 1 for the second one.
         Warning: right nodes are considered as the 'yes' responses of conditions, left nodes as 'no'.
         """
-        #print("self.id_feature:", self.id_feature)
-        #print("self.threshold:", self.threshold)
-        #print("instance[self.id_feature - 1]:", instance[self.id_feature - 1])
+        print("self.id_feature:", self.id_feature)
+        print("self.threshold:", self.threshold)
+        print("self.operator:", self.operator)
+        print("instance[self.id_feature - 1]:", instance[self.id_feature - 1])
 
         if self.operator == OperatorCondition.GE:
             if instance[self.id_feature - 1] >= self.threshold:
+                print("go right")
                 return self.right.take_decisions_instance(instance)
             else:
+                print("go left")
                 return self.left.take_decisions_instance(instance)
         elif self.operator == OperatorCondition.GT:
             if instance[self.id_feature - 1] > self.threshold:
