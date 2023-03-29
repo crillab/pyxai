@@ -4,6 +4,7 @@ import pickle
 import numpy
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
+from pyxai import Tools
 
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.structure.randomForest import RandomForest
@@ -14,37 +15,65 @@ from pyxai.sources.learning.Learner import Learner, NoneData
 class Scikitlearn(Learner):
     def __init__(self, data=NoneData, types=None):
         super().__init__(data, types)
+        self.has_to_display_parameters = True
 
+    def display_parameters(self, learner_options):
+        if self.has_to_display_parameters is True:
+            Tools.verbose("learner_options:", learner_options)
+            self.has_to_display_parameters = False
 
     def get_solver_name(self):
         return str(self.__class__.__name__)
 
-
     def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        # Training phase
-        decision_tree = DecisionTreeClassifier(max_depth=learner_options["max_depth"], random_state=learner_options["seed"])
-        decision_tree.fit(instances_training, labels_training)
+        if "seed" in learner_options.keys():
+            learner_options["random_state"] = learner_options["seed"]
+            learner_options.pop("seed")
 
-        # Test phase
-        result = decision_tree.predict(instances_test)
-        return (copy.deepcopy(decision_tree), compute_accuracy(result, labels_test))
+        self.display_parameters(learner_options)
+        learner = DecisionTreeClassifier(**learner_options)
+        learner.fit(instances_training, labels_training)
 
-
-    def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        # Training phase
-        decision_tree = RandomForestClassifier(max_depth=learner_options["max_depth"], random_state=learner_options["seed"])
-        decision_tree.fit(instances_training, labels_training)
-        # Test phase
-        result = decision_tree.predict(instances_test)
+        result = learner.predict(instances_test)
         metrics = {
             "accuracy": compute_accuracy(result, labels_test)
         }
-        return (copy.deepcopy(decision_tree), metrics)
+        extras = {
+            "base_score": 0
+        }
+        return (copy.deepcopy(learner), metrics, extras)
+
+
+    def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        if "seed" in learner_options.keys():
+            learner_options["random_state"] = learner_options["seed"]
+            learner_options.pop("seed")
+
+        self.display_parameters(learner_options)
+        learner = RandomForestClassifier(**learner_options)
+        learner.fit(instances_training, labels_training)
+        
+        result = learner.predict(instances_test)
+        metrics = {
+            "accuracy": compute_accuracy(result, labels_test)
+        }
+        extras = {
+            "base_score": 0
+        }
+        return (copy.deepcopy(learner), metrics, extras)
     
 
-    def fit_and_predict_BT(self, instances_training, instances_test, labels_training, labels_test, max_depth=None, seed=0):
-        assert False, "Scikitlearn is not able to produce BT !"
+    def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        raise NotImplementedError("Boosted Trees with classification is not implemented for ScikitLearn.")
 
+    def fit_and_predict_DT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
+    
+    def fit_and_predict_RF_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
+    
+    def fit_and_predict_BT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
 
     """
     Convert the Scikitlearn's decision trees into the program-specific objects called 'DecisionTree'.
@@ -55,11 +84,11 @@ class Scikitlearn(Learner):
         if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
+            print("id_solver_results", id_solver_results)
             sk_tree = self.learner_information[id_solver_results].raw_model
             sk_raw_tree = sk_tree.tree_
             decision_trees.append(self.classifier_to_DT(sk_tree, sk_raw_tree, id_solver_results))
         return decision_trees
-
 
     def to_RF_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
@@ -75,8 +104,17 @@ class Scikitlearn(Learner):
         return random_forests
 
 
-    def to_BT(self):
-        assert False, "TODO"
+    def to_BT_CLS(self, learner_information=None):
+        raise NotImplementedError("Boosted Trees with classification is not implemented for ScikitLearn.")
+
+    def to_DT_REG(self, learner_information=None):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
+
+    def to_RF_REG(self, learner_information=None):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
+
+    def to_BT_REG(self, learner_information=None):
+        raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
 
 
     def save_model(self, learner_information, filename):
@@ -87,7 +125,6 @@ class Scikitlearn(Learner):
     Convert a specific Scikitlearn's decision tree into a program-specific object called 'DecisionTree'.
     """
 
-
     def classifier_to_DT(self, sk_tree, sk_raw_tree, id_solver_results=0):
         nodes = {i: DecisionNode(int(feature + 1), threshold=sk_raw_tree.threshold[i], left=None, right=None)
                  for i, feature in enumerate(sk_raw_tree.feature) if feature >= 0}
@@ -96,8 +133,14 @@ class Scikitlearn(Learner):
                 # Set left and right of each node
                 id_left = sk_raw_tree.children_left[i]
                 id_right = sk_raw_tree.children_right[i]
+
+                print("sk_raw_tree.threshold[i]", sk_raw_tree.threshold[i])
+                print("sk_raw_tree.value[id_right]", sk_raw_tree.value[id_right])
+                print("sk_raw_tree.value[id_left]", sk_raw_tree.value[id_left])
+
                 nodes[i].left = nodes[id_left] if id_left in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_left][0]))
                 nodes[i].right = nodes[id_right] if id_right in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_right][0]))
+                
         root = nodes[0] if 0 in nodes else DecisionNode(1, 0, sk_raw_tree.value[0][0])
         return DecisionTree(sk_tree.n_features_in_, root, sk_tree.classes_, id_solver_results=id_solver_results,
                             learner_information=self.learner_information[id_solver_results])
