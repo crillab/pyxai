@@ -10,11 +10,11 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, NoneData
-from pyxai.sources.core.structure.type import OperatorCondition
+from pyxai.sources.core.structure.type import OperatorCondition, LearnerType
 
 class Scikitlearn(Learner):
-    def __init__(self, data=NoneData, types=None):
-        super().__init__(data, types)
+    def __init__(self, data=NoneData, *, learner_type=None):
+        super().__init__(data, learner_type)
         self.has_to_display_parameters = True
 
     def display_parameters(self, learner_options):
