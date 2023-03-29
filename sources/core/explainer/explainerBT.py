@@ -36,6 +36,9 @@ class ExplainerBT(Explainer):
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
+    def _theory_clauses(self):
+        return self._boosted_trees.get_theory(self._binary_representation)
+
 
     def is_implicant(self, abductive):
         if self._boosted_trees.n_classes == 2:
@@ -305,10 +308,15 @@ class ExplainerBT(Explainer):
 
 
     def is_tree_specific_reason(self, reason, check_minimal_inclusion=False):
-        if not self.is_implicant(reason):
+
+        extended_reason = self._extend_reason_with_theory(reason)
+
+        if not self.is_implicant(extended_reason):
             return False
+
         if not check_minimal_inclusion:
             return True
+
         tmp = list(reason)
         random.shuffle(tmp)
         for lit in tmp:
