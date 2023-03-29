@@ -10,7 +10,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, NoneData
-
+from pyxai.sources.core.structure.type import OperatorCondition
 
 class Scikitlearn(Learner):
     def __init__(self, data=NoneData, types=None):
@@ -84,7 +84,6 @@ class Scikitlearn(Learner):
         if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
-            print("id_solver_results", id_solver_results)
             sk_tree = self.learner_information[id_solver_results].raw_model
             sk_raw_tree = sk_tree.tree_
             decision_trees.append(self.classifier_to_DT(sk_tree, sk_raw_tree, id_solver_results))
@@ -126,17 +125,13 @@ class Scikitlearn(Learner):
     """
 
     def classifier_to_DT(self, sk_tree, sk_raw_tree, id_solver_results=0):
-        nodes = {i: DecisionNode(int(feature + 1), threshold=sk_raw_tree.threshold[i], left=None, right=None)
+        nodes = {i: DecisionNode(int(feature + 1), threshold=sk_raw_tree.threshold[i], operator=OperatorCondition.GT, left=None, right=None)
                  for i, feature in enumerate(sk_raw_tree.feature) if feature >= 0}
         for i in range(len(sk_raw_tree.feature)):
             if i in nodes:
                 # Set left and right of each node
                 id_left = sk_raw_tree.children_left[i]
                 id_right = sk_raw_tree.children_right[i]
-
-                print("sk_raw_tree.threshold[i]", sk_raw_tree.threshold[i])
-                print("sk_raw_tree.value[id_right]", sk_raw_tree.value[id_right])
-                print("sk_raw_tree.value[id_left]", sk_raw_tree.value[id_left])
 
                 nodes[i].left = nodes[id_left] if id_left in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_left][0]))
                 nodes[i].right = nodes[id_right] if id_right in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_right][0]))
