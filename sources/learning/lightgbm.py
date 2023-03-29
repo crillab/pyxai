@@ -12,15 +12,15 @@ from pyxai.sources.core.structure.boostedTrees import BoostedTrees, BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, LearnerInformation, NoneData
+from pyxai.sources.core.structure.type import LearnerType
 
 class LightGBM(Learner):
     """
     Load the dataset, rename the attributes and separe the prediction from the data
     """
 
-
-    def __init__(self, data=NoneData, types=None):
-        super().__init__(data, types)
+    def __init__(self, data=NoneData, *, learner_type=None):
+        super().__init__(data, learner_type)
         self.has_to_display_parameters = True
 
     def display_parameters(self, learner_options):
@@ -99,7 +99,6 @@ class LightGBM(Learner):
         bt = self.learner_information[id_solver_results].raw_model.booster_
         
         bt_json = self.BT_to_JSON(bt)
-        
 
         decision_trees = []
         target_class = 0
@@ -107,8 +106,6 @@ class LightGBM(Learner):
             tree_JSON = tree_JSON['tree_structure']
             root = self.recuperate_nodes(tree_JSON)
             decision_trees.append(DecisionTree(self.n_features, root, target_class=[target_class], id_solver_results=id_solver_results))
-            if self.n_labels > 2:  # Special case for a 2-classes prediction !
-                target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
             
         return decision_trees
 

@@ -13,7 +13,7 @@ print("instance:", instance)
 
 
 # Explainer part
-explainer = Explainer.initialize(model, instance=instance, features_types=Tools.Options.types)
+explainer = Explainer.initialize(model, instance=instance, features_type=Tools.Options.types)
 
 
 contrastive = explainer.minimal_contrastive_reason(time_limit=100)

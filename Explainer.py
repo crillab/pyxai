@@ -37,13 +37,13 @@ def boosted_trees(model, instance=None):
     return ExplainerBT(model, instance)
 
 
-def initialize(model, instance=None, features_types=None):
+def initialize(model, instance=None, features_type=None):
     """Return and initialize an explainer according to a model and optionally an instance.
 
     Args:
         model (BoostedTrees, RandomForest, DecisionTree): A model.
         instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated. Defaults to None.
-        features_types (:obj:`dict` containing the keys `numerical`, `categorical` and `binary` | `String`, optional) Either a dict where each key contains a list (["Method*", "CouncilArea*", "Regionname*"]) or a .types file. 
+        features_type (:obj:`dict` containing the keys `numerical`, `categorical` and `binary` | `String`, optional) Either a dict where each key contains a list (["Method*", "CouncilArea*", "Regionname*"]) or a .types file. 
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """
@@ -56,8 +56,8 @@ def initialize(model, instance=None, features_types=None):
         explainer = ExplainerBT(model, instance)
     if isinstance(model, BoostedTreesRegression):
         explainer = ExplainerRegressionBT(model, instance)
-    if features_types is not None:
-        explainer.set_features_types(features_types)
+    if features_type is not None:
+        explainer.set_features_type(features_type)
 
     return explainer
 
