@@ -1,3 +1,4 @@
+from random import random
 from docplex.mp.model import Model
 
 
@@ -6,48 +7,50 @@ class SufficientRegression:
     def __init__(self):
         pass
 
-    def create_model(self):
+    def create_model(self, explainer, lb, ub):
         random.shuffle(featureBlock)
+        forest = explainer._boosted_trees.forest
+        extremum_range = explainer.extremum_range()
         model = Model()
         model.context.cplex_parameters.threads = 1
 
-        varTrees = [model.binary_var("b" + str(i))
-                    for i in range(1 + forest.getMaxIndex())]
-        varActiveBranches = [model.binary_var("a" + str(i))
-                             for i in range(forest.getNbAllBranches())]
-        varValueTree = [model.continuous_var(
-            t.getMinValue(), t.getMaxValue(), "t" + str(t.getId())) for t in forest]
+        var_trees = [model.binary_var("b" + str(i)) for i in range(1 + forest.getMaxIndex())] # max id binary var
+        var_active_branches = [model.binary_var("a" + str(i)) for i in range(forest.getNbAllBranches())] # nb leaves
+        var_value_tree = [model.continuous_var(t.getMinValue(), t.getMaxValue(), "t" + str(t.getId())) for t in forest]
 
-        varValueForest = model.continuous_var(lb=forest.getMinPossiblePrediction(
-        ), ub=forest.getMaxPossiblePrediction(), name="forest")
+
+        var_value_forest = model.continuous_var(lb=extremum_range[0], ub=extremum_range[1], name="forest")
 
         for tree in forest:
             model.add_constraint(
-                model.sum([varActiveBranches[branch.getId()] for branch in tree]) == 1)
-            model.add_constraint(model.sum([varActiveBranches[branch.getId(
-            )] * branch.getValue() for branch in tree]) == varValueTree[tree.getId()])
+                model.sum([var_active_branches[branch.getId()] for branch in tree]) == 1
+            )
+            model.add_constraint(
+                model.sum([var_active_branches[branch.getId()] * branch.getValue() for branch in tree]) == var_value_tree[tree.getId()]
+            )
 
             for branch in tree:
-                model.add_constraint(model.sum([varTrees[l] for l in branch.getLiterals() if (
-                        l > 0)] + [1 - varTrees[-l] for l in branch.getLiterals() if (l < 0)] + [-varActiveBranches[branch.getId()]]) <= len(
-                    branch.getLiterals()) - 1)
+                model.add_constraint(
+                    model.sum([var_trees[l] for l in branch.getLiterals() if ( l > 0)] + [1 - var_trees[-l] for l in branch.getLiterals() if (l < 0)] + [-var_active_branches[branch.getId()]]) <= len(branch.getLiterals()) - 1
+                )
 
         model.add_constraint(
-            model.sum(v for v in varValueTree) == varValueForest)
+            model.sum(v for v in var_value_tree) == var_value_forest
+        )
 
         varLb = model.binary_var("lb")
         varUb = model.binary_var("ub")
 
-        model.add_indicator(varLb, varValueForest <= lb, active_value=1)
-        model.add_indicator(varUb, varValueForest >= ub, active_value=1)
+        model.add_indicator(varLb, var_value_forest <= lb, active_value=1)
+        model.add_indicator(varUb, var_value_forest >= ub, active_value=1)
         model.add_constraint(varLb + varUb == 1)
 
         # add the category constraints
         for cat in listCatBin:
             for i in range(len(cat) - 1):
                 for j in range(i + 1, len(cat)):
-                    assert cat[i] < len(varTrees) and cat[j] < len(varTrees)
-                    model.add_constraint(varTrees[cat[i]] + varTrees[cat[j]] <= 1)
+                    assert cat[i] < len(var_trees) and cat[j] < len(var_trees)
+                    model.add_constraint(var_trees[cat[i]] + var_trees[cat[j]] <= 1)
 
         # add the domain constraints.
         for feature in featureBlock:
@@ -55,7 +58,7 @@ class SufficientRegression:
                 continue
             for i in range(len(feature) - 1):
                 model.add_constraint(
-                    varTrees[feature[i]] + 1 - varTrees[feature[i + 1]] >= 1)
+                    var_trees[feature[i]] + 1 - var_trees[feature[i + 1]] >= 1)
 
         valuation = {}
         for i in instance:
@@ -68,9 +71,9 @@ class SufficientRegression:
                 if abs(l) not in valuation:
                     continue
                 if valuation[abs(l)]:
-                    tmp.append((l, varTrees[l] == 1))
+                    tmp.append((l, var_trees[l] == 1))
                 else:
-                    tmp.append((-l, varTrees[l] == 0))
+                    tmp.append((-l, var_trees[l] == 0))
 
                 model.add_constraint(tmp[-1][1])
             notKnown.append(tmp)
@@ -181,7 +184,7 @@ class SufficientRegression:
                             negPoint += 1
 
                     interpretation = ModelSufficient.computeInterpretation(
-                        solution, varTrees)
+                        solution, var_trees)
                     score = forest.computePrediction(interpretation)
                     if score > lb and score < ub:
                         missclass.append(current[0])
