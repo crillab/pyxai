@@ -221,12 +221,13 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->set_n_iterations(n_iterations);
     explainer->set_time_limit(time_limit);
+    bool ret;
     if (features_expressivity == 1)
-      explainer->compute_reason_features(instance, features, prediction, reason);
+      ret = explainer->compute_reason_features(instance, features, prediction, reason);
     else
-      explainer->compute_reason_conditions(instance, prediction, reason, seed);
+      ret = explainer->compute_reason_conditions(instance, prediction, reason, seed);
 
-    if(reason.size() == 0)
+    if(ret == false)
         Py_RETURN_NONE;
 
     return vectorToTuple_Int(reason);

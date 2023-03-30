@@ -340,7 +340,7 @@ class Learner:
             f.close()
 
             if self.get_learner_name() != learner_information.learner_name:
-                raise ValueError("The learner in the .map file is not the same: " + self.get_solver_name() + " != " + learner_information.learner_name) 
+                raise ValueError("The learner in the .map file is not the same: " + self.get_learner_name() + " != " + learner_information.learner_name)
             
             # load model
             Tools.verbose("----------   Loading Information   -----------")
@@ -557,7 +557,7 @@ class Learner:
 
         assert isinstance(indexes, (Indexes, str)), "Bad value in the parameter 'indexes'"
 
-        if self.get_solver_name() == "Generic":
+        if self.get_learner_name() == "Generic":
             assert correct is None, "Please insert the model to use this parameter !"
             assert predictions is None, "Please insert the model to use this parameter !"
 
@@ -658,7 +658,7 @@ class Learner:
         else:
             random.shuffle(original_indexes)
 
-        if model is None or self.get_solver_name() == "Generic":
+        if model is None or self.get_learner_name() == "Generic":
             for j in original_indexes:
                 current_index = possible_indexes[j]
                 instances.append((data[j], None))

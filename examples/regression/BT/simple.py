@@ -24,7 +24,7 @@ print("extremum range: ",extremum_range)
 direct_reason = explainer.direct_reason()
 print("direct: ", explainer.to_features(direct_reason))
 print("len direct: ", len(direct_reason), len(explainer.to_features(direct_reason)))
-print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
+#print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
 
 
 percent = 2.5
@@ -42,11 +42,11 @@ print("is a tree specific", explainer.is_tree_specific_reason(tree_specific_reas
 
 
 print("\n\nActivate theorie")
-explainer = Explainer.initialize(model, instance=instance, features_types={"numerical": Learning.DEFAULT})
+explainer = Explainer.initialize(model, instance=instance, features_type={"numerical": Learning.DEFAULT})
 direct_reason = explainer.direct_reason()
 print("len direct: ", len(direct_reason))
-print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
-explainer.set_range(prediction*(1-percent), prediction*(1+percent))
+#print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
+explainer.set_range(prediction - delta, prediction + delta)
 print(f"set interval to [{1-percent} * prediction, {1+percent} * prediction]: [", explainer.lower_bound, explainer.upper_bound, "]")
 #
 tree_specific_reason = explainer.tree_specific_reason(n_iterations=1)
