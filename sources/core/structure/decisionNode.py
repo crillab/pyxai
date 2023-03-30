@@ -164,9 +164,9 @@ class DecisionNode:
         Warning: right nodes are considered as the 'yes' responses of conditions, left nodes as 'no'.
         """
         #print("self.id_feature:", self.id_feature)
-        #print("self.threshold:", self.threshold)
+        #print("self.threshold:", type(self.threshold))
         #print("self.operator:", self.operator)
-        #print("instance[self.id_feature - 1]:", instance[self.id_feature - 1])
+        #print("instance[self.id_feature - 1]:", type(instance[self.id_feature - 1]))
         
         if self.operator == OperatorCondition.GE:
             if instance[self.id_feature - 1] >= self.threshold:

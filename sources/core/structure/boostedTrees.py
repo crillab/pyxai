@@ -2,7 +2,7 @@ import math
 import numpy
 import os
 from operator import index
-
+from decimal import Decimal
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
 from pyxai.sources.core.structure.type import Encoding
@@ -140,14 +140,14 @@ class BoostedTreesRegression(BoostedTrees):
         Return the prediction of an implicant according to the trees
         """
         base_score = self.learner_information.extras["base_score"]
-        sum_trees = sum(tree.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries) for tree in self.forest)
-        return sum_trees + base_score
+        sum_trees = numpy.sum([tree.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries) for tree in self.forest], dtype=numpy.float64)
+        return numpy.sum(sum_trees + base_score)
     
     def predict_instance(self, instance):
         """
         Return the prediction of an instance according to the trees
         """
         base_score = self.learner_information.extras["base_score"]
-        sum_trees = sum(tree.predict_instance(instance) for tree in self.forest)
+        sum_trees = numpy.sum([tree.predict_instance(instance) for tree in self.forest], dtype=numpy.float64)
         
-        return sum_trees + base_score
+        return numpy.sum(sum_trees + base_score)
