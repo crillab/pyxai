@@ -147,7 +147,6 @@ class Xgboost(Learner):
             root = self.recuperate_nodes(tree_JSON)
             
             decision_trees.append(DecisionTree(self.n_features, root, target_class=[target_class], id_solver_results=id_solver_results))
-
             if self.learner_type == LearnerType.Classification and self.n_labels > 2:  # Special case for a 2-classes prediction !
                 target_class = target_class + 1 if target_class != self.n_labels - 1 else 0
             
@@ -157,18 +156,22 @@ class Xgboost(Learner):
         if "children" in tree_JSON:
             assert tree_JSON["split"] in self.id_features, "A feature is not correct during the parsing from xgb_JSON to DT !"
             id_feature = self.id_features[tree_JSON["split"]]
-            threshold = round(tree_JSON["split_condition"],6)
-            decision_node = DecisionNode(int(id_feature + 1), threshold=threshold, left=None, right=None)
+            threshold = numpy.float64(tree_JSON["split_condition"])
+            decision_node = DecisionNode(int(id_feature + 1), operator=OperatorCondition.GE, threshold=threshold, left=None, right=None)
             id_right = tree_JSON["no"]  # It is the inverse here, right for no, left for yes
             for child in tree_JSON["children"]:
                 if child["nodeid"] == id_right:
                     decision_node.right = self.recuperate_nodes(child)
                 else:
                     decision_node.left = self.recuperate_nodes(child)
+                    
             return decision_node
         elif "leaf" in tree_JSON:
             # Special case when the tree is just a leaf, this append when no split is realized by the solver, but the weight have to be take into account
-            return LeafNode(tree_JSON["leaf"])
+            #print("ess1:", tree_JSON["leaf"])
+            #print("ess2:", numpy.float64(tree_JSON["leaf"]))
+            #exit(0)
+            return LeafNode(numpy.float64(tree_JSON["leaf"]))
 
 
     def xgboost_BT_to_JSON(self, xgboost_BT):
