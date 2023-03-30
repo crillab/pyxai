@@ -10,9 +10,10 @@ class Generic(Learner):
     def __init__(self, data=NoneData):
         super().__init__(data)
 
-
-    def get_solver_name(self):
-        return str(self.__class__.__name__)
+    @staticmethod
+    def get_learner_name():
+        return str(Generic.__name__)
+    
 
 
     def fit_and_predict_DT(self, instances_training, instances_test, labels_training, labels_test):
