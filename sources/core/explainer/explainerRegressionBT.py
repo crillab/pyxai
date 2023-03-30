@@ -2,7 +2,7 @@ import c_explainer
 from pyxai.sources.core.explainer.Explainer import Explainer
 from pyxai.sources.core.explainer.explainerBT import ExplainerBT
 from pyxai.sources.core.structure.type import ReasonExpressivity
-
+from pyxai.sources.solvers.CPLEX.SufficientRegressionBT import SufficientRegression
 class ExplainerRegressionBT(ExplainerBT) :
     def __init__(self, boosted_trees, instance=None):
         self._lower_bound = None
@@ -73,6 +73,14 @@ class ExplainerRegressionBT(ExplainerBT) :
                                             time_limit,
                                             int(reason_expressivity), seed)
 
+
+
+    def sufficient_reason(self, *, n=1, seed=0, time_limit=None):
+        cplex = SufficientRegression()
+        cplex.create_model()
+        reason, time_used = cplex.solve()
+        self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
+        return reason
 
 
     def extremum_range(self):
