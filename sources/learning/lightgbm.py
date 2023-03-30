@@ -28,8 +28,9 @@ class LightGBM(Learner):
             Tools.verbose("learner_options:", learner_options)
             self.has_to_display_parameters = False
 
-    def get_solver_name(self):
-        return str(self.__class__.__name__)
+    @staticmethod
+    def get_learner_name():
+        return str(LightGBM.__name__)
 
 
     def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):

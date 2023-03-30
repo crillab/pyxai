@@ -2,7 +2,7 @@ import json
 from operator import index
 
 from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
-from pyxai.sources.learning.Learner import LearnerInformation, Learner
+from pyxai.sources.learning.Learner import LearnerInformation, Learner, NoneData
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost
@@ -43,26 +43,37 @@ ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
 ORDINAL = TypeEncoder.OrdinalEncoder
 ONE_HOT = TypeEncoder.OneHotEncoder
 
-def load(models_directory):
-    learner = Learner()
+def load(models_directory, *,tests=False, dataset=NoneData):
+    learner = Learner(learner_type=CLASSIFICATION)
     files = learner.load_get_files(models_directory)
-    solver_names = []
+    learner_names = []
+    learner_types = []
+    evaluation_outputs = []
+
     for _, model in enumerate(files):
-        model_file, map_file = model
+        _, map_file = model
         f = open(map_file)
         data = json.loads(json.load(f))
-        solver_names.append(data['solver_name'])
+        learner_names.append(data['learner_name'])
+        learner_types.append(data['learner_type'])
+        evaluation_outputs.append(data['evaluation_output'])
         f.close()
-    assert all(solver_name == solver_names[-1] for solver_name in solver_names), "All solver names have to be the same !"
-
-    if solver_names[0] == Generic().get_solver_name():
-        learner = Generic()
-    elif solver_names[0] == Xgboost().get_solver_name():
-        learner = Xgboost()
-    elif solver_names[0] == Scikitlearn().get_solver_name():
-        learner = Scikitlearn()
+    
+    if not all(learner_name == learner_names[-1] for learner_name in learner_names):
+        raise ValueError("All learners must have the same learner name.")
+    if not all(learner_type == learner_types[-1] for learner_type in learner_types):
+        raise ValueError("All learners must have the same learner type.")
+    if not all(evaluation_output == evaluation_outputs[-1] for evaluation_output in evaluation_outputs):
+        raise ValueError("All learners must have the same learner type.")
+    
+    if learner_names[0] == Generic.__name__:
+        learner = Generic(dataset)
+    elif learner_names[0] == Xgboost.__name__:
+        learner = Xgboost(dataset, learner_type=LearnerType.from_str(learner_types[0]))
+    elif learner_names[0] == Scikitlearn.__name__:
+        learner = Scikitlearn(dataset, learner_type=LearnerType.from_str(learner_types[0]))
     else:
-        assert False, "Bad solver names in the directory: " + models_directory
+        raise ValueError("The learner name is unknown:" + str(learner_names[0]))
 
-    models = learner.load(models_directory=models_directory)
+    models = learner.load(models_directory=models_directory, tests=tests)
     return learner, models
