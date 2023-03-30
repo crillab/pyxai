@@ -32,11 +32,11 @@ namespace pyxai {
 
         void addTree(PyObject *tree_obj);
         std::vector<Tree*> trees;
-        void compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed);
+        bool compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed);
         void initializeBeforeOneRun(std::vector<bool> & polarity_instance, std::vector<bool>&active_litd, int prediction);
         void propagateActiveLits( std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits);
 
-        void compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction, std::vector<int> &reason);
+        bool compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction, std::vector<int> &reason);
         
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, unsigned int prediction);
 

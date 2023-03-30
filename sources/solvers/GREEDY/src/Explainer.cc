@@ -36,9 +36,7 @@ void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instan
     }
 }
 
-void
-pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason,
-                                           long seed) {
+bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed) {
     if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
         theory_propagator = new Propagator();
         for(pyxai::Tree *t : trees)
@@ -84,7 +82,7 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
         propagateActiveLits(excluded_features, polarity_instance, active_lits);
         try_to_remove = l;
         if (is_implicant(polarity_instance, active_lits, prediction) == false)
-            return; // It is not possible to remove excluded features
+            return false; // It is not possible to remove excluded features
         theory_propagator->restart();
     }
 
@@ -104,7 +102,7 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
         for (int l: order) {
             active_lits[abs(l)] = false;
             try_to_remove = l;
-            //std::cout << "try " << l << " ";
+            // std::cout << "try " << l << " ";
             propagateActiveLits(order, polarity_instance, active_lits);
 
             if (is_implicant(polarity_instance, active_lits, prediction)) {
@@ -131,8 +129,9 @@ pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int pred
 
         if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
             || (time_limit == 0 && n_current_iterations > n_iterations))
-            return;
+            return true;
     }
+    return true;
 }
 
 void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits) {
@@ -272,7 +271,7 @@ bool pyxai::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<
 }
 
 
-void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
+bool pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
                                               std::vector<int> &reason) {
     assert(false);
     // TODO CHECK FOR FEATURES : V2......
@@ -344,8 +343,9 @@ void pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::
 
         if ((time_limit != 0 && pyxai::TimerHelper::realTime() > time_limit)
             || (time_limit == 0 && n_current_iterations > n_iterations))
-            return;
+            return true;
     }
+    return true;
 }
 
 
