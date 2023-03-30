@@ -26,14 +26,14 @@ class LearnerInformation:
         self.group = group
         self.metrics = metrics
         self.extras = extras
-        self.solver_name = None
+        self.learner_name = None
         self.feature_names = None
         self.evaluation_method = None
         self.evaluation_output = None
 
 
-    def set_solver_name(self, solver_name):
-        self.solver_name = solver_name
+    def set_learner_name(self, learner_name):
+        self.learner_name = learner_name
 
 
     def set_feature_names(self, feature_names):
@@ -234,7 +234,7 @@ class Learner:
             assert False, "Not implemented !"
 
         for learner_information in self.learner_information:
-            learner_information.set_solver_name(self.get_solver_name())
+            learner_information.set_learner_name(self.get_learner_name())
             learner_information.set_feature_names(self.feature_names)
             learner_information.set_evaluation_method(method)
             learner_information.set_evaluation_output(output)
@@ -311,7 +311,7 @@ class Learner:
         return files
 
 
-    def load(self, *, models_directory, with_tests=False):
+    def load(self, *, models_directory, tests=False):
         files = self.load_get_files(models_directory)
 
         for _, model in enumerate(files):
@@ -319,67 +319,57 @@ class Learner:
 
             # recuperate map
             f = open(map_file)
+            
             data = json.loads(json.load(f))
-            training_index = data['training_index']
-            test_index = data['test_index']
-            accuracy_saved = data['accuracy']
-            solver_name = data['solver_name']
-            evaluation_method = data['evaluation_method']
-            evaluation_output = data['evaluation_output']
-
+            raw_model = self.load_model(model_file, data['extras']['learner_options'])
+            learner_information = LearnerInformation(
+                                    copy.deepcopy(raw_model), 
+                                    data['training_index'], 
+                                    data['test_index'], 
+                                    None, 
+                                    data['metrics'],
+                                    data['extras'])
+            learner_information.set_learner_name(data['learner_name'])
+            learner_information.set_evaluation_method(data['evaluation_method'])
+            learner_information.set_evaluation_output(data['evaluation_output'])
+            learner_information.set_feature_names(data["feature_names"])
             self.n_features = data['n_features']
             self.n_labels = data["n_labels"]
             self.dict_labels = data["dict_labels"]
             self.feature_names = data["feature_names"]
-
             f.close()
 
-            assert self.get_solver_name() == solver_name, "You try to load a model with " + self.get_solver_name() + ", but you have save the model with " + solver_name + " !"
-
+            if self.get_learner_name() != learner_information.learner_name:
+                raise ValueError("The learner in the .map file is not the same: " + self.get_solver_name() + " != " + learner_information.learner_name) 
+            
             # load model
-            classifier = self.load_model(model_file)
-
             Tools.verbose("----------   Loading Information   -----------")
             Tools.verbose("mapping file:", map_file)
             Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
-            Tools.verbose("nInstances (nObservations):", len(training_index) + len(test_index))
+            Tools.verbose("nInstances (nObservations):", len(learner_information.training_index) + len(learner_information.test_index))
             Tools.verbose("nLabels:", self.n_labels)
-            if with_tests:
+            if tests:
                 # Test phase
-                instances_test = [self.data[i] for i in test_index]
-                labels_test = [self.labels[i] for i in test_index]
-                result = classifier.predict(instances_test)
-                accuracy = compute_accuracy(result, labels_test)
-                assert accuracy == accuracy_saved, "The accuracy between the model loaded and the one determined at its creation is not the same !"
-            self.learner_information.append(LearnerInformation(copy.deepcopy(classifier), training_index, test_index, None, accuracy_saved))
-            self.learner_information[-1].set_solver_name(solver_name)
-            self.learner_information[-1].set_evaluation_method(evaluation_method)
-            self.learner_information[-1].set_evaluation_output(evaluation_output)
-            self.learner_information[-1].set_feature_names(self.feature_names)
-
-        assert all(learner_information.evaluation_output == self.learner_information[-1].evaluation_output for learner_information in
-                   self.learner_information), "All evaluation outputs have to be the same !"
-
+                instances_test = [self.data[i] for i in learner_information.test_index]
+                labels_test = [self.labels[i] for i in learner_information.test_index]
+                result = raw_model.predict(instances_test)
+                metrics = self.compute_metrics(labels_test, result)
+                if metrics != learner_information.metrics:
+                    raise ValueError("The calculated metrics are no longer the same as in the backup file." + metrics + " != " + learner_information.metrics)
+            self.learner_information.append(learner_information)
+            
         Tools.verbose("---------   Evaluation Information   ---------")
-        for i, result in enumerate(self.learner_information):
+        for i, learner_information in enumerate(self.learner_information):
             Tools.verbose("For the evaluation number " + str(i) + ":")
-            Tools.verbose("accuracy:", result.accuracy)
-            Tools.verbose("nTraining instances:", len(result.training_index))
-            Tools.verbose("nTest instances:", len(result.test_index))
+            Tools.verbose("metrics:", learner_information.metrics)
+            Tools.verbose("nTraining instances:", len(learner_information.training_index))
+            Tools.verbose("nTest instances:", len(learner_information.test_index))
             Tools.verbose()
 
         Tools.verbose("---------------   Explainer   ----------------")
         output = EvaluationOutput.from_str(self.learner_information[-1].evaluation_output)
-        result_output = None
+        result_output = self.convert_model(output)
 
-        if output == EvaluationOutput.DT:
-            result_output = self.to_DT(self.learner_information)
-        elif output == EvaluationOutput.RF:
-            result_output = self.to_RF(self.learner_information)
-        elif output == EvaluationOutput.BT:
-            result_output = self.to_BT(self.learner_information)
-        else:
-            assert False, "Not implemented !"
 
         for i, result in enumerate(result_output):
             Tools.verbose("For the evaluation number " + str(i) + ":")
@@ -388,6 +378,7 @@ class Learner:
 
 
     def save(self, models, save_directory, generic=False):
+        if not isinstance(models, Iterable): models = [models]
 
         name = self.dataset_name.split(os.sep)[-1].split('.')[0]
         if save_directory is not None:
@@ -400,8 +391,7 @@ class Learner:
         shutil.rmtree(base_directory, ignore_errors=True)
         os.mkdir(base_directory)
 
-        if not isinstance(models, Iterable):
-            models = [models]
+        
 
         for i, trees in enumerate(models):
             learner_information = trees.learner_information
@@ -410,28 +400,26 @@ class Learner:
             if not generic:
                 self.save_model(learner_information, filename)
             else:
-
                 self.save_model_generic(trees, filename)
             # map of indexes for training and test part
-            data = {"training_index": learner_information.training_index.tolist(),
-                    "test_index": learner_information.test_index.tolist(),
-                    "accuracy": learner_information.accuracy,
-                    "solver_name": learner_information.solver_name if not generic else "Generic",
+            data = {"learner_name": learner_information.learner_name if not generic else "Generic",
+                    "learner_type": str(self.learner_type),
+                    "extras": learner_information.extras,
+                    "metrics": learner_information.metrics,
                     "evaluation_method": learner_information.evaluation_method,
                     "evaluation_output": learner_information.evaluation_output,
-                    "format": str(format),
-
                     "n_features": self.n_features,
                     "n_labels": self.n_labels,
                     "dict_labels": self.dict_labels,
-                    "feature_names": self.feature_names}
+                    "feature_names": self.feature_names,
+                    "training_index": learner_information.training_index.tolist(),
+                    "test_index": learner_information.test_index.tolist()}
 
             json_string = json.dumps(data)
             with open(filename + ".map", 'w') as outfile:
                 json.dump(json_string, outfile)
 
-            Tools.verbose("Model saved:", filename + ".model")
-            Tools.verbose("Model saved:", filename + ".map")
+            Tools.verbose("Model saved: ("+ filename + ".model, " + filename + ".map)")
 
 
     def save_model_generic(self, trees, filename):
