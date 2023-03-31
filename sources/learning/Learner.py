@@ -16,6 +16,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import EvaluationMethod, LearnerType, EvaluationOutput, Indexes, TypeFeature
 from pyxai.sources.core.tools.utils import flatten, compute_accuracy
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
 class LearnerInformation:
@@ -48,6 +49,8 @@ class LearnerInformation:
         self.evaluation_output = str(evaluation_output)
 
 
+
+        
 class NoneData:
     pass
 
@@ -211,6 +214,18 @@ class Learner:
         prediction = data[str(n_features - 1)].copy().to_numpy()
         data = data.drop(columns=[str(n_features - 1)])
         return data, prediction
+
+    def compute_metrics(self, true, prediction):
+        if self.learner_type == LearnerType.Classification:
+            return {"accuracy": compute_accuracy(prediction, true)}
+        elif self.learner_type == LearnerType.Regression:
+            return {
+                "mean_squared_error": mean_squared_error(true, prediction),
+                "root_mean_squared_error": mean_squared_error(true, prediction, squared=False),
+                "mean_absolute_error": mean_absolute_error(true, prediction)
+            }
+        else:
+            raise ValueError("learner_type is unknown:", str(self.learner_type))
 
     def evaluate(self, *, method, output, n_models=10, test_size=0.3, **learner_options):
         if "seed" not in learner_options.keys():

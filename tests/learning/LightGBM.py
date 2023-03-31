@@ -5,7 +5,7 @@ Tools.set_verbose(0)
 
 import unittest
 
-class TestLightGBM(unittest.TestCase):
+class TestLearningLightGBM(unittest.TestCase):
     def setUp(self):
         print("..|In method:", self._testMethodName)
 
@@ -38,4 +38,5 @@ class TestLightGBM(unittest.TestCase):
                 self.assertEqual(prediction_classifier,prediction_model_2)
 
 if __name__ == '__main__':
+    print("Tests: " + TestLearningLightGBM.__name__ + ":")
     unittest.main()
