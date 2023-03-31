@@ -5,7 +5,7 @@ Tools.set_verbose(0)
 
 import unittest
 
-class TestXGBoost(unittest.TestCase):
+class TestLearningXGBoost(unittest.TestCase):
     PRECISION = 1
     def setUp(self):
         print("..|In method:", self._testMethodName)
@@ -75,14 +75,15 @@ class TestXGBoost(unittest.TestCase):
             instances = learner.get_instances(model=model, n=10, indexes=Learning.TEST)
             for i, (instance, prediction_classifier) in enumerate(instances):
                 
-                prediction_classifier = round(float(prediction_classifier),TestXGBoost.PRECISION)
-                prediction_model_1 = round(model.predict_instance(instance),TestXGBoost.PRECISION)
+                prediction_classifier = round(float(prediction_classifier),TestLearningXGBoost.PRECISION)
+                prediction_model_1 = round(model.predict_instance(instance),TestLearningXGBoost.PRECISION)
                 implicant = model.instance_to_binaries(instance)
-                prediction_model_2 = round(model.predict_implicant(implicant),TestXGBoost.PRECISION)
+                prediction_model_2 = round(model.predict_implicant(implicant),TestLearningXGBoost.PRECISION)
                 
                 self.assertEqual(prediction_classifier,prediction_model_1)
                 self.assertEqual(prediction_classifier,prediction_model_2)
 
    
 if __name__ == '__main__':
+    print("Tests: " + TestLearningXGBoost.__name__ + ":")
     unittest.main()

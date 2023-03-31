@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import pickle
 from numpy.random import RandomState
 
 import lightgbm
@@ -54,14 +55,12 @@ class LightGBM(Learner):
         learner.fit(instances_training, labels_training)
         
         result = learner.predict(instances_test)
-        metrics = {
-            "mean_squared_error": mean_squared_error(labels_test, result),
-            "root_mean_squared_error": mean_squared_error(labels_test, result, squared=False),
-            "mean_absolute_error": mean_absolute_error(labels_test, result)
-        }
+        metrics = self.compute_metrics(labels_test, result)
 
         extras = {
-            "base_score": 0
+            "learner": str(type(learner)),
+            "learner_options": learner_options,
+            "base_score": 0,
         }
         return (copy.deepcopy(learner), metrics, extras)
 
@@ -90,11 +89,6 @@ class LightGBM(Learner):
         BTs = [BoostedTreesRegression(self.results_to_trees(id_solver_results), learner_information=learner_information) for
                id_solver_results, learner_information in enumerate(self.learner_information)]
         return BTs
-
-
-    def save_model(self, learner_information, filename):
-        learner_information.raw_model.save_model(filename + ".model")
-
 
     def results_to_trees(self, id_solver_results):
         bt = self.learner_information[id_solver_results].raw_model.booster_
@@ -137,8 +131,16 @@ class LightGBM(Learner):
         #BT.feature_name_ = save_names
         return xgboost_JSON
 
+    def save_model(self, learner_information, filename):
+        #learner_information.raw_model.booster_.save_model(filename + ".model")
+        file = open(filename + ".model", 'wb')
+        pickle.dump(learner_information.raw_model, file)
+        file.close()
 
-    def load_model(self, model_file):
-        classifier = xgboost.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss')
-        classifier.load_model(model_file)
-        return classifier
+    def load_model(self, model_file, learner_options):
+        #learner = lightgbm.Booster(model_file=model_file)
+        learner = None
+        with open(model_file, 'rb') as file:
+            learner = pickle.load(file)
+        return learner
+        
