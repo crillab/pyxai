@@ -5,7 +5,6 @@ from numpy.random import RandomState
 
 import xgboost
 import numpy
-from sklearn.metrics import mean_squared_error, mean_absolute_error
 from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees, BoostedTreesRegression
 from pyxai.sources.core.structure.randomForest import RandomForest
@@ -39,17 +38,7 @@ class Xgboost(Learner):
     def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         raise NotImplementedError("Random Forest with classification is not implemented for XGBoost.")
 
-    def compute_metrics(self, true, prediction):
-        if self.learner_type == LearnerType.Classification:
-            return {"accuracy": compute_accuracy(prediction, true)}
-        elif self.learner_type == LearnerType.Regression:
-            return {
-                "mean_squared_error": mean_squared_error(true, prediction),
-                "root_mean_squared_error": mean_squared_error(true, prediction, squared=False),
-                "mean_absolute_error": mean_absolute_error(true, prediction)
-            }
-        else:
-            raise ValueError("learner_type is unknown:", str(self.learner_type))
+    
 
 
     def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
@@ -65,8 +54,8 @@ class Xgboost(Learner):
 
         extras = {
             "learner": str(type(learner)),
-            "base_score": None,
-            "learner_options": learner_options
+            "learner_options": learner_options,
+            "base_score": 0,
         }
         return (copy.deepcopy(learner), metrics, extras)
 
@@ -86,8 +75,8 @@ class Xgboost(Learner):
 
         extras = {
             "learner": str(type(learner)),
+            "learner_options": learner_options,
             "base_score": float(0.5) if learner.base_score is None else learner.base_score,
-            "learner_options": learner_options
         }
         
         return (copy.deepcopy(learner), metrics, extras)
@@ -129,10 +118,6 @@ class Xgboost(Learner):
         BTs = [BoostedTreesRegression(self.results_to_trees(id_solver_results), learner_information=learner_information) for
                id_solver_results, learner_information in enumerate(self.learner_information)]
         return BTs
-
-
-    def save_model(self, learner_information, filename):
-        learner_information.raw_model.save_model(filename + ".model")
         
     def results_to_trees(self, id_solver_results):
         xgb_BT = self.learner_information[id_solver_results].raw_model.get_booster()
@@ -181,6 +166,9 @@ class Xgboost(Learner):
         xgboost_BT.feature_names = save_names
         return xgboost_JSON
 
+    def save_model(self, learner_information, filename):
+        learner_information.raw_model.save_model(filename + ".model")
+        
     def load_model(self, model_file, learner_options):
         if self.learner_type == LearnerType.Classification:
             learner = xgboost.XGBClassifier(**learner_options)

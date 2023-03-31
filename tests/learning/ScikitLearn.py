@@ -5,7 +5,7 @@ Tools.set_verbose(0)
 
 import unittest
 
-class TestXGBoost(unittest.TestCase):
+class TestLearningScikitlearn(unittest.TestCase):
     PRECISION = 1
     def setUp(self):
         print("..|In method:", self._testMethodName)
@@ -108,4 +108,5 @@ class TestXGBoost(unittest.TestCase):
                 
 
 if __name__ == '__main__':
+    print("Tests: " + TestLearningScikitlearn.__name__ + ":")
     unittest.main()

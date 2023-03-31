@@ -36,11 +36,12 @@ class Scikitlearn(Learner):
         learner.fit(instances_training, labels_training)
 
         result = learner.predict(instances_test)
-        metrics = {
-            "accuracy": compute_accuracy(result, labels_test)
-        }
+        metrics = self.compute_metrics(labels_test, result)
+
         extras = {
-            "base_score": 0
+            "learner": str(type(learner)),
+            "learner_options": learner_options,
+            "base_score": 0,
         }
         return (copy.deepcopy(learner), metrics, extras)
 
@@ -55,11 +56,11 @@ class Scikitlearn(Learner):
         learner.fit(instances_training, labels_training)
         
         result = learner.predict(instances_test)
-        metrics = {
-            "accuracy": compute_accuracy(result, labels_test)
-        }
+        metrics = self.compute_metrics(labels_test, result)
         extras = {
-            "base_score": 0
+            "learner": str(type(learner)),
+            "learner_options": learner_options,
+            "base_score": 0,
         }
         return (copy.deepcopy(learner), metrics, extras)
     
@@ -117,9 +118,7 @@ class Scikitlearn(Learner):
         raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
 
 
-    def save_model(self, learner_information, filename):
-        pickle.dump(learner_information.raw_model, open(filename + ".model", 'wb'))
-
+   
 
     """
     Convert a specific Scikitlearn's decision tree into a program-specific object called 'DecisionTree'.
@@ -141,9 +140,13 @@ class Scikitlearn(Learner):
         return DecisionTree(sk_tree.n_features_in_, root, sk_tree.classes_, id_solver_results=id_solver_results,
                             learner_information=self.learner_information[id_solver_results])
 
+    def save_model(self, learner_information, filename):
+        file = open(filename + ".model", 'wb')
+        pickle.dump(learner_information.raw_model, file)
+        file.close()
 
-    def load_model(self, model_file):
-        classifier = None
+    def load_model(self, model_file, learner_options):
+        learner = None
         with open(model_file, 'rb') as file:
-            classifier = pickle.load(file)
-        return classifier
+            learner = pickle.load(file)
+        return learner
