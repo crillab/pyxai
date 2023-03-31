@@ -72,6 +72,8 @@ def load(models_directory, *,tests=False, dataset=NoneData):
         learner = Xgboost(dataset, learner_type=LearnerType.from_str(learner_types[0]))
     elif learner_names[0] == Scikitlearn.__name__:
         learner = Scikitlearn(dataset, learner_type=LearnerType.from_str(learner_types[0]))
+    elif learner_names[0] == LightGBM.__name__:
+        learner = LightGBM(dataset, learner_type=LearnerType.from_str(learner_types[0]))
     else:
         raise ValueError("The learner name is unknown:" + str(learner_names[0]))
 
