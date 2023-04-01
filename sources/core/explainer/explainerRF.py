@@ -221,7 +221,10 @@ class ExplainerRF(Explainer):
             (obj:`list` of :obj:`int`): Reason in the form of literals (binary form). The to_features() method allows to obtain the features of this
              reason.
         """
-        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        if self._random_forest.n_classes == 2:
+            hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        else :
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance)
 
         # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
@@ -261,7 +264,10 @@ class ExplainerRF(Explainer):
             this reason.
         """
 
-        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        if self._random_forest.n_classes == 2:
+            hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        else:
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance)
 
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
