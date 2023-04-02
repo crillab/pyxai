@@ -145,7 +145,7 @@ class Learner:
         return data, labels
 
 
-    def load_data(self, dataframe, datasetname):
+    def load_data(self, dataframe, datasetname, *, encode_labels=True):
         """
         dataframe: A pandas.core.frame.DataFrame object.
         """
@@ -159,13 +159,12 @@ class Learner:
         self.rename_attributes(self.data)
 
         self.data, self.labels = self.remove_labels(self.data, self.n_features)
-        if self.learner_type == LearnerType.Classification:
+        if self.learner_type == LearnerType.Classification and encode_labels is True:
             self.create_dict_labels(self.labels)
             self.labels = self.labels_to_values(self.labels)
             self.n_labels = len(set(self.labels))
             
         self.data = self.data.to_numpy()  # remove the first line (attributes) and now the first dimension represents the instances :)!
-        self.learner_information = []
         Tools.verbose("--------------   Information   ---------------")
         Tools.verbose("Dataset name:", self.dataset_name)
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
@@ -279,7 +278,10 @@ class Learner:
         
         return result_output if len(result_output) != 1 else result_output[0]
 
-    def convert_model(self, output):
+    def convert_model(self, output, learner_information=None):
+        if learner_information is not None: 
+            self.learner_information = learner_information
+
         if self.learner_type == LearnerType.Classification:
             if output == EvaluationOutput.DT:
                 return self.to_DT_CLS(self.learner_information)
@@ -564,43 +566,103 @@ class Learner:
 
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
-        #Tools.verbose("Correctness of instances : ", correct)
-        #Tools.verbose("Predictions of instances : ", predictions)
-        classifier = None
-        id_solver_results = None
-        results = None
-
         assert isinstance(indexes, (Indexes, str)), "Bad value in the parameter 'indexes'"
-
         if self.get_learner_name() == "Generic":
-            assert correct is None, "Please insert the model to use this parameter !"
-            assert predictions is None, "Please insert the model to use this parameter !"
+            assert correct is None, "The 'correct' option is not compatible with a generic model."
+            assert predictions is None, "The 'prediction' option is not compatible with a generic model."
+        learner, learner_information = self._get_learner(model, indexes, correct, predictions)
+        
+        # 2: Get the correct indexes:
+        possible_indexes = self._get_possible_indexes(indexes, n, instances_id, learner_information)
+        
+        # 3: Get the correct data (select only data that we need):
+        possible_indexes, data, labels = self._get_data(dataset, possible_indexes, n)
+        
+        # 4: Select instances according to data and possible_indexes.
+        instances = []
+        instances_indexes = []
+        original_indexes = list(range(len(data)))
+        if seed is not None: random.Random(seed).shuffle(original_indexes)
+        else: random.shuffle(original_indexes)
+        
+        if model is None or self.get_learner_name() == "Generic":
+            for j in original_indexes:
+                current_index = possible_indexes[j]
+                instances.append((data[j], None))
+                instances_indexes.append(current_index)
+                if isinstance(n, int) and len(instances) >= n:
+                    break
+        else:
+            for j in original_indexes:
+                current_index = possible_indexes[j]
+                prediction_solver = learner.predict(data[j].reshape(1, -1))[0]
+                if isinstance(prediction_solver, str):
+                    prediction_solver = numpy.where(learner.classes_ == prediction_solver)
+                # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
+                # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
+                label = labels[j]
+                if (correct and prediction_solver == label) \
+                        or (not correct and prediction_solver != label) \
+                        or (correct is None):
+                    if predictions is None or prediction_solver in predictions:
+                        instances.append((data[j], prediction_solver))
+                        instances_indexes.append(current_index)
+                if isinstance(n, int) and len(instances) >= n:
+                    break
+        
+        if save_directory is not None:
+            # we want to save the instances indexes in a file
+            name = self.dataset_name.split(os.sep)[-1].split('.')[0]
+            if not os.path.isdir(save_directory):
+                os.mkdir(save_directory)
+            base_directory = save_directory
 
-        if model is None:
+            if instances_id is None:
+                complete_name = base_directory + os.sep + name + ".instances"
+            else:
+                complete_name = base_directory + os.sep + name + "." + str(instances_id) + ".instances"
+            data = {"dataset": name,
+                    "n": len(instances_indexes),
+                    "indexes": instances_indexes}
+
+            json_string = json.dumps(data)
+            with open(complete_name, 'w') as outfile:
+                json.dump(json_string, outfile)
+
+            Tools.verbose("Indexes of selected instances saved in:", complete_name)
+        Tools.verbose("number of instances selected:", len(instances))
+        Tools.verbose("----------------------------------------------")
+        if len(instances) == 0 and n == 1:
+            return None, None
+        return instances if n is None or n > 1 else instances[0]
+
+    def _get_learner(self, model, indexes, correct, predictions):
+        if isinstance(model, Iterable):
+            raise ValueError("The model does not be an Iterable.")
+        elif model is None:
             assert indexes == Indexes.All, "Please insert the model to use this parameter !"
             assert correct is None, "Please insert the model to use this parameter !"
             assert predictions is None, "Please insert the model to use this parameter !"
-            # In this case, no prediction, just return some instances
-        elif isinstance(model, Iterable):
-            assert False, "The model is not a model !"
+            return None, None
+        elif isinstance(model, BoostedTrees):
+            id_learner = model.forest[0].id_solver_results
+            learner = self.learner_information[id_learner].raw_model
+            learner_information = self.learner_information[id_learner]
+            return learner, learner_information
+        elif isinstance(model, RandomForest):
+            id_learner = model.forest[0].id_solver_results
+            learner = self.learner_information[id_learner].raw_model
+            learner_information = self.learner_information[id_learner]
+            return learner, learner_information
+        elif isinstance(model, DecisionTree):
+            id_learner = model.id_solver_results
+            learner = self.learner_information[id_learner].raw_model
+            learner_information = self.learner_information[id_learner]
+            return learner, learner_information
         else:
-            # depending of the model
-            if isinstance(model, BoostedTrees):
-                id_solver_results = model.forest[0].id_solver_results
-                classifier = self.learner_information[id_solver_results].raw_model
-                results = self.learner_information[id_solver_results]
-            if isinstance(model, RandomForest):
-                id_solver_results = model.forest[0].id_solver_results
-                classifier = self.learner_information[id_solver_results].raw_model
-                results = self.learner_information[id_solver_results]
-            if isinstance(model, DecisionTree):
-                id_solver_results = model.id_solver_results
-                classifier = self.learner_information[id_solver_results].raw_model
-                results = self.learner_information[id_solver_results]
+            raise ValueError("The model is not readable: ", str(type(model)))
 
-        # 2: Get the correct indexes:
-        possible_indexes = None
-
+    def _get_possible_indexes(self, indexes, n, instances_id, learner_information):
         if isinstance(indexes, str):
             if os.path.isfile(indexes):
                 files_indexes = indexes
@@ -631,92 +693,32 @@ class Learner:
             f.close()
 
         elif indexes == Indexes.Training or indexes == Indexes.Test or indexes == Indexes.Mixed:
-            possible_indexes = results.training_index if indexes == Indexes.Training else results.test_index
+            possible_indexes = learner_information.training_index if indexes == Indexes.Training else learner_information.test_index
             if indexes == Indexes.Mixed and n is not None and len(possible_indexes) < n:
                 for i in range(n + 1 - len(possible_indexes)):
-                    if i < len(results.training_index):
-                        possible_indexes = numpy.append(possible_indexes, results.training_index[i])
-        # Tools.verbose("possible indexes:", possible_indexes, n)
-        # load data and get instances
-        # 2b : shuffle data if asked
+                    if i < len(learner_information.training_index):
+                        possible_indexes = numpy.append(possible_indexes, learner_information.training_index[i])
+        else:
+            return None        
+        
         if isinstance(possible_indexes, numpy.ndarray):
             possible_indexes = possible_indexes.tolist()
-
-        # 3: Get the correct data (select only data that we need):
+        return possible_indexes
+    
+    def _get_data(self, dataset, possible_indexes, n):
         if self.data is None:
-            assert dataset is not None, "Data are not loaded yet. You have to put your dataset filename through the 'dataset' parameter !"
-            if possible_indexes is not None:
-                data, labels = self.load_data_limited(dataset, possible_indexes, n)
-            else:
-                possible_indexes = [i for i in range(len(self.data))]
+            if dataset is None:
+                raise ValueError("Dataset is not loaded yet: you must put the dataset filename through the 'dataset' parameter.")
+            if possible_indexes is None:
                 data, name = self.parse_data(dataset)
-                if data is not None:
-                    self.load_data(data, name)
-                data = self.data
-                labels = self.labels
+                if data is not None: self.load_data(data, name)
+                return [i for i in range(len(self.data))], self.data, self.labels
+            else:
+                data, labels = self.load_data_limited(dataset, possible_indexes, n)
+                return possible_indexes, data, labels
         else:
             if possible_indexes is None:
                 possible_indexes = [i for i in range(len(self.data))]
-                data = [self.data[x] for x in possible_indexes]
-                labels = self.labels
-            else:
-                data = numpy.array([self.data[x] for x in possible_indexes])
-                labels = numpy.array([self.labels[x] for x in possible_indexes])
-
-        # 4: Select instances according to parameters and data that is modify with only instances of possible_indexes.
-        instances = []
-        instances_indexes = []
-
-        original_indexes = list(range(len(data)))
-        if seed is not None:
-          random.Random(seed).shuffle(original_indexes)
-        else:
-            random.shuffle(original_indexes)
-
-        if model is None or self.get_learner_name() == "Generic":
-            for j in original_indexes:
-                current_index = possible_indexes[j]
-                instances.append((data[j], None))
-                instances_indexes.append(current_index)
-                if isinstance(n, int) and len(instances) >= n:
-                    break
-        else:
-            for j in original_indexes:
-                current_index = possible_indexes[j]
-                prediction_solver = classifier.predict(data[j].reshape(1, -1))[0]
-                # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
-                # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
-                label = labels[j]
-                if (correct and prediction_solver == label) \
-                        or (not correct and prediction_solver != label) \
-                        or (correct is None):
-                    if predictions is None or prediction_solver in predictions:
-                        instances.append((data[j], prediction_solver))
-                        instances_indexes.append(current_index)
-                if isinstance(n, int) and len(instances) >= n:
-                    break
-        if save_directory is not None:
-            # we want to save the instances indexes in a file
-            name = self.dataset_name.split(os.sep)[-1].split('.')[0]
-            if not os.path.isdir(save_directory):
-                os.mkdir(save_directory)
-            base_directory = save_directory
-
-            if instances_id is None:
-                complete_name = base_directory + os.sep + name + ".instances"
-            else:
-                complete_name = base_directory + os.sep + name + "." + str(instances_id) + ".instances"
-            data = {"dataset": name,
-                    "n": len(instances_indexes),
-                    "indexes": instances_indexes}
-
-            json_string = json.dumps(data)
-            with open(complete_name, 'w') as outfile:
-                json.dump(json_string, outfile)
-
-            Tools.verbose("Indexes of selected instances saved in:", complete_name)
-        Tools.verbose("number of instances selected:", len(instances))
-        Tools.verbose("----------------------------------------------")
-        if len(instances) == 0 and n == 1:
-            return None, None
-        return instances if n is None or n > 1 else instances[0]
+            data = numpy.array([self.data[x] for x in possible_indexes])
+            labels = numpy.array([self.labels[x] for x in possible_indexes])
+            return possible_indexes, data, labels

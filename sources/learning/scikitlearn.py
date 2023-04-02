@@ -10,7 +10,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, NoneData
-from pyxai.sources.core.structure.type import OperatorCondition, LearnerType
+from pyxai.sources.core.structure.type import OperatorCondition, LearnerType, EvaluationOutput
 
 class Scikitlearn(Learner):
     def __init__(self, data=NoneData, *, learner_type=None):
@@ -22,6 +22,11 @@ class Scikitlearn(Learner):
             Tools.verbose("learner_options:", learner_options)
             self.has_to_display_parameters = False
     
+    @staticmethod
+    def get_learner_types():
+        return {type(DecisionTreeClassifier()): (LearnerType.Classification, EvaluationOutput.DT),
+                type(RandomForestClassifier()): (LearnerType.Classification, EvaluationOutput.RF)}
+
     @staticmethod
     def get_learner_name():
         return str(Scikitlearn.__name__)
@@ -83,7 +88,6 @@ class Scikitlearn(Learner):
 
 
     def to_DT_CLS(self, learner_information=None):
-        if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
             sk_tree = self.learner_information[id_solver_results].raw_model
@@ -92,7 +96,6 @@ class Scikitlearn(Learner):
         return decision_trees
 
     def to_RF_CLS(self, learner_information=None):
-        if learner_information is not None: self.learner_information = learner_information
         random_forests = []
         for id_solver_results, _ in enumerate(self.learner_information):
             random_forest = self.learner_information[id_solver_results].raw_model
