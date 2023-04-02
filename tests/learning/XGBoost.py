@@ -6,7 +6,7 @@ Tools.set_verbose(0)
 import unittest
 
 class TestLearningXGBoost(unittest.TestCase):
-    PRECISION = 1
+    PRECISION = 4
     def setUp(self):
         print("..|In method:", self._testMethodName)
 
