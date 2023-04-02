@@ -1,5 +1,6 @@
 import json
 from operator import index
+from typing import Iterable
 
 from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
 from pyxai.sources.learning.Learner import LearnerInformation, Learner, NoneData
@@ -8,6 +9,7 @@ from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost
 from pyxai.sources.learning.lightgbm import LightGBM
 from pyxai.sources.learning.converter import Converter
+from pyxai import Tools
 
 
 HOLD_OUT = EvaluationMethod.HoldOut
@@ -42,6 +44,33 @@ ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
 
 ORDINAL = TypeEncoder.OrdinalEncoder
 ONE_HOT = TypeEncoder.OneHotEncoder
+
+def import_models(models):
+    if not isinstance(models, Iterable):
+        models = [models]
+    if not all(type(model) == type(models[0]) for model in models):
+        raise ValueError("All models must be of the same type: " + str(type(models[0])))
+    
+    if type(models[0]) in Scikitlearn.get_learner_types().keys():
+        learner_type = Scikitlearn.get_learner_types()[type(models[0])][0]
+        evaluation_output = Scikitlearn.get_learner_types()[type(models[0])][1]
+        learner = Scikitlearn(NoneData, learner_type=learner_type)
+        #if (isinstance(models[0].classes_[0], str)):
+        #    raise ValueError("Please use direct encoding on the labels: "+str(models[0].classes_))
+        
+
+    learner_information=[LearnerInformation(model) for model in models]
+    result_output = learner.convert_model(evaluation_output, learner_information)
+    
+    Tools.verbose("---------------   Explainer   ----------------")
+    for i, result in enumerate(result_output):
+        Tools.verbose("For the evaluation number " + str(i) + ":")
+        Tools.verbose(result)
+
+    return learner, result_output if len(result_output) != 1 else result_output[0]
+
+
+
 
 def load(models_directory, *,tests=False, dataset=NoneData):
     learner = Learner(learner_type=CLASSIFICATION)
