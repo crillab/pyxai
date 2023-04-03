@@ -224,7 +224,7 @@ class ExplainerRF(Explainer):
         if self._random_forest.n_classes == 2:
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else :
-            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance)
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
 
         # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
