@@ -183,13 +183,17 @@ class Learner:
         rename_dictionary = {element: str(i) for i, element in enumerate(data.columns)}
         data.rename(columns=rename_dictionary, inplace=True)
 
+    def get_label_from_value(self, value):
+        return self.inverse_dict_labels[value]
 
     def create_dict_labels(self, labels):
         index = 0
         self.dict_labels = OrderedDict()
+        self.inverse_dict_labels = OrderedDict()
         for p in labels:
             if str(p) not in self.dict_labels:
                 self.dict_labels[str(p)] = index
+                self.inverse_dict_labels[index] = str(p)
                 index += 1
 
 
@@ -561,8 +565,19 @@ class Learner:
     """
 
 
-    def get_instances(self, model=None, indexes=Indexes.All, *, dataset=None, n=None, correct=None, predictions=None, save_directory=None,
-                      instances_id=None, seed=0):
+    def get_instances(self, 
+                      model=None, 
+                      indexes=Indexes.All, 
+                      *, 
+                      dataset=None, 
+                      n=None, 
+                      correct=None, 
+                      predictions=None, 
+                      save_directory=None,
+                      instances_id=None, 
+                      seed=0, 
+                      training_indexes=None,
+                      test_indexes=None):
 
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
@@ -573,7 +588,7 @@ class Learner:
         learner, learner_information = self._get_learner(model, indexes, correct, predictions)
         
         # 2: Get the correct indexes:
-        possible_indexes = self._get_possible_indexes(indexes, n, instances_id, learner_information)
+        possible_indexes = self._get_possible_indexes(indexes, n, instances_id, learner_information, training_indexes, test_indexes)
         
         # 3: Get the correct data (select only data that we need):
         possible_indexes, data, labels = self._get_data(dataset, possible_indexes, n)
@@ -596,8 +611,6 @@ class Learner:
             for j in original_indexes:
                 current_index = possible_indexes[j]
                 prediction_solver = learner.predict(data[j].reshape(1, -1))[0]
-                if isinstance(prediction_solver, str):
-                    prediction_solver = numpy.where(learner.classes_ == prediction_solver)
                 # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
                 # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
                 label = labels[j]
@@ -662,7 +675,7 @@ class Learner:
         else:
             raise ValueError("The model is not readable: ", str(type(model)))
 
-    def _get_possible_indexes(self, indexes, n, instances_id, learner_information):
+    def _get_possible_indexes(self, indexes, n, instances_id, learner_information, training_indexes, test_indexes):
         if isinstance(indexes, str):
             if os.path.isfile(indexes):
                 files_indexes = indexes
@@ -693,6 +706,17 @@ class Learner:
             f.close()
 
         elif indexes == Indexes.Training or indexes == Indexes.Test or indexes == Indexes.Mixed:
+            if training_indexes is not None:
+                learner_information.training_index = training_indexes
+            if test_indexes is not None:
+                learner_information.test_index = test_indexes
+            if indexes == Indexes.Training and learner_information.training_index is None:
+                raise ValueError("The training indexes are unknown: please use the training_indexes parameter.")
+            if indexes == Indexes.Test and learner_information.test_index is None:
+                raise ValueError("The test indexes are unknown: please use the test_indexes parameter.")
+            if indexes == Indexes.Mixed and (learner_information.test_index is None or learner_information.training_index is None):
+                raise ValueError("The training or test indexes are unknown: please use the training_indexes or the test_indexes parameters.")
+            
             possible_indexes = learner_information.training_index if indexes == Indexes.Training else learner_information.test_index
             if indexes == Indexes.Mixed and n is not None and len(possible_indexes) < n:
                 for i in range(n + 1 - len(possible_indexes)):
