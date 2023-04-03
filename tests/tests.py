@@ -9,3 +9,4 @@ import os
 #os.system('python3 tests/saveload/ScikitLearn.py')
 
 os.system('python3 tests/import/ScikitLearn.py')
+#os.system('python3 tests/import/XGBoost.py')

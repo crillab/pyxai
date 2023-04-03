@@ -54,13 +54,34 @@ def import_models(models):
     if type(models[0]) in Scikitlearn.get_learner_types().keys():
         learner_type = Scikitlearn.get_learner_types()[type(models[0])][0]
         evaluation_output = Scikitlearn.get_learner_types()[type(models[0])][1]
-        
         learner = Scikitlearn(NoneData, learner_type=learner_type)
-        learner.create_dict_labels(models[0].classes_)
-        learner.labels = learner.labels_to_values(models[0].classes_)
-        learner.n_labels = len(set(learner.labels))
+        if learner_type == CLASSIFICATION:
+            learner.create_dict_labels(models[0].classes_)
+            learner.labels = learner.labels_to_values(models[0].classes_)
+            learner.n_labels = len(set(learner.labels))
+        extras = {
+            "learner": str(type(models[0])),
+            "learner_options": models[0].get_params(),
+            "base_score": 0,
+        }
+    elif type(models[0]) in Xgboost.get_learner_types().keys():
+        learner_type = Xgboost.get_learner_types()[type(models[0])][0]
+        evaluation_output = Xgboost.get_learner_types()[type(models[0])][1]
+        learner = Xgboost(NoneData, learner_type=learner_type)
+        extras = {
+            "learner": str(type(models[0])),
+            "learner_options": models[0].get_xgb_params(),
+            "base_score": float(0.5) if models[0].base_score is None else models[0].base_score,
+        }
+            
+        if learner_type == CLASSIFICATION:
+            learner.create_dict_labels(models[0].classes_)
+            learner.labels = learner.labels_to_values(models[0].classes_)
+            learner.n_labels = len(set(learner.labels))
+    else:
+        raise ValueError("The type of this model is unknown: "+str(type(models[0])))
 
-    learner_information=[LearnerInformation(model) for model in models]
+    learner_information=[LearnerInformation(model, None, None, None, None, extras) for model in models]
     result_output = learner.convert_model(evaluation_output, learner_information)
     
     Tools.verbose("---------------   Explainer   ----------------")
