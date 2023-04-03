@@ -54,10 +54,11 @@ def import_models(models):
     if type(models[0]) in Scikitlearn.get_learner_types().keys():
         learner_type = Scikitlearn.get_learner_types()[type(models[0])][0]
         evaluation_output = Scikitlearn.get_learner_types()[type(models[0])][1]
-        learner = Scikitlearn(NoneData, learner_type=learner_type)
-        #if (isinstance(models[0].classes_[0], str)):
-        #    raise ValueError("Please use direct encoding on the labels: "+str(models[0].classes_))
         
+        learner = Scikitlearn(NoneData, learner_type=learner_type)
+        learner.create_dict_labels(models[0].classes_)
+        learner.labels = learner.labels_to_values(models[0].classes_)
+        learner.n_labels = len(set(learner.labels))
 
     learner_information=[LearnerInformation(model) for model in models]
     result_output = learner.convert_model(evaluation_output, learner_information)
