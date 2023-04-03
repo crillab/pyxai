@@ -132,8 +132,8 @@ class RandomForest(TreeEnsembles):
 
         return CNFencoding.format(cnf)
 
-    def to_CNF_sufficient_reason_multi_classes(self, target_prediction) :
-        last_lit = len(self.binary_representation) + 1
+    def to_CNF_sufficient_reason_multi_classes(self, instance, binary_representation, target_prediction) :
+        last_lit = len(binary_representation) + 1
         n_classes = self.n_classes
         n_trees = len(self.forest)
         hard_clauses = []
@@ -152,9 +152,9 @@ class RandomForest(TreeEnsembles):
 
         # Encode each tree with the selector
         for i in range(n_trees):
-            tree = self._random_forest.forest[i]
+            tree = self.forest[i]
             for cl in range(n_classes):
-                clauses = tree.to_CNF(self._instance, cl, format=False, inverse_coding=True)
+                clauses = tree.to_CNF(instance, cl, format=False, inverse_coding=True)
                 if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                     clauses.append([-selectors[i][cl]] if tree.root.is_prediction(cl) else [selectors[i][cl]])
                 else:
@@ -165,7 +165,7 @@ class RandomForest(TreeEnsembles):
                     hard_clauses.append([-unicity_challengers[cl], -selectors[i][cl], challenger[i]])
                     hard_clauses.append([-unicity_challengers[cl], selectors[i][cl], -challenger[i]])
                 else:
-                    clauses = tree.to_CNF(self._instance, cl, format=False, inverse_coding=False)
+                    clauses = tree.to_CNF(instance, cl, format=False, inverse_coding=False)
                     # TODO BIZARRE
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                         clauses.append([selectors[i][cl]] if tree.root.is_prediction(cl) else [-selectors[i][cl]])
@@ -175,7 +175,6 @@ class RandomForest(TreeEnsembles):
                     hard_clauses.extend(clauses)
 
         # TODO ADD Theroy clauses
-
         # Step 2 : cardinality constraint unicity
         base_cls = []
         for cl in range(n_classes):
@@ -183,11 +182,12 @@ class RandomForest(TreeEnsembles):
             for cl2 in range(cl+1, n_classes):
                 hard_clauses.append([-unicity_challengers[cl], -unicity_challengers[cl2]])
         hard_clauses.append(base_cls)
-        hard_clauses.append(-unicity_challengers[target_prediction])
+        hard_clauses.append([-unicity_challengers[target_prediction]])
 
         # step 3 : cardinality constraint target VS unicity
-        lits = [-selectors[i][self.target_prediction] for i in range(n_trees)]
+        lits = [-selectors[i][target_prediction] for i in range(n_trees)]
         lits.extend([challenger[i] for i in range(n_trees)])
         hard_clauses.extend(CardEnc.atleast(lits=lits, encoding=EncType.seqcounter, bound=n_trees,
                                           top_id=last_lit).clauses)
+        return CNFencoding.format(hard_clauses)
 
