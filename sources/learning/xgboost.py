@@ -11,7 +11,7 @@ from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, LearnerInformation, NoneData
-from pyxai.sources.core.structure.type import OperatorCondition, LearnerType
+from pyxai.sources.core.structure.type import OperatorCondition, LearnerType, EvaluationOutput
 
 class Xgboost(Learner):
     """
@@ -27,6 +27,11 @@ class Xgboost(Learner):
         if self.has_to_display_parameters is True:
             Tools.verbose("learner_options:", learner_options)
             self.has_to_display_parameters = False
+
+    @staticmethod
+    def get_learner_types():
+        return {type(xgboost.XGBClassifier()): (LearnerType.Classification, EvaluationOutput.BT),
+                type(xgboost.XGBRegressor()): (LearnerType.Regression, EvaluationOutput.BT)}
 
     @staticmethod
     def get_learner_name():
