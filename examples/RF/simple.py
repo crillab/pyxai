@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 
 
 # Machine learning part
-learner = Learning.Scikitlearn(Tools.Options.dataset)
+learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(n=1)
 
@@ -27,7 +27,6 @@ print("\nlen majoritary: ", len(majoritary))
 
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(majoritary))
 
-exit(0)
 # can be costly
 sufficient_reason = explainer.sufficient_reason(time_limit=5)
 print("\nlen sufficient reason:", len(sufficient_reason))
