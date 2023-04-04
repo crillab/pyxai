@@ -87,8 +87,11 @@ class ExplainerRF(Explainer):
         direct_reason = set()
         for tree in self._random_forest.forest:
             local_target_prediction = tree.predict_instance(self._instance)
+            print("---")
+            print(tree, local_target_prediction)
             if local_target_prediction == self.target_prediction:
                 local_direct = tree.direct_reason(self._instance)
+                print(local_direct)
                 direct_reason |= set(local_direct)
 
         # remove excluded features

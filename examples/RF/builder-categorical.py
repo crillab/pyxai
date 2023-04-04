@@ -1,8 +1,8 @@
 # Example:
 # Instances are described by three attributes: A (numerical), B_1 and B_2 (boolean).  
-# The value of A gives the annual income of a customer (in k$)
-# B_1 indicates whether the customer has no debts, and B_2 indicates that the customer has reimbursed his/her previous loan. 
-# This is the classifier representing an approximation of the exact function. 
+# The value of A gives the annual income of a customer (in k$)
+# B_1 indicates whether the customer has no debts, and B_2 indicates that the customer has reimbursed his/her previous loan.
+# This is the classifier representing an approximation of the exact function.
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
 
