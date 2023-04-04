@@ -13,7 +13,7 @@ from pyxai.sources.core.structure.boostedTrees import BoostedTrees, BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.Learner import Learner, LearnerInformation, NoneData
-from pyxai.sources.core.structure.type import LearnerType
+from pyxai.sources.core.structure.type import LearnerType, EvaluationOutput
 
 class LightGBM(Learner):
     """
@@ -28,6 +28,10 @@ class LightGBM(Learner):
         if self.has_to_display_parameters is True:
             Tools.verbose("learner_options:", learner_options)
             self.has_to_display_parameters = False
+            
+    @staticmethod
+    def get_learner_types():
+        return {type(lightgbm.LGBMRegressor()): (LearnerType.Regression, EvaluationOutput.BT)}
 
     @staticmethod
     def get_learner_name():

@@ -78,6 +78,20 @@ def import_models(models):
             learner.create_dict_labels(models[0].classes_)
             learner.labels = learner.labels_to_values(models[0].classes_)
             learner.n_labels = len(set(learner.labels))
+    elif type(models[0]) in LightGBM.get_learner_types().keys():
+        learner_type = LightGBM.get_learner_types()[type(models[0])][0]
+        evaluation_output = LightGBM.get_learner_types()[type(models[0])][1]
+        learner = LightGBM(NoneData, learner_type=learner_type)
+        extras = {
+            "learner": str(type(learner)),
+            "learner_options": models[0].get_params(),
+            "base_score": 0
+        }
+           
+        if learner_type == CLASSIFICATION:
+            learner.create_dict_labels(models[0].classes_)
+            learner.labels = learner.labels_to_values(models[0].classes_)
+            learner.n_labels = len(set(learner.labels))
     else:
         raise ValueError("The type of this model is unknown: "+str(type(models[0])))
 
