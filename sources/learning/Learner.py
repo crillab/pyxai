@@ -111,37 +111,41 @@ class Learner:
             return sum(1 for _ in f)
 
 
-    def load_data_limited(self, datasetname, possibles_indexes, n):
+    def load_data_limited(self, datasetname, possible_indexes, n):
         self.dataset_name = datasetname
         n_indexes = self.count_lines(datasetname) - 1  # to skip the first line
-
-        skip = [i + 1 for i in range(n_indexes) if i not in possibles_indexes] if possibles_indexes is not None else None
-
-        # create a map to get the good order of instances
-        if skip is not None:
-            sorted_possibles_indexes = sorted(possibles_indexes)
-            map_possibles_indexes = [sorted_possibles_indexes.index(index) for index in possibles_indexes]
+        if possible_indexes is None:
+            skip = None
+        else:
+            # To avoid a 'i not in possibles_indexes' in a loop.
+            map_possible_indexes = [False for _ in range(n_indexes)]
+            for v in possible_indexes: map_possible_indexes[v] = True 
+            # Create the values to skip
+            skip = [i+1 for i in range(n_indexes) if map_possible_indexes[i] is False]
+            # Create a map to get the good order of instances
+            sorted_possibles_indexes = sorted(possible_indexes)
+            map_possibles_indexes = [sorted_possibles_indexes.index(index) for index in possible_indexes]
 
         data = pandas.read_csv(
             datasetname,
             skiprows=skip,
             nrows=n
         )
-
         # recreate the dataframe object but with the good order of instances
         if skip is not None:
             sorted_data = pandas.DataFrame(columns=data.columns).astype(data.dtypes)
             for i in range(data.shape[0]):
-                sorted_data = sorted_data.append(data.loc[map_possibles_indexes[i]].to_dict(), ignore_index=True)
+                #sorted_data = sorted_data.append(data.loc[map_possibles_indexes[i]].to_dict(), ignore_index=True)
+                pandas.concat([sorted_data, data.loc[map_possibles_indexes[i]]], ignore_index=True)
             sorted_data = sorted_data.astype(data.dtypes)
 
         n_instances, n_features = data.shape
         self.feature_names = data.columns.values.tolist()
         self.rename_attributes(data)
         data, labels = self.remove_labels(data, n_features)
-        labels = self.labels_to_values(labels)
+        if self.dict_labels is not None:
+            labels = self.labels_to_values(labels)
         data = data.to_numpy()
-
         return data, labels
 
 
@@ -599,7 +603,6 @@ class Learner:
         original_indexes = list(range(len(data)))
         if seed is not None: random.Random(seed).shuffle(original_indexes)
         else: random.shuffle(original_indexes)
-        
         if model is None or self.get_learner_name() == "Generic":
             for j in original_indexes:
                 current_index = possible_indexes[j]
@@ -610,7 +613,8 @@ class Learner:
         else:
             for j in original_indexes:
                 current_index = possible_indexes[j]
-                prediction_solver = learner.predict(data[j].reshape(1, -1))[0]
+                prediction_solver = learner.predict(numpy.ascontiguousarray(data[j].reshape(1, -1)))[0]
+                
                 # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
                 # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
                 label = labels[j]
