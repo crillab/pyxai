@@ -600,9 +600,8 @@ class Learner:
         # 4: Select instances according to data and possible_indexes.
         instances = []
         instances_indexes = []
-        original_indexes = list(range(len(data)))
-        if seed is not None: random.Random(seed).shuffle(original_indexes)
-        else: random.shuffle(original_indexes)
+        original_indexes = self._build_original_indexes(data, seed)
+        
         if model is None or self.get_learner_name() == "Generic":
             for j in original_indexes:
                 current_index = possible_indexes[j]
@@ -679,6 +678,14 @@ class Learner:
         else:
             raise ValueError("The model is not readable: ", str(type(model)))
 
+    def _build_original_indexes(self, data, seed):
+        original_indexes = list(range(len(data)))
+        if seed is None: 
+            random.shuffle(original_indexes)
+        elif seed != 0:
+            random.Random(seed).shuffle(original_indexes)
+        return original_indexes
+    
     def _get_possible_indexes(self, indexes, n, instances_id, learner_information, training_indexes, test_indexes):
         if isinstance(indexes, str):
             if os.path.isfile(indexes):
