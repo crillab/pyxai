@@ -281,7 +281,7 @@ class BinaryMapping():
             id_feature = key[0]
             operator = key[1]
             threshold = key[2]
-            if operator == OperatorCondition.GE:
+            if operator == OperatorCondition.GE or operator == OperatorCondition.GT:
                 if lit > 0:
                     if (id_feature, operator) not in positive:
                         positive[(id_feature, operator)] = [threshold]
