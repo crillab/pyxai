@@ -17,7 +17,6 @@ class TestImportLightGBM(unittest.TestCase):
     def setUp(self):
         print("..|In method:", self._testMethodName)
 
-   
     def test_import_BT_regression_creditcard(self):
         self.do_import("tests/creditcard.csv", Learning.REGRESSION)
     

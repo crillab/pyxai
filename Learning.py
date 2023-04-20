@@ -45,8 +45,8 @@ ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
 ORDINAL = TypeEncoder.OrdinalEncoder
 ONE_HOT = TypeEncoder.OneHotEncoder
 
-def import_models(models):
-    if not isinstance(models, Iterable):
+def import_models(models, feature_names=None):
+    if not isinstance(models, (list, tuple)):
         models = [models]
     if not all(type(model) == type(models[0]) for model in models):
         raise ValueError("All models must be of the same type: " + str(type(models[0])))
@@ -96,6 +96,10 @@ def import_models(models):
         raise ValueError("The type of this model is unknown: "+str(type(models[0])))
 
     learner_information=[LearnerInformation(model, None, None, None, None, extras) for model in models]
+    if feature_names is not None:
+        learner.feature_names = feature_names
+        for l in learner_information: l.set_feature_names(feature_names)
+    
     result_output = learner.convert_model(evaluation_output, learner_information)
     
     Tools.verbose("---------------   Explainer   ----------------")
