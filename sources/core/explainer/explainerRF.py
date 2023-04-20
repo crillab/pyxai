@@ -87,11 +87,8 @@ class ExplainerRF(Explainer):
         direct_reason = set()
         for tree in self._random_forest.forest:
             local_target_prediction = tree.predict_instance(self._instance)
-            print("---")
-            print(tree, local_target_prediction)
             if local_target_prediction == self.target_prediction:
                 local_direct = tree.direct_reason(self._instance)
-                print(local_direct)
                 direct_reason |= set(local_direct)
 
         # remove excluded features
@@ -228,6 +225,10 @@ class ExplainerRF(Explainer):
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else :
             hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
+        SATSolver = GlucoseSolver()
+        SATSolver.add_clauses(hard_clauses)
+        SATSolver.add_clauses([[lit] for lit in self._binary_representation])
+        print(SATSolver.solve(time_limit=time_limit))
 
         # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:

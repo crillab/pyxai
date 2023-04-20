@@ -10,11 +10,12 @@ class SufficientRegression:
     def create_model(self, explainer, lb, ub):
         random.shuffle(featureBlock)
         forest = explainer._boosted_trees.forest
+
         extremum_range = explainer.extremum_range()
         model = Model()
         model.context.cplex_parameters.threads = 1
 
-        var_trees = [model.binary_var("b" + str(i)) for i in range(1 + forest.getMaxIndex())] # max id binary var
+        var_trees = [model.binary_var("b" + str(i)) for i in range(1 + len(explainer.binary_representation))] # max id binary var
         var_active_branches = [model.binary_var("a" + str(i)) for i in range(forest.getNbAllBranches())] # nb leaves
         var_value_tree = [model.continuous_var(t.getMinValue(), t.getMaxValue(), "t" + str(t.getId())) for t in forest]
 
