@@ -98,39 +98,21 @@
     "encoder:": "OneHotEncoder",
     "original_feature:": "education"
   },
-  "default_no": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "default"
-  },
-  "default_yes": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "default"
+  "default": {
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "balance": {
     "type:": "NUMERICAL",
     "encoder:": "None"
   },
-  "housing_no": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "housing"
+  "housing": {
+    "type:": "BINARY",
+    "encoder:": "None"
   },
-  "housing_yes": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "housing"
-  },
-  "loan_no": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "loan"
-  },
-  "loan_yes": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "loan"
+  "loan": {
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "contact_cellular": {
     "type:": "CATEGORICAL",
@@ -248,7 +230,7 @@
     "original_feature:": "poutcome"
   },
   "y": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "no",
