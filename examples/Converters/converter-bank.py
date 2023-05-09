@@ -4,16 +4,15 @@ from pyxai import Learning, Explainer, Tools
 
 import datetime
 
-converter = Learning.Converter(Tools.Options.dataset, target_feature="y", classification_type=Learning.BINARY_CLASS) # class Converter
+preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="y", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
-print("data:", converter.data)
+print("data:", preprocessor.data)
 
-converter.unset_features([])
+preprocessor.unset_features([])
 
-converter.set_categorical_features(columns=["job", "marital", "education", "default", "housing", "loan", "contact", "month", "poutcome"])
+preprocessor.set_categorical_features(columns=["job", "marital", "education", "default", "housing", "loan", "contact", "month", "poutcome"])
 
-#datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
-converter.set_numerical_features({
+preprocessor.set_numerical_features({
   "age": None,
   "balance": None,
   "day": None, 
@@ -23,6 +22,6 @@ converter.set_numerical_features({
   "previous": None
   })
 
-converter.process()
+preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name, output="examples/datasets_converted")
+preprocessor.export(dataset_name, output="examples/datasets_converted")

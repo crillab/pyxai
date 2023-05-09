@@ -1,13 +1,13 @@
-# dataset source: https://www.openml.org/search?type=data&status=active&id=1494&sort=runs
+# dataset source: https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009
 
 from pyxai import Learning, Explainer, Tools
 
 import datetime
-
-
 import pandas
+data = pandas.read_csv(Tools.Options.dataset)
+preprocessor = Learning.Preprocessor(data, target_feature="quality", learner_type=Learning.REGRESSION)
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="41", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS) 
+print("data:", preprocessor.data)
 
 preprocessor.all_numerical_features()
 

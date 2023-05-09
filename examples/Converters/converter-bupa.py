@@ -5,14 +5,14 @@ from pyxai import Learning, Explainer, Tools
 import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=['mcv', 'alkphos', 'sgpt', 'sgot', 'gammagt','drinks', 'selector'])
-converter = Learning.Converter(data, target_feature="drinks", classification_type=Learning.BINARY_CLASS) # class Converter
+preprocessor = Learning.Preprocessor(data, target_feature="drinks", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
-print("data:", converter.data)
+print("data:", preprocessor.data)
 
-converter.unset_features(["selector"])
+preprocessor.unset_features(["selector"])
 
-converter.all_numerical_features()
+preprocessor.all_numerical_features()
 
-converter.process()
+preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name, output="examples/datasets_converted")
+preprocessor.export(dataset_name, output="examples/datasets_converted")
