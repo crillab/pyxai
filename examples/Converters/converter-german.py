@@ -8,10 +8,10 @@ import pandas
 data = pandas.read_csv(Tools.Options.dataset, index_col=False) #Warning, here there are no index columns
 
 print("data:", data)
-converter = Learning.Converter(data, target_feature="V20", classification_type=Learning.BINARY_CLASS) # class Converter
-converter.set_categorical_features(columns=["V1", "V3", "V4", "V6", "V7", "V9", "V10","V12", "V14", "V15", "V17", "V19"])
+preprocessor = Learning.Preprocessor(data, target_feature="V20", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor.set_categorical_features(columns=["V1", "V3", "V4", "V6", "V7", "V9", "V10","V12", "V14", "V15", "V17", "V19"])
 
-converter.set_numerical_features({
+preprocessor.set_numerical_features({
   "V2": None,
   "V5": None,
   "V8": None,
@@ -21,6 +21,6 @@ converter.set_numerical_features({
   "V18": None,
 })
 
-converter.process()
+preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name, output="examples/datasets_converted")
+preprocessor.export(dataset_name, output="examples/datasets_converted")
