@@ -1,7 +1,7 @@
 import pandas
 
 from pyxai.sources.learning.Learner import Learner
-from pyxai.sources.core.structure.type import TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder
+from pyxai.sources.core.structure.type import TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
 from pyxai import Tools
 from pyxai.sources.core.tools.utils import switch_list
 
@@ -10,11 +10,15 @@ from sklearn.preprocessing import OrdinalEncoder, LabelEncoder, OneHotEncoder
 import os
 import numpy
 import json
-class Converter:
-    def __init__(self, dataset, target_feature, classification_type, to_binary_classification=MethodToBinaryClassification.OneVsRest):
-        learner = Learner()
+class Preprocessor:
+    def __init__(self, dataset, target_feature, learner_type, classification_type=None, to_binary_classification=MethodToBinaryClassification.OneVsRest):
+        learner = Learner(learner_type=learner_type)
         self.file = dataset
+        self.learner_type = learner_type
         self.classification_type = classification_type
+        if self.learner_type == LearnerType.Classification and classification_type is None:
+            raise ValueError("Please set the 'classification_type' parameter.")
+
         self.to_binary_classification = to_binary_classification
         self.data, self.file = learner.parse_data(data=dataset)
         self.n_instances, self.n_features = self.data.shape
@@ -154,7 +158,7 @@ class Converter:
 
     def process_target_feature(self):
         # Switch two features to put the target_feature at the end
-        self.encoder[self.target_feature] = "LabelEncoder" 
+        
         self.switch_indexes(self.target_feature, -1)
         
         # Move the data
@@ -165,10 +169,15 @@ class Converter:
         self.data=self.data.dropna(subset=[self.target_features_name])
         
         # Use the label encoder to encode this feature 
-        encoder = LabelEncoder()
-        self.data[self.target_features_name] = encoder.fit_transform(self.data[self.target_features_name])
-        self.label_encoder_classes = encoder.classes_
-
+        if self.learner_type == LearnerType.Classification:
+            self.encoder[self.target_feature] = "LabelEncoder" 
+            encoder = LabelEncoder()
+            self.data[self.target_features_name] = encoder.fit_transform(self.data[self.target_features_name])
+            self.label_encoder_classes = encoder.classes_
+        elif self.learner_type == LearnerType.Regression:
+            self.encoder[self.target_feature] = "None"
+        else:
+            raise ValueError("The 'learner_type' parameter is not correct.")
     def process_to_delete(self):
         features_to_delete = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.TO_DELETE]
         indexes_to_delete = []
@@ -262,6 +271,10 @@ class Converter:
       self.process_categorical_features()
       
       self.process_numerical_features()
+
+      if self.learner_type == LearnerType.Regression:
+           self.results = [self.data]
+           return self.results
       
       #Lead with Multi or Binary classification
       n_classes = self.data[self.target_features_name].nunique()
@@ -370,9 +383,15 @@ class Converter:
 
           #new_dict["original_type:"] = self.original_types[i]
           if self.features_type[i] == TypeFeature.TARGET:
-              new_dict["classes:"] = [str(v) for v in self.label_encoder_classes]
-              if self.convert_labels is not None:
-                  new_dict["binary_conversion:"] = self.convert_labels[index]
+                if self.learner_type == LearnerType.Classification:
+                    new_dict["type:"] = str(LearnerType.Classification)
+                    new_dict["classes:"] = [str(v) for v in self.label_encoder_classes]
+                    if self.convert_labels is not None:
+                        new_dict["binary_conversion:"] = self.convert_labels[index]
+                elif self.learner_type == LearnerType.Regression:
+                    new_dict["type:"] = str(LearnerType.Regression)
+                else:
+                    raise ValueError("The 'learner_type' parameter is not correct.")
           data_type[feature] = new_dict
 
       with open(types_filenames, 'w') as outfile:

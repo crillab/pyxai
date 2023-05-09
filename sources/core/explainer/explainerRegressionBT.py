@@ -50,7 +50,6 @@ class ExplainerRegressionBT(ExplainerBT) :
 
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
         reason_expressivity = ReasonExpressivity.Conditions
-        print("od")
         if self._upper_bound is None or self.lower_bound is None:
             raise RuntimeError("lower bound and upper bound must be set when computing a reason")
         if seed is None:

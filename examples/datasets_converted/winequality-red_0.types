@@ -1,0 +1,50 @@
+{
+  "fixed acidity": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "volatile acidity": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "citric acid": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "residual sugar": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "chlorides": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "free sulfur dioxide": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "total sulfur dioxide": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "density": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "pH": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "sulphates": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "alcohol": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "quality": {
+    "type:": "Regression",
+    "encoder:": "None"
+  }
+}

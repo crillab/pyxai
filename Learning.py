@@ -8,7 +8,7 @@ from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost
 from pyxai.sources.learning.lightgbm import LightGBM
-from pyxai.sources.learning.converter import Converter
+from pyxai.sources.learning.preprocessor import Preprocessor
 from pyxai import Tools
 
 

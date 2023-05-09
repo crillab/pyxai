@@ -7,10 +7,10 @@ import datetime
 
 import pandas
 
-converter = Learning.Converter(Tools.Options.dataset, target_feature="Class", classification_type=Learning.BINARY_CLASS) # class Converter
+preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="Class", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
-converter.all_numerical_features()
+preprocessor.all_numerical_features()
 
-converter.process()
+preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-converter.export(dataset_name, output="examples/datasets_converted")
+preprocessor.export(dataset_name, output="examples/datasets_converted")
