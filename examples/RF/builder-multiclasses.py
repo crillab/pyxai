@@ -38,9 +38,11 @@ print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1)
 print("sufficient reason: ", explainer.sufficient_reason())
 
 
-exit(1)
 explainer.set_instance([1,1,0,0,0,1])
 print("instance", instance)
 print("prediction: ", explainer.target_prediction)
 
 print("direct_reason: ", explainer.direct_reason())
+print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
+sufficient_reason = explainer.sufficient_reason()
+print("sufficient reason: ", sufficient_reason)
