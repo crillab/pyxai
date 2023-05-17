@@ -191,3 +191,44 @@ class RandomForest(TreeEnsembles):
                                           top_id=last_lit).clauses)
         return CNFencoding.format(hard_clauses)
 
+    def to_CNF_majoritary_reason_multi_classes(self, instance, binary_representation, target_prediction) :
+        last_lit = len(binary_representation) + 1
+        n_classes = self.n_classes
+        n_trees = len(self.forest)
+        hard_clauses = []
+
+        # Init all additional literals except the one from cardinality constraints
+        selectors = []
+        for i in range(n_trees):
+            selectors.append([last_lit + j for j in range(n_classes)])
+            last_lit += n_classes
+
+        unicity_challengers = [last_lit + j for j in range(n_classes)]
+        last_lit += n_classes
+
+        challengers = [last_lit + j for j in range(n_trees)]
+        last_lit += n_trees
+
+        vote_for_class = []
+        for i in range(n_trees):
+            tree = self.forest[i]
+            vote_for_class.append(tree.predict_instance(instance))
+            for k in range(n_classes):
+                selector = selectors[i][k]
+                if k == target_prediction:
+                    clauses = tree.to_CNF(k, format=False, inverse_coding=True)
+                    if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
+                        clauses.append([selectors[i][k]] if tree.root.is_prediction(k) else [-selectors[i][k]])
+                    else:
+                        for clause in clauses:
+                            clause.append(-selectors[i][k])
+                else:
+                    clauses = tree.to_CNF(k, format=False)
+                    if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
+                        clauses.append([-selectors[i][k]] if tree.root.is_prediction(k) else [selectors[i][k]])
+                    else:
+                        for clause in clauses:
+                            clause.append(selectors[i][k])
+
+                hard_clauses.extend(clauses)
+
