@@ -385,7 +385,7 @@ class Explainer:
         to provide the right answer). Therefore, this method can return True, False or None.
         @param reason: (list[int]) the reason to be checked.
         @param n_samples: (int) the number of samples done.
-        @return: True if it is a ssuficient reason( w.r.t. the number of samples), False if not and None if ti is not sure.
+        @return: True if it is a ssuficient reason( w.r.t. the number of samples), False if not and None if it is not sure.
         """
         if not self.is_reason(reason, n_samples=n_samples):
             return False  # We are sure it is not a reason
