@@ -228,9 +228,8 @@ class ExplainerRF(Explainer):
         if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
             hard_clauses = hard_clauses + tuple(clauses_theory)
+
         # Check if excluded features produce a SAT problem => No sufficient reason
-
-
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
             SATSolver.add_clauses(hard_clauses)
@@ -271,7 +270,10 @@ class ExplainerRF(Explainer):
         if self._random_forest.n_classes == 2:
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else:
-            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance)
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
+        if self._theory:
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            hard_clauses = hard_clauses + tuple(clauses_theory)
 
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
@@ -386,7 +388,15 @@ class ExplainerRF(Explainer):
 
         n = n if type(n) == int else float('inf')
 
-        clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
+        if self._random_forest.n_classes == 2:
+            clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
+        else:
+            clauses = self._random_forest.to_CNF_majoritary_reason_multi_classes(self._instance, self._binary_representation, self.target_prediction)
+        if self._theory:
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            clauses = clauses + tuple(clauses_theory)
+
+
         n_variables = CNFencoding.compute_n_variables(clauses)
         id_features = [feature["id"] for feature in
                        self._random_forest.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
