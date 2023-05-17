@@ -149,31 +149,27 @@ class RandomForest(TreeEnsembles):
 
         challengers = [last_lit + i for i in range(n_trees)]
         last_lit += n_trees
-        print("selectors:", selectors)
-        print("unicity:", unicity_challengers)
-        print("challenger:", challengers)
-        print("last_lit:", last_lit)
-        # Encode each tree with the selector
+
+         # Encode each tree with the selector
         for i in range(n_trees):
             tree = self.forest[i]
             for k in range(n_classes):
-                clauses = tree.to_CNF(instance, k, format=False, inverse_coding=True)
+                clauses = tree.to_CNF(instance, k, format=False)
                 if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
-                    clauses.append([-selectors[i][k]] if tree.root.is_prediction(k) else [selectors[i][k]])
+                    clauses.append([selectors[i][k]] if tree.root.is_prediction(k) else [-selectors[i][k]])
                 else:
                     for clause in clauses:
                         clause.append(-selectors[i][k])
                 hard_clauses.extend(clauses)
-                print(clauses)
                 #print(hard_clauses)
                 if k != target_prediction :
                     hard_clauses.append([-unicity_challengers[k], -selectors[i][k], challengers[i]])
                     hard_clauses.append([-unicity_challengers[k], selectors[i][k], -challengers[i]])
                 else:
-                    clauses = tree.to_CNF(instance, k, format=False, inverse_coding=False)
+                    clauses = tree.to_CNF(instance, k, format=False, inverse_coding=True)
                     # TODO BIZARRE
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
-                        clauses.append([selectors[i][k]] if tree.root.is_prediction(k) else [-selectors[i][k]])
+                        clauses.append([-selectors[i][k]] if tree.root.is_prediction(k) else [selectors[i][k]])
                     else:
                         for clause in clauses:
                             clause.append(selectors[i][k])
@@ -186,16 +182,12 @@ class RandomForest(TreeEnsembles):
             for cl2 in range(k+1, n_classes):
                 hard_clauses.append([-unicity_challengers[k], -unicity_challengers[cl2]])
         hard_clauses.append(base_cls)
-        print(base_cls, -unicity_challengers[target_prediction])
         hard_clauses.append([-unicity_challengers[target_prediction]])
 
         # step 3 : cardinality constraint target VS unicity
         lits = [-selectors[i][target_prediction] for i in range(n_trees)]
         lits.extend([challengers[i] for i in range(n_trees)])
-        print(lits)
         hard_clauses.extend(CardEnc.atleast(lits=lits, encoding=EncType.seqcounter, bound=n_trees,
                                           top_id=last_lit).clauses)
-        print(hard_clauses)
-        print(CNFencoding.format(hard_clauses))
         return CNFencoding.format(hard_clauses)
 

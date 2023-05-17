@@ -200,7 +200,7 @@ class ExplainerRF(Explainer):
                 break
             first_call = False
 
-            # Add this contrastive
+            # Add this contrastive
             results.append(true_reason)
 
             # Stop or not due to time or n :)
@@ -225,12 +225,12 @@ class ExplainerRF(Explainer):
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else :
             hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
-        SATSolver = GlucoseSolver()
-        SATSolver.add_clauses(hard_clauses)
-        SATSolver.add_clauses([[lit] for lit in self._binary_representation])
-        print(SATSolver.solve(time_limit=time_limit))
-
+        if self._theory:
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            hard_clauses = hard_clauses + tuple(clauses_theory)
         # Check if excluded features produce a SAT problem => No sufficient reason
+
+
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
             SATSolver.add_clauses(hard_clauses)
