@@ -348,9 +348,9 @@ class Preprocessor:
       self.results = [self.data]
       return self.results
 
-    def export(self, filename, type="csv", output=None):
+    def export(self, filename, type="csv", output_directory=None):
       for i, dataset in enumerate(self.results):
-          self._export(dataset, filename+"_"+str(i), i, type, output)
+          self._export(dataset, filename+"_"+str(i), i, type, output_directory)
       Tools.verbose("-----------------------------------------------")
       
     def _export(self, dataset, filename, index, type, output=None):
@@ -363,7 +363,7 @@ class Preprocessor:
           dataset.to_csv(filename, index=False)
           types_filenames = filename.replace(".csv", ".types")
       elif filename.endswith(".xls"):
-          dataset.to_csv(filename, index=False)
+          dataset.to_xls(filename, index=False)
           types_filenames = filename.replace(".xls", ".types")
       else:
           raise ValueError("The name file of the data_file parameter must be of the type .csv or .xls.")
