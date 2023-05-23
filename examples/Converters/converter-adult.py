@@ -13,13 +13,7 @@ preprocessor.unset_features(["education-num"])
 
 preprocessor.set_categorical_features(columns=["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"])
 
-preprocessor.set_numerical_features({
-  "age": None,
-  "fnlwgt": None,
-  "capital-gain": None,
-  "capital-loss": None, 
-  "hours-per-week": None
-  })
+preprocessor.set_numerical_features({"age": None, "fnlwgt": None, "capital-gain": None, "capital-loss": None, "hours-per-week": None})
 
 preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
