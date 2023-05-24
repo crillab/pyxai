@@ -35,6 +35,9 @@ print("prediction: ", explainer.target_prediction)
 
 print("direct     reason: ", explainer.direct_reason())
 print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
+minimal_majoritary_reason = explainer.minimal_majoritary_reason()
+print("minimal majoritary reason: ", minimal_majoritary_reason)
+print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
 
 
