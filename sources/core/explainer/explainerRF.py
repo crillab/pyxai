@@ -225,6 +225,7 @@ class ExplainerRF(Explainer):
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else :
             hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
+
         if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
             hard_clauses = hard_clauses + tuple(clauses_theory)
@@ -271,6 +272,7 @@ class ExplainerRF(Explainer):
             hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
         else:
             hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation, self.target_prediction)
+
         if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
             hard_clauses = hard_clauses + tuple(clauses_theory)
@@ -301,7 +303,7 @@ class ExplainerRF(Explainer):
             n (int|ALL, optional): The desired number of reasons. Defaults to 1, currently needs to be 1 or Exmplainer.ALL.
             time_limit (int, optional): The maximum time to compute the reasons. None to have a infinite time. Defaults to None.
         """
-        reason_expressivity = ReasonExpressivity.Conditions  # TODO
+        reason_expressivity = ReasonExpressivity.Conditions
         if seed is None: seed = -1
         if isinstance(n, int) and n == 1:
             if self.c_RF is None:
@@ -328,6 +330,8 @@ class ExplainerRF(Explainer):
             elif reason_expressivity == ReasonExpressivity.Features:
                 return self.to_features_indexes(reason)  # TODO
 
+        # TODO : deal with multi classes and all majoritary
+        raise NotImplementedError("Currently, only n set to 1 or All is available.")
         if isinstance(n, int) and n != 1:
             raise NotImplementedError("Currently, only n set to 1 or All is available.")
 
@@ -392,9 +396,7 @@ class ExplainerRF(Explainer):
             clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
         else:
             clauses = self._random_forest.to_CNF_majoritary_reason_multi_classes(self._instance, self._binary_representation, self.target_prediction)
-        if self._theory:
-            clauses_theory = self._random_forest.get_theory(self._binary_representation)
-            clauses = clauses + tuple(clauses_theory)
+
 
 
         n_variables = CNFencoding.compute_n_variables(clauses)
@@ -413,6 +415,18 @@ class ExplainerRF(Explainer):
         # Hard clauses
         for c in clauses:
             solver.add_hard_clause([lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit])
+
+        glucose = GlucoseSolver()
+        for c in clauses:
+            glucose.add_clauses([[lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit]])
+        print(self._binary_representation)
+        for i in range(len(self._binary_representation)):
+            glucose.add_clauses([[-self._binary_representation[i]]])
+        print(glucose.solve())
+        if self._theory: # TODO
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            for c in clauses_theory:
+                solver.add_hard_clause(c)
 
         # excluded features
         for lit in self._binary_representation:
