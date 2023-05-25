@@ -92,10 +92,11 @@ class Explainer:
     def set_features_type(self, features_types):
 
         model = self.get_model()
-
-        print(model.learner_information)
-        feature_names = model.learner_information.feature_names
-        
+        if model.learner_information is None:
+            # Builder case 
+            feature_names = ["f"+str(i+1) for i in range(model.get_used_features())]
+        else:    
+            feature_names = model.learner_information.feature_names
         # reg_exp = regular expression 
         # "A*" is the regular expression meaning that ["A1", "A2", "A3"] come from one initial categorical feature that is one hot encoded 
         # to form 3 features. 
@@ -145,20 +146,20 @@ class Explainer:
                         if feature in feature_names:
                             self._numerical_features.extend([feature])
                         else:
-                            raise ValueError("The feature " + feature + "does not exist.")
+                            raise ValueError("The feature " + str(feature) + " does not exist.")
                 elif key == "binary":
                     for feature in features_types[key]:
                         if feature in feature_names:
                             self._binary_features.extend([feature])
                         else:
-                            raise ValueError("The feature " + feature + "does not exist.")
+                            raise ValueError("The feature " + str(feature) + " does not exist.")
                 elif key == "categorical":
                     for feature in features_types[key]:
                         if "*" in feature:
                             feature = feature.split("*")[0]
                             associated_features = [f for f in feature_names if f.startswith(feature)]
                             if associated_features == []:
-                                raise ValueError("No feature with the pattern " + feature + ".")
+                                raise ValueError("No feature with the pattern " + str(feature) + ".")
                             self._reg_exp_categorical_features[feature]=associated_features
                             self._categorical_features.extend(associated_features)                
                         else:
@@ -166,7 +167,7 @@ class Explainer:
                                 self._reg_exp_categorical_features[feature]=feature
                                 self._categorical_features.extend([feature])
                             else:
-                                raise ValueError("The feature " + feature + "does not exist.")                
+                                raise ValueError("The feature " + str(feature) + " does not exist.")                
             if default is not None:
                 #Without the last that is the label/prediction
                 if default == "numerical":

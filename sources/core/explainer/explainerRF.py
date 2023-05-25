@@ -137,8 +137,10 @@ class ExplainerRF(Explainer):
         if self._theory is False:
             for lit in self._binary_representation:
                 MAXSATsolver.add_soft_clause([lit], weight=1)
+                print("soft:", lit)
             for clause in tree_cnf:
                 MAXSATsolver.add_hard_clause(clause)
+                print(clause)
         else:
             # Hard clauses
             for clause in tree_cnf:
@@ -185,14 +187,15 @@ class ExplainerRF(Explainer):
             if reason is None:
                 break
             # We have to invert the reason :)
-            true_reason = [-lit for lit in reason if abs(lit) < len(self._binary_representation) and map_in_binary_representation[-lit] == True]
+            true_reason = [-lit for lit in reason if abs(lit) <= len(self._binary_representation) and map_in_binary_representation[-lit] == True]
             
             # Add a blocking clause to avoid this reason in the next steps
             MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_binary_representation])
 
             # Compute the score
             score = len(true_reason)
-            
+            print("score:", score)
+            print("true:", true_reason)
             # Stop or not due to score :)
             if first_call:
                 best_score = score
