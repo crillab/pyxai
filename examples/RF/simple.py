@@ -22,10 +22,15 @@ majoritary = explainer.majoritary_reason(n=1, n_iterations=1)
 # print("majoritary:", majoritary)
 
 print("\nmajoritary: ", explainer.to_features(majoritary))
-
 print("\nlen majoritary: ", len(majoritary))
-
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(majoritary))
+
+minimal_majoritary = explainer.minimal_majoritary_reason(time_limit=10)
+
+print("\nminimal majoritary: ", explainer.to_features(minimal_majoritary))
+print("\nlen majoritary: ", len(minimal_majoritary))
+print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(minimal_majoritary))
+
 
 # can be costly
 sufficient_reason = explainer.sufficient_reason(time_limit=5)
