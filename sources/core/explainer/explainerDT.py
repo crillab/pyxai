@@ -255,17 +255,17 @@ class ExplainerDT(Explainer):
 
     @staticmethod
     def rectify(_tree, positive_rectifying__tree, negative_rectifying__tree):
-        not_positive_rectifying__tree = positive_rectifying__tree.negating__tree()
-        not_negative_rectifying__tree = negative_rectifying__tree.negating__tree()
+        not_positive_rectifying__tree = positive_rectifying__tree.negating_tree()
+        not_negative_rectifying__tree = negative_rectifying__tree.negating_tree()
 
-        _tree_1 = positive_rectifying__tree.concatenate__tree(not_negative_rectifying__tree)
-        _tree_2 = negative_rectifying__tree.concatenate__tree(not_positive_rectifying__tree)
+        _tree_1 = positive_rectifying__tree.concatenate_tree(not_negative_rectifying__tree)
+        _tree_2 = negative_rectifying__tree.concatenate_tree(not_positive_rectifying__tree)
 
-        not__tree_2 = _tree_2.negating__tree()
+        not__tree_2 = _tree_2.negating_tree()
 
-        _tree_and_not__tree_2 = _tree.concatenate__tree(not__tree_2)
+        _tree_and_not__tree_2 = _tree.concatenate_tree(not__tree_2)
         _tree_and_not__tree_2.simplify()
 
-        _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint__tree(_tree_1)
+        _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint_tree(_tree_1)
         _tree_and_not__tree_2_or__tree_1.simplify()
         return _tree_and_not__tree_2_or__tree_1
