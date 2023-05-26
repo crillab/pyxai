@@ -28,9 +28,11 @@ tree_5 = Builder.DecisionTree(6, node_5_3)
 forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, tree_5], n_classes=5)
 
 instance = [0, 0, 1, 1, 0, 0]
-instance = [0, 0, 1, 0, 0, 1]
+instance = [0, 0, 0, 0, 0, 0]
 explainer = Explainer.initialize(forest, instance=instance)
 print("instance", instance)
+print("binary", explainer.binary_representation)
+print("to f", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
 print("prediction: ", explainer.target_prediction)
 
 print("direct     reason: ", explainer.direct_reason())
@@ -40,12 +42,16 @@ print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
 
-
-explainer.set_instance([1,1,0,0,0,1])
+instance = [1, 0, 1, 1, 0, 0]
+explainer.set_instance(instance)
 print("instance", instance)
 print("prediction: ", explainer.target_prediction)
 
 print("direct_reason: ", explainer.direct_reason())
 print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
+minimal_majoritary_reason = explainer.minimal_majoritary_reason()
+print("minimal majoritary reason: ", minimal_majoritary_reason)
+print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
+
 sufficient_reason = explainer.sufficient_reason()
 print("sufficient reason: ", sufficient_reason)
