@@ -208,25 +208,29 @@ class RandomForest(TreeEnsembles):
         challengers = [last_lit + j for j in range(n_trees)]
         last_lit += n_trees
 
-        vote_for_class = []
         for i in range(n_trees):
             tree = self.forest[i]
-            vote_for_class.append(tree.predict_instance(instance))
             for k in range(n_classes):
                 if k == target_prediction:
                     clauses = tree.to_CNF(instance, k, format=False)
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                         clauses.append([selectors[i][k]] if tree.root.is_prediction(k) else [-selectors[i][k]])
                     else:
-                        for clause in clauses:
-                            clause.append(-selectors[i][k])
+                        if len(clauses) == 0:
+                            clauses.append([-selectors[i][k]])
+                        else :
+                            for clause in clauses:
+                                clause.append(-selectors[i][k])
                 else:
                     clauses = tree.to_CNF(instance, k, format=False, inverse_coding=True)
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                         clauses.append([-selectors[i][k]] if tree.root.is_prediction(k) else [selectors[i][k]])
                     else:
-                        for clause in clauses:
-                            clause.append(selectors[i][k])
+                        if len(clauses) == 0:
+                            clauses.append([selectors[i][k]])
+                        else:
+                            for clause in clauses:
+                                clause.append(selectors[i][k])
                         hard_clauses.append([-unicity_challengers[k], -selectors[i][k], challengers[i]])
                         hard_clauses.append([-unicity_challengers[k], selectors[i][k], -challengers[i]])
                 hard_clauses.extend(clauses)
@@ -245,4 +249,5 @@ class RandomForest(TreeEnsembles):
         lits.extend(challengers)
         hard_clauses.extend(CardEnc.atmost(lits=lits, encoding=EncType.seqcounter, bound=n_trees-1,
                                           top_id=last_lit).clauses)
+        print(hard_clauses)
         return CNFencoding.format(hard_clauses)
