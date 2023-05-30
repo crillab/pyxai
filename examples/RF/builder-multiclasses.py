@@ -1,7 +1,7 @@
 from pyxai import Builder, Explainer
 
-node_1_1 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
-node_1_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=4, right=node_1_1)
+node_1_1 =   Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
+node_1_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=1, right=node_1_1)
 node_1_3 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=node_1_2)
 node_1_4 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=3, right=node_1_3)
 tree_1 = Builder.DecisionTree(6, node_1_4)
@@ -42,7 +42,7 @@ print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
 
-instance = [1, 0, 1, 1, 0, 0]
+instance = [0, 0, 0, 1, 1, 1]
 explainer.set_instance(instance)
 print("instance", instance)
 print("prediction: ", explainer.target_prediction)
@@ -52,6 +52,7 @@ print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1)
 minimal_majoritary_reason = explainer.minimal_majoritary_reason()
 print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
+print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
 
 sufficient_reason = explainer.sufficient_reason()
 print("sufficient reason: ", sufficient_reason)
