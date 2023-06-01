@@ -44,6 +44,13 @@ class BinaryMapping():
         for key in self.map_features_to_id_binaries.keys():
             used_features.add(key[0])
         return len(used_features)
+    
+    def clear_theory_features(self):
+        self.map_check_already_used.clear()
+        self.map_numerical_features.clear()
+        self.map_binary_features.clear()
+        self.map_categorical_features_one_hot.clear()
+        self.map_categorical_features_ordinal.clear()
         
     def add_numerical_feature(self, id_feature):
         if id_feature in self.map_check_already_used.keys():
@@ -195,7 +202,7 @@ class BinaryMapping():
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
 
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, inverse=False):
+    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False):
         """
         Convert an implicant into features. Return a tuple of features.
         Two types of features are available according to the details parameter.
@@ -211,7 +218,7 @@ class BinaryMapping():
         """
         result = []
         if eliminate_redundant_features:
-            binary_representation = self.eliminate_redundant_features(binary_representation, inverse)
+            binary_representation = self.eliminate_redundant_features(binary_representation, contrastive)
         for lit in binary_representation:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
@@ -263,7 +270,7 @@ class BinaryMapping():
                 feature["id_feature"] in excluded_features]
 
 
-    def eliminate_redundant_features(self, binary_representation, inverse=False):
+    def eliminate_redundant_features(self, binary_representation, contrastive=False):
         """
         A implicant without redundant features i.e. If we have 'feature_a > 3' and 'feature_a > 2', we keep only the id_binary linked to the boolean
         corresponding to the 'feature_a > 3' Warning, the 'implicant' parameter can be a list of literals or a dict of literals.
@@ -308,14 +315,14 @@ class BinaryMapping():
 
         # Replace min(negative[(idx, operator)]))][0] by max(negative[(idx, operator)]))][0], to check !
         if not isinstance(binary_representation, dict):
-            output = [self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if inverse is False else min(positive[(idx, operator)]))][0] for (idx, operator) in positive.keys()]
-            output += [-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if inverse is False else max(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
+            output = [self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if contrastive is False else min(positive[(idx, operator)]))][0] for (idx, operator) in positive.keys()]
+            output += [-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if contrastive is False else max(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
             output += no_done
             return tuple(output)
         
-        output = [(self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if inverse is False else min(positive[(idx, operator)]))][0], positive_weights[(idx, operator)]) for
+        output = [(self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if contrastive is False else min(positive[(idx, operator)]))][0], positive_weights[(idx, operator)]) for
                   (idx, operator) in positive.keys()]
-        output += [(-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if inverse is False else max(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
+        output += [(-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if contrastive is False else max(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
                    (idx, operator) in negative.keys()]
         output += no_done
         output = {t[0]: t[1] for t in output}  # To dict

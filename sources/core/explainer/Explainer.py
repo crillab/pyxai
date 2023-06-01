@@ -92,6 +92,9 @@ class Explainer:
     def set_features_type(self, features_types):
 
         model = self.get_model()
+        #To avoid a bug when several initialize in done :)
+        model.clear_theory_features()
+        
         if model.learner_information is None:
             # Builder case 
             feature_names = ["f"+str(i+1) for i in range(model.get_used_features())]
@@ -113,21 +116,22 @@ class Explainer:
             dict_types = json.load(f)
             f.close()
             for feature in  dict_types.keys():
-                t = TypeFeature.from_str(dict_types[feature]["type:"])
-                encoder = dict_types[feature]["encoder:"]
-                if t == TypeFeature.CATEGORICAL:
-                    if encoder != "OneHotEncoder":
-                        raise NotImplementedError # A voir avec Gilles
-                    original_feature = dict_types[feature]["original_feature:"]
-                    if original_feature in self._reg_exp_categorical_features:
-                        self._reg_exp_categorical_features[original_feature].append(feature)
-                    else:
-                        self._reg_exp_categorical_features[original_feature] = [feature]
-                    self._categorical_features.append(feature)
-                elif t == TypeFeature.BINARY:
-                    self._binary_features.append(feature)
-                elif t == TypeFeature.NUMERICAL:
-                    self._numerical_features.append(feature)
+                if dict_types[feature]["type:"] != "Classification" and dict_types[feature]["type:"] != "Regression": 
+                    t = TypeFeature.from_str(dict_types[feature]["type:"])
+                    encoder = dict_types[feature]["encoder:"]
+                    if t == TypeFeature.CATEGORICAL:
+                        if encoder != "OneHotEncoder":
+                            raise NotImplementedError # A voir avec Gilles
+                        original_feature = dict_types[feature]["original_feature:"]
+                        if original_feature in self._reg_exp_categorical_features:
+                            self._reg_exp_categorical_features[original_feature].append(feature)
+                        else:
+                            self._reg_exp_categorical_features[original_feature] = [feature]
+                        self._categorical_features.append(feature)
+                    elif t == TypeFeature.BINARY:
+                        self._binary_features.append(feature)
+                    elif t == TypeFeature.NUMERICAL:
+                        self._numerical_features.append(feature)
 
         elif isinstance(features_types, dict):
 
@@ -308,7 +312,7 @@ class Explainer:
         raise NotImplementedError
 
 
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, inverse=False):
+    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False):
         """
         Converts a binary representation of a reason into the features space.
         
