@@ -419,6 +419,7 @@ class ExplainerRF(Explainer):
         for c in clauses:
             glucose.add_clauses([[lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit]])
         print(self._binary_representation)
+        print(glucose.solve())
         for i in range(len(self._binary_representation)):
             glucose.add_clauses([[-self._binary_representation[i]]])
         print(glucose.solve())
