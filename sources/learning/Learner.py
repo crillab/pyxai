@@ -61,7 +61,7 @@ class Learner:
     """
     def __init__(self, data=NoneData, learner_type=None):
         if learner_type is None:
-            raise ValueError("Please set the parameter 'learner_type' to 'LearnerType.Classification' or 'LearnerType.Regression'.")
+            raise ValueError("Please set the parameter 'learner_type' to 'Learning.CLASSIFICATION' or 'Learning.REGRESSION'.")
         self.learner_type = learner_type
         self.dict_labels = None
         self.data = None
