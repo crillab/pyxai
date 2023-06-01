@@ -29,6 +29,7 @@ forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, tree_5], n_classe
 
 instance = [0, 0, 1, 1, 0, 0]
 instance = [0, 0, 0, 0, 0, 0]
+instance = [0, 0, 1, 1, 0, 0]
 explainer = Explainer.initialize(forest, instance=instance)
 print("instance", instance)
 print("binary", explainer.binary_representation)
@@ -41,7 +42,7 @@ minimal_majoritary_reason = explainer.minimal_majoritary_reason()
 print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
-
+exit(1)
 instance = [0, 0, 0, 1, 1, 1]
 explainer.set_instance(instance)
 print("instance", instance)

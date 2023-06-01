@@ -219,26 +219,28 @@ class RandomForest(TreeEnsembles):
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                         clauses.append([selectors[k][c]] if tree.root.is_prediction(c) else [-selectors[k][c]])
                     else:
-                        if len(clauses) == 0:
-                            clauses.append([-selectors[k][c]])
-                        else :
-                            for clause in clauses:
-                                clause.append(-selectors[k][c])
+                        for clause in clauses:
+                            clause.append(-selectors[k][c])
                 else:
                     clauses = tree.to_CNF(instance, c, format=False, inverse_coding=True)
                     if tree.root.is_leaf():  # special case when the tree is just a leaf value (clauses_for_l = [])
                         clauses.append([-selectors[k][c]] if tree.root.is_prediction(c) else [selectors[k][c]])
                     else:
-                        if len(clauses) == 0:
-                            clauses.append([selectors[k][c]])
-                        else:
-                            for clause in clauses:
-                                clause.append(selectors[k][c])
-                        hard_clauses.append([-unicity_challengers[c], -selectors[k][c], challengers[k]])
-                        hard_clauses.append([-unicity_challengers[c], selectors[k][c], -challengers[k]])
+                        for clause in clauses:
+                            clause.append(selectors[k][c])
+                        hard_clauses.append([-unicity_challengers[c], -selectors[c][k], challengers[k]])
+                        hard_clauses.append([-unicity_challengers[c], selectors[c][k], -challengers[k]])
                 print("clauses=", clauses)
                 hard_clauses.extend(clauses)
 
+        #for k in range(n_classes) :
+        #    if k != target_prediction:
+        #        lits = [-selectors[i][target_prediction] for i in range(n_trees)]
+        #        lits2 = [selectors[i][k] for i in range(n_trees)]
+        #        lits = lits + lits2
+        #        cnf = CardEnc.atmost(lits=lits, encoding=EncType.seqcounter, bound=n_trees - 1, top_id=last_lit).clauses
+        #        last_lit = CNFencoding.compute_max_id_variable(cnf)
+        #        hard_clauses.extend(cnf)
 
         clause = []
         for c in range(n_classes):
