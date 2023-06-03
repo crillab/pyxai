@@ -1,5 +1,7 @@
 from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
+from numpy import argmax, argmin 
+import collections
 
 class BinaryMapping():
 
@@ -14,6 +16,8 @@ class BinaryMapping():
         self.map_check_already_used = {} # Just to check if a feature is already used
 
         self.learner_information = learner_information
+
+        self.n_redundant_features = 0 # Variable to store the number of redondances in eliminate_redundant_features()
 
     @property
     def raw_model(self):
@@ -202,7 +206,7 @@ class BinaryMapping():
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
 
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False):
+    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False):
         """
         Convert an implicant into features. Return a tuple of features.
         Two types of features are available according to the details parameter.
@@ -218,8 +222,9 @@ class BinaryMapping():
         """
         result = []
         if eliminate_redundant_features:
-            binary_representation = self.eliminate_redundant_features(binary_representation, contrastive)
-        for lit in binary_representation:
+            reason = self.eliminate_redundant_features(reason, contrastive)
+        
+        for lit in reason:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
 
@@ -233,7 +238,7 @@ class BinaryMapping():
             feature["operator"] = self.map_id_binaries_to_features[abs(lit)][1]
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]
             feature["sign"] = True if lit > 0 else False
-            feature["weight"] = binary_representation[lit] if isinstance(binary_representation, dict) else None
+            feature["weight"] = reason[lit] if isinstance(reason, dict) else None
             if details:
                 result.append(feature)
             else:
@@ -270,60 +275,75 @@ class BinaryMapping():
                 feature["id_feature"] in excluded_features]
 
 
-    def eliminate_redundant_features(self, binary_representation, contrastive=False):
+    def add_redundant_features(self, dict_redondant, literal, id_feature, operator, threshold, weight=None):
+        if id_feature not in dict_redondant: #add in the dict a new key
+            dict_redondant[id_feature] = [(literal, threshold, operator, weight)]
+        else: #The key already exists
+            self.n_redundant_features += 1
+            dict_redondant[id_feature].append((literal, threshold, operator, weight))
+            
+
+    def eliminate_redundant_features(self, reason, contrastive=False):
         """
         A implicant without redundant features i.e. If we have 'feature_a > 3' and 'feature_a > 2', we keep only the id_binary linked to the boolean
         corresponding to the 'feature_a > 3' Warning, the 'implicant' parameter can be a list of literals or a dict of literals.
         In the last case, it is a map literal -> weight.
+        Warning: reason can be either a list of literals or a dict literal -> weight
         """
-        positive = {}
-        positive_weights = {}
-        negative = {}
-        negative_weights = {}
-        n_redundant_features = 0
-        no_done = []
+
+        self.n_redundant_features = 0 # reset this information
+        positive_literals_GE_GT = {} # (id_feature) => [(threshold, operator, weight)]
+        negative_literals_GE_GT = {} # (id_feature) => [(threshold, operator, weight)]
+        positive_literals_LE_LT = {} # (id_feature) => [(threshold, operator, weight)]
+        negative_literals_LE_LT = {} # (id_feature) => [(threshold, operator, weight)]
+        undone = [] # For undone literals in this elimination of redundant_features
+        #For a contrastive, invert the sign and the reason, process to the elimination and re-inverse. 
+        if contrastive is True:
+            reason = [-i for i in reason]
+
         # Search redundant features
-        for lit in binary_representation:
-            key = self.map_id_binaries_to_features[abs(lit)]
+        for literal in reason:
+            key = self.map_id_binaries_to_features[abs(literal)]
             id_feature = key[0]
             operator = key[1]
             threshold = key[2]
+            weight = reason[literal] if isinstance(reason, dict) else None
             if operator == OperatorCondition.GE or operator == OperatorCondition.GT:
-                if lit > 0:
-                    if (id_feature, operator) not in positive:
-                        positive[(id_feature, operator)] = [threshold]
-                        if isinstance(binary_representation, dict):
-                            positive_weights[(id_feature, operator)] = binary_representation[lit]
-                    else:
-                        n_redundant_features += 1
-                        positive[(id_feature, operator)].append(threshold)
-                        if isinstance(binary_representation, dict):
-                            positive_weights[(id_feature, operator)] += binary_representation[lit]
-                else:
-                    if (id_feature, operator) not in negative:
-                        negative[(id_feature, operator)] = [threshold]
-                        if isinstance(binary_representation, dict):
-                            negative_weights[(id_feature, operator)] = binary_representation[lit]
-                    else:
-                        n_redundant_features += 1
-                        negative[(id_feature, operator)].append(threshold)
-                        if isinstance(binary_representation, dict):
-                            negative_weights[(id_feature, operator)] += binary_representation[lit]
+                if literal > 0: #If the sign is positive
+                    self.add_redundant_features(positive_literals_GE_GT, literal, id_feature, operator, threshold, weight)
+                else: #If the sign is negative
+                    self.add_redundant_features(negative_literals_GE_GT, literal, id_feature, operator, threshold, weight)
+            elif operator == OperatorCondition.LE or operator == OperatorCondition.LT:
+                if literal > 0: #If the sign is negative 
+                    self.add_redundant_features(positive_literals_LE_LT, literal, id_feature, operator, threshold, weight)
+                else: #If the sign is positive
+                    self.add_redundant_features(negative_literals_LE_LT, literal, id_feature, operator, threshold, weight)
             else:
-                no_done.append(lit)
-        # Copy the new implicant without these redundant features
+                undone.append((literal, threshold, operator, weight))
 
-        # Replace min(negative[(idx, operator)]))][0] by max(negative[(idx, operator)]))][0], to check !
-        if not isinstance(binary_representation, dict):
-            output = [self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if contrastive is False else min(positive[(idx, operator)]))][0] for (idx, operator) in positive.keys()]
-            output += [-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if contrastive is False else max(negative[(idx, operator)]))][0] for (idx, operator) in negative.keys()]
-            output += no_done
-            return tuple(output)
+        # Compute the condition to keep
+        results = undone.copy() #keep the undone
+
+        for key in positive_literals_GE_GT.keys():
+            max_positive_literals_GE_GT = positive_literals_GE_GT[key][argmax(tuple(x[1] for x in positive_literals_GE_GT[key]))]
+            results.append(max_positive_literals_GE_GT)
+        for key in negative_literals_GE_GT.keys():
+            min_negative_literals_GE_GT = negative_literals_GE_GT[key][argmin(tuple(x[1] for x in negative_literals_GE_GT[key]))]
+            results.append(min_negative_literals_GE_GT)
+
+        for key in positive_literals_LE_LT.keys():
+            min_positive_literals_LE_LT = positive_literals_LE_LT[key][argmin(tuple(x[1] for x in positive_literals_LE_LT[key]))]
+            results.append(min_positive_literals_LE_LT)
+        for key in negative_literals_LE_LT.keys():
+            min_negative_literals_LE_LT = negative_literals_LE_LT[key][argmax(tuple(x[1] for x in negative_literals_LE_LT[key]))]
+            results.append(min_negative_literals_LE_LT)
         
-        output = [(self.map_features_to_id_binaries[(idx, operator, max(positive[(idx, operator)]) if contrastive is False else min(positive[(idx, operator)]))][0], positive_weights[(idx, operator)]) for
-                  (idx, operator) in positive.keys()]
-        output += [(-self.map_features_to_id_binaries[(idx, operator, min(negative[(idx, operator)]) if contrastive is False else max(negative[(idx, operator)]))][0], negative_weights[(idx, operator)]) for
-                   (idx, operator) in negative.keys()]
-        output += no_done
-        output = {t[0]: t[1] for t in output}  # To dict
-        return output
+        #For a contrastive, re-inverse the sign. 
+        if contrastive is True:
+            results = [(-result[0],result[1],result[2],result[3]) for result in results]
+        
+        # Return the good results according to the type of the reason (dict or list)
+        if not isinstance(reason, dict):
+            return tuple(result[0] for result in results)
+        return {result[0]: result[3] for result in results}
+        
