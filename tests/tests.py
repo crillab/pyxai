@@ -11,6 +11,7 @@ import os
 #os.system('python3 tests/import/ScikitLearn.py')
 #os.system('python3 tests/import/XGBoost.py')
 #os.system('python3 tests/import/LightGBM.py')
-os.system('python3 tests/import/SimpleScikitLearn.py')
+#os.system('python3 tests/import/SimpleScikitLearn.py')
 
 #os.system('python3 tests/functionality/GetInstances.py')
+os.system('python3 tests/functionality/ToFeatures.py')
