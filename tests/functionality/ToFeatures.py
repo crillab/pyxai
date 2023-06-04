@@ -33,14 +33,17 @@ class TestToFeatures(unittest.TestCase):
         test_1 = explainer.binary_representation
         print("test_1:", test_1)
         print("test_1:", explainer.to_features(test_1))
+        self.assertEqual(explainer.to_features(test_1, graphical_interface=True),('f1 >= 10', 'f1 < 20')) 
 
         test_2 = explainer.minimal_contrastive_reason(n=1)
-        print("test_1:", test_2)
+        print("test_2:", test_2)
         print("test_2:", explainer.to_features(test_2, contrastive=True))
+        self.assertEqual(explainer.to_features(test_2, contrastive=True),('f1 <= 30',)) 
 
         test_3 = explainer.minimal_sufficient_reason()
-        print("test_1:", test_3)
+        print("test_3:", test_3)
         print("test_3:", explainer.to_features(test_3))
+        self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
         
 if __name__ == '__main__':
     print("Tests: " + TestToFeatures.__name__ + ":")
