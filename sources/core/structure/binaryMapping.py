@@ -1,5 +1,7 @@
 from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
+from pyxai.sources.core.tools.GUI import GraphicalInterface
+
 from numpy import argmax, argmin 
 import collections
 
@@ -18,6 +20,7 @@ class BinaryMapping():
         self.learner_information = learner_information
 
         self.n_redundant_features = 0 # Variable to store the number of redondances in eliminate_redundant_features()
+        self.feature_names = None
 
     @property
     def raw_model(self):
@@ -206,7 +209,7 @@ class BinaryMapping():
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
 
-    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False):
+    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False, graphical_interface=False):
         """
         Convert an implicant into features. Return a tuple of features.
         Two types of features are available according to the details parameter.
@@ -223,7 +226,10 @@ class BinaryMapping():
         result = []
         if eliminate_redundant_features:
             reason = self.eliminate_redundant_features(reason, contrastive)
-        
+        used_features = set()
+        for key in self.map_features_to_id_binaries.keys():
+            used_features.add(key[0])
+        print("features:", used_features)
         for lit in reason:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
@@ -234,7 +240,7 @@ class BinaryMapping():
                 feature["name"] = "f" + str(feature["id"])
             else:
                 feature["name"] = self.learner_information.feature_names[feature["id"] - 1]
-
+            
             feature["operator"] = self.map_id_binaries_to_features[abs(lit)][1]
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]
             feature["sign"] = True if lit > 0 else False
@@ -258,6 +264,10 @@ class BinaryMapping():
                     raise NotImplementedError("The operator " + str(feature["operator"]) + " is not implemented.")
 
                 result.append(str(feature["name"]) + str_sign + str(feature["threshold"]))
+        if graphical_interface is True:
+            gi = GraphicalInterface()
+            gi.mainloop()
+            
         return tuple(result)
 
 
