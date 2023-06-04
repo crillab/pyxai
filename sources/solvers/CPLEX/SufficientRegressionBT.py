@@ -8,50 +8,61 @@ class SufficientRegression:
         pass
 
     def create_model(self, explainer, lb, ub):
-        random.shuffle(featureBlock)
+        '''
+        Model comes from IJCAI 23 paper. All constraitns of the model  are numbered as in this paper.
+        '''
+        #random.shuffle(featureBlock)
         forest = explainer._boosted_trees.forest
+
+        leaves = [tree.get_leaves() for tree in forest]
+
 
         extremum_range = explainer.extremum_range()
         model = Model()
         model.context.cplex_parameters.threads = 1
 
         var_trees = [model.binary_var("b" + str(i)) for i in range(1 + len(explainer.binary_representation))] # max id binary var
-        var_active_branches = [model.binary_var("a" + str(i)) for i in range(forest.getNbAllBranches())] # nb leaves
+        var_active_branches = [[model.binary_var("a_" + str(i) + "_"+ str(j)) for j in range(len(leaves[i]))] for i in range(len(leaves))] # nb leaves
         var_value_tree = [model.continuous_var(t.getMinValue(), t.getMaxValue(), "t" + str(t.getId())) for t in forest]
-
-
         var_value_forest = model.continuous_var(lb=extremum_range[0], ub=extremum_range[1], name="forest")
 
-        for tree in forest:
-            model.add_constraint(
-                model.sum([var_active_branches[branch.getId()] for branch in tree]) == 1
-            )
-            model.add_constraint(
-                model.sum([var_active_branches[branch.getId()] * branch.getValue() for branch in tree]) == var_value_tree[tree.getId()]
+        for i in range(len(forest)):
+            model.add_constraint( # (4)
+                model.sum(var_active_branches[i]) == 1
             )
 
-            for branch in tree:
-                model.add_constraint(
-                    model.sum([var_trees[l] for l in branch.getLiterals() if ( l > 0)] + [1 - var_trees[-l] for l in branch.getLiterals() if (l < 0)] + [-var_active_branches[branch.getId()]]) <= len(branch.getLiterals()) - 1
+            model.add_constraint( # (5)
+                model.sum([var_active_branches[i][j] * leaves[i][j].value for j in range(var_active_branches[i])]) == var_value_tree[i]
+            )
+
+            for j in range(len(leaves[i])):
+                leave = leaves[i][j]
+                t = TypeLeaf.LEFT if  leave.parent.left == leave else TypeLeaf.RIGHT
+                cube = leave.create_cube(leave.parent, t)
+                model.add_constraint( # (3)
+                    model.sum([var_trees[l] for l in cube if ( l > 0)] + [1 - var_trees[-l] for l in cube if (l < 0)] + [-var_active_branches[i]|j]) <= len(cube) - 1
                 )
 
-        model.add_constraint(
-            model.sum(v for v in var_value_tree) == var_value_forest
+        model.add_constraint( # (6)
+            model.sum(var_value_tree) == var_value_forest
         )
 
         varLb = model.binary_var("lb")
         varUb = model.binary_var("ub")
 
-        model.add_indicator(varLb, var_value_forest <= lb, active_value=1)
-        model.add_indicator(varUb, var_value_forest >= ub, active_value=1)
-        model.add_constraint(varLb + varUb == 1)
+        model.add_indicator(varLb, var_value_forest <= lb, active_value=1) # (7)
+        model.add_indicator(varUb, var_value_forest >= ub, active_value=1) # (8)
+        model.add_constraint(varLb + varUb == 1)                           # (9)
+
+        model.export_as_lp()
+        exit(1)
 
         # add the category constraints
         for cat in listCatBin:
             for i in range(len(cat) - 1):
                 for j in range(i + 1, len(cat)):
                     assert cat[i] < len(var_trees) and cat[j] < len(var_trees)
-                    model.add_constraint(var_trees[cat[i]] + var_trees[cat[j]] <= 1)
+                    model.add_constraint(var_trees[cat[i]] + var_trees[cat[j]] <= 1)  # (1)
 
         # add the domain constraints.
         for feature in featureBlock:
@@ -59,7 +70,7 @@ class SufficientRegression:
                 continue
             for i in range(len(feature) - 1):
                 model.add_constraint(
-                    var_trees[feature[i]] + 1 - var_trees[feature[i + 1]] >= 1)
+                    var_trees[feature[i]] + 1 - var_trees[feature[i + 1]] >= 1)     # (1)
 
         valuation = {}
         for i in instance:
