@@ -1,7 +1,7 @@
 import random
 import json
 from typing import Iterable
-
+from collections import OrderedDict
 
 from pyxai.sources.core.tools.utils import count_dimensions
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
@@ -20,7 +20,7 @@ class Explainer:
         self._instance = None
         self._theory = False
         self._categorical_features = []
-        self._history = dict()
+        self._history = OrderedDict()
         self._do_history = True
 
     def show(self, image=None):
