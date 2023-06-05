@@ -28,6 +28,7 @@ class DecisionTree(BinaryMapping):
         self.n_features = n_features
         self.nodes = []
         self.root = root
+        self._leaves = None
         self.target_class = target_class  # can be a integer (for BT) or a list (for DT and RF) TODO
         if not self.root.is_leaf():
             self.define_parents(self.root)
@@ -373,4 +374,13 @@ class DecisionTree(BinaryMapping):
         return self._get_leaves(node.left) + self._get_leaves(node.right)
 
     def get_leaves(self):
-        return self._get_leaves(self.root)
+        if self._leaves is None:
+            self._leaves = self._get_leaves(self.root)
+        return self._leaves
+
+    def get_min_value(self):
+        print([l.value for l in self.get_leaves()])
+        return min([l.value for l in self.get_leaves()])
+
+    def get_max_value(self):
+        return max([l.value for l in self.get_leaves()])
