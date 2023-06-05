@@ -58,7 +58,7 @@ class SufficientRegression:
         exit(1)
 
         # add the category constraints
-        for cat in listCatBin:
+        '''for cat in listCatBin:
             for i in range(len(cat) - 1):
                 for j in range(i + 1, len(cat)):
                     assert cat[i] < len(var_trees) and cat[j] < len(var_trees)
@@ -71,9 +71,9 @@ class SufficientRegression:
             for i in range(len(feature) - 1):
                 model.add_constraint(
                     var_trees[feature[i]] + 1 - var_trees[feature[i + 1]] >= 1)     # (1)
-
+'''
         valuation = {}
-        for i in instance:
+        for i in explainer.binary_representation:
             valuation[abs(i)] = i > 0
 
         notKnown = []
