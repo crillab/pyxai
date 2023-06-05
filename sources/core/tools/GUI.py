@@ -4,12 +4,9 @@ import ctypes
  
 class GraphicalInterface(tkinter.Tk):
     
-    def __init__(self, explainer, abductives=[], contrastive=[], image=None):
+    def __init__(self, explainer, image=None):
         self.explainer = explainer
-        self.abductives = abductives
-        self.contrastive = contrastive
         self.image = image
-
         if self.image is not None:
             if not isinstance(self.image, tuple) or len(self.image) != 2:
                 raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
@@ -29,6 +26,9 @@ class GraphicalInterface(tkinter.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
+        
+
+
         instance_bar = tkinter.Frame(container, borderwidth=1, relief="groove")
         instance_bar.pack(side="left", fill="both", expand=True)
         self.create_instance_bar(instance_bar)
@@ -38,17 +38,30 @@ class GraphicalInterface(tkinter.Tk):
         self.create_explanation_bar(explanation_bar)
         
     def create_instance_bar(self, instance_bar):
-        label = tkinter.Label(instance_bar, text="Instance:", justify="left", anchor="w")
-        label.grid(sticky="w", row=0, columnspan=4)
+        
+        instances = tkinter.Variable(value=tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1)))
 
-        v1 = tkinter.StringVar()
-        v1.set('Name')
-        e1 = tkinter.Entry(instance_bar, textvariable = v1, state = 'readonly')
-        e1.grid(row=1, column=1)
-        v2 = tkinter.StringVar()
-        v2.set('Value')
-        e2 = tkinter.Entry(instance_bar, textvariable = v2, state = 'readonly')
-        e2.grid(row=1, column=2) 
+
+        listbox = tkinter.Listbox(
+            instance_bar,
+            listvariable=instances,
+            height=6,
+            selectmode=tkinter.SINGLE
+        )
+
+        listbox.grid(sticky="w", row=0, columnspan=4)
+
+
+        def items_selected(event):
+            # get all selected indices
+            selected_instance = listbox.curselection()[0]
+            # get selected items
+            msg = f'You selected: {selected_instance}'
+            tkinter.messagebox.showinfo(title='Information', message=msg)
+
+
+        listbox.bind('<<ListboxSelect>>', items_selected)
+
 
 
     def create_explanation_bar(self, explanation_bar):
