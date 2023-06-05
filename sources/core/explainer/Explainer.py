@@ -20,6 +20,15 @@ class Explainer:
         self._instance = None
         self._theory = False
         self._categorical_features = []
+        self._history = dict()
+        self._do_history = True
+
+    def add_history(self, instance, class_name, method_name, reason):
+        if self._do_history is True:
+            if instance in self._history.keys():
+                self._history[instance].append((class_name, method_name, reason))
+            else:
+                self._history[instance] = [(class_name, method_name, reason)]
 
     def get_model(self):
         if hasattr(self, 'tree'):
@@ -30,6 +39,7 @@ class Explainer:
             return self.regression_boosted_trees
         elif hasattr(self, 'boosted_trees'):
             return self.boosted_tree
+    
     @property
     def instance(self):
         """
@@ -83,6 +93,13 @@ class Explainer:
           c.add(self.map_indexes[id])
         return len(c)
 
+    def get_feature_names(self):
+        model = self.get_model()
+        if model.learner_information is None:
+            return ["f"+str(i+1) for i in range(model.get_used_features())]
+        return model.learner_information.feature_names
+        
+
     """
         Add a theory in the resolution methods.
         This theory is built according to the features types.  
@@ -94,12 +111,7 @@ class Explainer:
         model = self.get_model()
         #To avoid a bug when several initialize in done :)
         model.clear_theory_features()
-        
-        if model.learner_information is None:
-            # Builder case 
-            feature_names = ["f"+str(i+1) for i in range(model.get_used_features())]
-        else:    
-            feature_names = model.learner_information.feature_names
+        feature_names = self.get_feature_names()
         # reg_exp = regular expression 
         # "A*" is the regular expression meaning that ["A1", "A2", "A3"] come from one initial categorical feature that is one hot encoded 
         # to form 3 features. 
