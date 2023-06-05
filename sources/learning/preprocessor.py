@@ -1,6 +1,6 @@
 import pandas
 
-from pyxai.sources.learning.Learner import Learner
+from pyxai.sources.learning.learner import Learner
 from pyxai.sources.core.structure.type import TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
 from pyxai import Tools
 from pyxai.sources.core.tools.utils import switch_list
