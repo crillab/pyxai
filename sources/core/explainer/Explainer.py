@@ -23,6 +23,11 @@ class Explainer:
         self._history = dict()
         self._do_history = True
 
+    def show(self, image=None):
+        graphical_interface = Tools.GraphicalInterface(self, image=image)
+        graphical_interface.mainloop()
+
+
     def add_history(self, instance, class_name, method_name, reason):
         if self._do_history is True:
             if instance in self._history.keys():

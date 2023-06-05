@@ -47,6 +47,9 @@ def initialize(model, instance=None, features_type=None):
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """
+    if instance is not None and not isinstance(instance, tuple):
+        instance = tuple(instance)
+        
     explainer = None
     if isinstance(model, DecisionTree):
         explainer = ExplainerDT(model, instance)

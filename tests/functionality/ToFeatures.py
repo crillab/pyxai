@@ -37,6 +37,7 @@ class TestToFeatures(unittest.TestCase):
         self.assertEqual(explainer.to_features(test_1),('f1 >= 10', 'f1 < 20')) 
 
         test_2 = explainer.minimal_contrastive_reason(n=1)
+        
         print("test_2:", test_2)
         print("test_2:", explainer.to_features(test_2, contrastive=True))
         self.assertEqual(explainer.to_features(test_2, contrastive=True),('f1 <= 30',)) 
@@ -46,8 +47,7 @@ class TestToFeatures(unittest.TestCase):
         print("test_3:", explainer.to_features(test_3))
         self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
 
-        i = Tools.GraphicalInterface(explainer, ["titi"])
-        i.mainloop()
+        explainer.show()
         
 if __name__ == '__main__':
     print("Tests: " + TestToFeatures.__name__ + ":")
