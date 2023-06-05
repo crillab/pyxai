@@ -4,9 +4,15 @@ import ctypes
  
 class GraphicalInterface(tkinter.Tk):
     
-    def __init__(self, instance, reasons):
-        self.instance = instance
-        self.reason = reasons
+    def __init__(self, explainer, abductives=[], contrastive=[], image=None):
+        self.explainer = explainer
+        self.abductives = abductives
+        self.contrastive = contrastive
+        self.image = image
+
+        if self.image is not None:
+            if not isinstance(self.image, tuple) or len(self.image) != 2:
+                raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
 
         tkinter.Tk.__init__(self)
         self.call('tk', 'scaling', 2.0)
@@ -33,17 +39,15 @@ class GraphicalInterface(tkinter.Tk):
         
     def create_instance_bar(self, instance_bar):
         label = tkinter.Label(instance_bar, text="Instance:", justify="left", anchor="w")
-        label.pack(padx=0, pady=0)
         label.grid(sticky="w", row=0, columnspan=4)
 
         v1 = tkinter.StringVar()
-        e1 = tkinter.Entry(instance_bar, textvariable = v1, state = 'readonly')
         v1.set('Name')
+        e1 = tkinter.Entry(instance_bar, textvariable = v1, state = 'readonly')
         e1.grid(row=1, column=1)
-
         v2 = tkinter.StringVar()
-        e2 = tkinter.Entry(instance_bar, textvariable = v2, state = 'readonly')
         v2.set('Value')
+        e2 = tkinter.Entry(instance_bar, textvariable = v2, state = 'readonly')
         e2.grid(row=1, column=2) 
 
 

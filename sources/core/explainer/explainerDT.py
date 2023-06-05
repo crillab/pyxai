@@ -68,8 +68,13 @@ class ExplainerDT(Explainer):
         self._elapsed_time = 0
         direct_reason = self._tree.direct_reason(self._instance)
         if any(not self._is_specific(lit) for lit in direct_reason):
-            return None  # The reason contains excluded features
-        return Explainer.format(direct_reason)
+            direct_reason = None  # The reason contains excluded features
+        else:
+            direct_reason = Explainer.format(direct_reason)
+
+        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, direct_reason)
+        return direct_reason
+        
 
 
     def contrastive_reason(self, *, n=1):
@@ -78,23 +83,29 @@ class ExplainerDT(Explainer):
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         core = [c for c in core if all(self._is_specific(lit) for lit in c)]  # remove excluded
         contrastives = sorted(core, key=lambda clause: len(clause))
-        return Explainer.format(contrastives, n) if type(n) != int else Explainer.format(contrastives[:n], n)
-
+        contrastives = Explainer.format(contrastives, n) if type(n) != int else Explainer.format(contrastives[:n], n)
+        self.add_history(self._instance, self.__class__.__name__, self.contrastive_reason.__name__, contrastives)
+        return contrastives
 
     def necessary_literals(self):
         self._elapsed_time = 0
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         # DO NOT remove excluded features. If they appear, they explain why there is no sufficient
-        return sorted({lit for _, clause in enumerate(core) if len(clause) == 1 for lit in clause})
+
+        literals = sorted({lit for _, clause in enumerate(core) if len(clause) == 1 for lit in clause})
+        self.add_history(self._instance, self.__class__.__name__, self.necessary_literals.__name__, literals)
+        return literals
 
 
     def relevant_literals(self):
         self._elapsed_time = 0
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
-        return [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
 
+        literals = [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
+        self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
+        return literals
 
     def _excluded_features_are_necesssary(self, prime_cnf):
         for lit in prime_cnf.necessary:
@@ -130,7 +141,10 @@ class ExplainerDT(Explainer):
             sufficient_reasons.append(prime_implicant_cnf.get_reason_from_model(result))
             SATsolver.add_clauses([prime_implicant_cnf.get_blocking_clause(result)])
         self._elapsed_time = time_used if (time_limit is None or time_used < time_limit) else Explainer.TIMEOUT
-        return Explainer.format(sufficient_reasons, n)
+
+        reasons = Explainer.format(sufficient_reasons, n)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        return reasons
 
 
     def preferred_sufficient_reason(self, *, method, n=1, time_limit=None, weights=None, features_partition=None):
@@ -198,7 +212,14 @@ class ExplainerDT(Explainer):
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        return Explainer.format(reasons, n)
+
+
+        reasons = Explainer.format(reasons, n)
+        if method == PreferredReasonMethod.Minimal:
+            self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
+        else:
+            self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
+        return reasons
 
 
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):
@@ -207,6 +228,7 @@ class ExplainerDT(Explainer):
 
     def n_sufficient_reasons(self, time_limit = None):
         self.n_sufficient_reasons_per_attribute(time_limit=time_limit)
+        self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons.__name__, self._n_sufficient_reasons)
         return self._n_sufficient_reasons
 
 
@@ -246,6 +268,8 @@ class ExplainerDT(Explainer):
         n_sufficients_per_attribute = {n: n_necessary for n in prime_implicant_cnf.necessary}
         for lit in range(1, prime_implicant_cnf.n_literals_mapping):
             n_sufficients_per_attribute[prime_implicant_cnf.mapping_new_to_original[lit]] = n_models[lit]
+        
+        self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons_per_attribute.__name__, n_sufficients_per_attribute)
         return n_sufficients_per_attribute
 
 
