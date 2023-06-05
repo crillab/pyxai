@@ -4,7 +4,7 @@ from pyxai import Builder, Explainer
 
 node1_1 = Builder.DecisionNode(1, operator=Builder.GT, threshold=3000, left=1500, right=1750)
 node1_2 = Builder.DecisionNode(1, operator=Builder.GT, threshold=2000, left=1000, right=node1_1)
-node1_3 = Builder.DecisionNode(1, operator=Builder.GT, threshold=1000, left=1000, right=node1_2)
+node1_3 = Builder.DecisionNode(1, operator=Builder.GT, threshold=1000, left=0, right=node1_2)
 tree1 = Builder.DecisionTree(5, node1_3)
 
 
@@ -32,3 +32,4 @@ print("direct:", explainer.to_features(explainer.direct_reason()))
 
 explainer.set_range(1500, 2500)
 print("tree specific:", explainer.to_features(explainer.tree_specific_reason()))
+print("sufficient: ", explainer.sufficient_reason())

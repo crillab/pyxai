@@ -151,5 +151,4 @@ class BoostedTreesRegression(BoostedTrees):
         """
         base_score = self.learner_information.extras["base_score"]
         sum_trees = sum([tree.predict_instance(instance) for tree in self.forest])
-        
         return sum_trees + base_score

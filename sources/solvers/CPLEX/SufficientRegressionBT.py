@@ -1,17 +1,18 @@
 from random import random
 from docplex.mp.model import Model
-
-
+from pyxai.sources.core.structure.type import TypeLeaf
+import time
 
 class SufficientRegression:
     def __init__(self):
         pass
 
-    def create_model(self, explainer, lb, ub):
+    def create_model_and_solve(self, explainer, lb, ub, *, time_out=None):
         '''
         Model comes from IJCAI 23 paper. All constraitns of the model  are numbered as in this paper.
         '''
         #random.shuffle(featureBlock)
+        verbose = True
         forest = explainer._boosted_trees.forest
 
         leaves = [tree.get_leaves() for tree in forest]
@@ -21,9 +22,9 @@ class SufficientRegression:
         model = Model()
         model.context.cplex_parameters.threads = 1
 
-        var_trees = [model.binary_var("b" + str(i)) for i in range(1 + len(explainer.binary_representation))] # max id binary var
+        var_trees = [model.binary_var("b_" + str(i)) for i in range(1 + len(explainer.binary_representation))] # max id binary var
         var_active_branches = [[model.binary_var("a_" + str(i) + "_"+ str(j)) for j in range(len(leaves[i]))] for i in range(len(leaves))] # nb leaves
-        var_value_tree = [model.continuous_var(t.getMinValue(), t.getMaxValue(), "t" + str(t.getId())) for t in forest]
+        var_value_tree = [model.continuous_var(forest[i].get_min_value(), forest[i].get_max_value(), "t" + str(i)) for i in range(len(forest))]
         var_value_forest = model.continuous_var(lb=extremum_range[0], ub=extremum_range[1], name="forest")
 
         for i in range(len(forest)):
@@ -32,15 +33,15 @@ class SufficientRegression:
             )
 
             model.add_constraint( # (5)
-                model.sum([var_active_branches[i][j] * leaves[i][j].value for j in range(var_active_branches[i])]) == var_value_tree[i]
+                model.sum([var_active_branches[i][j] * leaves[i][j].value for j in range(len(leaves[i]))]) == var_value_tree[i]
             )
 
             for j in range(len(leaves[i])):
                 leave = leaves[i][j]
                 t = TypeLeaf.LEFT if  leave.parent.left == leave else TypeLeaf.RIGHT
-                cube = leave.create_cube(leave.parent, t)
+                cube = forest[i].create_cube(leave.parent, t)
                 model.add_constraint( # (3)
-                    model.sum([var_trees[l] for l in cube if ( l > 0)] + [1 - var_trees[-l] for l in cube if (l < 0)] + [-var_active_branches[i]|j]) <= len(cube) - 1
+                    model.sum([var_trees[l] for l in cube if ( l > 0)] + [1 - var_trees[-l] for l in cube if (l < 0)] + [-var_active_branches[i][j]]) <= len(cube) - 1
                 )
 
         model.add_constraint( # (6)
@@ -54,8 +55,6 @@ class SufficientRegression:
         model.add_indicator(varUb, var_value_forest >= ub, active_value=1) # (8)
         model.add_constraint(varLb + varUb == 1)                           # (9)
 
-        model.export_as_lp()
-        exit(1)
 
         # add the category constraints
         '''for cat in listCatBin:
@@ -77,6 +76,16 @@ class SufficientRegression:
             valuation[abs(i)] = i > 0
 
         notKnown = []
+
+        featureBlock = []
+        for _ in range(len(explainer.instance)):
+            featureBlock.append([])
+        for i in range(len(explainer._implicant_id_features)):
+            print(explainer._implicant_id_features[i] - 1)
+            featureBlock[explainer._implicant_id_features[i] - 1].append(i)
+        print(featureBlock, len(explainer.instance))
+
+
         for feature in featureBlock:
             tmp = []
             for l in feature:
@@ -90,7 +99,7 @@ class SufficientRegression:
                 model.add_constraint(tmp[-1][1])
             notKnown.append(tmp)
 
-        # to visualize the model, it is in /tmp
+
         # model.export_as_lp()
 
         nbRemoveByRotation = 0
@@ -103,9 +112,12 @@ class SufficientRegression:
         # by feature.
         if verbose:
             print("c First run, elimination by feature")
-
-        while (len(notKnown) > 0 and (starting_time + time.process_time()) < time_out):
-            model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
+        # to visualize the model, it is in /tmp
+        # model.export_as_lp()
+        # exit(1)
+        while (len(notKnown) > 0 and (time_out is None or (starting_time + time.process_time()) < time_out)):
+            if time_out is not None:
+                model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
             oldnotKnown = notKnown + [] + reason
             if verbose:
                 print(len(notKnown), len(reason))
@@ -118,7 +130,7 @@ class SufficientRegression:
 
             # check if it is a necessary feature.
             solution = model.solve()
-            if solution is not None or (starting_time + time.process_time()) > time_out:
+            if solution is not None or (time_out is not None and (starting_time + time.process_time()) > time_out):
                 # for the moment this feature is required.
                 tmp = []
                 for c in feature:
@@ -135,8 +147,9 @@ class SufficientRegression:
         if verbose:
             print("c Second run, elimination by boolean")
 
-        while (len(notKnown) > 0 and (starting_time + time.process_time()) < time_out):
-            model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
+        while (len(notKnown) > 0 and (time_out is None or (starting_time + time.process_time()) < time_out)):
+            if time_out is not None:
+                model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
             oldnotKnown = notKnown + []
             if verbose:
                 print(len(notKnown), len(reason))
@@ -157,8 +170,9 @@ class SufficientRegression:
             negPoint = posPoint + 1
 
             state = 0
-            while (posPoint >= 0 or negPoint < len(feature) and (starting_time + time.process_time()) < time_out):
-                model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
+            while (posPoint >= 0 or negPoint < len(feature) and (time_out is None or (starting_time + time.process_time()) < time_out)):
+                if time_out is not None:
+                    model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
                 ind = -1
                 if posPoint < 0:
                     ind = negPoint
@@ -216,5 +230,5 @@ class SufficientRegression:
             reason = simplifyImplicant(reason, featureBlock, list_cat_bin=listCatBin)
 
 
-def solve(self, time_limit=None):
+    def solve(self, time_limit=None):
         pass
