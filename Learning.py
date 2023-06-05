@@ -3,7 +3,7 @@ from operator import index
 from typing import Iterable
 
 from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
-from pyxai.sources.learning.Learner import LearnerInformation, Learner, NoneData
+from pyxai.sources.learning.learner import LearnerInformation, Learner, NoneData
 from pyxai.sources.learning.generic import Generic
 from pyxai.sources.learning.scikitlearn import Scikitlearn
 from pyxai.sources.learning.xgboost import Xgboost

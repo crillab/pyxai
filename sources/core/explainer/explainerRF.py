@@ -41,7 +41,7 @@ class ExplainerRF(Explainer):
     def _theory_clauses(self):
         return self._random_forest.get_theory(self._binary_representation)
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, graphical_interface=False):
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False):
         """
         Convert each literal of the implicant (representing a condition) to a tuple (``id_feature``, ``threshold``, ``sign``, ``weight``).
           - ``id_feature``: the feature identifier.
@@ -58,7 +58,7 @@ class ExplainerRF(Explainer):
             obj:`tuple` of :obj:`tuple` of size 4: Represent the reason in the form of features (with their respective thresholds, signs and possible
             weights)
         """
-        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details, contrastive=contrastive, graphical_interface=graphical_interface)
+        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details, contrastive=contrastive)
 
 
     def _to_binary_representation(self, instance):

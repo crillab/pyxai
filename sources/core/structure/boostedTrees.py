@@ -7,7 +7,9 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
 from pyxai.sources.core.structure.type import Encoding
 from pyxai.sources.core.tools.encoding import CNFencoding
-#from pyxai.sources.learning.Learner import LearnerInformation
+from pyxai.sources.learning.learner_information import LearnerInformation
+
+
 # TODO fix circular import
 class BoostedTrees(TreeEnsembles):
 
