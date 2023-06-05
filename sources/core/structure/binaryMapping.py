@@ -209,7 +209,7 @@ class BinaryMapping():
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
 
-    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False, graphical_interface=False):
+    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False):
         """
         Convert an implicant into features. Return a tuple of features.
         Two types of features are available according to the details parameter.
@@ -264,10 +264,7 @@ class BinaryMapping():
                     raise NotImplementedError("The operator " + str(feature["operator"]) + " is not implemented.")
 
                 result.append(str(feature["name"]) + str_sign + str(feature["threshold"]))
-        if graphical_interface is True:
-            gi = GraphicalInterface()
-            gi.mainloop()
-            
+    
         return tuple(result)
 
 

@@ -1,6 +1,7 @@
 from pyxai import Builder, Learning, Explainer, Tools
 import math
 
+
 Tools.set_verbose(0)
 
 import unittest
@@ -33,7 +34,7 @@ class TestToFeatures(unittest.TestCase):
         test_1 = explainer.binary_representation
         print("test_1:", test_1)
         print("test_1:", explainer.to_features(test_1))
-        self.assertEqual(explainer.to_features(test_1, graphical_interface=True),('f1 >= 10', 'f1 < 20')) 
+        self.assertEqual(explainer.to_features(test_1),('f1 >= 10', 'f1 < 20')) 
 
         test_2 = explainer.minimal_contrastive_reason(n=1)
         print("test_2:", test_2)
@@ -44,6 +45,9 @@ class TestToFeatures(unittest.TestCase):
         print("test_3:", test_3)
         print("test_3:", explainer.to_features(test_3))
         self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
+
+        i = Tools.GraphicalInterface("tata", ["titi"])
+        i.mainloop()
         
 if __name__ == '__main__':
     print("Tests: " + TestToFeatures.__name__ + ":")

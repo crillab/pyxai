@@ -4,9 +4,11 @@ import ctypes
  
 class GraphicalInterface(tkinter.Tk):
     
-    def __init__(self, *args, **kwargs):
-        
-        tkinter.Tk.__init__(self, *args, **kwargs)
+    def __init__(self, instance, reasons):
+        self.instance = instance
+        self.reason = reasons
+
+        tkinter.Tk.__init__(self)
         self.call('tk', 'scaling', 2.0)
         
         # Adding a title to the window
