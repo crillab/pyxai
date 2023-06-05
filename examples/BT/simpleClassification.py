@@ -13,7 +13,6 @@ direct_reason = explainer.direct_reason()
 print("len direct: ", len(direct_reason))
 print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
 
-
 tree_specific_reason = explainer.tree_specific_reason(n_iterations=10)
 
 print("tree_specific_reason:", tree_specific_reason)
