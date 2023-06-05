@@ -46,7 +46,7 @@ class TestToFeatures(unittest.TestCase):
         print("test_3:", explainer.to_features(test_3))
         self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
 
-        i = Tools.GraphicalInterface("tata", ["titi"])
+        i = Tools.GraphicalInterface(explainer, ["titi"])
         i.mainloop()
         
 if __name__ == '__main__':

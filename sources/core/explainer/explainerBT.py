@@ -158,8 +158,10 @@ class ExplainerBT(Explainer):
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
             return None
-
-        return Explainer.format(list(direct_reason))
+        
+        reason = Explainer.format(list(direct_reason))
+        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        return reason
 
 
     def sufficient_reason(self, *, n=1, seed=0, time_limit=None):
@@ -192,8 +194,9 @@ class ExplainerBT(Explainer):
                 is_removed[i] = False
 
         abductive = [l for i, l in enumerate(abductive) if not is_removed[i]]
-
-        return Explainer.format(abductive, n)
+        reasons = Explainer.format(abductive, n)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        return reasons
 
 
     def minimal_tree_specific_reason(self, *, time_limit=None, from_reason=None):
@@ -208,9 +211,9 @@ class ExplainerBT(Explainer):
         result, solution = cp_solver.solve(time_limit=time_limit, upper_bound=len(tree_specific) + 1)
         time_used += time.time()
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
-
-        return None if (result == UNSAT or result == UNKNOWN) else Explainer.format([l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
-
+        result = None if (result == UNSAT or result == UNKNOWN) else Explainer.format([l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
+        self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
+        return result
 
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
         """
@@ -250,10 +253,11 @@ class ExplainerBT(Explainer):
 
         reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations, time_limit,
                                             int(reason_expressivity), seed)
-        if reason_expressivity == ReasonExpressivity.Conditions:
-            return reason
-        elif reason_expressivity == ReasonExpressivity.Features:
-            return self.to_features_indexes(reason)
+        if reason_expressivity == ReasonExpressivity.Features:
+            reason = self.to_features_indexes(reason)
+        
+        self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
+        return reason
 
 
     def compute_weights_class(self, implicant, cls, king="worst"):

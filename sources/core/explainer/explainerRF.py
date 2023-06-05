@@ -93,8 +93,11 @@ class ExplainerRF(Explainer):
 
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
-            return None
-        return Explainer.format(list(direct_reason))
+            reason = None
+        else:
+            reason = Explainer.format(list(direct_reason))
+        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        return reason
 
 
     def minimal_contrastive_reason(self, *, n=1, time_limit=None):
@@ -208,7 +211,10 @@ class ExplainerRF(Explainer):
                 break
 
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
-        return Explainer.format(results, n)
+
+        reasons = Explainer.format(results, n)
+        self.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, reasons)
+        return reasons
 
 
     def sufficient_reason(self, *, time_limit=None):
@@ -251,7 +257,11 @@ class ExplainerRF(Explainer):
         muser_solver.write_gcnf(n_variables, hard_clauses, soft_clauses)
         model, status, self._elapsed_time = muser_solver.solve(time_limit)
         reason = [mapping[i] for i in model if i > 1]
-        return Explainer.format(reason, 1)
+        
+        reason = Explainer.format(reason, 1)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        return reason
+    
 
 
     def minimal_sufficient_reason(self, time_limit=None):
@@ -289,8 +299,10 @@ class ExplainerRF(Explainer):
         optux_solver.add_hard_clauses(hard_clauses)
         optux_solver.add_soft_clauses(soft_clauses, weight=1)
         reason = optux_solver.solve(self._binary_representation)
-        return Explainer.format(reason)
-
+        
+        reason = Explainer.format(reason)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        return reason
 
     def majoritary_reason(self, *, n=1, n_iterations=50, time_limit=None, seed=0):
         """Informally, a majoritary reason for classifying a instance x as positive by some random forest f
@@ -324,10 +336,13 @@ class ExplainerRF(Explainer):
                 
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,
                                                 time_limit, int(reason_expressivity), seed)
-            if reason_expressivity == ReasonExpressivity.Conditions:
-                return reason
-            elif reason_expressivity == ReasonExpressivity.Features:
-                return self.to_features_indexes(reason)  # TODO
+            
+            if reason_expressivity == ReasonExpressivity.Features:
+                reason = self.to_features_indexes(reason)  # TODO
+            
+            reason = Explainer.format(reason)
+            self.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reason)
+            return reason
 
         # TODO : deal with multi classes and all majoritary
         raise NotImplementedError("Currently, only n set to 1 or All is available.")
@@ -466,8 +481,14 @@ class ExplainerRF(Explainer):
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        return Explainer.format(reasons, n)
 
+        reasons = Explainer.format(reasons, n)
+        if method==PreferredReasonMethod.Minimal:
+            self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+        else:
+            self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)    
+        return reasons
+        
 
     def minimal_majoritary_reason(self, *, n=1, time_limit=None):
         return self.preferred_majoritary_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
