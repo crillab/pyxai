@@ -108,10 +108,7 @@ class ExplainerDT(Explainer):
         return literals
 
     def _excluded_features_are_necesssary(self, prime_cnf):
-        for lit in prime_cnf.necessary:
-            if self._is_specific(lit) is False:
-                return True
-        return False
+        return any(not self._is_specific(lit) for lit in prime_cnf.necessary)
 
 
     def sufficient_reason(self, *, n=1, time_limit=None):
@@ -175,8 +172,7 @@ class ExplainerDT(Explainer):
         solver = OPENWBOSolver()
 
         # Hard clauses
-        for c in cnf:
-            solver.add_hard_clause(c)
+        solver.add_hard_clauses(cnf)
 
         # Soft clauses
         for i in range(len(soft)):
