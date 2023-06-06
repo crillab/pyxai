@@ -13,6 +13,8 @@ class MAXSATSolver:
     def add_hard_clause(self, clause):
         self.WCNF.append(clause)
 
+    def add_hard_clauses(self, clauses):
+        self.WCNF.extend(clauses)
 
     def solve(self, *, time_limit=0):
         raise NotImplementedError

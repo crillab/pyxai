@@ -233,7 +233,9 @@ class ExplainerRF(Explainer):
 
         if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
-            hard_clauses = hard_clauses + tuple(clauses_theory)
+            print(clauses_theory)
+            for c in clauses_theory:
+                hard_clauses = hard_clauses + c
 
         # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
@@ -430,15 +432,7 @@ class ExplainerRF(Explainer):
         for c in clauses:
             solver.add_hard_clause([lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit])
 
-        glucose = GlucoseSolver()
-        for c in clauses:
-            glucose.add_clauses([[lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit]])
-        print(self._binary_representation)
-        print(glucose.solve())
-        for i in range(len(self._binary_representation)):
-            glucose.add_clauses([[-self._binary_representation[i]]])
-        print(glucose.solve())
-        if self._theory: # TODO
+        if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
             for c in clauses_theory:
                 solver.add_hard_clause(c)
