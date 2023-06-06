@@ -44,7 +44,9 @@ class Explainer:
             return self.regression_boosted_trees
         elif hasattr(self, 'boosted_trees'):
             return self.boosted_tree
-    
+        else:
+            assert false
+
     @property
     def instance(self):
         """
@@ -112,9 +114,8 @@ class Explainer:
         @param features_types (str | list): the theory selected.
     """
     def set_features_type(self, features_types):
-
         model = self.get_model()
-        #To avoid a bug when several initialize in done :)
+        #To avoid a bug when several init done :)
         model.clear_theory_features()
         feature_names = self.get_feature_names()
         # reg_exp = regular expression 
@@ -277,13 +278,8 @@ class Explainer:
         if len(excluded_features) == 0:
             self.unset_specific_features()
             return
-
-        if self._binary_representation is None:
-            # we want to know if binary lits are related to excluded features
-            binary_representation = self._extend_reason_to_complete_representation([])
-        else:
-            binary_representation = self._binary_representation
-        self._excluded_literals = [lit for lit in binary_representation if
+        bin_rep =  self._extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
+        self._excluded_literals = [lit for lit in bin_rep if
                                    self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in excluded_features]
         self._excluded_features = excluded_features
 
@@ -292,9 +288,10 @@ class Explainer:
         excluded = []
         if hasattr(self, 'tree'):
             excluded = [f for f in self.tree.learner_information.feature_names if f not in specific_features]
-        if hasattr(self, 'random_forest'):
+        elif hasattr(self, 'random_forest'):
             excluded = [f for f in self.random_forest.learner_information.feature_names if f not in specific_features]
-        if hasattr(self, 'boosted_tree'):
+        else:
+            assert hasattr(self, 'boosted_tree')
             excluded = [f for f in self.boosted_tree.learner_information.feature_names if f not in specific_features]
 
         if excluded is None:

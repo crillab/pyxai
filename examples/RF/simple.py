@@ -16,11 +16,9 @@ explainer = Explainer.initialize(model, instance=instance)
 
 direct_reason = explainer.direct_reason()
 print("len direct:", len(direct_reason))
-#print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
+print("is a reason (for 50 checks):", explainer.is_reason(direct_reason, n_samples=50))
 
 majoritary = explainer.majoritary_reason(n=1, n_iterations=1)
-# print("majoritary:", majoritary)
-
 print("\nmajoritary: ", explainer.to_features(majoritary))
 print("\nlen majoritary: ", len(majoritary))
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(majoritary))
@@ -28,7 +26,7 @@ print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(ma
 minimal_majoritary = explainer.minimal_majoritary_reason(time_limit=10)
 
 print("\nminimal majoritary: ", explainer.to_features(minimal_majoritary))
-print("\nlen majoritary: ", len(minimal_majoritary))
+print("len majoritary: ", len(minimal_majoritary))
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(minimal_majoritary))
 
 
@@ -36,6 +34,7 @@ print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(mi
 sufficient_reason = explainer.sufficient_reason(time_limit=5)
 print("\nlen sufficient reason:", len(sufficient_reason))
 if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
+print("sufficient: ", explainer.to_features(sufficient_reason))
 print("is reason (for 50 checks)", explainer.is_reason(sufficient_reason, n_samples=50))
 
 minimal_constrative_reason = explainer.minimal_contrastive_reason(time_limit=5)
