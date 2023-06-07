@@ -75,7 +75,6 @@ class ExplainerRegressionBT(ExplainerBT) :
 
 
     def sufficient_reason(self, *, seed=0, time_limit=None):
-        print("ici", self._implicant_id_features)
         cplex = SufficientRegression()
         reason, time_used = cplex.create_model_and_solve(self, self._lower_bound, self._upper_bound)
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
