@@ -22,6 +22,7 @@ class Explainer:
         self._categorical_features = []
         self._history = OrderedDict()
         self._do_history = True
+        self._glucose = None
 
     def show(self, image=None):
         graphical_interface = Tools.GraphicalInterface(self, image=image)
@@ -370,9 +371,10 @@ class Explainer:
     def _extend_reason_with_theory(self, reason):
         if self._theory is False:
             return reason
-        glucose = GlucoseSolver()
-        glucose.add_clauses(self._theory_clauses())
-        return glucose.propagate(reason)[1]
+        if self._glucose is None:
+            self._glucose = GlucoseSolver()
+            self._glucose.add_clauses(self._theory_clauses())
+        return self._glucose.propagate(reason)[1]
 
 
     def is_reason(self, reason, *, n_samples=1000):
