@@ -29,6 +29,9 @@ class Explainer:
 
 
     def add_history(self, instance, class_name, method_name, reason):
+        if instance is not None and not isinstance(instance, tuple):
+            instance = tuple(instance)
+
         if self._do_history is True:
             if instance in self._history.keys():
                 self._history[instance].append((class_name, method_name, reason))
@@ -43,7 +46,7 @@ class Explainer:
         elif hasattr(self, 'regression_boosted_trees'):
             return self.regression_boosted_trees
         elif hasattr(self, 'boosted_trees'):
-            return self.boosted_tree
+            return self.boosted_trees
     
     @property
     def instance(self):
