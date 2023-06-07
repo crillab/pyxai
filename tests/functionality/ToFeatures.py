@@ -46,7 +46,6 @@ class TestToFeatures(unittest.TestCase):
         print("test_3:", test_3)
         print("test_3:", explainer.to_features(test_3))
         self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
-        #explainer.show()
         
 if __name__ == '__main__':
     print("Tests: " + TestToFeatures.__name__ + ":")
