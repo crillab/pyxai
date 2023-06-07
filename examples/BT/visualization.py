@@ -11,10 +11,10 @@ from pyxai import Learning, Explainer, Tools
 
 # the location of the dataset
 path = ""
-dataset = "./examples/datasets/ mnist49.csv"
+dataset = "../../data/dataML/mnist38.csv"
 
 # Machine learning part
-learner = Learning.Xgboost(dataset)
+learner = Learning.Xgboost(dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
 instance, prediction = learner.get_instances(model, n=1, correct=True)
 
