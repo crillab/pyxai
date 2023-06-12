@@ -32,8 +32,8 @@ class Explainer:
     def add_history(self, instance, class_name, method_name, reason):
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
-
         if self._do_history is True:
+            reason = self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False)
             if instance in self._history.keys():
                 self._history[instance].append((class_name, method_name, reason))
             else:
