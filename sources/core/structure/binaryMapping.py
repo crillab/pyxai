@@ -229,7 +229,7 @@ class BinaryMapping():
         used_features = set()
         for key in self.map_features_to_id_binaries.keys():
             used_features.add(key[0])
-        print("features:", used_features)
+        
         for lit in reason:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
