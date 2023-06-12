@@ -16,7 +16,7 @@ dataset = "../../data/dataML/mnist38.csv"
 # Machine learning part
 learner = Learning.Xgboost(dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instances = learner.get_instances(model, n=10, correct=True)
+instances = learner.get_instances(model, n=3, correct=True)
 
 # Explanation part
 explainer = Explainer.initialize(model)
@@ -28,5 +28,9 @@ for (instance, prediction) in instances:
 
     tree_specific_reason = explainer.tree_specific_reason()
     print("len tree_specific_reason:", len(tree_specific_reason))
-    
-explainer.show()
+
+    minimal_tree_specific_reason = explainer.minimal_tree_specific_reason(time_limit=5)
+    print("len minimal tree_specific_reason:", len(minimal_tree_specific_reason))
+
+
+explainer.show(image=(28, 28))
