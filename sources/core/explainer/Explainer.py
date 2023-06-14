@@ -24,20 +24,21 @@ class Explainer:
         self._do_history = True
         self._glucose = None
 
-    def show(self, image=None):
-        graphical_interface = Tools.GraphicalInterface(self, image=image)
+    def show(self, image_size=None):
+        graphical_interface = Tools.GraphicalInterface(self, image_size=image_size)
         graphical_interface.mainloop()
 
 
-    def add_history(self, instance, class_name, method_name, reason):
+    def add_history(self, instance, class_name, method_name, reasons):
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
-
         if self._do_history is True:
+            if not isinstance(reasons[0], tuple): reasons = [reasons]
+            reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
             if instance in self._history.keys():
-                self._history[instance].append((class_name, method_name, reason))
+                self._history[instance].append((class_name, method_name, reasons))
             else:
-                self._history[instance] = [(class_name, method_name, reason)]
+                self._history[instance] = [(class_name, method_name, reasons)]
 
     def get_model(self):
         if hasattr(self, 'tree'):
@@ -328,7 +329,7 @@ class Explainer:
         raise NotImplementedError
 
 
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False):
+    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
         """
         Converts a binary representation of a reason into the features space.
         

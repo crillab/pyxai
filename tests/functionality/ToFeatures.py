@@ -34,7 +34,7 @@ class TestToFeatures(unittest.TestCase):
         print("test_1:", test_1)
         print("test_1:", explainer.to_features(test_1))
         self.assertEqual(explainer.to_features(test_1),('f1 >= 10', 'f1 < 20')) 
-
+        
         test_2 = explainer.minimal_contrastive_reason(n=1)
         
         print("test_2:", test_2)
