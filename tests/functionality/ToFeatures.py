@@ -5,7 +5,6 @@ import math
 Tools.set_verbose(0)
 
 import unittest
-
 class TestToFeatures(unittest.TestCase):
     def setUp(self):
         print("..|In method:", self._testMethodName)
