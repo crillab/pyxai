@@ -1,4 +1,4 @@
-#import os
+# import os
 import unittest
 from pyxai.tests.functionality.GetInstances import *
 from pyxai.tests.functionality.ToFeatures import *
@@ -13,6 +13,8 @@ from pyxai.tests.importing.SimpleScikitLearn import *
 from pyxai.tests.importing.LightGBM import *
 from pyxai.tests.importing.XGBoost import *
 from pyxai.tests.explaining.dt import *
+from pyxai.tests.explaining.rf import *
+
 
 def suite():
     suite = unittest.TestSuite()
@@ -33,6 +35,7 @@ def suite():
     # suite.addTest(unittest.makeSuite(TestImportLightGBM))
 
     suite.addTest(unittest.makeSuite(TestDT))
+    suite.addTest(unittest.makeSuite(TestRF))
     return suite
 
 
