@@ -11,7 +11,7 @@ class TestDT(unittest.TestCase):
     def init(cls):
         if cls.model is None:
             cls.learner = Learning.Scikitlearn("tests/iris.csv", learner_type=Learning.CLASSIFICATION)
-            cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT, test_size=0.2, max_depth=6)
+            cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
         return cls.learner, cls.model
 
 
@@ -19,7 +19,7 @@ class TestDT(unittest.TestCase):
         print("..|In method:", self._testMethodName)
 
 
-    def test_sufficient(self):
+    def test_sufficients(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model)
         instances = learner.get_instances(model, n=30, correct=True)
