@@ -7,6 +7,27 @@ class SufficientRegression:
     def __init__(self):
         pass
 
+
+    def computeInterpretation(self, solution, varTrees: list):
+        """
+        Compute the interpretation computed by cplex.
+
+        Attributes:
+        ----------
+        solution : Cplex solution
+            is the solution returned by cplex
+        varTrees : list
+            is the set of variables.
+        """
+        interpretation = [0]
+        for i in range(1, len(varTrees)):
+            if solution[varTrees[i]] > 0.9:
+                interpretation.append(i)
+            else:
+                interpretation.append(-i)
+        return interpretation
+
+
     def create_model_and_solve(self, explainer, lb, ub, *, time_out=None):
         '''
         Model comes from IJCAI 23 paper. All constraitns of the model  are numbered as in this paper.
@@ -100,7 +121,7 @@ class SufficientRegression:
             notKnown.append(tmp)
 
 
-        # model.export_as_lp()
+        model.export_as_lp()
 
         nbRemoveByRotation = 0
         reason = []
@@ -113,11 +134,11 @@ class SufficientRegression:
         if verbose:
             print("c First run, elimination by feature")
         # to visualize the model, it is in /tmp
-        # model.export_as_lp()
+        #model.export_as_lp()
         # exit(1)
         while (len(notKnown) > 0 and (time_out is None or (starting_time + time.process_time()) < time_out)):
             if time_out is not None:
-                model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
+                model.set_time_limit(max([1, time_out - (starting_time + time.process_time())]))
             oldnotKnown = notKnown + [] + reason
             if verbose:
                 print(len(notKnown), len(reason))
@@ -152,7 +173,7 @@ class SufficientRegression:
                 model.set_time_limit(np.max([1, time_out - (starting_time + time.process_time())]))
             oldnotKnown = notKnown + []
             if verbose:
-                print(len(notKnown), len(reason))
+                print(notKnown, len(notKnown), len(reason))
             feature = notKnown[-1]
             notKnown.pop()
 
@@ -209,13 +230,12 @@ class SufficientRegression:
                             longReason.append(feature[negPoint][0])
                             negPoint += 1
 
-                    interpretation = ModelSufficient.computeInterpretation(
-                        solution, var_trees)
-                    score = forest.computePrediction(interpretation)
+                    interpretation = self.computeInterpretation(solution, var_trees)
+                    score = explainer.predict_implicant(interpretation)
                     if score > lb and score < ub:
                         missclass.append(current[0])
 
-        if (starting_time + time.process_time()) > time_out:
+        if time_out is not None and (starting_time + time.process_time()) > time_out:
             timeCheck = True
             for f in oldnotKnown:
                 posPoint = 0
@@ -229,6 +249,7 @@ class SufficientRegression:
                     reason.append(f[negPoint][0])
             reason = simplifyImplicant(reason, featureBlock, list_cat_bin=listCatBin)
 
+        return reason, starting_time + time.process_time()
 
     def solve(self, time_limit=None):
         pass

@@ -1,4 +1,5 @@
 import random
+import time
 
 import c_explainer
 import numpy
@@ -37,9 +38,6 @@ class ExplainerRF(Explainer):
     @property
     def random_forest(self):
         return self._random_forest
-
-    def _theory_clauses(self):
-        return self._random_forest.get_theory(self._binary_representation)
 
     def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
         """
@@ -136,44 +134,27 @@ class ExplainerRF(Explainer):
         MAXSATsolver = OPENWBOSolver()
         #print("Length of the binary representation:", len(self._binary_representation))
         #print("Number of hard clauses in the CNF encoding the random forest:", len(tree_cnf))
-        
+        MAXSATsolver.add_hard_clauses(tree_cnf)
         if self._theory is False:
             for lit in self._binary_representation:
                 MAXSATsolver.add_soft_clause([lit], weight=1)
-            for clause in tree_cnf:
-                MAXSATsolver.add_hard_clause(clause)
         else:
             # Hard clauses
-            for clause in tree_cnf:
-                MAXSATsolver.add_hard_clause(clause)
             theory_cnf, theory_new_variables = self._random_forest.get_theory(
                 self._binary_representation,
                 theory_type=TypeTheory.NEW_VARIABLES, 
                 id_new_var=max_id_binary_cnf)
             theory_new_variables, map_is_represented_by_new_variables = theory_new_variables
             #print("Number of hard clauses in the theory:", len(theory_cnf))
-            for clause in theory_cnf:
-                MAXSATsolver.add_hard_clause(clause)
-            
-
-            # Soft clauses
-            #new_variables = [new_variable for new_variable, _ in theory_new_variables]
-            #all_associated_literals = [associated_literal for _, associated_literals in theory_new_variables for associated_literal in associated_literals]
-            
+            MAXSATsolver.add_hard_clauses(theory_cnf)
             count = 0
             for lit in self._binary_representation:
                 if map_is_represented_by_new_variables[abs(lit)] is False:
                     MAXSATsolver.add_soft_clause([lit], weight=1)
                     count+=1
-            #print("Number of soft clauses due to binary representation:", count)
             for new_variable in theory_new_variables:
                 MAXSATsolver.add_soft_clause([new_variable], weight=1)
-            #print("Number of new soft clauses with new variable due to the theory:", len(theory_new_variables))
 
-        #soft = [a for l in MAXSATsolver.WCNF.soft for a in l]
-        #print("Total number of hard clauses:", len(MAXSATsolver.WCNF.hard))
-        #print("Total number of soft clauses:", len(soft))
-        
         # Remove excluded features
         for lit in self._excluded_literals:
             MAXSATsolver.add_hard_clause([lit])
@@ -233,7 +214,6 @@ class ExplainerRF(Explainer):
 
         if self._theory:
             clauses_theory = self._random_forest.get_theory(self._binary_representation)
-            print(clauses_theory)
             for c in clauses_theory:
                 hard_clauses = hard_clauses + c
 
@@ -335,10 +315,11 @@ class ExplainerRF(Explainer):
             c_explainer.set_excluded(self.c_RF, tuple(self._excluded_literals))
             if self._theory:
                 c_explainer.set_theory(self.c_RF, tuple(self._random_forest.get_theory(self._binary_representation)))
-                
+            current_time = time.process_time()
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,
                                                 time_limit, int(reason_expressivity), seed)
-            
+            total_time = time.process_time() - current_time
+            self._elapsed_time = total_time if time_limit == 0 or total_time < time_limit else Explainer.TIMEOUT
             if reason_expressivity == ReasonExpressivity.Features:
                 reason = self.to_features_indexes(reason)  # TODO
             
@@ -346,11 +327,8 @@ class ExplainerRF(Explainer):
             self.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reason)
             return reason
 
-        # TODO : deal with multi classes and all majoritary
-        raise NotImplementedError("Currently, only n set to 1 or All is available.")
-        if isinstance(n, int) and n != 1:
-            raise NotImplementedError("Currently, only n set to 1 or All is available.")
-
+        if self._theory :
+            raise NotImplementedError("Theory and all majoritary is not yet implanted")
         n = n if type(n) == int else float('inf')
 
         clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
