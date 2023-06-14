@@ -374,7 +374,7 @@ class Explainer:
             return reason
         if self._glucose is None:
             self._glucose = GlucoseSolver()
-            self._glucose.add_clauses(self._theory_clauses())
+            self._glucose.add_clauses(self.get_model().get_theory())
         return self._glucose.propagate(reason)[1]
 
 

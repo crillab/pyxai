@@ -31,5 +31,10 @@ print("prediction:", explainer.predict(instance))
 print("direct:", explainer.to_features(explainer.direct_reason()))
 
 explainer.set_range(1500, 2500)
-print("tree specific:", explainer.to_features(explainer.tree_specific_reason()))
-print("sufficient: ", explainer.sufficient_reason())
+
+tree_specific = explainer.tree_specific_reason()
+print("tree specific:", explainer.to_features(tree_specific))
+print("is tree : ", explainer.is_tree_specific_reason(tree_specific))
+sufficient_reason = explainer.sufficient_reason()
+print("sufficient: ", sufficient_reason,  explainer.to_features(sufficient_reason))
+print("is implicant:", explainer.is_implicant(sufficient_reason))
