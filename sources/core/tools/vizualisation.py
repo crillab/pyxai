@@ -1,4 +1,5 @@
 import matplotlib.pyplot as pyplot
+import matplotlib as mpl
 import numpy
 from PIL import Image as PILImage
 from PIL.ImageQt import ImageQt
@@ -50,12 +51,89 @@ class Image:
         images[0] = numpy.ma.masked_where(images[0] < 0.9, images[0])
         images[1] = numpy.ma.masked_where(images[1] < 0.9, images[1])
         return self
-    
-class PlotGenerator():
+
+class PyPlotDiagramGenerator():
+    def __init__(self):
+        pass
+
+    def convert_features_to_dict_features(self, features):
+        dict_features = dict()
+        for feature in features:
+            name = feature["name"]
+            if name not in dict_features.keys():
+                dict_features[name] = [feature]
+            else:
+                dict_features[name].append(feature)
+        return dict_features
+    def generate_explanation(self, feature_values, instance, reason):
+
+
+        mpl.rcParams['axes.spines.left'] = False
+        mpl.rcParams['axes.spines.right'] = False
+        mpl.rcParams['axes.spines.top'] = False
+        mpl.rcParams['axes.spines.bottom'] = True
+        dict_features = self.convert_features_to_dict_features(reason)
+        print("dict_features:", dict_features)
+        fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
+        for i, feature in enumerate(dict_features.keys()):
+            thresholds = []
+            for info in dict_features[feature]:
+                thresholds.append(info["threshold"])
+
+            value_instance = feature_values[feature]
+            if len(thresholds) == 1 and thresholds[0] == 0.5:
+                #binary case
+                min_left = 0
+                max_right = 1
+                min_trace = 0
+                max_trace = 1
+            else:
+                min_left = min(thresholds+[value_instance])
+                max_right = max(thresholds+[value_instance])
+                
+                if max_right == value_instance:
+                    max_right = max_right+max_right
+                if min_left == value_instance:
+                    min_left = min_left-min_left
+                    
+                min_trace = min_left
+                max_trace = max_right
+
+            midle = (min_left+max_right)/2
+           
+            print("value_instance:", value_instance)
+            print("thresholds:", thresholds)
+            
+
+            axes[i].set_ylim(bottom=-1, top=50)
+            axes[i].set_xlim(left=min_left, right=max_right)
+            axes[i].plot([min_trace, max_trace], [25, 25])
+            axes[i].plot([value_instance, value_instance], [25, 25], marker="o", clip_on=False)
+            axes[i].text(midle,30,feature)
+            axes[i].yaxis.set_visible(False)
+            #axes[i].tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='on')
+            #invisible = axes[i].plot([0, 100], [2, 2], marker = 'o')
+        pyplot.subplots_adjust(top=1, hspace=1)
+
+        #pyplot.figure(figsize=(3.6,0.75*)))
+        #pyplot.axis('off')
+        pyplot.savefig('tmp_diagram.png', bbox_inches='tight')
+        image = PILImage.open('tmp_diagram.png')
+
+        #ess = axes.imshow()
+        #print("ess:", ess)
+        #new_image = axes.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
+        #new_image = PILImage.fromarray(axes[0])
+        pyplot.close()
+        return ImageQt(image)
+
+class PyPlotImageGenerator():
 
     def __init__(self, size, n_colors):
         self.size = size
         self.n_colors = n_colors
+        
+    
 
     def generate_instance(self, instance):
         image = numpy.zeros(self.size)

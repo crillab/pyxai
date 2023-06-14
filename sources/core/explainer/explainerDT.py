@@ -47,7 +47,7 @@ class ExplainerDT(Explainer):
         return self._tree.predict_instance(instance)
 
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False):
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
         """_summary_
 
         Args:
@@ -56,7 +56,7 @@ class ExplainerDT(Explainer):
         Returns:
             _type_: _description_
         """
-        return self._tree.to_features(binary_representation, details=details, eliminate_redundant_features=eliminate_redundant_features, contrastive=contrastive)
+        return self._tree.to_features(binary_representation, details=details, eliminate_redundant_features=eliminate_redundant_features, contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def direct_reason(self):
