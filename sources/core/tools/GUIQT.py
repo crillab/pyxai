@@ -10,24 +10,25 @@ import numpy
 import colorsys
 import math
 from pyxai.sources.core.tools.ImageViewSync import QImageViewSync
-from pyxai.sources.core.tools.vizualisation import PlotGenerator
+from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
 
 class GraphicalInterface(QMainWindow):
     """Main Window."""
-    def __init__(self, explainer, image=None):
+    def __init__(self, explainer, image_size=None):
         """Initializer."""
         app = QApplication(sys.argv)
         
         self.explainer = explainer
-        self.image = image
+        self.image_size = image_size
         self.feature_names = explainer.get_feature_names()
-        
-        if self.image is not None:
-            if not isinstance(self.image, tuple) or len(self.image) != 2:
+        self.feature_values = dict()
+        if self.image_size is not None:
+            if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
                 raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
-            self.plot_generator = PlotGenerator(image, 256)
+            self.pyplot_image_generator = PyPlotImageGenerator(image_size, 256)
 
+        self.pyplot_diagram_generator = PyPlotDiagramGenerator()
         super().__init__(None)
         self.originalPalette = QApplication.palette()
         main_layout = QGridLayout()
@@ -84,33 +85,35 @@ class GraphicalInterface(QMainWindow):
         for i, name in enumerate(self.feature_names):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
         
-        #Image of the selected instance
-        self.imageLabelLeft = QLabel()
-        self.imageLabelLeft.setBackgroundRole(QPalette.Base)
-        self.imageLabelLeft.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
-        #self.imageLabelLeft.setScaledContents(True)
+        if self.image_size is not None:
+            #Image of the selected instance
+            self.imageLabelLeft = QLabel()
+            self.imageLabelLeft.setBackgroundRole(QPalette.Base)
+            self.imageLabelLeft.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+            #self.imageLabelLeft.setScaledContents(True)
 
-        self.imageLabelLeft.setMinimumWidth(300)
-        self.imageLabelLeft.setMinimumHeight(300)
-        
-        self.scrollAreaLeft = QScrollArea()
-        self.scrollAreaLeft.setBackgroundRole(QPalette.Dark)
-        self.scrollAreaLeft.setWidget(self.imageLabelLeft)
-        self.scrollAreaLeft.setVisible(True)
+            self.imageLabelLeft.setMinimumWidth(300)
+            self.imageLabelLeft.setMinimumHeight(300)
+            
+            self.scrollAreaLeft = QScrollArea()
+            self.scrollAreaLeft.setBackgroundRole(QPalette.Dark)
+            self.scrollAreaLeft.setWidget(self.imageLabelLeft)
+            self.scrollAreaLeft.setVisible(True)
 
-        self.scrollAreaLeft.setMinimumWidth(302)
-        self.scrollAreaLeft.setMinimumHeight(302)
+            self.scrollAreaLeft.setMinimumWidth(302)
+            self.scrollAreaLeft.setMinimumHeight(302)
 
-        self.scrollAreaLeft.mouseMoveEvent = self.mouseMoveEventLeft
-        self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
-        self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
+            self.scrollAreaLeft.mouseMoveEvent = self.mouseMoveEventLeft
+            self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
+            self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-        self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
-        
+            self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+            
         layout = QGridLayout()
         layout.addWidget(self.list_instance, 0, 0)
         layout.addWidget(self.table_instance, 0, 1)
-        layout.addWidget(self.scrollAreaLeft, 0, 2)
+        if self.image_size is not None:
+            layout.addWidget(self.scrollAreaLeft, 0, 2)
         
         return layout
     
@@ -119,16 +122,27 @@ class GraphicalInterface(QMainWindow):
     
 
     def display_left(self, instance):
-        image = self.plot_generator.generate_instance(instance)
+        image = self.pyplot_image_generator.generate_instance(instance)
         self.scaleFactor = 1.0
         size = self.imageLabelLeft.size()
         self.imageLabelLeft.setPixmap(QPixmap.fromImage(image).scaled(size))
         
     def display_right(self, instance, reason=None):
-        image = self.plot_generator.generate_explanation(instance, reason)
-        size = self.imageLabelRight.size()
-        self.imageLabelRight.setPixmap(QPixmap.fromImage(image).scaled(size))
-                 
+        if self.image_size is not None:
+            image = self.pyplot_image_generator.generate_explanation(instance, reason)
+            size = self.imageLabelRight.size()
+            self.imageLabelRight.setPixmap(QPixmap.fromImage(image).scaled(size))
+        else:
+            image = self.pyplot_diagram_generator.generate_explanation(self.feature_values, instance, reason)
+            qpixmap = QPixmap.fromImage(image)
+            self.scrollAreaRight.setMinimumWidth(qpixmap.width()+16)
+            #self.imageLabelRight.setMinimumWidth(qpixmap.width())
+            #self.imageLabelRight.setMinimumHeight(qpixmap.width())
+            self.imageLabelRight.setPixmap(qpixmap)
+            self.imageLabelRight.adjustSize()
+            
+            
+        
 
     def mousePressEventLeft(self, event):
         self.pressed = True
@@ -170,7 +184,7 @@ class GraphicalInterface(QMainWindow):
         self.imageLabelRight = QLabel()
         self.imageLabelRight.setBackgroundRole(QPalette.Base)
         self.imageLabelRight.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
-        self.imageLabelRight.setScaledContents(True)
+        #self.imageLabelRight.setScaledContents(True)
 
         self.imageLabelRight.setMinimumWidth(300)
         self.imageLabelRight.setMinimumHeight(300)
@@ -198,17 +212,17 @@ class GraphicalInterface(QMainWindow):
     
     def clicked_instance(self, qmodelindex):
         index = self.list_instance.currentIndex().row()
-        print(index)
         self.current_instance = tuple(self.explainer._history.keys())[index]
+        self.feature_values.clear()
         for i, value in enumerate(self.current_instance):
             self.table_instance.setItem(i, 1, QTableWidgetItem(str(value)))
+            self.feature_values[self.feature_names[i]] = value
 
         n_to_delete = self.table_explanation.rowCount()
         for _ in range(n_to_delete):
             self.table_explanation.removeRow(0)
 
         for id_method, (_, method, reasons) in enumerate(self.explainer._history[self.current_instance]):
-            if not isinstance(reasons[0], tuple): reasons = [reasons]
             for id_reason, reason in enumerate(reasons):
                 method = method.replace("reason", "").replace("reasons", "").replace("_", " ").capitalize()
                 method = " ".join(word.capitalize() for word in method.split(" "))
@@ -220,8 +234,8 @@ class GraphicalInterface(QMainWindow):
                 self.table_explanation.setItem(numrows,2, QTableWidgetItem(str(id_reason)))
                 self.table_explanation.setItem(numrows,3, QTableWidgetItem(str(len(reason))))
         
-        
-        self.display_left(self.current_instance)
+        if self.image_size is not None:
+            self.display_left(self.current_instance)
 
     
     def clicked_explanation(self, qmodelindex):
@@ -230,7 +244,6 @@ class GraphicalInterface(QMainWindow):
         self.id_reason = int(self.table_explanation.item(self.index, 2).text())
         
         reasons = self.explainer._history[self.current_instance][self.id_method][2]
-        if not isinstance(reasons[0], tuple): reasons = [reasons]
         reason = reasons[self.id_reason]
         #print("reason:", reason)
         self.display_right(self.current_instance, reason)
