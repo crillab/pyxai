@@ -61,7 +61,6 @@ class ExplainerDT(Explainer):
 
     def direct_reason(self):
         """
-
         Returns:
             _type_: _description_
         """
