@@ -1,17 +1,38 @@
-import os
+#import os
+import unittest
+from pyxai.tests.functionality.GetInstances import *
+from pyxai.tests.functionality.ToFeatures import *
+from pyxai.tests.learning.ScikitLearn import *
+from pyxai.tests.learning.LightGBM import *
+from pyxai.tests.learning.XGBoost import *
+from pyxai.tests.saveload.XGBoost import *
+from pyxai.tests.saveload.ScikitLearn import *
+from pyxai.tests.saveload.LightGBM import *
+from pyxai.tests.importing.ScikitLearn import *
+from pyxai.tests.importing.SimpleScikitLearn import *
+from pyxai.tests.importing.LightGBM import *
+from pyxai.tests.importing.XGBoost import *
 
-#os.system('python3 tests/learning/LightGBM.py')
-#os.system('python3 tests/learning/XGBoost.py')
-#os.system('python3 tests/learning/ScikitLearn.py')
+def suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestToFeatures))
+    suite.addTest(unittest.makeSuite(TestGetInstances))
 
-#os.system('python3 tests/saveload/LightGBM.py')
-#os.system('python3 tests/saveload/XGBoost.py')
-#os.system('python3 tests/saveload/ScikitLearn.py')
+    suite.addTest(unittest.makeSuite(TestLearningScikitlearn))
+    suite.addTest(unittest.makeSuite(TestLearningXGBoost))
+    suite.addTest(unittest.makeSuite(TestLearningLightGBM))
 
-#os.system('python3 tests/import/ScikitLearn.py')
-#os.system('python3 tests/import/XGBoost.py')
-#os.system('python3 tests/import/LightGBM.py')
-#os.system('python3 tests/import/SimpleScikitLearn.py')
+    suite.addTest(unittest.makeSuite(TestSaveLoadScikitlearn))
+    suite.addTest(unittest.makeSuite(TestSaveLoadXgboost))
+    suite.addTest(unittest.makeSuite(TestSaveLoadLightGBM))
 
-#os.system('python3 tests/functionality/GetInstances.py')
-os.system('python3 tests/functionality/ToFeatures.py')
+    suite.addTest(unittest.makeSuite(TestImportScikitlearn))
+    suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
+    suite.addTest(unittest.makeSuite(TestImportXGBoost))
+    suite.addTest(unittest.makeSuite(TestImportLightGBM))
+    return suite
+
+
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
+    runner.run(suite())
