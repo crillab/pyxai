@@ -43,7 +43,7 @@ class ExplainerRegressionBT(ExplainerBT) :
     def upper_bound(self, upper_bound):
         self._upper_bound = upper_bound
 
-    def predict(self, instance) :
+    def predict(self, instance):
         return self._boosted_trees.predict_instance(instance)
 
     def predict_implicant(self, bin_implicant):

@@ -208,8 +208,45 @@ class BinaryMapping():
     def get_id_features(self, binary_representation):
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
+    def convert_features_to_dict_features(self, features, feature_names):
+        dict_features = dict()
+        for feature in features:
+            name = feature["name"]
+            if name not in dict_features.keys():
+                dict_features[name] = [feature]
+            else:
+                dict_features[name].append(feature)
 
-    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False):
+        # Sort the dict in order to have the features in the good order
+        order_dict_features = collections.OrderedDict()
+        for name in feature_names:
+            if name in dict_features.keys():
+                order_dict_features[name] = dict_features[name]
+
+        return order_dict_features 
+    
+    def apply_sign_on_operator(self, operator, sign):
+        """
+        Invert the operator if there is a sign (a negative literal).
+        """
+        if sign is False: return operator
+        
+        if operator == OperatorCondition.GE:
+            return OperatorCondition.LT 
+        if operator == OperatorCondition.GT:
+            return OperatorCondition.LE
+        if operator == OperatorCondition.LE:
+            return OperatorCondition.GT
+        if operator == OperatorCondition.LT:
+            return OperatorCondition.GE
+        if operator == OperatorCondition.EQ:
+            return OperatorCondition.NEQ
+        if operator == OperatorCondition.NEQ:
+            return OperatorCondition.EQ
+        
+        raise NotImplementedError("The operator " + str(operator) + " is not implemented.")
+        
+    def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False, feature_names=None):
         """
         Convert an implicant into features. Return a tuple of features.
         Two types of features are available according to the details parameter.
@@ -226,46 +263,124 @@ class BinaryMapping():
         result = []
         if eliminate_redundant_features:
             reason = self.eliminate_redundant_features(reason, contrastive)
-        used_features = set()
-        for key in self.map_features_to_id_binaries.keys():
-            used_features.add(key[0])
-        print("features:", used_features)
+        
+        #First pass on each literal
         for lit in reason:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
-
-            if self.learner_information is None:
-                feature["name"] = "f" + str(feature["id"])
-            elif self.learner_information.feature_names is None:
-                feature["name"] = "f" + str(feature["id"])
-            else:
-                feature["name"] = self.learner_information.feature_names[feature["id"] - 1]
-            
+            feature["name"] = feature_names[feature["id"] - 1]
             feature["operator"] = self.map_id_binaries_to_features[abs(lit)][1]
+            feature["sign"] = False if lit > 0 else True #True if there is a sign else False
+            feature["operator_sign_considered"] = self.apply_sign_on_operator(feature["operator"], feature["sign"])
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]
-            feature["sign"] = True if lit > 0 else False
             feature["weight"] = reason[lit] if isinstance(reason, dict) else None
-            if details:
-                result.append(feature)
-            else:
-                if feature["operator"] == OperatorCondition.GE:
-                    str_sign = " >= " if feature["sign"] else " < "
-                elif feature["operator"] == OperatorCondition.GT:
-                    str_sign = " > " if feature["sign"] else " <= "
-                elif feature["operator"] == OperatorCondition.LE:
-                    str_sign = " <= " if feature["sign"] else " > "
-                elif feature["operator"] == OperatorCondition.LT:
-                    str_sign = " < " if feature["sign"] else " >= "
-                elif feature["operator"] == OperatorCondition.EQ:
-                    str_sign = " == " if feature["sign"] else " != "
-                elif feature["operator"] == OperatorCondition.NEQ:
-                    str_sign = " != " if feature["sign"] else " == "
-                else:
-                    raise NotImplementedError("The operator " + str(feature["operator"]) + " is not implemented.")
+            result.append(feature)
 
-                result.append(str(feature["name"]) + str_sign + str(feature["threshold"]))
-    
-        return tuple(result)
+        #Get conditions with the same feature and create the string representation
+        dict_features = self.convert_features_to_dict_features(result, feature_names)
+        
+        simple_result = []
+        if without_intervals is True or eliminate_redundant_features is False:
+            for name in dict_features.keys():
+                features = dict_features[name]
+                for feature in features:
+                    str_operator = feature["operator_sign_considered"].to_str_readable()
+                    feature["string"] = str(feature["name"]) + " " + str_operator + " " + str(feature["threshold"])
+                    simple_result.append(feature["string"])
+            if details is True:
+                return tuple(result)
+            return tuple(simple_result)
+        
+        
+        for name in dict_features.keys():
+            features = dict_features[name]
+            if len(features) == 1:
+                feature = features[0]
+                str_operator = feature["operator_sign_considered"].to_str_readable()
+                feature["string"] = str(feature["name"]) + " " + str_operator + " " + str(feature["threshold"])
+                simple_result.append(feature["string"])
+            elif len(features) == 2:
+                feature_1 = features[0]
+                feature_2 = features[1]
+                operator_1 = feature_1["operator_sign_considered"]
+                operator_2 = feature_2["operator_sign_considered"]
+                
+                if (operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT)\
+                    and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT):
+                    value = max(feature_1["threshold"], feature_2["threshold"])
+                    operator = operator_1 if value == feature_1["threshold"] else operator_2
+                    str_operator = operator.to_str_readable()
+                    feature_1["string"] = str(feature_1["name"]) + " " + str_operator + " " + str(value)
+                    feature_2["string"] = feature_1["string"]
+                    simple_result.append(feature_1["string"])
+                elif (operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT)\
+                    and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT):
+                    value = min(feature_1["threshold"], feature_2["threshold"])
+                    operator = operator_1 if value == feature_1["threshold"] else operator_2
+                    str_operator = operator.to_str_readable()
+                    feature_1["string"] = str(feature_1["name"]) + " " + str_operator + " " + str(value)
+                    feature_2["string"] = feature_1["string"]
+                    simple_result.append(feature_1["string"])
+                elif ((operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT)\
+                    and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT)) or \
+                    ((operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT)\
+                    and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT)):
+
+                    if feature_1["threshold"] > feature_2["threshold"]:
+                        if operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT:
+                            #case 1: [bound_1, bound_2]
+                            bound_1 = feature_2["threshold"]
+                            bound_2 = feature_1["threshold"] 
+                            bracket_1 = "[" if operator_2 == OperatorCondition.GE else "]"
+                            bracket_2 = "]" if operator_1 == OperatorCondition.LE else "["
+                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2  
+                            feature_2["string"] = feature_1["string"]
+                            simple_result.append(feature_1["string"])
+                        else:
+                            #case 2: [infinity, bound_1] and [bound_2, infinity]
+                            bound_1 = feature_2["threshold"]
+                            bound_2 = feature_1["threshold"] 
+                            bracket_1 = "]" if operator_2 == OperatorCondition.LE else "["
+                            bracket_2 = "[" if operator_1 == OperatorCondition.GE else "]"
+                            interval_1 = "[infinity, " + str(bound_1) + bracket_1
+                            interval_2 = bracket_2 + str(bound_2) + "infinity]"  
+                            
+                            feature_1["string"] = str(feature_1["name"]) + " in " + interval_1 + " and " + interval_2
+                            feature_2["string"] = feature_1["string"]
+                            simple_result.append(feature_1["string"])
+                    else:
+                        #feature_1["threshold"] <= feature_2["threshold"]:
+                        if operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT:
+                            #case 2: [infinity, bound_1] and [bound_2, infinity]
+                            bound_1 = feature_1["threshold"]
+                            bound_2 = feature_2["threshold"] 
+                            bracket_1 = "]" if operator_1 == OperatorCondition.LE else "["
+                            bracket_2 = "[" if operator_2 == OperatorCondition.GE else "]"
+                            interval_1 = "[infinity, " + str(bound_1) + bracket_1
+                            interval_2 = bracket_2 + str(bound_2) + "infinity]"  
+                            
+                            feature_1["string"] = str(feature_1["name"]) + " in " + interval_1 + " and " + interval_2
+                            feature_2["string"] = feature_1["string"]
+                            simple_result.append(feature_1["string"])
+                        else:
+                            #case 1: [bound_1, bound_2]
+                            bound_1 = feature_1["threshold"]
+                            bound_2 = feature_2["threshold"] 
+                            bracket_1 = "[" if operator_1 == OperatorCondition.GE else "]"
+                            bracket_2 = "]" if operator_2 == OperatorCondition.LE else "["
+                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2  
+                            feature_2["string"] = feature_1["string"]
+                            simple_result.append(feature_1["string"])
+
+                else:
+                    raise NotImplementedError("Combine operators " + str(operator_1) + " and " + str(operator_2) + " is not implemented.")
+            else:
+                # case to implement len(features) > 2:
+                raise ValueError("In the interval view, the number of conditions for one feature must be <= 2.")
+            
+        if details is True:
+            return tuple(result)
+        return tuple(simple_result)
 
 
     def extract_excluded_features(self, implicant, excluded_features):

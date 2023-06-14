@@ -130,8 +130,8 @@ class ExplainerBT(Explainer):
         return [i for i, _ in enumerate(self._instance) if i + 1 in features]
 
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False):
-        return self._boosted_trees.to_features(binary_representation, details=details, contrastive=contrastive)
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
+        return self._boosted_trees.to_features(binary_representation, details=details, contrastive=contrastive, without_intervals=without_intervals)
 
 
     def redundancy_analysis(self):
@@ -203,16 +203,17 @@ class ExplainerBT(Explainer):
                                                     implicant_id_features, from_reason)
         time_used = -time.time()
         # TODO V2 reason_expressivity = reason_expressivity,
-        tree_specific = self.tree_specific_reason(n_iterations=5)
+        tree_specific = self.tree_specific_reason(n_iterations=5, history=False)
 
         result, solution = cp_solver.solve(time_limit=time_limit, upper_bound=len(tree_specific) + 1)
         time_used += time.time()
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
         result = None if (result == UNSAT or result == UNKNOWN) else Explainer.format([l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
         self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
+
         return result
 
-    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
+    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True):
         """
         Tree-specific (TS) explanations are abductive explanations that can be computed in polynomial time. While tree-specific explanations are not
         subset-minimal in the general case, they turn out to be close to sufficient reasons in practice. Furthermore, because sufficient reasons can
@@ -252,8 +253,8 @@ class ExplainerBT(Explainer):
                                             int(reason_expressivity), seed)
         if reason_expressivity == ReasonExpressivity.Features:
             reason = self.to_features_indexes(reason)
-        
-        self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
+        if history:
+            self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
         return reason
 
 

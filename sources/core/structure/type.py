@@ -197,9 +197,28 @@ class OperatorCondition(Enum):
 
 
     def __eq__(self, other):
+        if isinstance(other, int):
+            return self.value == other
+        
         return self.value == other.value
 
-
+    def to_str_readable(self):
+        if self.value == OperatorCondition.EQ:
+            return "=="
+        if self.value == OperatorCondition.GE:
+            return ">="
+        if self.value == OperatorCondition.GT:
+            return ">"
+        if self.value == OperatorCondition.LE:
+            return "<="
+        if self.value == OperatorCondition.LT:
+            return "<"
+        if self.value == OperatorCondition.EQ:
+            return "="
+        if self.value == OperatorCondition.NEQ:
+            return "!="
+        raise NotImplementedError("The operator " + str(self.value) + " is not implemented.")
+    
     def __str__(self):
         return self.name
 
