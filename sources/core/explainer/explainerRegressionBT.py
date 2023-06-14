@@ -46,8 +46,10 @@ class ExplainerRegressionBT(ExplainerBT) :
     def predict(self, instance) :
         return self._boosted_trees.predict_instance(instance)
 
+    def predict_implicant(self, bin_implicant):
+        return self._boosted_trees.predict_implicant(bin_implicant
 
-
+                                                     )
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
         reason_expressivity = ReasonExpressivity.Conditions
         if self._upper_bound is None or self.lower_bound is None:
@@ -77,7 +79,7 @@ class ExplainerRegressionBT(ExplainerBT) :
     def sufficient_reason(self, *, seed=0, time_limit=None):
         cplex = SufficientRegression()
         reason, time_used = cplex.create_model_and_solve(self, self._lower_bound, self._upper_bound)
-        self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
+        self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
         return reason
 
 
@@ -100,5 +102,6 @@ class ExplainerRegressionBT(ExplainerBT) :
             weights = self.compute_weights(tree, tree.root, abductive)
             min_weights.append(min(weights))
             max_weights.append(max(weights))
+        print(min_weights, max_weights)
         return base_score + sum(min_weights) >= self._lower_bound and base_score + sum(max_weights) <= self._upper_bound
 
