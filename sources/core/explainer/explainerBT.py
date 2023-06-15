@@ -131,7 +131,8 @@ class ExplainerBT(Explainer):
 
 
     def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
-        return self._boosted_trees.to_features(binary_representation, details=details, contrastive=contrastive, without_intervals=without_intervals)
+        return self._boosted_trees.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details,
+                                               contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def redundancy_analysis(self):
