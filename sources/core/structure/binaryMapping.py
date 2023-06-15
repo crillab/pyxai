@@ -2,110 +2,122 @@ from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.GUI import GraphicalInterface
 
-from numpy import argmax, argmin 
+from numpy import argmax, argmin
 import collections
+
 
 class BinaryMapping():
 
     def __init__(self, map_id_binaries_to_features, map_features_to_id_binaries, learner_information):
         self.map_id_binaries_to_features = map_id_binaries_to_features
         self.map_features_to_id_binaries = map_features_to_id_binaries
-        self.map_numerical_features = {} # dict[id_feature] -> [id_binaries of the feature]
-        self.map_binary_features = {} # dict[id_feature] -> [id_binaries of the feature]
-        self.map_categorical_features_ordinal = {} # dict[id_feature] -> [id_binaries of the feature]
-        self.map_categorical_features_one_hot = {} # dict[reg_exp_name] -> [id_binaries of the set of features representing the reg_exp_name of the feature that was one hot encoded]
-        
-        self.map_check_already_used = {} # Just to check if a feature is already used
+        self.map_numerical_features = {}  # dict[id_feature] -> [id_binaries of the feature]
+        self.map_binary_features = {}  # dict[id_feature] -> [id_binaries of the feature]
+        self.map_categorical_features_ordinal = {}  # dict[id_feature] -> [id_binaries of the feature]
+        self.map_categorical_features_one_hot = {}  # dict[reg_exp_name] -> [id_binaries of the set of features representing the reg_exp_name of the feature that was one hot encoded]
+
+        self.map_check_already_used = {}  # Just to check if a feature is already used
 
         self.learner_information = learner_information
 
-        self.n_redundant_features = 0 # Variable to store the number of redondances in eliminate_redundant_features()
+        self.n_redundant_features = 0  # Variable to store the number of redondances in eliminate_redundant_features()
         self.feature_names = None
+
 
     @property
     def raw_model(self):
         return self.learner_information.raw_model
 
+
     @property
     def accuracy(self):
         return self.learner_information.accuracy
+
 
     @property
     def features_name(self):
         return self.learner_information.feature_names
 
+
     @property
     def numerical_features(self):
         return self.map_numerical_features
+
 
     @property
     def categorical_features_ordinal(self):
         return self.map_categorical_features_ordinal
 
+
     @property
     def categorical_features_one_hot(self):
         return self.map_categorical_features_ordinal
-    
+
+
     def get_used_features(self):
         used_features = set()
         for key in self.map_features_to_id_binaries.keys():
             used_features.add(key[0])
         return len(used_features)
-    
+
+
     def clear_theory_features(self):
         self.map_check_already_used.clear()
         self.map_numerical_features.clear()
         self.map_binary_features.clear()
         self.map_categorical_features_one_hot.clear()
         self.map_categorical_features_ordinal.clear()
-        
+
+
     def add_numerical_feature(self, id_feature):
         if id_feature in self.map_check_already_used.keys():
-            raise ValueError("The feature id ("+str(id_feature)+") is already used as"+self.map_check_already_used[id_feature])
-        
+            raise ValueError("The feature id (" + str(id_feature) + ") is already used as" + self.map_check_already_used[id_feature])
+
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
-          if key[0] == id_feature:
-            id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+            if key[0] == id_feature:
+                id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
 
         self.map_numerical_features[id_feature] = id_binaries_of_the_feature
         self.map_check_already_used[id_feature] = "numerical"
 
+
     def add_binary_feature(self, id_feature):
         if id_feature in self.map_check_already_used.keys():
-            raise ValueError("The feature id ("+str(id_feature)+") is already used as"+self.map_check_already_used[id_feature])
-                
+            raise ValueError("The feature id (" + str(id_feature) + ") is already used as" + self.map_check_already_used[id_feature])
+
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
-          if key[0] == id_feature:
-            id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
+            if key[0] == id_feature:
+                id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
 
         self.map_binary_features[id_feature] = id_binaries_of_the_feature
         self.map_check_already_used[id_feature] = "binary"
 
-    def add_categorical_feature_one_hot(self, reg_exp_feature_name, id_features): 
+
+    def add_categorical_feature_one_hot(self, reg_exp_feature_name, id_features):
         id_binaries_of_the_feature = []
         for id_feature in id_features:
             if id_feature in self.map_check_already_used.keys():
-                raise ValueError("The feature id ("+str(id_feature)+") is already used as "+self.map_check_already_used[id_feature])
-        
+                raise ValueError("The feature id (" + str(id_feature) + ") is already used as " + self.map_check_already_used[id_feature])
+
         for key in self.map_features_to_id_binaries.keys():
             for id_feature in id_features:
                 if key[0] == id_feature:
                     id_binaries_of_the_feature.append(self.map_features_to_id_binaries[key][0])
-                
+
         self.map_categorical_features_one_hot[reg_exp_feature_name] = id_binaries_of_the_feature
         for id_feature in id_features:
             self.map_check_already_used[id_feature] = "categorical"
 
 
     def add_categorical_feature_ordinal(self, id_feature):
-        raise NotImplementedError #See with Gilles ? on laisse pour l'instant
-        if id_feature in self.map_numerical_features: 
+        raise NotImplementedError  # See with Gilles ? on laisse pour l'instant
+        if id_feature in self.map_numerical_features:
             raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as numerical.")
         if id_feature in self.map_categorical_features_ordinal:
             raise ValueError("The given id_feature (" + str(id_feature) + ") is already considered as categorical ordinal.")
-        
+
         id_binaries_of_the_feature = []
         for key in self.map_features_to_id_binaries.keys():
             if key[0] == id_feature:
@@ -114,58 +126,59 @@ class BinaryMapping():
         self.map_categorical_features_ordinal[id_feature] = id_binaries_of_the_feature
 
 
-
     """
         
     """
+
+
     def get_theory(self, binary_representation, *, theory_type=TypeTheory.SIMPLE, id_new_var=0):
-        #structure to help to do this method faster
+        # structure to help to do this method faster
         map_id_binary_sign = dict()
         map_is_represented_by_new_variables = dict()
         for id in binary_representation:
             map_id_binary_sign[abs(id)] = 1 if id > 0 else -1
             map_is_represented_by_new_variables[abs(id)] = False
-        
+
         clauses = []
         new_variables = []
-             
+
         # For numerical features
         for key in self.map_numerical_features.keys():
             id_binaries = self.map_numerical_features[key]
-            conditions = [tuple(list(self.map_id_binaries_to_features[id])+[id]) for id in id_binaries]
+            conditions = [tuple(list(self.map_id_binaries_to_features[id]) + [id]) for id in id_binaries]
             conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
             id_binaries_sorted = tuple(condition[3] for condition in conditions)
-            
-            for i in range(len(id_binaries_sorted)-1): #To not takes the last
-                clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i+1]))
 
-            if theory_type == TypeTheory.NEW_VARIABLES: 
+            for i in range(len(id_binaries_sorted) - 1):  # To not takes the last
+                clauses.append((-id_binaries_sorted[i], id_binaries_sorted[i + 1]))
+
+            if theory_type == TypeTheory.NEW_VARIABLES:
                 id_new_var = id_new_var + 1
-                #associated_literals = []
+                # associated_literals = []
                 for id_binary in id_binaries_sorted:
-                    clauses.append((-id_new_var, map_id_binary_sign[id_binary]*id_binary))
+                    clauses.append((-id_new_var, map_id_binary_sign[id_binary] * id_binary))
                     map_is_represented_by_new_variables[id_binary] = True
                     # associated_literals.append(map_id_binary_sign[id_binary]*id_binary)
                 new_variables.append(id_new_var)
-    
+
         # For categorical features that was one hot encoded
-        for key in self.map_categorical_features_one_hot.keys(): 
+        for key in self.map_categorical_features_one_hot.keys():
             id_binaries = self.map_categorical_features_one_hot[key]
             for i, id_1 in enumerate(id_binaries):
                 for j, id_2 in enumerate(id_binaries):
                     if i != j:
                         # we code a => not b that is equivalent to not a or not b (material implication)
-                        clauses.append((-id_1, -id_2))   
+                        clauses.append((-id_1, -id_2))
 
-        # For binary feature, nothing to do.
+                        # For binary feature, nothing to do.
 
-        if theory_type == TypeTheory.SIMPLE:    
+        if theory_type == TypeTheory.SIMPLE:
             return clauses
         elif theory_type == TypeTheory.NEW_VARIABLES:
             return clauses, (new_variables, map_is_represented_by_new_variables)
         else:
             raise NotImplementedError
-        
+
 
     def compute_id_binaries(self):
         assert False, "Have to be implemented in a child class."
@@ -208,6 +221,7 @@ class BinaryMapping():
     def get_id_features(self, binary_representation):
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
 
+
     def convert_features_to_dict_features(self, features, feature_names):
         dict_features = dict()
         for feature in features:
@@ -223,16 +237,17 @@ class BinaryMapping():
             if name in dict_features.keys():
                 order_dict_features[name] = dict_features[name]
 
-        return order_dict_features 
-    
+        return order_dict_features
+
+
     def apply_sign_on_operator(self, operator, sign):
         """
         Invert the operator if there is a sign (a negative literal).
         """
         if sign is False: return operator
-        
+
         if operator == OperatorCondition.GE:
-            return OperatorCondition.LT 
+            return OperatorCondition.LT
         if operator == OperatorCondition.GT:
             return OperatorCondition.LE
         if operator == OperatorCondition.LE:
@@ -243,9 +258,10 @@ class BinaryMapping():
             return OperatorCondition.NEQ
         if operator == OperatorCondition.NEQ:
             return OperatorCondition.EQ
-        
+
         raise NotImplementedError("The operator " + str(operator) + " is not implemented.")
-        
+
+
     def to_features(self, reason, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False, feature_names=None):
         """
         Convert an implicant into features. Return a tuple of features.
@@ -263,22 +279,22 @@ class BinaryMapping():
         result = []
         if eliminate_redundant_features:
             reason = self.eliminate_redundant_features(reason, contrastive)
-        
-        #First pass on each literal
+
+        # First pass on each literal
         for lit in reason:
             feature = dict()
             feature["id"] = self.map_id_binaries_to_features[abs(lit)][0]
             feature["name"] = feature_names[feature["id"] - 1]
             feature["operator"] = self.map_id_binaries_to_features[abs(lit)][1]
-            feature["sign"] = False if lit > 0 else True #True if there is a sign else False
+            feature["sign"] = False if lit > 0 else True  # True if there is a sign else False
             feature["operator_sign_considered"] = self.apply_sign_on_operator(feature["operator"], feature["sign"])
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]
             feature["weight"] = reason[lit] if isinstance(reason, dict) else None
             result.append(feature)
 
-        #Get conditions with the same feature and create the string representation
+        # Get conditions with the same feature and create the string representation
         dict_features = self.convert_features_to_dict_features(result, feature_names)
-        
+
         simple_result = []
         if without_intervals is True or eliminate_redundant_features is False:
             for name in dict_features.keys():
@@ -290,8 +306,7 @@ class BinaryMapping():
             if details is True:
                 return tuple(result)
             return tuple(simple_result)
-        
-        
+
         for name in dict_features.keys():
             features = dict_features[name]
             if len(features) == 1:
@@ -304,71 +319,71 @@ class BinaryMapping():
                 feature_2 = features[1]
                 operator_1 = feature_1["operator_sign_considered"]
                 operator_2 = feature_2["operator_sign_considered"]
-                
-                if (operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT)\
-                    and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT):
+
+                if (operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT) \
+                        and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT):
                     value = max(feature_1["threshold"], feature_2["threshold"])
                     operator = operator_1 if value == feature_1["threshold"] else operator_2
                     str_operator = operator.to_str_readable()
                     feature_1["string"] = str(feature_1["name"]) + " " + str_operator + " " + str(value)
                     feature_2["string"] = feature_1["string"]
                     simple_result.append(feature_1["string"])
-                elif (operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT)\
-                    and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT):
+                elif (operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT) \
+                        and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT):
                     value = min(feature_1["threshold"], feature_2["threshold"])
                     operator = operator_1 if value == feature_1["threshold"] else operator_2
                     str_operator = operator.to_str_readable()
                     feature_1["string"] = str(feature_1["name"]) + " " + str_operator + " " + str(value)
                     feature_2["string"] = feature_1["string"]
                     simple_result.append(feature_1["string"])
-                elif ((operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT)\
-                    and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT)) or \
-                    ((operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT)\
-                    and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT)):
+                elif ((operator_1 == OperatorCondition.GE or operator_1 == OperatorCondition.GT) \
+                      and (operator_2 == OperatorCondition.LE or operator_2 == OperatorCondition.LT)) or \
+                        ((operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT) \
+                         and (operator_2 == OperatorCondition.GE or operator_2 == OperatorCondition.GT)):
 
                     if feature_1["threshold"] > feature_2["threshold"]:
                         if operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT:
-                            #case 1: [bound_1, bound_2]
+                            # case 1: [bound_1, bound_2]
                             bound_1 = feature_2["threshold"]
-                            bound_2 = feature_1["threshold"] 
+                            bound_2 = feature_1["threshold"]
                             bracket_1 = "[" if operator_2 == OperatorCondition.GE else "]"
                             bracket_2 = "]" if operator_1 == OperatorCondition.LE else "["
-                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2  
+                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2
                             feature_2["string"] = feature_1["string"]
                             simple_result.append(feature_1["string"])
                         else:
-                            #case 2: [infinity, bound_1] and [bound_2, infinity]
+                            # case 2: [infinity, bound_1] and [bound_2, infinity]
                             bound_1 = feature_2["threshold"]
-                            bound_2 = feature_1["threshold"] 
+                            bound_2 = feature_1["threshold"]
                             bracket_1 = "]" if operator_2 == OperatorCondition.LE else "["
                             bracket_2 = "[" if operator_1 == OperatorCondition.GE else "]"
                             interval_1 = "[infinity, " + str(bound_1) + bracket_1
-                            interval_2 = bracket_2 + str(bound_2) + "infinity]"  
-                            
+                            interval_2 = bracket_2 + str(bound_2) + "infinity]"
+
                             feature_1["string"] = str(feature_1["name"]) + " in " + interval_1 + " and " + interval_2
                             feature_2["string"] = feature_1["string"]
                             simple_result.append(feature_1["string"])
                     else:
-                        #feature_1["threshold"] <= feature_2["threshold"]:
+                        # feature_1["threshold"] <= feature_2["threshold"]:
                         if operator_1 == OperatorCondition.LE or operator_1 == OperatorCondition.LT:
-                            #case 2: [infinity, bound_1] and [bound_2, infinity]
+                            # case 2: [infinity, bound_1] and [bound_2, infinity]
                             bound_1 = feature_1["threshold"]
-                            bound_2 = feature_2["threshold"] 
+                            bound_2 = feature_2["threshold"]
                             bracket_1 = "]" if operator_1 == OperatorCondition.LE else "["
                             bracket_2 = "[" if operator_2 == OperatorCondition.GE else "]"
                             interval_1 = "[infinity, " + str(bound_1) + bracket_1
-                            interval_2 = bracket_2 + str(bound_2) + "infinity]"  
-                            
+                            interval_2 = bracket_2 + str(bound_2) + "infinity]"
+
                             feature_1["string"] = str(feature_1["name"]) + " in " + interval_1 + " and " + interval_2
                             feature_2["string"] = feature_1["string"]
                             simple_result.append(feature_1["string"])
                         else:
-                            #case 1: [bound_1, bound_2]
+                            # case 1: [bound_1, bound_2]
                             bound_1 = feature_1["threshold"]
-                            bound_2 = feature_2["threshold"] 
+                            bound_2 = feature_2["threshold"]
                             bracket_1 = "[" if operator_1 == OperatorCondition.GE else "]"
                             bracket_2 = "]" if operator_2 == OperatorCondition.LE else "["
-                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2  
+                            feature_1["string"] = str(feature_1["name"]) + " in " + bracket_1 + str(bound_1) + ", " + str(bound_2) + bracket_2
                             feature_2["string"] = feature_1["string"]
                             simple_result.append(feature_1["string"])
 
@@ -377,7 +392,7 @@ class BinaryMapping():
             else:
                 # case to implement len(features) > 2:
                 raise ValueError("In the interval view, the number of conditions for one feature must be <= 2.")
-            
+
         if details is True:
             return tuple(result)
         return tuple(simple_result)
@@ -398,12 +413,12 @@ class BinaryMapping():
 
 
     def add_redundant_features(self, dict_redondant, literal, id_feature, operator, threshold, weight=None):
-        if id_feature not in dict_redondant: #add in the dict a new key
+        if id_feature not in dict_redondant:  # add in the dict a new key
             dict_redondant[id_feature] = [(literal, threshold, operator, weight)]
-        else: #The key already exists
+        else:  # The key already exists
             self.n_redundant_features += 1
             dict_redondant[id_feature].append((literal, threshold, operator, weight))
-            
+
 
     def eliminate_redundant_features(self, reason, contrastive=False):
         """
@@ -413,13 +428,13 @@ class BinaryMapping():
         Warning: reason can be either a list of literals or a dict literal -> weight
         """
 
-        self.n_redundant_features = 0 # reset this information
-        positive_literals_GE_GT = {} # (id_feature) => [(threshold, operator, weight)]
-        negative_literals_GE_GT = {} # (id_feature) => [(threshold, operator, weight)]
-        positive_literals_LE_LT = {} # (id_feature) => [(threshold, operator, weight)]
-        negative_literals_LE_LT = {} # (id_feature) => [(threshold, operator, weight)]
-        undone = [] # For undone literals in this elimination of redundant_features
-        #For a contrastive, invert the sign and the reason, process to the elimination and re-inverse. 
+        self.n_redundant_features = 0  # reset this information
+        positive_literals_GE_GT = {}  # (id_feature) => [(threshold, operator, weight)]
+        negative_literals_GE_GT = {}  # (id_feature) => [(threshold, operator, weight)]
+        positive_literals_LE_LT = {}  # (id_feature) => [(threshold, operator, weight)]
+        negative_literals_LE_LT = {}  # (id_feature) => [(threshold, operator, weight)]
+        undone = []  # For undone literals in this elimination of redundant_features
+        # For a contrastive, invert the sign and the reason, process to the elimination and re-inverse.
         if contrastive is True:
             reason = [-i for i in reason]
 
@@ -431,20 +446,20 @@ class BinaryMapping():
             threshold = key[2]
             weight = reason[literal] if isinstance(reason, dict) else None
             if operator == OperatorCondition.GE or operator == OperatorCondition.GT:
-                if literal > 0: #If the sign is positive
+                if literal > 0:  # If the sign is positive
                     self.add_redundant_features(positive_literals_GE_GT, literal, id_feature, operator, threshold, weight)
-                else: #If the sign is negative
+                else:  # If the sign is negative
                     self.add_redundant_features(negative_literals_GE_GT, literal, id_feature, operator, threshold, weight)
             elif operator == OperatorCondition.LE or operator == OperatorCondition.LT:
-                if literal > 0: #If the sign is negative 
+                if literal > 0:  # If the sign is negative
                     self.add_redundant_features(positive_literals_LE_LT, literal, id_feature, operator, threshold, weight)
-                else: #If the sign is positive
+                else:  # If the sign is positive
                     self.add_redundant_features(negative_literals_LE_LT, literal, id_feature, operator, threshold, weight)
             else:
                 undone.append((literal, threshold, operator, weight))
 
         # Compute the condition to keep
-        results = undone.copy() #keep the undone
+        results = undone.copy()  # keep the undone
 
         for key in positive_literals_GE_GT.keys():
             max_positive_literals_GE_GT = positive_literals_GE_GT[key][argmax(tuple(x[1] for x in positive_literals_GE_GT[key]))]
@@ -459,13 +474,12 @@ class BinaryMapping():
         for key in negative_literals_LE_LT.keys():
             min_negative_literals_LE_LT = negative_literals_LE_LT[key][argmax(tuple(x[1] for x in negative_literals_LE_LT[key]))]
             results.append(min_negative_literals_LE_LT)
-        
-        #For a contrastive, re-inverse the sign. 
+
+        # For a contrastive, re-inverse the sign.
         if contrastive is True:
-            results = [(-result[0],result[1],result[2],result[3]) for result in results]
-        
+            results = [(-result[0], result[1], result[2], result[3]) for result in results]
+
         # Return the good results according to the type of the reason (dict or list)
         if not isinstance(reason, dict):
             return tuple(result[0] for result in results)
         return {result[0]: result[3] for result in results}
-        

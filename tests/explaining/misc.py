@@ -1,4 +1,5 @@
 from pyxai import Builder, Learning, Explainer, Tools
+from pyxai.sources.core.explainer.Explainer import Explainer as exp
 import unittest
 
 Tools.set_verbose(0)
@@ -27,6 +28,12 @@ class TestMisc(unittest.TestCase):
     def test_noinstance(self):
         with self.assertRaises(ValueError):
             self.no_instance()
+
+
+    def test_format(self):
+        self.assertTrue(exp.format([1, 2], n=1) == (1, 2))
+        self.assertTrue(exp.format([[1, 2], [3]], n=2) == ((1, 2), (3,)))
+        self.assertTrue(exp.format([[1]], n=2) == ((1,),))
 
 
 if __name__ == '__main__':
