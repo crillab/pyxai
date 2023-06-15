@@ -148,6 +148,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The direct reason.
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         direct_reason = set()
         for tree in self._boosted_trees.forest:
             direct_reason |= set(tree.direct_reason(self._instance))
@@ -155,7 +158,7 @@ class ExplainerBT(Explainer):
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
             return None
-        
+
         reason = Explainer.format(list(direct_reason))
         self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
         return reason
@@ -168,6 +171,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The sufficient reason.
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         assert n == 1, "To do implement that"
         if self._boosted_trees.n_classes > 2:
             raise NotImplementedError
@@ -197,9 +203,13 @@ class ExplainerBT(Explainer):
 
 
     def minimal_tree_specific_reason(self, *, time_limit=None, from_reason=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         cp_solver = TSMinimal()
         implicant_id_features = []  # TODO V2 self.implicant_id_features if reason_expressivity == ReasonExpressivity.Features else []
-        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees, self.target_prediction, self._boosted_trees.n_classes,
+        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees, self.target_prediction,
+                                                    self._boosted_trees.n_classes,
                                                     implicant_id_features, from_reason)
         time_used = -time.time()
         # TODO V2 reason_expressivity = reason_expressivity,
@@ -208,10 +218,12 @@ class ExplainerBT(Explainer):
         result, solution = cp_solver.solve(time_limit=time_limit, upper_bound=len(tree_specific) + 1)
         time_used += time.time()
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
-        result = None if (result == UNSAT or result == UNKNOWN) else Explainer.format([l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
+        result = None if (result == UNSAT or result == UNKNOWN) else Explainer.format(
+            [l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
         self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
 
         return result
+
 
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True):
         """
@@ -232,8 +244,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The tree-specific reason
         """
-        # TODO V2,
         reason_expressivity = ReasonExpressivity.Conditions
+        if self._instance is None:
+            raise ValueError("Instance is not set")
 
         if seed is None:
             seed = -1
@@ -249,7 +262,8 @@ class ExplainerBT(Explainer):
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
 
-        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations, time_limit,
+        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations,
+                                            time_limit,
                                             int(reason_expressivity), seed)
         if reason_expressivity == ReasonExpressivity.Features:
             reason = self.to_features_indexes(reason)
