@@ -15,9 +15,6 @@ class TestDT(unittest.TestCase):
         return cls.learner, cls.model
 
 
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
-
 
     def test_sufficients(self):
         learner, model = self.init()
@@ -51,3 +48,6 @@ class TestDT(unittest.TestCase):
             print("ici ", minimal_reasons)
             for m in minimal_reasons:
                 self.assertTrue(explainer.is_sufficient_reason(m))
+
+if __name__ == '__main__':
+    unittest.main(verbosity=1)
