@@ -15,9 +15,6 @@ class TestRF(unittest.TestCase):
         return cls.learner, cls.model
 
 
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
-
 
     def test_sufficient(self):
         learner, model = self.init()
@@ -72,3 +69,7 @@ class TestRF(unittest.TestCase):
             print("ici ", minimal_reasons)
             for m in minimal_reasons:
                 self.assertTrue(explainer.is_sufficient_reason(m))
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
