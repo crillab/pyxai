@@ -170,8 +170,8 @@ class ExplainerDT(Explainer):
             return None
 
         cnf = prime_implicant_cnf.cnf
-        if len(cnf) == 0:  # TODO: test when this case append
-            return [lit for lit in prime_implicant_cnf.necessary]
+        if len(cnf) == 0:
+            return Explainer.format([[lit for lit in prime_implicant_cnf.necessary]], n=n)
 
         weights = compute_weight(method, self._instance, weights, self._tree.learner_information, features_partition=features_partition)
         weights_per_feature = {i + 1: weight for i, weight in enumerate(weights)}
@@ -222,7 +222,7 @@ class ExplainerDT(Explainer):
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-
+        print("la", reasons)
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
             self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
