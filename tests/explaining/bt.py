@@ -22,7 +22,7 @@ class TestDT(unittest.TestCase):
         for instance, prediction in instances:
             explainer.set_instance(instance)
             tree_specific_reason = explainer.tree_specific_reason()
-            self.assertTrue(explainer.is_tree_specific_reason(sufficient_reason))
+            self.assertTrue(explainer.is_tree_specific_reason(tree_specific_reason))
 
 
 if __name__ == '__main__':
