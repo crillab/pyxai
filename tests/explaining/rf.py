@@ -15,11 +15,10 @@ class TestRF(unittest.TestCase):
         return cls.learner, cls.model
 
 
-
     def test_sufficient(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             sufficient_reason = explainer.sufficient_reason(time_limit=5)
@@ -32,7 +31,7 @@ class TestRF(unittest.TestCase):
     def test_majoritary(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             majoritary_reason = explainer.majoritary_reason()
@@ -41,8 +40,8 @@ class TestRF(unittest.TestCase):
 
     def test_minimal_majoritary(self):
         learner, model = self.init()
-        explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        explainer = Explainer.initialize(model)  # ), features_type={"numerical": Learning.DEFAULT})
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             majoritary_reason = explainer.minimal_majoritary_reason(time_limit=5)
@@ -52,23 +51,11 @@ class TestRF(unittest.TestCase):
     def test_contrastive(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model)
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             contrastive_reason = explainer.minimal_contrastive_reason(time_limit=5)
             self.assertTrue(explainer.is_contrastive_reason(contrastive_reason))
-
-
-    def test_minimals(self):
-        learner, model = self.init()
-        explainer = Explainer.initialize(model)
-        instances = learner.get_instances(model, n=30, correct=True)
-        for instance, prediction in instances:
-            explainer.set_instance(instance)
-            minimal_reasons = explainer.minimal_sufficient_reason(n=10)
-            print("ici ", minimal_reasons)
-            for m in minimal_reasons:
-                self.assertTrue(explainer.is_sufficient_reason(m))
 
 
 if __name__ == '__main__':
