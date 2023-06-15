@@ -226,9 +226,7 @@ class ExplainerRF(Explainer):
                                                                                       self.target_prediction)
 
         if self._theory:
-            clauses_theory = self._random_forest.get_theory(self._binary_representation)
-            for c in clauses_theory:
-                hard_clauses = hard_clauses + c
+            hard_clauses = hard_clauses + tuple(self._random_forest.get_theory(self._binary_representation))
 
         # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
@@ -416,8 +414,7 @@ class ExplainerRF(Explainer):
             clauses = self._random_forest.to_CNF_majoritary_reason_multi_classes(self._instance, self._binary_representation, self.target_prediction)
 
         n_variables = CNFencoding.compute_n_variables(clauses)
-        id_features = [feature["id"] for feature in
-                       self._random_forest.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
+        id_features = [feature["id"] for feature in self.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
 
         weights = compute_weight(method, self._instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
@@ -427,7 +424,6 @@ class ExplainerRF(Explainer):
         map_abs_implicant = [0 for _ in range(0, n_variables + 1)]
         for lit in self._binary_representation:
             map_abs_implicant[abs(lit)] = lit
-
         # Hard clauses
         for c in clauses:
             solver.add_hard_clause([lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit])
@@ -468,14 +464,13 @@ class ExplainerRF(Explainer):
             if first_call:
                 best_score = score
             elif score != best_score:
-                return Explainer.format(reasons)
+                return Explainer.format(reasons, n)
             first_call = False
 
             reasons.append(prefered_reason)
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
             self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
