@@ -16,6 +16,8 @@ from pyxai.tests.importing.XGBoost import *
 from pyxai.tests.explaining.dt import *
 from pyxai.tests.explaining.misc import *
 from pyxai.tests.explaining.rf import *
+from pyxai.tests.explaining.bt import *
+from pyxai.tests.explaining.regressionbt import *
 
 
 def suite():

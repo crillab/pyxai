@@ -7,21 +7,20 @@ from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 
 import pandas
-import numpy 
+import numpy
 import random
 import functools
 import operator
 import copy
+
 Tools.set_verbose(0)
 
 import unittest
 
+
 class TestImportSimpleScikitlearn(unittest.TestCase):
     PRECISION = 3
-    
 
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
 
     def test_simple_RF_breast_cancer(self):
         model_rf = RandomForestClassifier(random_state=0)
@@ -36,9 +35,9 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
         instance, prediction = learner.get_instances(dataset=data.frame, model=model, n=1)
         print("instance:", instance)
         print("prediction:", prediction)
-        
+
         explainer = Explainer.initialize(model, instance=instance)
-        
+
         direct = explainer.direct_reason()
         print("len direct reason:", len(direct))
 
@@ -46,6 +45,7 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
         print("len sufficient reason:", len(sufficient))
 
         print("to_features:", explainer.to_features(sufficient))
+
 
     def test_simple_RF_iris(self):
         model_rf = RandomForestClassifier(random_state=0)
@@ -60,9 +60,9 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
         instance, prediction = learner.get_instances(dataset=data.frame, model=model, n=1)
         print("instance:", instance)
         print("prediction:", prediction)
-        
+
         explainer = Explainer.initialize(model, instance=instance)
-        
+
         direct = explainer.direct_reason()
         print("len direct reason:", len(direct))
 
@@ -71,7 +71,6 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
 
         print("to_features:", explainer.to_features(sufficient))
 
-        
 
 if __name__ == '__main__':
     print("Tests: " + TestImportSimpleScikitlearn.__name__ + ":")
