@@ -484,7 +484,7 @@ class ExplainerRF(Explainer):
 
 
     def is_majoritary_reason(self, reason, n_samples=50):
-        extended_reason = self._extend_reason_with_theory(reason)
+        extended_reason = self.extend_reason_with_theory(reason)
         if not self.is_implicant(extended_reason):
             return False
         tmp = list(reason)
