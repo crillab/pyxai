@@ -36,6 +36,8 @@ class Explainer:
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
         if self._do_history is True:
+            if len(reasons) == 0:
+                return
             if not isinstance(reasons[0], tuple): reasons = [reasons]
             reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
             if instance in self._history.keys():
@@ -296,7 +298,7 @@ class Explainer:
         if len(excluded_features) == 0:
             self.unset_specific_features()
             return
-        bin_rep = self._extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
+        bin_rep = self.extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
         self._excluded_literals = [lit for lit in bin_rep if
                                    self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in excluded_features]
         self._excluded_features = excluded_features
@@ -385,7 +387,7 @@ class Explainer:
         raise NotImplementedError
 
 
-    def _extend_reason_with_theory(self, reason):
+    def extend_reason_with_theory(self, reason):
         if self._theory is False:
             return reason
         if self._glucose is None:
@@ -403,9 +405,9 @@ class Explainer:
         @param n_samples: (int) the number of tests to be done.
         @return: True if the reason is really one reason, False otherwise.
         """
-        extended_reason = self._extend_reason_with_theory(reason)
+
         for _ in range(n_samples):
-            binary_representation = self._extend_reason_to_complete_representation(extended_reason)
+            binary_representation = self.extend_reason_to_complete_representation(reason)
             if not self.is_implicant(binary_representation):
                 return False
         return True
@@ -481,12 +483,16 @@ class Explainer:
         return not self.is_implicant(new_binary_representation)
 
 
-    def _extend_reason_to_complete_representation(self, reason):
+    def extend_reason_to_complete_representation(self, reason):
         complete = list(reason).copy()
         to_add = [literal for literal in self._binary_representation if literal not in complete and -literal not in complete]
+        complete = self.extend_reason_with_theory(complete)
         for literal in to_add:
+            if literal in complete or -literal in complete:
+                continue
             sign = random.choice([1, -1])
             complete.append(sign * abs(literal))
+            complete = self.extend_reason_with_theory(complete)
         assert len(complete) == len(self._binary_representation)
         return complete
 
