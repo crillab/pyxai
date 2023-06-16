@@ -326,7 +326,7 @@ class ExplainerBT(Explainer):
 
     def is_tree_specific_reason(self, reason, check_minimal_inclusion=False):
 
-        extended_reason = self._extend_reason_with_theory(reason)
+        extended_reason = self.extend_reason_with_theory(reason)
 
         if not self.is_implicant(extended_reason):
             return False
