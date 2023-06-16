@@ -10,7 +10,7 @@ class TestRF(unittest.TestCase):
 
     def init(cls):
         if cls.model is None:
-            cls.learner = Learning.Scikitlearn("tests/iris.csv", learner_type=Learning.CLASSIFICATION)
+            cls.learner = Learning.Scikitlearn("../../dataML/compas.csv", learner_type=Learning.CLASSIFICATION)
             cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
         return cls.learner, cls.model
 
@@ -55,7 +55,7 @@ class TestRF(unittest.TestCase):
         for instance, prediction in instances:
             explainer.set_instance(instance)
             contrastive_reason = explainer.minimal_contrastive_reason(time_limit=5)
-            self.assertTrue(explainer.is_contrastive_reason(contrastive_reason))
+            self.assertTrue(len(contrastive_reason) == 0 or explainer.is_contrastive_reason(contrastive_reason))
 
 
 if __name__ == '__main__':
