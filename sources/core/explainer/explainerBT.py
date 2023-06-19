@@ -268,6 +268,7 @@ class ExplainerBT(Explainer):
                                             int(reason_expressivity), seed)
         if reason_expressivity == ReasonExpressivity.Features:
             reason = self.to_features_indexes(reason)
+        reason = Explainer.format(reason)
         if history:
             self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
         return reason
