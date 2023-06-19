@@ -298,10 +298,12 @@ class Explainer:
         if len(excluded_features) == 0:
             self.unset_specific_features()
             return
+        self._excluded_features = excluded_features
+        if self.instance is None:
+            return
         bin_rep = self.extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
         self._excluded_literals = [lit for lit in bin_rep if
                                    self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in excluded_features]
-        self._excluded_features = excluded_features
 
 
     def _set_specific_features(self, specific_features):  # TODO a changer en je veux ces features
@@ -499,7 +501,7 @@ class Explainer:
 
     @staticmethod
     def format(reasons, n=1):
-        if len(reasons) == 0:
+        if reasons is None or len(reasons) == 0:
             return tuple()
         if type(n) != int or n > 1:
             if isinstance(reasons[0], Iterable):

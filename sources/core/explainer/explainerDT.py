@@ -131,7 +131,7 @@ class ExplainerDT(Explainer):
 
         if self._excluded_features_are_necesssary(prime_implicant_cnf):
             self._elapsed_time = 0
-            return None
+            return []
 
         SATsolver = GlucoseSolver()
         SATsolver.add_clauses(prime_implicant_cnf.cnf)
@@ -180,7 +180,7 @@ class ExplainerDT(Explainer):
         weights_soft = []
         for lit in soft:  # soft clause
             for i in range(len(self._instance)):
-                if self._tree.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
+                if self.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
                     weights_soft.append(weights[i])
 
         solver = OPENWBOSolver()
@@ -212,7 +212,7 @@ class ExplainerDT(Explainer):
             solver.add_hard_clause(prime_implicant_cnf.get_blocking_clause(model))
             # Compute the score
             score = sum([weights_per_feature[feature["id"]] for feature in
-                         self._tree.to_features(preferred, eliminate_redundant_features=False, details=True)])
+                         self.to_features(preferred, eliminate_redundant_features=False, details=True)])
             if first_call:
                 best_score = score
             elif score != best_score:
@@ -222,7 +222,6 @@ class ExplainerDT(Explainer):
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        print("la", reasons)
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
             self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
