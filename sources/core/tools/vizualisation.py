@@ -67,7 +67,9 @@ class PyPlotDiagramGenerator():
         return dict_features
     def generate_explanation(self, feature_values, instance, reason):
 
-
+        trans_left = mpl.transforms.Affine2D().translate(-5, 0)
+        trans_right = mpl.transforms.Affine2D().translate(5, 0)
+        
         mpl.rcParams['axes.spines.left'] = False
         mpl.rcParams['axes.spines.right'] = False
         mpl.rcParams['axes.spines.top'] = False
@@ -76,43 +78,120 @@ class PyPlotDiagramGenerator():
         print("dict_features:", dict_features)
         fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
         for i, feature in enumerate(dict_features.keys()):
-            thresholds = []
-            for info in dict_features[feature]:
-                thresholds.append(info["threshold"])
-
-            value_instance = feature_values[feature]
-            if len(thresholds) == 1 and thresholds[0] == 0.5:
-                #binary case
-                min_left = 0
-                max_right = 1
-                min_trace = 0
-                max_trace = 1
-            else:
-                min_left = min(thresholds+[value_instance])
-                max_right = max(thresholds+[value_instance])
-                
-                if max_right == value_instance:
-                    max_right = max_right+max_right
-                if min_left == value_instance:
-                    min_left = min_left-min_left
-                    
-                min_trace = min_left
-                max_trace = max_right
-
-            midle = (min_left+max_right)/2
-           
-            print("value_instance:", value_instance)
-            print("thresholds:", thresholds)
+            string_view = dict_features[feature][0]["string"]
+            print("string_view:", string_view)
+            bound_left = 0
+            bound_right = 1
+            bound_explanation_left = None
+            bound_explanation_right = None
             
+            value_instance = feature_values[feature]
+            if "in" in string_view:
+                if "and" in string_view:
+                    #case feature in [infinty, threshold1] and feature in [threshold2, infinity]
+                    raise NotImplementedError("TODO feature in [infinty, threshold1] and feature in [threshold2, infinity]")
+                else:
+                    #case feature in [threshold1, threshold2]
+                    feature_str, _, threshold_str_1, threshold_str_2 = string_view.split(" ")
 
-            axes[i].set_ylim(bottom=-1, top=50)
-            axes[i].set_xlim(left=min_left, right=max_right)
-            axes[i].plot([min_trace, max_trace], [25, 25])
-            axes[i].plot([value_instance, value_instance], [25, 25], marker="o", clip_on=False)
-            axes[i].text(midle,30,feature)
-            axes[i].yaxis.set_visible(False)
-            #axes[i].tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='on')
-            #invisible = axes[i].plot([0, 100], [2, 2], marker = 'o')
+                    threshold_1 = threshold_str_1
+                    threshold_2 = threshold_str_2
+                    
+                    threshold_1 = float(threshold_1.replace("[", "").replace("]", "").replace(",", ""))
+                    threshold_2 = float(threshold_2.replace("[", "").replace("]", "").replace(",", ""))
+                    bound_left = min(threshold_1, threshold_2, value_instance)
+                    bound_right = max(threshold_1, threshold_2, value_instance)
+                    total = bound_right - bound_left
+                    bound_left = bound_left - (total/10)
+                    bound_right = bound_right + (total/10)
+                    print("bound_left:", bound_left)
+                    print("bound_right:", bound_right)
+
+                    midle = (bound_left+bound_right)/2
+                    axes[i].set_ylim(bottom=-1, top=50)
+                    axes[i].set_xlim(left=bound_left, right=bound_right)
+                    axes[i].plot([bound_left, bound_right], [25, 25], color="teal")
+                    axes[i].text(midle,35,feature)
+                    axes[i].yaxis.set_visible(False)
+                    
+                    bracket_left = None
+                    bound_explanation_left = min(threshold_1, threshold_2)
+                    if bound_explanation_left == threshold_1:
+                        bracket_left = "$\mathcal{[}$" if "[" in threshold_str_1 else "$\mathcal{]}$"
+                    else:
+                        bracket_left = "$\mathcal{[}$" if "[" in threshold_str_2 else "$\mathcal{]}$"
+
+                    bracket_right = None
+                    bound_explanation_right = max(threshold_1, threshold_2)
+                    if bound_explanation_right == threshold_1:
+                        bracket_right = "$\mathcal{[}$" if "[" in threshold_str_1 else "$\mathcal{]}$"
+                    else:
+                        bracket_right = "$\mathcal{[}$" if "[" in threshold_str_2 else "$\mathcal{]}$"
+
+                    print("bound_explanation_left:", bound_explanation_left)
+                    print("bound_explanation_right:", bound_explanation_right)
+                    axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color="teal", linewidth=5)
+
+                    axes[i].plot(value_instance, 25, marker="o", color="tomato", clip_on=False, markersize=10)
+                    
+                    if bracket_left is not None:
+                        x = axes[i].plot(bound_explanation_left, 25, marker=bracket_left, color="teal", clip_on=False, markersize=20)
+                        if bracket_left == "$\mathcal{]}$": x[0].set_transform(x[0].get_transform()+trans_left)
+                    if bracket_right is not None:
+                        axes[i].plot(bound_explanation_right, 25, marker=bracket_right, color="teal", clip_on=False, markersize=20)
+                        if bracket_right == "$\mathcal{[}$": x[0].set_transform(x[0].get_transform()+trans_right)
+                    
+            else:
+                #Case with a simple condition feature > threshold
+                feature_str, operator_str, threshold_str = string_view.split(" ")
+                threshold = float(threshold_str)
+                bound_left = min(threshold, value_instance)
+                bound_right = max(threshold, value_instance)
+                total = bound_right - bound_left
+                bound_left = bound_left - (total/10)
+                bound_right = bound_right + (total/10)
+                
+                print("threshold:", threshold)
+                print("bound_left:", bound_left)
+                print("bound_right:", bound_right)
+                
+                midle = (bound_left+bound_right)/2
+                axes[i].set_ylim(bottom=-1, top=50)
+                axes[i].set_xlim(left=bound_left, right=bound_right)
+                axes[i].plot([bound_left, bound_right], [25, 25], color="teal")
+                axes[i].text(midle,35,feature)
+                axes[i].yaxis.set_visible(False)
+                
+                bracket_left = None
+                bracket_right = None
+                if operator_str == ">" or operator_str == ">=":
+                    bound_explanation_left = threshold
+                    bound_explanation_right = bound_right
+                    bracket_left = "$\mathcal{[}$" if operator_str == ">=" else "$\mathcal{]}$"
+                    
+                elif operator_str == "<" or operator_str == "<=":
+                    bound_explanation_left = bound_left
+                    bound_explanation_right = threshold
+                    bracket_right = "$\mathcal{[}$" if operator_str == "<" else "$\mathcal{]}$"
+                else:
+                    raise NotImplementedError("TODO = and !=")
+                
+                axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color="teal", linewidth=5)
+                axes[i].plot(value_instance, 25, marker="o", color="tomato", clip_on=False, markersize=10)
+                
+                if bracket_left is not None:
+                    x = axes[i].plot(threshold, 25, marker=bracket_left, color="teal", clip_on=False, markersize=20)
+                    if bracket_left == "$\mathcal{]}$": x[0].set_transform(x[0].get_transform()+trans_left)
+                
+                if bracket_right is not None:
+                    x = axes[i].plot(threshold, 25, marker=bracket_right, color="teal", clip_on=False, markersize=20)
+                    if bracket_right == "$\mathcal{[}$": x[0].set_transform(x[0].get_transform()+trans_right)
+                        
+                        
+
+
+                #axes[i].tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='on')
+                #invisible = axes[i].plot([0, 100], [2, 2], marker = 'o')
         pyplot.subplots_adjust(top=1, hspace=1)
 
         #pyplot.figure(figsize=(3.6,0.75*)))

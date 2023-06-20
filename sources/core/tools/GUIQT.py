@@ -9,19 +9,29 @@ import webbrowser
 import numpy
 import colorsys
 import math
+import pickle
 from pyxai.sources.core.tools.ImageViewSync import QImageViewSync
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
+class EmptyExplainer():pass
 
 class GraphicalInterface(QMainWindow):
     """Main Window."""
-    def __init__(self, explainer, image_size=None):
+    def __init__(self, explainer, image_size=None, feature_names=None):
         """Initializer."""
         app = QApplication(sys.argv)
-        
+        if explainer is not None:
+            pass
         self.explainer = explainer
         self.image_size = image_size
-        self.feature_names = explainer.get_feature_names()
+
+        if feature_names is not None:
+            self.feature_names = feature_names
+        elif explainer is not None:
+            self.feature_names = explainer.get_feature_names()
+        else:
+            self.feature_names = []
+
         self.feature_values = dict()
         if self.image_size is not None:
             if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
@@ -32,6 +42,7 @@ class GraphicalInterface(QMainWindow):
         super().__init__(None)
         self.originalPalette = QApplication.palette()
         main_layout = QGridLayout()
+        self.imageLabelLeft = None
 
         self.setWindowTitle("PyXAI")
         self.resize(400, 200)
@@ -67,14 +78,16 @@ class GraphicalInterface(QMainWindow):
         
         self.instance_group.repaint()
         self.list_instance = QListWidget()
-        instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
-        
+        if self.explainer is not None:
+            instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
+        else:
+            instances = tuple()
         #List of instances
         self.list_instance.addItems(instances)
         self.list_instance.clicked.connect(self.clicked_instance)
         self.list_instance.setMaximumWidth(100)
         self.list_instance.setMinimumWidth(100)
-
+        
         #Table of the selected instance
         self.table_instance = QTableWidget(len(self.feature_names), 2)
         self.table_instance.verticalHeader().setVisible(False)
@@ -114,7 +127,7 @@ class GraphicalInterface(QMainWindow):
         layout.addWidget(self.table_instance, 0, 1)
         if self.image_size is not None:
             layout.addWidget(self.scrollAreaLeft, 0, 2)
-        
+        self.left_layout = layout
         return layout
     
     def to_rgb(self, value):
@@ -132,6 +145,7 @@ class GraphicalInterface(QMainWindow):
             image = self.pyplot_image_generator.generate_explanation(instance, reason)
             size = self.imageLabelRight.size()
             self.imageLabelRight.setPixmap(QPixmap.fromImage(image).scaled(size))
+            self.imageLabelRight.adjustSize()
         else:
             image = self.pyplot_diagram_generator.generate_explanation(self.feature_values, instance, reason)
             qpixmap = QPixmap.fromImage(image)
@@ -145,16 +159,18 @@ class GraphicalInterface(QMainWindow):
         
 
     def mousePressEventLeft(self, event):
-        self.pressed = True
-        self.imageLabelLeft.setCursor(Qt.ClosedHandCursor)
-        self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value() + event.pos().x()
-        self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value() + event.pos().y()
+        if self.imageLabelLeft is not None:
+            self.pressed = True
+            self.imageLabelLeft.setCursor(Qt.ClosedHandCursor)
+            self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value() + event.pos().x()
+            self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value() + event.pos().y()
 
     def mouseReleaseEventLeft(self, event):
-        self.pressed = False
-        self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
-        self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value()
-        self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value()
+        if self.imageLabelLeft is not None:
+            self.pressed = False
+            self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+            self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value()
+            self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value()
 
     def mouseMoveEventLeft(self, event):
         if self.pressed:
@@ -221,6 +237,7 @@ class GraphicalInterface(QMainWindow):
         n_to_delete = self.table_explanation.rowCount()
         for _ in range(n_to_delete):
             self.table_explanation.removeRow(0)
+        self.imageLabelRight.clear()
 
         for id_method, (_, method, reasons) in enumerate(self.explainer._history[self.current_instance]):
             for id_reason, reason in enumerate(reasons):
@@ -249,11 +266,19 @@ class GraphicalInterface(QMainWindow):
         self.display_right(self.current_instance, reason)
 
     def create_menu_bar(self):
-        self.save_action = QAction("&Save", self)
+        self.save_action = QAction("Save Explainer", self)
+        self.load_action = QAction("Load Explainer", self)
+        self.save_image_instance_action = QAction("Save Image Instance ", self)
+        self.save_image_explanation_action = QAction("Save Image Explanation ", self)
+        
         self.exit_action = QAction("&Exit", self)
         self.documentation_action = QAction("&Documentation", self)
         
         self.save_action.triggered.connect(self.save)
+        self.load_action.triggered.connect(self.load)
+        self.save_image_instance_action.triggered.connect(self.save_image_instance)
+        self.save_image_explanation_action.triggered.connect(self.save_image_explanation)
+
         self.exit_action.triggered.connect(self.close)
         self.documentation_action.triggered.connect(self.documentation)
 
@@ -263,12 +288,120 @@ class GraphicalInterface(QMainWindow):
         menu_bar.addMenu(file_menu)
         menu_bar.addMenu(help_menu)
 
+        file_menu.addAction(self.load_action)
         file_menu.addAction(self.save_action)
+        file_menu.addSeparator()
+        file_menu.addAction(self.save_image_instance_action)
+        file_menu.addAction(self.save_image_explanation_action)
+        file_menu.addSeparator()
         file_menu.addAction(self.exit_action)    
         help_menu.addAction(self.documentation_action)
     
+    def save_image_instance(self):
+        if self.imageLabelLeft is None or self.imageLabelLeft.pixmap() is None:
+            msgBox = QMessageBox()
+            msgBox.setText("No image displayed in the application at the moment for an instance.")
+            msgBox.exec()
+        else:
+            pixmap = self.imageLabelLeft.pixmap()
+            fileDialog = QFileDialog()
+            fileDialog.setDefaultSuffix("png")
+            name, _ = fileDialog.getSaveFileName(None, 'Save Image Instance', filter="Portable Network Graphics (*.png)")
+            if not name.endswith(".png"): name = name + ".png"
+            pixmap.save(name)
+
+    def save_image_explanation(self):
+        if self.imageLabelRight is None or self.imageLabelRight.pixmap() is None:
+            msgBox = QMessageBox()
+            msgBox.setText("No image displayed in the application at the moment for an explanation.")
+            msgBox.exec()
+        else:
+            pixmap = self.imageLabelRight.pixmap()
+            fileDialog = QFileDialog()
+            fileDialog.setDefaultSuffix("png")
+            name, _ = fileDialog.getSaveFileName(None, 'Save Image Instance', filter="Portable Network Graphics (*.png)")
+            if not name.endswith(".png"): name = name + ".png"
+            pixmap.save(name)
+
     def save(self):
-        print("Save")
+        fileDialog = QFileDialog()
+        fileDialog.setDefaultSuffix("explainer")
+        name, _ = fileDialog.getSaveFileName(None, 'Save File', filter="Pickle Explainer Object (*.explainer)")
+        
+        if not name.endswith(".explainer"): name = name + ".explainer"
+
+        file = open(name, 'wb')
+        pickle.dump([self.image_size, self.feature_names, self.explainer._history], file)
+        file.close()
+
+    def load(self):
+        fileDialog = QFileDialog()
+        fileDialog.setDefaultSuffix("explainer")
+        name, _ = fileDialog.getOpenFileName(None, 'Load File', filter="Pickle Explainer Object (*.explainer)")
+        
+        with open(name, 'rb') as file:
+            data = pickle.load(file)
+        self.image_size = data[0]
+        self.feature_names = data[1]
+        self.explainer = EmptyExplainer()
+        self.explainer._history = data[2]
+        
+        self.list_instance.clear()    
+        instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
+        self.list_instance.addItems(instances)
+        self.table_instance.setRowCount(len(self.feature_names))
+
+        for i, name in enumerate(self.feature_names):
+            self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
+
+        if self.image_size is not None:
+            if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
+                raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
+            self.pyplot_image_generator = PyPlotImageGenerator(self.image_size, 256)
+
+            #Image of the selected instance
+            if self.imageLabelLeft is None:
+                self.imageLabelLeft = QLabel()
+                self.imageLabelLeft.setBackgroundRole(QPalette.Base)
+                self.imageLabelLeft.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+                #self.imageLabelLeft.setScaledContents(True)
+
+                self.imageLabelLeft.setMinimumWidth(300)
+                self.imageLabelLeft.setMinimumHeight(300)
+                
+                self.scrollAreaLeft = QScrollArea()
+                self.scrollAreaLeft.setBackgroundRole(QPalette.Dark)
+                self.scrollAreaLeft.setWidget(self.imageLabelLeft)
+                self.scrollAreaLeft.setVisible(True)
+
+                self.scrollAreaLeft.setMinimumWidth(302)
+                self.scrollAreaLeft.setMinimumHeight(302)
+
+                self.scrollAreaLeft.mouseMoveEvent = self.mouseMoveEventLeft
+                self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
+                self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
+
+                self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+                self.left_layout.addWidget(self.scrollAreaLeft, 0, 2) 
+        else:
+            if self.imageLabelLeft is not None:
+                self.left_layout.removeWidget(self.scrollAreaLeft)
+                self.scrollAreaLeft.setVisible(False)
+                self.scrollAreaLeft.close()
+                self.imageLabelLeft.clear()
+                self.imageLabelLeft.close()
+                self.imageLabelLeft = None
+
+                
+        n_to_delete = self.table_explanation.rowCount()
+        for _ in range(n_to_delete):
+            self.table_explanation.removeRow(0)
+        self.imageLabelRight.clear()
+        self.imageLabelRight.setMinimumWidth(300)
+        self.imageLabelRight.setMinimumHeight(300)
+        self.imageLabelRight.resize(300, 300)
+        self.scrollAreaRight.setMinimumWidth(302)
+        self.scrollAreaRight.setMinimumHeight(302)
 
     def documentation(self):
         webbrowser.open_new("http://www.cril.univ-artois.fr/pyxai/documentation/")
