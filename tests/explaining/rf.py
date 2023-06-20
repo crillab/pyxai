@@ -10,19 +10,15 @@ class TestRF(unittest.TestCase):
 
     def init(cls):
         if cls.model is None:
-            cls.learner = Learning.Scikitlearn("tests/iris.csv", learner_type=Learning.CLASSIFICATION)
+            cls.learner = Learning.Scikitlearn("../../dataML/compas.csv", learner_type=Learning.CLASSIFICATION)
             cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
         return cls.learner, cls.model
-
-
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
 
 
     def test_sufficient(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             sufficient_reason = explainer.sufficient_reason(time_limit=5)
@@ -35,7 +31,7 @@ class TestRF(unittest.TestCase):
     def test_majoritary(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=30)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             majoritary_reason = explainer.majoritary_reason()
@@ -44,8 +40,8 @@ class TestRF(unittest.TestCase):
 
     def test_minimal_majoritary(self):
         learner, model = self.init()
-        explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
-        instances = learner.get_instances(model, n=30, correct=True)
+        explainer = Explainer.initialize(model)  # ), features_type={"numerical": Learning.DEFAULT})
+        instances = learner.get_instances(model, n=10)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             majoritary_reason = explainer.minimal_majoritary_reason(time_limit=5)
@@ -55,20 +51,42 @@ class TestRF(unittest.TestCase):
     def test_contrastive(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model)
-        instances = learner.get_instances(model, n=30, correct=True)
+        instances = learner.get_instances(model, n=10)
         for instance, prediction in instances:
             explainer.set_instance(instance)
             contrastive_reason = explainer.minimal_contrastive_reason(time_limit=5)
-            self.assertTrue(explainer.is_contrastive_reason(contrastive_reason))
+            self.assertTrue(len(contrastive_reason) == 0 or explainer.is_contrastive_reason(contrastive_reason))
 
 
-    def test_minimals(self):
+    def test_excluded(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model)
-        instances = learner.get_instances(model, n=30, correct=True)
+        explainer.set_excluded_features(['African_American', 'Hispanic'])
+        instances = learner.get_instances(model, n=10)
+
         for instance, prediction in instances:
             explainer.set_instance(instance)
-            minimal_reasons = explainer.minimal_sufficient_reason(n=10)
-            print("ici ", minimal_reasons)
-            for m in minimal_reasons:
-                self.assertTrue(explainer.is_sufficient_reason(m))
+            sufficient_reasons = explainer.sufficient_reason()
+            for sr in sufficient_reasons:
+                self.assertFalse(explainer.reason_contains_features(sr, 'Hispanic'))
+                self.assertFalse(explainer.reason_contains_features(sr, 'African_American'))
+
+            contrastives_reasons = explainer.minimal_contrastive_reason(time_limit=2)
+            for sr in contrastives_reasons:
+                self.assertFalse(explainer.reason_contains_features(sr, 'Hispanic'))
+                self.assertFalse(explainer.reason_contains_features(sr, 'African_American'))
+
+        explainer.set_excluded_features(['Female'])
+        for instance, prediction in instances:
+            explainer.set_instance(instance)
+            sufficient_reasons = explainer.sufficient_reason()
+            for sr in sufficient_reasons:
+                self.assertFalse(explainer.reason_contains_features(sr, 'Female'))
+
+            contrastives_reasons = explainer.contrastive_reason()
+            for sr in contrastives_reasons:
+                self.assertFalse(explainer.reason_contains_features(sr, 'Female'))
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

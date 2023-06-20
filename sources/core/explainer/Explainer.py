@@ -7,6 +7,8 @@ from pyxai.sources.core.tools.utils import count_dimensions
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
 from pyxai import Tools
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
+
+
 class Explainer:
     TIMEOUT = -1
 
@@ -24,6 +26,7 @@ class Explainer:
         self._do_history = True
         self._glucose = None
 
+
     def show(self, image_size=None):
         graphical_interface = Tools.GraphicalInterface(self, image_size=image_size)
         graphical_interface.mainloop()
@@ -33,12 +36,15 @@ class Explainer:
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
         if self._do_history is True:
+            if len(reasons) == 0:
+                return
             if not isinstance(reasons[0], tuple): reasons = [reasons]
             reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
             if instance in self._history.keys():
                 self._history[instance].append((class_name, method_name, reasons))
             else:
                 self._history[instance] = [(class_name, method_name, reasons)]
+
 
     def get_model(self):
         if hasattr(self, 'tree'):
@@ -49,7 +55,8 @@ class Explainer:
             return self.regression_boosted_trees
         elif hasattr(self, 'boosted_trees'):
             return self.boosted_trees
-    
+
+
     @property
     def instance(self):
         """
@@ -96,19 +103,21 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
+
     def count_features_before_converting(self, features):
         c = set()
         for feature in features:
-          id = feature["id"]
-          c.add(self.map_indexes[id])
+            id = feature["id"]
+            c.add(self.map_indexes[id])
         return len(c)
+
 
     def get_feature_names(self):
         model = self.get_model()
         if model.learner_information is None:
-            return ["f"+str(i+1) for i in range(model.get_used_features())]
+            return ["f" + str(i + 1) for i in range(model.get_used_features())]
         return model.learner_information.feature_names
-        
+
 
     """
         Add a theory in the resolution methods.
@@ -116,33 +125,35 @@ class Explainer:
 
         @param features_types (str | list): the theory selected.
     """
+
+
     def set_features_type(self, features_types):
         model = self.get_model()
-        #To avoid a bug when several init done :)
+        # To avoid a bug when several init done :)
         model.clear_theory_features()
         feature_names = self.get_feature_names()
         # reg_exp = regular expression 
         # "A*" is the regular expression meaning that ["A1", "A2", "A3"] come from one initial categorical feature that is one hot encoded 
         # to form 3 features. 
-          
-        self._reg_exp_categorical_features = dict() # dict[reg_exp_feature]->[feature matching with A]  
-        
-        self._numerical_features = [] # List of feature names of numerical_features
-        self._categorical_features = [] # List of feature names of categorical features
-        self._binary_features = [] # List of feature names of binary features
+
+        self._reg_exp_categorical_features = dict()  # dict[reg_exp_feature]->[feature matching with A]
+
+        self._numerical_features = []  # List of feature names of numerical_features
+        self._categorical_features = []  # List of feature names of categorical features
+        self._binary_features = []  # List of feature names of binary features
 
         # Build the lists
         if isinstance(features_types, str):
             f = open(features_types)
             dict_types = json.load(f)
             f.close()
-            for feature in  dict_types.keys():
-                if dict_types[feature]["type:"] != "Classification" and dict_types[feature]["type:"] != "Regression": 
+            for feature in dict_types.keys():
+                if dict_types[feature]["type:"] != "Classification" and dict_types[feature]["type:"] != "Regression":
                     t = TypeFeature.from_str(dict_types[feature]["type:"])
                     encoder = dict_types[feature]["encoder:"]
                     if t == TypeFeature.CATEGORICAL:
                         if encoder != "OneHotEncoder":
-                            raise NotImplementedError # A voir avec Gilles
+                            raise NotImplementedError  # A voir avec Gilles
                         original_feature = dict_types[feature]["original_feature:"]
                         if original_feature in self._reg_exp_categorical_features:
                             self._reg_exp_categorical_features[original_feature].append(feature)
@@ -160,7 +171,7 @@ class Explainer:
             for key in features_types.keys():
                 if key not in ["numerical", "categorical", "binary"]:
                     raise ValueError("The keys have to be either 'numerical' or 'categorical' or 'binary'.")
-                
+
                 if features_types[key] == TypeFeature.DEFAULT:
                     if default is not None:
                         raise ValueError("TypeFeature.DEFAULT must appear only once.")
@@ -185,49 +196,52 @@ class Explainer:
                             associated_features = [f for f in feature_names if f.startswith(feature)]
                             if associated_features == []:
                                 raise ValueError("No feature with the pattern " + str(feature) + ".")
-                            self._reg_exp_categorical_features[feature]=associated_features
-                            self._categorical_features.extend(associated_features)                
+                            self._reg_exp_categorical_features[feature] = associated_features
+                            self._categorical_features.extend(associated_features)
                         else:
                             if feature in feature_names:
-                                self._reg_exp_categorical_features[feature]=feature
+                                self._reg_exp_categorical_features[feature] = feature
                                 self._categorical_features.extend([feature])
                             else:
-                                raise ValueError("The feature " + str(feature) + " does not exist.")                
+                                raise ValueError("The feature " + str(feature) + " does not exist.")
             if default is not None:
-                #Without the last that is the label/prediction
+                # Without the last that is the label/prediction
                 if default == "numerical":
-                    self._numerical_features = [feature for feature in feature_names[:-1] if feature not in self._categorical_features and feature not in self._binary_features]
+                    self._numerical_features = [feature for feature in feature_names[:-1] if
+                                                feature not in self._categorical_features and feature not in self._binary_features]
                 elif default == "categorical":
-                    self._categorical_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._binary_features]
+                    self._categorical_features = [feature for feature in feature_names[:-1] if
+                                                  feature not in self._numerical_features and feature not in self._binary_features]
                 elif default == "binary":
-                    self._binary_features = [feature for feature in feature_names[:-1] if feature not in self._numerical_features and feature not in self._categorical_features]                       
+                    self._binary_features = [feature for feature in feature_names[:-1] if
+                                             feature not in self._numerical_features and feature not in self._categorical_features]
         else:
-            raise ValueError("The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
-        
-        
-        #Activate the theory
+            raise ValueError(
+                "The parameter must be either a list of string as ['Method*', 'CouncilArea*', 'Regionname*'] or a filename of .types file.")
+
+        # Activate the theory
         self.activate_theory()
-        
-        self.map_indexes = dict() #Used to count used_features_without_one_hot_encoded
-        
-        #Firstly, for the numerical one  
+
+        self.map_indexes = dict()  # Used to count used_features_without_one_hot_encoded
+
+        # Firstly, for the numerical one
         for feature in self._numerical_features:
-            #Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
-            index = feature_names.index(feature)+1 
-            model.add_numerical_feature(index)  
+            # Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
+            index = feature_names.index(feature) + 1
+            model.add_numerical_feature(index)
             self.map_indexes[index] = index
 
-        #Secondly, for the binary one 
+        # Secondly, for the binary one
         for feature in self._binary_features:
-            #Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
-            index = feature_names.index(feature)+1
-            model.add_binary_feature(index)  
+            # Warning ids of features start from 1 to n (not 0), this is why there is +1 here.
+            index = feature_names.index(feature) + 1
+            model.add_binary_feature(index)
             self.map_indexes[index] = index
 
-        #Finaly, for the categorical one 
+        # Finaly, for the categorical one
         for reg_exp_feature_name in self._reg_exp_categorical_features.keys():
-            indexes = [feature_names.index(feature)+1 for feature in self._reg_exp_categorical_features[reg_exp_feature_name]]
-            model.add_categorical_feature_one_hot(reg_exp_feature_name, indexes) 
+            indexes = [feature_names.index(feature) + 1 for feature in self._reg_exp_categorical_features[reg_exp_feature_name]]
+            model.add_categorical_feature_one_hot(reg_exp_feature_name, indexes)
             for index in indexes:
                 self.map_indexes[index] = reg_exp_feature_name
 
@@ -241,19 +255,20 @@ class Explainer:
         Tools.verbose("Numerical features:", nNumerical)
         Tools.verbose("Categorical features:", nCategorical)
         Tools.verbose("Binary features:", nBinaries)
-        Tools.verbose("Number of features:",nNumerical+nCategorical+nBinaries)
-        
+        Tools.verbose("Number of features:", nNumerical + nCategorical + nBinaries)
+
         used_features = set()
         used_features_without_one_hot_encoded = set()
         for key in model.map_features_to_id_binaries.keys():
             if key[0] not in self.map_indexes.keys():
-                raise ValueError("The feature " + feature_names[key[0]-1] + " is missing in features_types.")        
+                raise ValueError("The feature " + feature_names[key[0] - 1] + " is missing in features_types.")
             used_features.add(key[0])
             used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
         Tools.verbose("")
         Tools.verbose("Number of used features in the model (before the encoding):", len(used_features_without_one_hot_encoded))
         Tools.verbose("Number of used features in the model (after the encoding):", len(used_features))
         Tools.verbose("----------------------------------------------")
+
 
     def _theory_clauses(self):
         raise NotImplementedError
@@ -265,12 +280,14 @@ class Explainer:
         This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
         """
         self._theory = True
-        
+
+
     def deactivate_theory(self):
         """
         Unset the theory set with the activate_theory method.
         """
         self._theory = False
+
 
     def set_excluded_features(self, excluded_features):
         """
@@ -281,10 +298,12 @@ class Explainer:
         if len(excluded_features) == 0:
             self.unset_specific_features()
             return
-        bin_rep =  self._extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
+        self._excluded_features = excluded_features
+        if self.instance is None:
+            return
+        bin_rep = self.extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
         self._excluded_literals = [lit for lit in bin_rep if
                                    self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in excluded_features]
-        self._excluded_features = excluded_features
 
 
     def _set_specific_features(self, specific_features):  # TODO a changer en je veux ces features
@@ -370,7 +389,7 @@ class Explainer:
         raise NotImplementedError
 
 
-    def _extend_reason_with_theory(self, reason):
+    def extend_reason_with_theory(self, reason):
         if self._theory is False:
             return reason
         if self._glucose is None:
@@ -388,9 +407,9 @@ class Explainer:
         @param n_samples: (int) the number of tests to be done.
         @return: True if the reason is really one reason, False otherwise.
         """
-        extended_reason = self._extend_reason_with_theory(reason)
+
         for _ in range(n_samples):
-            binary_representation = self._extend_reason_to_complete_representation(extended_reason)
+            binary_representation = self.extend_reason_to_complete_representation(reason)
             if not self.is_implicant(binary_representation):
                 return False
         return True
@@ -453,41 +472,43 @@ class Explainer:
         features = self.to_features(reason, eliminate_redundant_features=False, details=True)
         copy_instance = list(self.instance).copy()
         for feature in features:
-            id = feature["id"]-1
+            id = feature["id"] - 1
             operator = feature["operator"]
             threshold = feature["threshold"]
             if operator == OperatorCondition.GE:
-                #print("copy_instance[id]:", copy_instance[id])
-                #assert copy_instance[id] < threshold, "We have to change that to apply the contrastive."
-                copy_instance[id] = threshold               
+                # print("copy_instance[id]:", copy_instance[id])
+                # assert copy_instance[id] < threshold, "We have to change that to apply the contrastive."
+                copy_instance[id] = threshold
             else:
                 raise NotImplementedError()
         new_binary_representation = self._to_binary_representation(copy_instance)
         return not self.is_implicant(new_binary_representation)
 
 
-    def _extend_reason_to_complete_representation(self, reason):
+    def extend_reason_to_complete_representation(self, reason):
         complete = list(reason).copy()
         to_add = [literal for literal in self._binary_representation if literal not in complete and -literal not in complete]
+        complete = self.extend_reason_with_theory(complete)
         for literal in to_add:
+            if literal in complete or -literal in complete:
+                continue
             sign = random.choice([1, -1])
             complete.append(sign * abs(literal))
+            complete = self.extend_reason_with_theory(complete)
         assert len(complete) == len(self._binary_representation)
         return complete
 
 
     @staticmethod
     def format(reasons, n=1):
-        if len(reasons) == 0:
+        if reasons is None or len(reasons) == 0:
             return tuple()
-        if len(reasons) == 1 and isinstance(reasons[0], Iterable):
-            if type(n) != int:
-                return tuple(tuple(sorted(reason, key=lambda l: abs(l))) for reason in reasons)
-            elif type(n) == int and n != 1:
+        if type(n) != int or n > 1:
+            if isinstance(reasons[0], Iterable):
                 return tuple(tuple(sorted(reason, key=lambda l: abs(l))) for reason in reasons)
             else:
-                return Explainer.format(reasons[0])
-        if not isinstance(reasons[0], Iterable):
-            return tuple(sorted(reasons, key=lambda l: abs(l)))
+                return tuple(tuple(sorted(reasons, key=lambda l: abs(l))))
 
-        return tuple(tuple(sorted(reason, key=lambda l: abs(l))) for reason in reasons)
+        if isinstance(reasons[0], Iterable):
+            return Explainer.format(reasons[0])
+        return tuple(sorted(reasons, key=lambda l: abs(l)))
