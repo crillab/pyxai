@@ -56,7 +56,8 @@ class ExplainerDT(Explainer):
         Returns:
             _type_: _description_
         """
-        return self._tree.to_features(binary_representation, details=details, eliminate_redundant_features=eliminate_redundant_features, contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
+        return self._tree.to_features(binary_representation, details=details, eliminate_redundant_features=eliminate_redundant_features,
+                                      contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def direct_reason(self):
@@ -64,6 +65,9 @@ class ExplainerDT(Explainer):
         Returns:
             _type_: _description_
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         self._elapsed_time = 0
         direct_reason = self._tree.direct_reason(self._instance)
         if any(not self._is_specific(lit) for lit in direct_reason):
@@ -73,10 +77,11 @@ class ExplainerDT(Explainer):
 
         self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, direct_reason)
         return direct_reason
-        
 
 
     def contrastive_reason(self, *, n=1):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         self._elapsed_time = 0
         cnf = self._tree.to_CNF(self._instance)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
@@ -86,7 +91,10 @@ class ExplainerDT(Explainer):
         self.add_history(self._instance, self.__class__.__name__, self.contrastive_reason.__name__, contrastives)
         return contrastives
 
+
     def necessary_literals(self):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         self._elapsed_time = 0
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
@@ -98,6 +106,8 @@ class ExplainerDT(Explainer):
 
 
     def relevant_literals(self):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         self._elapsed_time = 0
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
@@ -106,11 +116,14 @@ class ExplainerDT(Explainer):
         self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
         return literals
 
+
     def _excluded_features_are_necesssary(self, prime_cnf):
         return any(not self._is_specific(lit) for lit in prime_cnf.necessary)
 
 
     def sufficient_reason(self, *, n=1, time_limit=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         time_used = 0
         n = n if type(n) == int else float('inf')
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
@@ -118,7 +131,7 @@ class ExplainerDT(Explainer):
 
         if self._excluded_features_are_necesssary(prime_implicant_cnf):
             self._elapsed_time = 0
-            return None
+            return []
 
         SATsolver = GlucoseSolver()
         SATsolver.add_clauses(prime_implicant_cnf.cnf)
@@ -144,6 +157,8 @@ class ExplainerDT(Explainer):
 
 
     def preferred_sufficient_reason(self, *, method, n=1, time_limit=None, weights=None, features_partition=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         n = n if type(n) == int else float('inf')
         cnf = self._tree.to_CNF(self._instance)
         self._elapsed_time = 0
@@ -155,8 +170,8 @@ class ExplainerDT(Explainer):
             return None
 
         cnf = prime_implicant_cnf.cnf
-        if len(cnf) == 0:  # TODO: test when this case append
-            return [lit for lit in prime_implicant_cnf.necessary]
+        if len(cnf) == 0:
+            return Explainer.format([[lit for lit in prime_implicant_cnf.necessary]], n=n)
 
         weights = compute_weight(method, self._instance, weights, self._tree.learner_information, features_partition=features_partition)
         weights_per_feature = {i + 1: weight for i, weight in enumerate(weights)}
@@ -165,7 +180,7 @@ class ExplainerDT(Explainer):
         weights_soft = []
         for lit in soft:  # soft clause
             for i in range(len(self._instance)):
-                if self._tree.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
+                if self.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
                     weights_soft.append(weights[i])
 
         solver = OPENWBOSolver()
@@ -197,7 +212,7 @@ class ExplainerDT(Explainer):
             solver.add_hard_clause(prime_implicant_cnf.get_blocking_clause(model))
             # Compute the score
             score = sum([weights_per_feature[feature["id"]] for feature in
-                         self._tree.to_features(preferred, eliminate_redundant_features=False, details=True)])
+                         self.to_features(preferred, eliminate_redundant_features=False, details=True)])
             if first_call:
                 best_score = score
             elif score != best_score:
@@ -207,8 +222,6 @@ class ExplainerDT(Explainer):
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-
-
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
             self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
@@ -221,13 +234,15 @@ class ExplainerDT(Explainer):
         return self.preferred_sufficient_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
 
-    def n_sufficient_reasons(self, time_limit = None):
+    def n_sufficient_reasons(self, time_limit=None):
         self.n_sufficient_reasons_per_attribute(time_limit=time_limit)
         self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons.__name__, self._n_sufficient_reasons)
         return self._n_sufficient_reasons
 
 
     def n_sufficient_reasons_per_attribute(self, *, time_limit=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         cnf = self._tree.to_CNF(self._instance)
         prime_implicant_cnf = CNFencoding.to_prime_implicant_CNF(cnf, self._binary_representation)
 
@@ -263,7 +278,7 @@ class ExplainerDT(Explainer):
         n_sufficients_per_attribute = {n: n_necessary for n in prime_implicant_cnf.necessary}
         for lit in range(1, prime_implicant_cnf.n_literals_mapping):
             n_sufficients_per_attribute[prime_implicant_cnf.mapping_new_to_original[lit]] = n_models[lit]
-        
+
         self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons_per_attribute.__name__, n_sufficients_per_attribute)
         return n_sufficients_per_attribute
 
