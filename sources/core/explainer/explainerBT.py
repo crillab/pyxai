@@ -36,6 +36,9 @@ class ExplainerBT(Explainer):
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
+    def _theory_clauses(self):
+        return self._boosted_trees.get_theory(self._binary_representation)
+
 
     def is_implicant(self, abductive):
         if self._boosted_trees.n_classes == 2:
@@ -131,7 +134,7 @@ class ExplainerBT(Explainer):
 
 
     def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
-        return self._boosted_trees.to_features(binary_representation, details=details, contrastive=contrastive, without_intervals=without_intervals)
+        return self._boosted_trees.to_features(binary_representation, details=details, contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def redundancy_analysis(self):
