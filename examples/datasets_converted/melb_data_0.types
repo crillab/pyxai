@@ -1,360 +1,345 @@
 {
   "Rooms": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "int64"
+    "encoder:": "None"
   },
   "Propertycount": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "LabelEncoder"
   },
   "Price": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Method_PI": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Method",
-    "original_type:": "object"
+    "original_value:": "PI"
   },
   "Method_S": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Method",
-    "original_type:": "object"
+    "original_value:": "S"
   },
   "Method_SA": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Method",
-    "original_type:": "object"
+    "original_value:": "SA"
   },
   "Method_SP": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Method",
-    "original_type:": "object"
+    "original_value:": "SP"
   },
   "Method_VB": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Method",
-    "original_type:": "object"
+    "original_value:": "VB"
   },
   "Date": {
     "type:": "NUMERICAL",
-    "encoder:": "CustomizedOrdinalEncoder",
-    "original_type:": "object"
+    "encoder:": "CustomizedOrdinalEncoder"
   },
   "Distance": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Postcode": {
     "type:": "NUMERICAL",
-    "encoder:": "CustomizedOrdinalEncoder",
-    "original_type:": "float64"
+    "encoder:": "CustomizedOrdinalEncoder"
   },
   "Bedroom2": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Bathroom": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Car": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Landsize": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "BuildingArea": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "YearBuilt": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "CouncilArea_Banyule": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Banyule"
   },
   "CouncilArea_Bayside": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Bayside"
   },
   "CouncilArea_Boroondara": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Boroondara"
   },
   "CouncilArea_Brimbank": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Brimbank"
   },
   "CouncilArea_Cardinia": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Cardinia"
   },
   "CouncilArea_Casey": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Casey"
   },
   "CouncilArea_Darebin": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Darebin"
   },
   "CouncilArea_Frankston": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Frankston"
   },
   "CouncilArea_Glen Eira": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Glen Eira"
   },
   "CouncilArea_Greater Dandenong": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Greater Dandenong"
   },
   "CouncilArea_Hobsons Bay": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Hobsons Bay"
   },
   "CouncilArea_Hume": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Hume"
   },
   "CouncilArea_Kingston": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Kingston"
   },
   "CouncilArea_Knox": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Knox"
   },
   "CouncilArea_Macedon Ranges": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Macedon Ranges"
   },
   "CouncilArea_Manningham": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Manningham"
   },
   "CouncilArea_Maribyrnong": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Maribyrnong"
   },
   "CouncilArea_Maroondah": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Maroondah"
   },
   "CouncilArea_Melbourne": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Melbourne"
   },
   "CouncilArea_Melton": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Melton"
   },
   "CouncilArea_Monash": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Monash"
   },
   "CouncilArea_Moonee Valley": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Moonee Valley"
   },
   "CouncilArea_Moorabool": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Moorabool"
   },
   "CouncilArea_Moreland": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Moreland"
   },
   "CouncilArea_Nillumbik": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Nillumbik"
   },
   "CouncilArea_Port Phillip": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Port Phillip"
   },
   "CouncilArea_Stonnington": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Stonnington"
   },
   "CouncilArea_Unavailable": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Unavailable"
   },
   "CouncilArea_Whitehorse": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Whitehorse"
   },
   "CouncilArea_Whittlesea": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Whittlesea"
   },
   "CouncilArea_Wyndham": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Wyndham"
   },
   "CouncilArea_Yarra": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Yarra"
   },
   "CouncilArea_Yarra Ranges": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": "Yarra Ranges"
   },
   "CouncilArea_nan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "CouncilArea",
-    "original_type:": "object"
+    "original_value:": NaN
   },
   "Lattitude": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Longtitude": {
     "type:": "NUMERICAL",
-    "encoder:": "None",
-    "original_type:": "float64"
+    "encoder:": "None"
   },
   "Regionname_Eastern Metropolitan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Eastern Metropolitan"
   },
   "Regionname_Eastern Victoria": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Eastern Victoria"
   },
   "Regionname_Northern Metropolitan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Northern Metropolitan"
   },
   "Regionname_Northern Victoria": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Northern Victoria"
   },
   "Regionname_South-Eastern Metropolitan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "South-Eastern Metropolitan"
   },
   "Regionname_Southern Metropolitan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Southern Metropolitan"
   },
   "Regionname_Western Metropolitan": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Western Metropolitan"
   },
   "Regionname_Western Victoria": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Regionname",
-    "original_type:": "object"
+    "original_value:": "Western Victoria"
   },
   "Type": {
-    "type:": "TARGET",
-    "encoder:": "LabelEncoder",
-    "original_type:": "object",
+    "type:": "Classification",
+    "encoder:": "None",
     "classes:": [
       "h",
       "t",

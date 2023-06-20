@@ -14,127 +14,152 @@
   "A4_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A4"
+    "original_feature:": "A4",
+    "original_value:": 1
   },
   "A4_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A4"
+    "original_feature:": "A4",
+    "original_value:": 2
   },
   "A4_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A4"
+    "original_feature:": "A4",
+    "original_value:": 3
   },
   "A5_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 1
   },
   "A5_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 2
   },
   "A5_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 3
   },
   "A5_4": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 4
   },
   "A5_5": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 5
   },
   "A5_6": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 6
   },
   "A5_7": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 7
   },
   "A5_8": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 8
   },
   "A5_9": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 9
   },
   "A5_10": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 10
   },
   "A5_11": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 11
   },
   "A5_12": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 12
   },
   "A5_13": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 13
   },
   "A5_14": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A5"
+    "original_feature:": "A5",
+    "original_value:": 14
   },
   "A6_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 1
   },
   "A6_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 2
   },
   "A6_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 3
   },
   "A6_4": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 4
   },
   "A6_5": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 5
   },
   "A6_7": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 7
   },
   "A6_8": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 8
   },
   "A6_9": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A6"
+    "original_feature:": "A6",
+    "original_value:": 9
   },
   "A7": {
     "type:": "NUMERICAL",
@@ -159,17 +184,20 @@
   "A12_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A12"
+    "original_feature:": "A12",
+    "original_value:": 1
   },
   "A12_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A12"
+    "original_feature:": "A12",
+    "original_value:": 2
   },
   "A12_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "A12"
+    "original_feature:": "A12",
+    "original_value:": 3
   },
   "A13": {
     "type:": "NUMERICAL",
@@ -180,7 +208,7 @@
     "encoder:": "None"
   },
   "A15": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "0",
