@@ -66,7 +66,7 @@ class Learner:
             return data, "pandas.core.frame.DataFrame"
 
         if data is None:
-            raise ValueError("The data parameter is set but None (can be optional, but not None).")
+            raise ValueError("The 'data' parameter is set but None (can be optional, but not None). If you are passed 'Tools.Options.dataset' as parameter, check if the '-dataset=<dataset_file>' option is present in your command.")
 
         raise ValueError("The data parameter is either a string representing a csv or excel file or a pandas.core.frame.DataFrame object.")
 

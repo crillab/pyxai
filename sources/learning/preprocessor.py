@@ -28,17 +28,19 @@ class Preprocessor:
         self.numerical_converters = [None]*self.n_features
         self.encoder = [None]*self.n_features
         self.categories = [None]*self.n_features
+        self.original_value = [None]*self.n_features
         self.original_types = [str(self.data[feature].dtype) for feature in self.features_name]
         self.already_encoded = [False]*self.n_features
         self.n_bool = 0
         self.target_feature = self.set_target_feature(target_feature)
         
-    def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_type, already_enc):
+    def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_value, original_type, already_enc):
         self.features_name.insert(index, feature_name)
         self.features_type.insert(index, feature_type)
         self.numerical_converters.insert(index, numerical_converter)
         self.encoder.insert(index, encoder)
         self.categories.insert(index, category)
+        self.original_value.insert(index, original_value)
         self.original_types.insert(index, original_type)
         self.already_encoded.insert(index, already_enc)
 
@@ -49,6 +51,7 @@ class Preprocessor:
         del self.encoder[index]              
         del self.categories[index]              
         del self.original_types[index]
+        del self.original_value[index]
         del self.already_encoded[index]
 
     def switch_indexes(self, index1, index2):
@@ -58,6 +61,7 @@ class Preprocessor:
         self.encoder = switch_list(self.encoder, index1, index2)
         self.categories = switch_list(self.categories, index1, index2)
         self.original_types = switch_list(self.original_types, index1, index2)
+        self.original_value = switch_list(self.original_value, index1, index2)
         self.already_encoded = switch_list(self.already_encoded, index1, index2)
 
     def set_target_feature(self, feature):
@@ -214,14 +218,16 @@ class Preprocessor:
                 #print("data:", data_categorical)
                 matrix = encoder.fit_transform(data_categorical).toarray()
                 names = [element.replace("x0", feature) for element in encoder.get_feature_names_out()]
-                print("One hot encoding new features for " + feature + ": " + str(len(names)))
+                original_values = encoder.categories_[0].tolist()
                 if len(names) == 2:
                     self.n_bool += 1
                     self.features_type[index] = TypeFeature.BINARY
                     self.encoder[index] = None
-                    print("The feature " + feature + " is boolean! Do not One Hot Encoding this features.") 
+                    print("The feature " + feature + " is boolean! No One Hot Encoding for this features.") 
                     continue   
-                    
+                else:
+                    print("One hot encoding new features for " + feature + ": " + str(len(names)))
+                
                 transformed_df = pandas.DataFrame(matrix, columns=names)
                 
                 save_features_type = self.features_type[index]
@@ -229,12 +235,15 @@ class Preprocessor:
                 save_encoder = self.encoder[index]
                 save_category = feature #we put in this variable the original feature :)
                 save_original_type = self.original_types[index]
+                
                 save_already_enc = self.already_encoded[index]
                 self.data.drop(feature, inplace=True, axis=1)
                 self.delete_index(index)
                 
-                for name in reversed(names):
-                    self.insert_index(index, name, save_features_type, save_numerical_converter, save_encoder, save_category, save_original_type, save_already_enc)
+                for i in reversed(range(len(names))):
+                    name = names[i]
+                    save_original_value = original_values[i]
+                    self.insert_index(index, name, save_features_type, save_numerical_converter, save_encoder, save_category, save_original_value, save_original_type, save_already_enc)
                     self.data.insert(index, name, transformed_df[name], True)
                 #print("index:", index)
                 #print("names:", names)
@@ -380,6 +389,8 @@ class Preprocessor:
           
           if self.encoder[i] == TypeEncoder.OneHotEncoder:
               new_dict["original_feature:"] = self.categories[i] 
+              new_dict["original_value:"] = self.original_value[i] 
+              
 
           #new_dict["original_type:"] = self.original_types[i]
           if self.features_type[i] == TypeFeature.TARGET:
