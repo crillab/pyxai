@@ -1,5 +1,6 @@
 # import os
 import unittest
+
 from pyxai.tests.functionality.GetInstances import *
 from pyxai.tests.functionality.ToFeatures import *
 from pyxai.tests.learning.ScikitLearn import *
@@ -13,7 +14,10 @@ from pyxai.tests.importing.SimpleScikitLearn import *
 from pyxai.tests.importing.LightGBM import *
 from pyxai.tests.importing.XGBoost import *
 from pyxai.tests.explaining.dt import *
+from pyxai.tests.explaining.misc import *
 from pyxai.tests.explaining.rf import *
+from pyxai.tests.explaining.bt import *
+from pyxai.tests.explaining.regressionbt import *
 
 
 def suite():
@@ -33,12 +37,11 @@ def suite():
     # suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
     # suite.addTest(unittest.makeSuite(TestImportXGBoost))
     # suite.addTest(unittest.makeSuite(TestImportLightGBM))
-
+    suite.addTest(unittest.makeSuite(TestMisc))
     suite.addTest(unittest.makeSuite(TestDT))
     suite.addTest(unittest.makeSuite(TestRF))
     return suite
 
 
 if __name__ == '__main__':
-    runner = unittest.TextTestRunner()
-    runner.run(suite())
+    unittest.main(verbosity=1)
