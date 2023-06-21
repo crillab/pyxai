@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 
 
 # Machine learning part
-learner = Learning.Scikitlearn(Tools.Options.dataset)
+learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instance, prediction = learner.get_instances(n=1)
 
@@ -17,7 +17,12 @@ explainer = Explainer.initialize(model, instance=instance, features_type=Tools.O
 
 
 contrastive = explainer.minimal_contrastive_reason(time_limit=100)
-features = explainer.to_features(contrastive, eliminate_redundant_features=True, inverse=True)
+features = explainer.to_features(contrastive, contrastive=True)
 
 print("contrastive:", contrastive)
 print("features contrastive:", features)
+
+majoritary_reason = explainer.majoritary_reason(n_iterations=10)
+features = explainer.to_features(majoritary_reason)
+print("features majoritary:", features)
+

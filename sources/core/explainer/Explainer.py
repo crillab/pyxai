@@ -141,6 +141,7 @@ class Explainer:
         self._numerical_features = []  # List of feature names of numerical_features
         self._categorical_features = []  # List of feature names of categorical features
         self._binary_features = []  # List of feature names of binary features
+        self._values_categorical_features = dict() # dict[feature name]->categorical value 
 
         # Build the lists
         if isinstance(features_types, str):
@@ -159,6 +160,9 @@ class Explainer:
                             self._reg_exp_categorical_features[original_feature].append(feature)
                         else:
                             self._reg_exp_categorical_features[original_feature] = [feature]
+                        original_values = dict_types[feature]["original_values:"]
+                        original_values = [original_feature, original_values[0], original_values[1]]
+                        self._values_categorical_features[feature] = original_values
                         self._categorical_features.append(feature)
                     elif t == TypeFeature.BINARY:
                         self._binary_features.append(feature)
@@ -190,12 +194,19 @@ class Explainer:
                         else:
                             raise ValueError("The feature " + str(feature) + " does not exist.")
                 elif key == "categorical":
-                    for feature in features_types[key]:
+                    if not isinstance(features_types[key], dict):
+                        raise ValueError("The value of the key 'categorical' must be a Python dictionnary. Example: {'color': ('blue', 'red', 'yellow')}")
+                    for feature in features_types[key].keys():
+                        values = features_types[key][feature]        
                         if "*" in feature:
                             feature = feature.split("*")[0]
                             associated_features = [f for f in feature_names if f.startswith(feature)]
                             if associated_features == []:
                                 raise ValueError("No feature with the pattern " + str(feature) + ".")
+                            if len(associated_features) != len(values):
+                                raise ValueError("The number of values in " + str(values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(associated_features))
+                            for i in range(len(associated_features)):
+                                self._values_categorical_features[associated_features[i]] = [feature, values[i], values]
                             self._reg_exp_categorical_features[feature] = associated_features
                             self._categorical_features.extend(associated_features)
                         else:
@@ -245,6 +256,7 @@ class Explainer:
             for index in indexes:
                 self.map_indexes[index] = reg_exp_feature_name
 
+        model.set_values_categorical_features(self._values_categorical_features)
         # Display some statistics
         nNumerical = len(self._numerical_features)
         nBinaries = len(self._binary_features)
@@ -256,7 +268,7 @@ class Explainer:
         Tools.verbose("Categorical features:", nCategorical)
         Tools.verbose("Binary features:", nBinaries)
         Tools.verbose("Number of features:", nNumerical + nCategorical + nBinaries)
-
+        Tools.verbose("Values of categorical features:", self._values_categorical_features)
         used_features = set()
         used_features_without_one_hot_encoded = set()
         for key in model.map_features_to_id_binaries.keys():

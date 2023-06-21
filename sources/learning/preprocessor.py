@@ -242,7 +242,7 @@ class Preprocessor:
                 
                 for i in reversed(range(len(names))):
                     name = names[i]
-                    save_original_value = original_values[i]
+                    save_original_value = (original_values[i], original_values)
                     self.insert_index(index, name, save_features_type, save_numerical_converter, save_encoder, save_category, save_original_value, save_original_type, save_already_enc)
                     self.data.insert(index, name, transformed_df[name], True)
                 #print("index:", index)
@@ -389,7 +389,7 @@ class Preprocessor:
           
           if self.encoder[i] == TypeEncoder.OneHotEncoder:
               new_dict["original_feature:"] = self.categories[i] 
-              new_dict["original_value:"] = self.original_value[i] 
+              new_dict["original_values:"] = self.original_value[i] 
               
 
           #new_dict["original_type:"] = self.original_types[i]
