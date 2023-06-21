@@ -15,7 +15,7 @@ class BinaryMapping():
         self.map_binary_features = {}  # dict[id_feature] -> [id_binaries of the feature]
         self.map_categorical_features_ordinal = {}  # dict[id_feature] -> [id_binaries of the feature]
         self.map_categorical_features_one_hot = {}  # dict[reg_exp_name] -> [id_binaries of the set of features representing the reg_exp_name of the feature that was one hot encoded]
-
+        self.values_categorical_features = {} # dict[feature name]->categorical value 
         self.map_check_already_used = {}  # Just to check if a feature is already used
 
         self.learner_information = learner_information
@@ -67,7 +67,7 @@ class BinaryMapping():
         self.map_binary_features.clear()
         self.map_categorical_features_one_hot.clear()
         self.map_categorical_features_ordinal.clear()
-
+        self.values_categorical_features.clear()
 
     def add_numerical_feature(self, id_feature):
         if id_feature in self.map_check_already_used.keys():
@@ -94,6 +94,9 @@ class BinaryMapping():
         self.map_binary_features[id_feature] = id_binaries_of_the_feature
         self.map_check_already_used[id_feature] = "binary"
 
+
+    def set_values_categorical_features(self, values_categorical_features):
+        self.values_categorical_features = values_categorical_features
 
     def add_categorical_feature_one_hot(self, reg_exp_feature_name, id_features):
         id_binaries_of_the_feature = []
@@ -220,12 +223,20 @@ class BinaryMapping():
 
     def get_id_features(self, binary_representation):
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
+    
 
-
+    
     def convert_features_to_dict_features(self, features, feature_names):
         dict_features = dict()
+        dict_features_categorical = dict()
         for feature in features:
+            
             name = feature["name"]
+            theory = feature["theory"]
+            if theory is not None and theory[0] == "categorical":
+                dict_features_categorical[name] = theory[1][0]
+                name = theory[1][0]
+            
             if name not in dict_features.keys():
                 dict_features[name] = [feature]
             else:
@@ -236,7 +247,9 @@ class BinaryMapping():
         for name in feature_names:
             if name in dict_features.keys():
                 order_dict_features[name] = dict_features[name]
-
+            elif name in dict_features_categorical.keys():
+                if dict_features_categorical[name] not in order_dict_features.keys():
+                    order_dict_features[dict_features_categorical[name]] = dict_features[dict_features_categorical[name]]
         return order_dict_features
 
 
@@ -290,10 +303,25 @@ class BinaryMapping():
             feature["operator_sign_considered"] = self.apply_sign_on_operator(feature["operator"], feature["sign"])
             feature["threshold"] = self.map_id_binaries_to_features[abs(lit)][2]
             feature["weight"] = reason[lit] if isinstance(reason, dict) else None
+
+            if len(self.map_check_already_used) != 0: 
+                if self.map_check_already_used[feature["id"]] == "binary":
+                    feature["theory"] = ("binary", (0,1))
+                elif self.map_check_already_used[feature["id"]] == "categorical":
+                    feature["theory"] = ("categorical", self.values_categorical_features[feature["name"]])
+                elif self.map_check_already_used[feature["id"]] == "numerical":
+                    feature["theory"] = ("numerical")
+                else:
+                    feature["theory"] = None
+            else:
+                feature["theory"] = None
+            
             result.append(feature)
 
         # Get conditions with the same feature and create the string representation
+        
         dict_features = self.convert_features_to_dict_features(result, feature_names)
+        #print("dict_features:", dict_features)
 
         simple_result = []
         if without_intervals is True or eliminate_redundant_features is False:
@@ -309,7 +337,57 @@ class BinaryMapping():
 
         for name in dict_features.keys():
             features = dict_features[name]
-            if len(features) == 1:
+            if features[0]["theory"] is not None and features[0]["theory"][0] == "binary":
+                #binary case 
+                if len(features) != 1:
+                    raise ValueError("A binary feature must be only one conditions in the explanation.")
+                feature = features[0]
+                if feature["threshold"] != 0.5:
+                    raise ValueError("the threshold of a binary feature must be equal to 0.5: " + feature["threshold"])
+                str_operator = feature["operator_sign_considered"].to_str_readable()
+                if str_operator == ">" or str_operator == ">=":
+                    feature["string"] = str(feature["name"]) + " = 1"
+                else:
+                    feature["string"] = str(feature["name"]) + " = 0"
+                simple_result.append(feature["string"])    
+
+            elif features[0]["theory"] is not None and features[0]["theory"][0] == "categorical":
+                #categorical case 
+                thresholds = [feature["threshold"] for feature in features]
+                for threshold in thresholds:
+                    if threshold != 0.5:
+                        raise ValueError("The thresholds of a categorical feature must be equals to 0.5: " + threshold)
+                    
+                positive_values = []
+                negative_values = []
+                
+                for feature in features:
+                    if feature["operator_sign_considered"].to_str_readable() == ">" or feature["operator_sign_considered"].to_str_readable() == ">=":
+                        positive_values.append(feature)
+                    else:
+                        negative_values.append(feature)
+
+                if len(positive_values) != 0 and len(negative_values) != 0:
+                    raise ValueError("Theory prevents to have at the same time a categorical equal to A and not equal to B.")
+                if len(positive_values) > 1:
+                    raise ValueError("Theory prevents to have at the same time a categorical equal to A and also equal to B.")
+                
+                if len(positive_values) != 0:
+                    feature = positive_values[0]
+                    name = feature["theory"][1][0]
+                    value = feature["theory"][1][1]
+                    feature["string"] = str(name) + " = " + str(value)
+                    simple_result.append(feature["string"])  
+                elif len(negative_values) != 0:
+                    name = negative_values[0]["theory"][1][0]
+                    values = [feature["theory"][1][1] for feature in negative_values]
+                    if len(values) == 1:
+                        feature["string"] = str(name) + " != " + str(values[0])
+                    else:
+                        feature["string"] = str(name) + " != {" + ",".join(str(value) for value in values)+"}"
+                    simple_result.append(feature["string"])
+                    
+            elif len(features) == 1:
                 feature = features[0]
                 str_operator = feature["operator_sign_considered"].to_str_readable()
                 feature["string"] = str(feature["name"]) + " " + str_operator + " " + str(feature["threshold"])
