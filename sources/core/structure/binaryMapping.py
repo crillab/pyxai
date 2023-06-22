@@ -340,14 +340,24 @@ class BinaryMapping():
             if features[0]["theory"] is not None and features[0]["theory"][0] == "binary":
                 #binary case 
                 if len(features) != 1:
-                    raise ValueError("A binary feature must be only one conditions in the explanation.")
+                    raise ValueError("A binary feature must be represented only by one condition in the explanation.")
                 feature = features[0]
-                if feature["threshold"] != 0.5:
-                    raise ValueError("the threshold of a binary feature must be equal to 0.5: " + feature["threshold"])
-                str_operator = feature["operator_sign_considered"].to_str_readable()
-                if str_operator == ">" or str_operator == ">=":
+                
+                operator = feature["operator_sign_considered"]
+                if (operator == OperatorCondition.EQ or operator == OperatorCondition.NEQ):
+                    if feature["threshold"] != 0 and feature["threshold"] != 1:
+                        raise ValueError("The threshold of a binary feature with EQ or NEQ must be equal to 0 or 1: " + str(feature["threshold"]))
+                    feature["string"] = str(feature["name"]) + " " + operator.to_str_readable() + " " + str(feature["threshold"])
+                elif (operator == OperatorCondition.GE or operator == OperatorCondition.GT):
+                    if feature["threshold"] != 0.5:
+                        raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                     feature["string"] = str(feature["name"]) + " = 1"
+                elif (operator == OperatorCondition.LE or operator == OperatorCondition.LT):
+                    if feature["threshold"] != 0.5:
+                        raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
+                    feature["string"] = str(feature["name"]) + " = 0"
                 else:
+                    raise ValueError("The operator " + str(operator) + " do not exist.")
                     feature["string"] = str(feature["name"]) + " = 0"
                 simple_result.append(feature["string"])    
 
@@ -356,7 +366,7 @@ class BinaryMapping():
                 thresholds = [feature["threshold"] for feature in features]
                 for threshold in thresholds:
                     if threshold != 0.5:
-                        raise ValueError("The thresholds of a categorical feature must be equals to 0.5: " + threshold)
+                        raise ValueError("The thresholds of a categorical feature must be equals to 0.5: " + str(threshold))
                     
                 positive_values = []
                 negative_values = []
