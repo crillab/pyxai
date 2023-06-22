@@ -1,8 +1,7 @@
 {
   "Misdemeanor": {
     "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "Misdemeanor"
+    "encoder:": "LabelEncoder"
   },
   "Number_of_Priors": {
     "type:": "NUMERICAL",
@@ -11,51 +10,60 @@
   "score_factor": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "score_factor"
+    "original_feature:": "score_factor",
+    "original_values:": null
   },
   "Age_Above_FourtyFive": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Age_Above_FourtyFive"
+    "original_feature:": "Age_Above_FourtyFive",
+    "original_values:": null
   },
   "Age_Below_TwentyFive": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Age_Below_TwentyFive"
+    "original_feature:": "Age_Below_TwentyFive",
+    "original_values:": null
   },
   "African_American": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Ethnic"
+    "original_feature:": "Ethnic",
+    "original_values:": null
   },
   "Asian": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Ethnic"
+    "original_feature:": "Ethnic",
+    "original_values:": null
   },
   "Hispanic": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Ethnic"
+    "original_feature:": "Ethnic",
+    "original_values:": null
   },
   "Native_American": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Ethnic"
+    "original_feature:": "Ethnic",
+    "original_values:": null
   },
   "Other": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Ethnic"
+    "original_feature:": "Ethnic",
+    "original_values:": null
   },
   "Female": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
-    "original_feature:": "Female"
+    "original_feature:": "Female",
+    "original_values:": null
   },
   "Two_yr_Recidivism": {
-    "type:": "TARGET",
-    "encoder:": "LabelEncoder",
+    "type:": "Classification",
+    "encoder:": "None",
     "classes:": [
       "0",
       "1"
