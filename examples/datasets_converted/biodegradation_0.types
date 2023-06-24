@@ -164,7 +164,7 @@
     "encoder:": "None"
   },
   "41": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "1.0",

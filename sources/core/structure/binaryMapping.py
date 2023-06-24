@@ -364,10 +364,21 @@ class BinaryMapping():
             elif features[0]["theory"] is not None and features[0]["theory"][0] == "categorical":
                 #categorical case 
                 thresholds = [feature["threshold"] for feature in features]
-                for threshold in thresholds:
-                    if threshold != 0.5:
-                        raise ValueError("The thresholds of a categorical feature must be equals to 0.5: " + str(threshold))
-                    
+                if all(feature["operator_sign_considered"] == OperatorCondition.GE \
+                        or feature["operator_sign_considered"] == OperatorCondition.GT \
+                        or feature["operator_sign_considered"] == OperatorCondition.LE \
+                        or feature["operator_sign_considered"] == OperatorCondition.LT
+                        for feature in features):
+                    if not all(feature["threshold"] == 0.5 for feature in features):
+                        raise ValueError("The thresholds of a categorical feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
+                elif all(feature["operator_sign_considered"] == OperatorCondition.EQ \
+                        or feature["operator_sign_considered"] == OperatorCondition.NEQ \
+                        for feature in features):
+                    if not all(feature["threshold"] == 0 or feature["threshold"] == 1 for feature in features):
+                        raise ValueError("The thresholds of a categorical feature with EQ or NEQ must be equal to 0 or 1: " + str(feature["threshold"]))
+                else:
+                    raise ValueError("A categorical feature have some different operators.")
+                
                 positive_values = []
                 negative_values = []
                 
