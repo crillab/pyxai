@@ -14,9 +14,6 @@ preprocessor.set_categorical_features_already_one_hot_encoded("Ethnic", ["Africa
 preprocessor.set_categorical_features_already_one_hot_encoded("Female", ["Female"])
 preprocessor.set_categorical_features_already_one_hot_encoded("Misdemeanor", ["Misdemeanor"])
 
-
-
-#datetime.date(d.split("/")[2], d.split("/")[1], d.split("/")[0]).toordinal()
 preprocessor.set_numerical_features({
   "Number_of_Priors": None
 })
