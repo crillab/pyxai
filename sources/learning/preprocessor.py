@@ -63,7 +63,7 @@ class Preprocessor:
         self.original_types = switch_list(self.original_types, index1, index2)
         self.original_value = switch_list(self.original_value, index1, index2)
         self.already_encoded = switch_list(self.already_encoded, index1, index2)
-
+        
     def set_target_feature(self, feature):
         if feature in self.features_name: 
             self.features_type[self.features_name.index(feature)] = TypeFeature.TARGET
@@ -97,12 +97,21 @@ class Preprocessor:
                 raise ValueError("Wrong type for the key " + str(element) + ".")
 
     def set_categorical_features_already_one_hot_encoded(self, name, features):
-        for element in features:
+        if len(features) == 1:
+            element = features[0]
             index_element = self.features_name.index(element)
-            self.features_type[index_element] = TypeFeature.CATEGORICAL
-            self.encoder[index_element] = TypeEncoder.OneHotEncoder
-            self.categories[index_element] = name
-            self.already_encoded[index_element] = True
+            self.n_bool += 1
+            self.features_type[index_element] = TypeFeature.BINARY
+            self.encoder[index_element] = None
+            print("The feature " + element + " is boolean! No One Hot Encoding for this features.")
+        else:
+            for element in features:
+                index_element = self.features_name.index(element)
+                self.features_type[index_element] = TypeFeature.CATEGORICAL
+                self.encoder[index_element] = TypeEncoder.OneHotEncoder
+                self.categories[index_element] = name
+                self.already_encoded[index_element] = True
+                self.original_value[index_element] = (element, features)
 
 
     def set_categorical_features(self, columns=None, encoder=TypeEncoder.OneHotEncoder):
@@ -164,7 +173,8 @@ class Preprocessor:
         # Switch two features to put the target_feature at the end
         
         self.switch_indexes(self.target_feature, -1)
-        
+        self.target_feature = -1 #Litte bug: now the target is at the end
+
         # Move the data
         self.data=self.data[self.features_name]
         
@@ -174,7 +184,7 @@ class Preprocessor:
         
         # Use the label encoder to encode this feature 
         if self.learner_type == LearnerType.Classification:
-            self.encoder[self.target_feature] = "LabelEncoder" 
+            self.encoder[self.target_feature] = "LabelEncoder"
             encoder = LabelEncoder()
             self.data[self.target_features_name] = encoder.fit_transform(self.data[self.target_features_name])
             self.label_encoder_classes = encoder.classes_
@@ -276,7 +286,6 @@ class Preprocessor:
     
       self.process_to_delete()
 
-    
       self.process_categorical_features()
       
       self.process_numerical_features()

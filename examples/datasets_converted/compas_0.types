@@ -1,69 +1,106 @@
 {
   "Misdemeanor": {
-    "type:": "CATEGORICAL",
-    "encoder:": "LabelEncoder"
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "Number_of_Priors": {
     "type:": "NUMERICAL",
     "encoder:": "None"
   },
   "score_factor": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "score_factor",
-    "original_values:": null
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "Age_Above_FourtyFive": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "Age_Above_FourtyFive",
-    "original_values:": null
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "Age_Below_TwentyFive": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "Age_Below_TwentyFive",
-    "original_values:": null
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "African_American": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Ethnic",
-    "original_values:": null
+    "original_values:": [
+      "African_American",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
   },
   "Asian": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Ethnic",
-    "original_values:": null
+    "original_values:": [
+      "Asian",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
   },
   "Hispanic": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Ethnic",
-    "original_values:": null
+    "original_values:": [
+      "Hispanic",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
   },
   "Native_American": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Ethnic",
-    "original_values:": null
+    "original_values:": [
+      "Native_American",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
   },
   "Other": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "Ethnic",
-    "original_values:": null
+    "original_values:": [
+      "Other",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
   },
   "Female": {
-    "type:": "CATEGORICAL",
-    "encoder:": "OneHotEncoder",
-    "original_feature:": "Female",
-    "original_values:": null
+    "type:": "BINARY",
+    "encoder:": "None"
   },
   "Two_yr_Recidivism": {
     "type:": "Classification",
-    "encoder:": "None",
+    "encoder:": "LabelEncoder",
     "classes:": [
       "0",
       "1"
