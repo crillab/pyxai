@@ -332,7 +332,7 @@ class BinaryMapping():
                     feature["string"] = str(feature["name"]) + " " + str_operator + " " + str(feature["threshold"])
                     simple_result.append(feature["string"])
             if details is True:
-                return tuple(result)
+                return dict_features
             return tuple(simple_result)
 
         for name in dict_features.keys():
@@ -394,18 +394,22 @@ class BinaryMapping():
                     raise ValueError("Theory prevents to have at the same time a categorical equal to A and also equal to B.")
                 
                 if len(positive_values) != 0:
+                    # Case color = 'green' 
                     feature = positive_values[0]
                     name = feature["theory"][1][0]
                     value = feature["theory"][1][1]
                     feature["string"] = str(name) + " = " + str(value)
                     simple_result.append(feature["string"])  
                 elif len(negative_values) != 0:
+                    # Case color != {'green', 'red'}
                     name = negative_values[0]["theory"][1][0]
                     values = [feature["theory"][1][1] for feature in negative_values]
-                    if len(values) == 1:
-                        feature["string"] = str(name) + " != " + str(values[0])
-                    else:
-                        feature["string"] = str(name) + " != {" + ",".join(str(value) for value in values)+"}"
+                    for feature in negative_values:
+                        if len(values) == 1:
+                            feature["string"] = str(name) + " != " + str(values[0])
+                        else:
+                            feature["string"] = str(name) + " != {" + ",".join(str(value) for value in values)+"}"
+
                     simple_result.append(feature["string"])
                     
             elif len(features) == 1:
@@ -493,7 +497,7 @@ class BinaryMapping():
                 raise ValueError("In the interval view, the number of conditions for one feature must be <= 2.")
 
         if details is True:
-            return tuple(result)
+            return dict_features
         return tuple(simple_result)
 
 
