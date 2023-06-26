@@ -9,7 +9,6 @@ learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLAS
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 instances = learner.get_instances(n=100)
 
-#print("instance:", instance)
 
 
 # Explainer part
@@ -18,6 +17,8 @@ instances = learner.get_instances(n=100)
 explainer = Explainer.initialize(model, features_type=Tools.Options.types)
 for (instance, prediction) in instances:
     explainer.set_instance(instance)
+    
+
 #contrastive = explainer.minimal_contrastive_reason(time_limit=100)
 #features = explainer.to_features(contrastive, contrastive=True)
 
@@ -27,4 +28,6 @@ for (instance, prediction) in instances:
     majoritary_reason = explainer.majoritary_reason(n_iterations=10)
     features = explainer.to_features(majoritary_reason)
     print("features majoritary:", features)
+
+explainer.show()
 
