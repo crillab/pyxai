@@ -1,5 +1,6 @@
 import matplotlib.pyplot as pyplot
 import matplotlib as mpl
+from matplotlib.ticker import MaxNLocator
 import numpy
 from PIL import Image as PILImage
 from PIL.ImageQt import ImageQt
@@ -65,8 +66,12 @@ class PyPlotDiagramGenerator():
             else:
                 dict_features[name].append(feature)
         return dict_features
+    
     def generate_explanation(self, feature_values, instance, reason):
 
+        color_blue = "#4169E1"
+        color_red = "#CD5C5C"
+        color_grey = "#808080"
         trans_left = mpl.transforms.Affine2D().translate(-5, 0)
         trans_right = mpl.transforms.Affine2D().translate(5, 0)
         
@@ -74,18 +79,82 @@ class PyPlotDiagramGenerator():
         mpl.rcParams['axes.spines.right'] = False
         mpl.rcParams['axes.spines.top'] = False
         mpl.rcParams['axes.spines.bottom'] = True
-        dict_features = self.convert_features_to_dict_features(reason)
-        print("dict_features:", dict_features)
+        dict_features = reason
         fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
         for i, feature in enumerate(dict_features.keys()):
+            if "string" not in dict_features[feature][0].keys():
+                
+                raise ValueError("The string version of this feature is not done.")
             string_view = dict_features[feature][0]["string"]
-            print("string_view:", string_view)
+            theory = dict_features[feature][0]["theory"] 
+            
             bound_left = 0
             bound_right = 1
             bound_explanation_left = None
             bound_explanation_right = None
             
+            if theory is not None:
+                if theory[0] == "binary":
+                    #binary case
+                    feature_str, operator_str, threshold_str = string_view.split(" ")
+                    
+                    if operator_str == "=":
+                        colors = [color_blue, color_red] if threshold_str == "0" else [color_red, color_blue]
+                    else:
+                        colors = [color_red, color_blue] if threshold_str == "0" else [color_blue, color_red]
+                    
+                    the_table = axes[i].table(
+                        cellText=[["0","1"]],
+                        cellColours=[colors],
+                        loc='center',
+                        colLoc='center',
+                        cellLoc='center',
+                        bbox=[0, -0.3, 1, 0.275])
+                    
+                    the_table.set_fontsize(10)
+                    axes[i].text(0.5,0.2,feature_str)
+                    
+                    axes[i].yaxis.set_visible(False)
+                    axes[i].xaxis.set_visible(False)
+                    axes[i].axis('off')
+                    continue
+                elif theory[0] == "categorical":
+                    #categorical case
+                    feature_str, operator_str, values = string_view.split(" ")
+                    all_values = [str(element) for element in theory[1][2]]
+                    colors = [color_grey] * len(all_values)
+                    if operator_str == "=":
+                        index = all_values.index(values)
+                        for c in range(len(colors)): colors[c] = color_red
+                        colors[index] = color_blue
+                    elif operator_str == "!=":
+                        if "{" in values:
+                            values_to_red = [element for element in values.replace("{","").replace("}","").split(",")]
+                            for value in values_to_red:
+                                index = all_values.index(value)
+                                colors[index] = color_red
+                        else:
+                            index = all_values.index(values)
+                            colors[index] = color_red
+
+                    the_table = axes[i].table(
+                        cellText=[all_values],
+                        cellColours=[colors],
+                        loc='center',
+                        colLoc='center',
+                        cellLoc='center',
+                        bbox=[0, -0.3, 1, 0.275])
+                    the_table.set_fontsize(10)
+                    axes[i].text(0.5,0.2,feature_str)
+                    
+                    axes[i].yaxis.set_visible(False)
+                    axes[i].xaxis.set_visible(False)
+                    axes[i].axis('off')
+                    
+                    continue
+
             value_instance = feature_values[feature]
+            #numerical case: if theory is None, all features are considered as numerical
             if "in" in string_view:
                 if "and" in string_view:
                     #case feature in [infinty, threshold1] and feature in [threshold2, infinity]
@@ -104,13 +173,11 @@ class PyPlotDiagramGenerator():
                     total = bound_right - bound_left
                     bound_left = bound_left - (total/10)
                     bound_right = bound_right + (total/10)
-                    print("bound_left:", bound_left)
-                    print("bound_right:", bound_right)
 
                     midle = (bound_left+bound_right)/2
                     axes[i].set_ylim(bottom=-1, top=50)
                     axes[i].set_xlim(left=bound_left, right=bound_right)
-                    axes[i].plot([bound_left, bound_right], [25, 25], color="teal")
+                    axes[i].plot([bound_left, bound_right], [25, 25], color=color_blue)
                     axes[i].text(midle,35,feature)
                     axes[i].yaxis.set_visible(False)
                     
@@ -128,17 +195,15 @@ class PyPlotDiagramGenerator():
                     else:
                         bracket_right = "$\mathcal{[}$" if "[" in threshold_str_2 else "$\mathcal{]}$"
 
-                    print("bound_explanation_left:", bound_explanation_left)
-                    print("bound_explanation_right:", bound_explanation_right)
-                    axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color="teal", linewidth=5)
+                    axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color=color_blue, linewidth=5)
 
-                    axes[i].plot(value_instance, 25, marker="o", color="tomato", clip_on=False, markersize=10)
+                    axes[i].plot(value_instance, 25, marker="o", color=color_red, clip_on=False, markersize=10)
                     
                     if bracket_left is not None:
-                        x = axes[i].plot(bound_explanation_left, 25, marker=bracket_left, color="teal", clip_on=False, markersize=20)
+                        x = axes[i].plot(bound_explanation_left, 25, marker=bracket_left, color=color_blue, clip_on=False, markersize=20)
                         if bracket_left == "$\mathcal{]}$": x[0].set_transform(x[0].get_transform()+trans_left)
                     if bracket_right is not None:
-                        axes[i].plot(bound_explanation_right, 25, marker=bracket_right, color="teal", clip_on=False, markersize=20)
+                        axes[i].plot(bound_explanation_right, 25, marker=bracket_right, color=color_blue, clip_on=False, markersize=20)
                         if bracket_right == "$\mathcal{[}$": x[0].set_transform(x[0].get_transform()+trans_right)
                     
             else:
@@ -148,17 +213,16 @@ class PyPlotDiagramGenerator():
                 bound_left = min(threshold, value_instance)
                 bound_right = max(threshold, value_instance)
                 total = bound_right - bound_left
+                if bound_right == bound_left:
+                    total = bound_right
                 bound_left = bound_left - (total/10)
                 bound_right = bound_right + (total/10)
                 
-                print("threshold:", threshold)
-                print("bound_left:", bound_left)
-                print("bound_right:", bound_right)
                 
                 midle = (bound_left+bound_right)/2
                 axes[i].set_ylim(bottom=-1, top=50)
                 axes[i].set_xlim(left=bound_left, right=bound_right)
-                axes[i].plot([bound_left, bound_right], [25, 25], color="teal")
+                axes[i].plot([bound_left, bound_right], [25, 25], color=color_blue)
                 axes[i].text(midle,35,feature)
                 axes[i].yaxis.set_visible(False)
                 
@@ -168,23 +232,25 @@ class PyPlotDiagramGenerator():
                     bound_explanation_left = threshold
                     bound_explanation_right = bound_right
                     bracket_left = "$\mathcal{[}$" if operator_str == ">=" else "$\mathcal{]}$"
-                    
+                
                 elif operator_str == "<" or operator_str == "<=":
                     bound_explanation_left = bound_left
                     bound_explanation_right = threshold
                     bracket_right = "$\mathcal{[}$" if operator_str == "<" else "$\mathcal{]}$"
                 else:
                     raise NotImplementedError("TODO = and !=")
+                print("bound_explanation_left:", bound_explanation_left)
+                print("bound_explanation_right:", bound_explanation_right)
                 
-                axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color="teal", linewidth=5)
-                axes[i].plot(value_instance, 25, marker="o", color="tomato", clip_on=False, markersize=10)
+                axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color=color_blue, linewidth=5)
+                axes[i].plot(value_instance, 25, marker="o", color=color_red, clip_on=False, markersize=10)
                 
                 if bracket_left is not None:
-                    x = axes[i].plot(threshold, 25, marker=bracket_left, color="teal", clip_on=False, markersize=20)
+                    x = axes[i].plot(threshold, 25, marker=bracket_left, color=color_blue, clip_on=False, markersize=20)
                     if bracket_left == "$\mathcal{]}$": x[0].set_transform(x[0].get_transform()+trans_left)
                 
                 if bracket_right is not None:
-                    x = axes[i].plot(threshold, 25, marker=bracket_right, color="teal", clip_on=False, markersize=20)
+                    x = axes[i].plot(threshold, 25, marker=bracket_right, color=color_blue, clip_on=False, markersize=20)
                     if bracket_right == "$\mathcal{[}$": x[0].set_transform(x[0].get_transform()+trans_right)
                         
                         
