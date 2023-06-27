@@ -36,11 +36,11 @@ class Explainer:
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
         if self._do_history is True:
-            if len(reasons) == 0:
+            if reasons is None or len(reasons) == 0:
                 return
             if not isinstance(reasons[0], tuple): reasons = [reasons]
             reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
-            if instance in self._history.keys():
+            if (instance, self.target_prediction) in self._history.keys():
                 self._history[(instance, self.target_prediction)].append((class_name, method_name, reasons))
             else:
                 self._history[(instance, self.target_prediction)] = [(class_name, method_name, reasons)]
