@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QAbstractItemView, QHeaderView, QDesktopWidget, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QAction, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+from PyQt5.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QDesktopWidget, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QAction, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
 
 from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QColor
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
@@ -51,32 +51,42 @@ class GraphicalInterface(QMainWindow):
         self.scaleFactor = 0.0
 
         self.create_menu_bar()
+        splitter = QSplitter()
+        
         instance_layout = self.create_instance_group()
-        main_layout.addLayout(instance_layout, 0, 0)
+        instance_widget = QWidget()
+        instance_widget.setLayout(instance_layout)
+        splitter.addWidget(instance_widget)
 
-        self.separator = QFrame()
-        self.separator.setFrameShape(QFrame.VLine)
-        self.separator.setFrameShadow(QFrame.Raised)
-        layout_separator = QHBoxLayout()
-        layout_separator.addWidget(self.separator)
-       
+        #main_layout.addLayout(instance_layout, 0, 0)
 
-        main_layout.addLayout(layout_separator, 0, 1)
+        #self.separator = QFrame()
+        #self.separator.setFrameShape(QFrame.VLine)
+        #self.separator.setFrameShadow(QFrame.Raised)
+        #layout_separator = QHBoxLayout()
+        #layout_separator.addWidget(self.separator)
+        
+
+        #main_layout.addLayout(layout_separator, 0, 1)
 
         explanation_layout = self.create_explanation_group()
-        main_layout.addLayout(explanation_layout, 0, 2)
+        explanation_widget = QWidget()
+        explanation_widget.setLayout(explanation_layout)
+        splitter.addWidget(explanation_widget)
 
-        widget = QWidget()
-        widget.setLayout(main_layout)
-        self.setCentralWidget(widget)
+        #main_layout.addLayout(explanation_layout, 0, 2)
+
+        #widget = QWidget()
+        #widget.setLayout(main_layout)
+        self.setCentralWidget(splitter)
         
         self.show()
         sys.exit(app.exec_())
 
     def create_instance_group(self):
         self.instance_group = QGroupBox("Instances")
-        
         self.instance_group.repaint()
+
         self.list_instance = QListWidget()
         if self.explainer is not None:
             instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
@@ -85,19 +95,27 @@ class GraphicalInterface(QMainWindow):
         #List of instances
         self.list_instance.addItems(instances)
         self.list_instance.clicked.connect(self.clicked_instance)
-        self.list_instance.setMaximumWidth(100)
-        self.list_instance.setMinimumWidth(100)
+        self.list_instance.setMaximumWidth(150)
+        self.list_instance.setMinimumWidth(150)
         
         #Table of the selected instance
-        self.table_instance = QTableWidget(len(self.feature_names), 2)
+        self.table_instance = QTableWidget(len(self.feature_names)-1, 2)
         self.table_instance.verticalHeader().setVisible(False)
         self.table_instance.setHorizontalHeaderItem(0, QTableWidgetItem("Name"))
         self.table_instance.setHorizontalHeaderItem(1, QTableWidgetItem("Value"))
-        self.table_instance.setMaximumWidth(220)
         self.table_instance.setMinimumWidth(220)
-        for i, name in enumerate(self.feature_names):
+        for i, name in enumerate(self.feature_names[:-1]):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
         
+        self.table_prediction = QTableWidget(1, 2)
+        self.table_prediction.verticalHeader().setVisible(False)
+        self.table_prediction.setHorizontalHeaderItem(0, QTableWidgetItem("Name"))
+        self.table_prediction.setHorizontalHeaderItem(1, QTableWidgetItem("Value"))
+        self.table_prediction.setMinimumWidth(220)
+        self.table_prediction.setMaximumHeight(50)
+        self.table_prediction.setMinimumHeight(50)
+        self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
+
         if self.image_size is not None:
             #Image of the selected instance
             self.imageLabelLeft = QLabel()
@@ -123,8 +141,23 @@ class GraphicalInterface(QMainWindow):
             self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
             
         layout = QGridLayout()
+        layout2 = QVBoxLayout()
+        
         layout.addWidget(self.list_instance, 0, 0)
-        layout.addWidget(self.table_instance, 0, 1)
+        layout.addLayout(layout2, 0, 1)
+        label_prediction = QLabel(self)
+        #label_prediction.setFrameStyle(QFrame.Panel | QFrame.Raised)
+        label_prediction.setText("Prediction:")
+        label_prediction.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        label_instance = QLabel(self)
+        label_instance.setText("Instance:")
+        label_instance.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        
+        layout2.addWidget(label_prediction)
+        layout2.addWidget(self.table_prediction)
+        layout2.addWidget(label_instance)
+        layout2.addWidget(self.table_instance)
+        
         if self.image_size is not None:
             layout.addWidget(self.scrollAreaLeft, 0, 2)
         self.left_layout = layout
@@ -230,9 +263,11 @@ class GraphicalInterface(QMainWindow):
         index = self.list_instance.currentIndex().row()
         self.current_instance = tuple(self.explainer._history.keys())[index]
         self.feature_values.clear()
-        for i, value in enumerate(self.current_instance):
+        for i, value in enumerate(self.current_instance[0]):
             self.table_instance.setItem(i, 1, QTableWidgetItem(str(value)))
             self.feature_values[self.feature_names[i]] = value
+
+        self.table_prediction.setItem(0, 1, QTableWidgetItem(str(self.current_instance[1])))
 
         n_to_delete = self.table_explanation.rowCount()
         for _ in range(n_to_delete):
@@ -262,7 +297,6 @@ class GraphicalInterface(QMainWindow):
         
         reasons = self.explainer._history[self.current_instance][self.id_method][2]
         reason = reasons[self.id_reason]
-        #print("reason:", reason)
         self.display_right(self.current_instance, reason)
 
     def create_menu_bar(self):
