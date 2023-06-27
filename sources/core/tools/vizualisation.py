@@ -287,9 +287,9 @@ class PyPlotImageGenerator():
         return ImageQt(self.PIL_instance)
     
     def generate_explanation(self, instance, reason):
+        reason = [reason[key][0] for key in reason.keys()]
         self.image_positive = numpy.zeros(self.size)
         self.image_negative = numpy.zeros(self.size)
-        
         with_weights = all(feature["weight"] is not None for feature in reason)
         if with_weights:
             max_weights = max(feature["weight"] for feature in reason if feature["weight"])

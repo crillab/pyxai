@@ -222,7 +222,7 @@ class ExplainerBT(Explainer):
         result, solution = cp_solver.solve(time_limit=time_limit, upper_bound=len(tree_specific) + 1)
         time_used += time.time()
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
-        result = None if (result == UNSAT or result == UNKNOWN) else Explainer.format(
+        result = () if (result == UNSAT or result == UNKNOWN) else Explainer.format(
             [l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
         self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
 

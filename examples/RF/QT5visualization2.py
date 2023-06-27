@@ -18,8 +18,8 @@ for (instance, prediction) in instances:
     explainer.set_instance(instance)
 
     majoritary_reason = explainer.majoritary_reason(time_limit=10)
-    majoritary_reason = explainer.majoritary_reason(time_limit=50)
-    majoritary_reason = explainer.majoritary_reason(time_limit=100)
+    #majoritary_reason = explainer.majoritary_reason(time_limit=50)
+    #majoritary_reason = explainer.majoritary_reason(time_limit=100)
 
 
 #print("\nlen tree_specific: ", len(majoritary_reason))
