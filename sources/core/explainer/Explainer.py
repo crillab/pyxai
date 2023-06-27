@@ -41,9 +41,9 @@ class Explainer:
             if not isinstance(reasons[0], tuple): reasons = [reasons]
             reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
             if instance in self._history.keys():
-                self._history[instance].append((class_name, method_name, reasons))
+                self._history[(instance, self.target_prediction)].append((class_name, method_name, reasons))
             else:
-                self._history[instance] = [(class_name, method_name, reasons)]
+                self._history[(instance, self.target_prediction)] = [(class_name, method_name, reasons)]
 
 
     def get_model(self):
