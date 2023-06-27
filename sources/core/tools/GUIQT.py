@@ -114,7 +114,8 @@ class GraphicalInterface(QMainWindow):
         self.table_prediction.setMinimumWidth(220)
         self.table_prediction.setMaximumHeight(50)
         self.table_prediction.setMinimumHeight(50)
-        self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
+        if len(self.feature_names) != 0:
+            self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
 
         if self.image_size is not None:
             #Image of the selected instance
@@ -274,6 +275,7 @@ class GraphicalInterface(QMainWindow):
             self.table_explanation.removeRow(0)
         self.imageLabelRight.clear()
 
+        print("len:", len(self.explainer._history[self.current_instance]))
         for id_method, (_, method, reasons) in enumerate(self.explainer._history[self.current_instance]):
             for id_reason, reason in enumerate(reasons):
                 method = method.replace("reason", "").replace("reasons", "").replace("_", " ").capitalize()
@@ -287,7 +289,7 @@ class GraphicalInterface(QMainWindow):
                 self.table_explanation.setItem(numrows,3, QTableWidgetItem(str(len(reason))))
         
         if self.image_size is not None:
-            self.display_left(self.current_instance)
+            self.display_left(self.current_instance[0])
 
     
     def clicked_explanation(self, qmodelindex):
@@ -297,7 +299,7 @@ class GraphicalInterface(QMainWindow):
         
         reasons = self.explainer._history[self.current_instance][self.id_method][2]
         reason = reasons[self.id_reason]
-        self.display_right(self.current_instance, reason)
+        self.display_right(self.current_instance[0], reason)
 
     def create_menu_bar(self):
         self.save_action = QAction("Save Explainer", self)
@@ -385,8 +387,9 @@ class GraphicalInterface(QMainWindow):
         self.list_instance.addItems(instances)
         self.table_instance.setRowCount(len(self.feature_names))
 
-        for i, name in enumerate(self.feature_names):
+        for i, name in enumerate(self.feature_names[:-1]):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
+        self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
 
         if self.image_size is not None:
             if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
