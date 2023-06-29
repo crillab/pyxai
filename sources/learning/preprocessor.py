@@ -33,6 +33,7 @@ class Preprocessor:
         self.already_encoded = [False]*self.n_features
         self.n_bool = 0
         self.target_feature = self.set_target_feature(target_feature)
+        self.convert_labels = None
         
     def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_value, original_type, already_enc):
         self.features_name.insert(index, feature_name)
