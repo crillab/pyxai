@@ -81,6 +81,8 @@ class PyPlotDiagramGenerator():
         mpl.rcParams['axes.spines.bottom'] = True
         dict_features = reason
         fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
+        if len(dict_features.keys()) == 1:
+            axes = [axes] # To solve a bug when axes is not a list. 
         for i, feature in enumerate(dict_features.keys()):
             if "string" not in dict_features[feature][0].keys():
                 
@@ -99,13 +101,15 @@ class PyPlotDiagramGenerator():
                     feature_str, operator_str, threshold_str = string_view.split(" ")
                     
                     if operator_str == "=":
-                        colors = [color_blue, color_red] if threshold_str == "0" else [color_red, color_blue]
+                        txt = "False" if threshold_str == "0" else "True"
+                        #colors = [color_blue, color_red] if threshold_str == "0" else [color_red, color_blue]
                     else:
-                        colors = [color_red, color_blue] if threshold_str == "0" else [color_blue, color_red]
+                        txt = "True" if threshold_str == "0" else "False"
+                        #colors = [color_red, color_blue] if threshold_str == "0" else [color_blue, color_red]
                     
                     the_table = axes[i].table(
-                        cellText=[["0","1"]],
-                        cellColours=[colors],
+                        cellText=[[txt]],
+                        #cellColours=[colors],
                         loc='center',
                         colLoc='center',
                         cellLoc='center',
@@ -161,13 +165,15 @@ class PyPlotDiagramGenerator():
                     raise NotImplementedError("TODO feature in [infinty, threshold1] and feature in [threshold2, infinity]")
                 else:
                     #case feature in [threshold1, threshold2]
-                    feature_str, _, threshold_str_1, threshold_str_2 = string_view.split(" ")
-
-                    threshold_1 = threshold_str_1
-                    threshold_2 = threshold_str_2
                     
+                    feature_str, interval = string_view.split("in")
+                    feature_str = feature_str.lstrip().rstrip()
+                    threshold_1, threshold_2 = interval.split(", ")
+                    threshold_str_1 = threshold_1
+                    threshold_str_2 = threshold_2
                     threshold_1 = float(threshold_1.replace("[", "").replace("]", "").replace(",", ""))
                     threshold_2 = float(threshold_2.replace("[", "").replace("]", "").replace(",", ""))
+
                     bound_left = min(threshold_1, threshold_2, value_instance)
                     bound_right = max(threshold_1, threshold_2, value_instance)
                     total = bound_right - bound_left
@@ -208,7 +214,14 @@ class PyPlotDiagramGenerator():
                     
             else:
                 #Case with a simple condition feature > threshold
-                feature_str, operator_str, threshold_str = string_view.split(" ")
+                
+                for operator in ["<=", ">=", "<", ">"]:
+                    if operator in string_view:
+                        feature_str, threshold_str = string_view.split(operator)
+                        feature_str = feature_str.lstrip().rstrip()
+                        operator_str = operator
+                        break
+                
                 threshold = float(threshold_str)
                 bound_left = min(threshold, value_instance)
                 bound_right = max(threshold, value_instance)
@@ -239,8 +252,6 @@ class PyPlotDiagramGenerator():
                     bracket_right = "$\mathcal{[}$" if operator_str == "<" else "$\mathcal{]}$"
                 else:
                     raise NotImplementedError("TODO = and !=")
-                print("bound_explanation_left:", bound_explanation_left)
-                print("bound_explanation_right:", bound_explanation_right)
                 
                 axes[i].plot([bound_explanation_left, bound_explanation_right], [25, 25], color=color_blue, linewidth=5)
                 axes[i].plot(value_instance, 25, marker="o", color=color_red, clip_on=False, markersize=10)
@@ -270,6 +281,7 @@ class PyPlotDiagramGenerator():
         #new_image = axes.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
         #new_image = PILImage.fromarray(axes[0])
         pyplot.close()
+        
         return ImageQt(image)
 
 class PyPlotImageGenerator():

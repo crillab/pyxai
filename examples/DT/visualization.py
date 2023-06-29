@@ -10,7 +10,7 @@ from pyxai import Learning, Explainer, Tools
 
 
 # the location of the dataset
-dataset = "./examples/datasets/mnist49.csv"
+dataset = "./examples/datasets_not_converted/mnist38.csv"
 
 # Machine learning part
 learner = Learning.Scikitlearn(dataset)
