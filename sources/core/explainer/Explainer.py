@@ -31,6 +31,19 @@ class Explainer:
         graphical_interface = Tools.GraphicalInterface(self, image_size=image_size)
         graphical_interface.mainloop()
 
+    def heat_map(self, name, map, contrastive=False):
+        instance = self._instance
+        if instance is not None and not isinstance(instance, tuple):
+            instance = tuple(instance)
+        
+        reason = [self.to_features(map, details=True, contrastive=contrastive)]
+        if self._do_history is True:
+            if reason is None or len(reason) == 0:
+                return
+            if (instance , self.target_prediction) in self._history.keys():
+                self._history[(instance, self.target_prediction)].append(("DT", name, reason))
+            else:
+                self._history[(instance, self.target_prediction)] = [("DT", name, reason)]
 
     def add_history(self, instance, class_name, method_name, reasons):
         if instance is not None and not isinstance(instance, tuple):
@@ -115,7 +128,7 @@ class Explainer:
     def get_feature_names(self):
         model = self.get_model()
         if model.learner_information is None:
-            return ["f" + str(i + 1) for i in range(model.get_used_features())]
+            return ["f" + str(i + 1) for i in range(model.get_used_features())]+["p"]
         return model.learner_information.feature_names
 
 

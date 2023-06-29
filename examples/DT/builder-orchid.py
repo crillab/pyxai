@@ -12,6 +12,7 @@
 # url = {https://www.sciencedirect.com/science/article/pii/S0169023X22000799},
 # author = {Gilles Audemard and Steve Bellart and Louenas Bounia and Frédéric Koriche and Jean-Marie Lagniez and Pierre Marquis},
 # }
+# Check V1.0: Ok
 
 from pyxai import Builder, Explainer
 
@@ -76,3 +77,5 @@ for sufficient in sufficient_reasons:
 minimals = explainer.minimal_sufficient_reason(n=1)
 print("Minimal sufficient reasons:", minimals)
 assert minimals == (-4,), "The minimal sufficient reasons are not good !"
+
+explainer.show()
