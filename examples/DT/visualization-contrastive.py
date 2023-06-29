@@ -11,10 +11,10 @@ from pyxai import Learning, Explainer, Tools
 
 # the location of the dataset
 
-dataset = "./examples/datasets/mnist38.csv"
+dataset = "./examples/datasets_not_converted/mnist38.csv"
 
 # Machine learning part
-learner = Learning.Scikitlearn(dataset)
+learner = Learning.Scikitlearn(dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
 instance, prediction = learner.get_instances(model, n=1, correct=False)
 
@@ -36,13 +36,7 @@ for c in contrastive_reasons:
             contrastive_reasons_per_attributes[lit] += 1
 
 print("contrastive reasaon per attributes:", contrastive_reasons_per_attributes)
-# Heatmap part
-vizualisation = Tools.Vizualisation(28, 28, instance)
 
-image1 = vizualisation.new_image("Instance").set_instance(instance)
+explainer.heat_map("heat map 1", contrastive_reasons_per_attributes, contrastive=True)
+explainer.show(image_size=(28, 28))
 
-vizualisation.new_image("A minimal").add_reason(explainer.to_features(contrastive_reasons[0], details=True)).set_background_instance(instance)
-vizualisation.new_image("Another Minimal").add_reason(explainer.to_features(contrastive_reasons[-1], details=True)).set_background_instance(instance)
-vizualisation.new_image("heatmap").add_reason(explainer.to_features(contrastive_reasons_per_attributes, details=True)).set_background_instance(instance)
-
-vizualisation.display(n_rows=2)
