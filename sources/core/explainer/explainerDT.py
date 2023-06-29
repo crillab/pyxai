@@ -101,7 +101,7 @@ class ExplainerDT(Explainer):
         # DO NOT remove excluded features. If they appear, they explain why there is no sufficient
 
         literals = sorted({lit for _, clause in enumerate(core) if len(clause) == 1 for lit in clause})
-        self.add_history(self._instance, self.__class__.__name__, self.necessary_literals.__name__, literals)
+        #self.add_history(self._instance, self.__class__.__name__, self.necessary_literals.__name__, literals)
         return literals
 
 
@@ -113,7 +113,7 @@ class ExplainerDT(Explainer):
         core = CNFencoding.extract_core(cnf, self._binary_representation)
 
         literals = [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
-        self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
+        #self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
         return literals
 
 
@@ -171,7 +171,12 @@ class ExplainerDT(Explainer):
 
         cnf = prime_implicant_cnf.cnf
         if len(cnf) == 0:
-            return Explainer.format([[lit for lit in prime_implicant_cnf.necessary]], n=n)
+            reasons = Explainer.format([[lit for lit in prime_implicant_cnf.necessary]], n=n)
+            if method == PreferredReasonMethod.Minimal:
+                self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
+            else:
+                self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)   
+            return reasons
 
         weights = compute_weight(method, self._instance, weights, self._tree.learner_information, features_partition=features_partition)
         weights_per_feature = {i + 1: weight for i, weight in enumerate(weights)}
@@ -180,7 +185,9 @@ class ExplainerDT(Explainer):
         weights_soft = []
         for lit in soft:  # soft clause
             for i in range(len(self._instance)):
-                if self.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
+                #if self.to_features([lit], eliminate_redundant_features=False, details=True)[0]["id"] == i + 1:
+                
+                if self._tree.get_id_features([lit])[0] == i + 1:
                     weights_soft.append(weights[i])
 
         solver = OPENWBOSolver()
@@ -211,8 +218,10 @@ class ExplainerDT(Explainer):
             preferred = prime_implicant_cnf.get_reason_from_model(model)
             solver.add_hard_clause(prime_implicant_cnf.get_blocking_clause(model))
             # Compute the score
-            score = sum([weights_per_feature[feature["id"]] for feature in
-                         self.to_features(preferred, eliminate_redundant_features=False, details=True)])
+            #score = sum([weights_per_feature[feature["id"]] for feature in
+            #             self.to_features(preferred, eliminate_redundant_features=False, details=True)])
+            
+            score = sum([weights_per_feature[id_feature] for id_feature in self._tree.get_id_features(preferred)])
             if first_call:
                 best_score = score
             elif score != best_score:
@@ -279,7 +288,7 @@ class ExplainerDT(Explainer):
         for lit in range(1, prime_implicant_cnf.n_literals_mapping):
             n_sufficients_per_attribute[prime_implicant_cnf.mapping_new_to_original[lit]] = n_models[lit]
 
-        self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons_per_attribute.__name__, n_sufficients_per_attribute)
+        #self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons_per_attribute.__name__, n_sufficients_per_attribute)
         return n_sufficients_per_attribute
 
 

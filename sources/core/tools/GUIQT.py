@@ -69,10 +69,10 @@ class GraphicalInterface(QMainWindow):
 
         #main_layout.addLayout(layout_separator, 0, 1)
 
-        explanation_layout = self.create_explanation_group()
-        explanation_widget = QWidget()
-        explanation_widget.setLayout(explanation_layout)
-        splitter.addWidget(explanation_widget)
+        self.explanation_layout = self.create_explanation_group()
+        self.explanation_widget = QWidget()
+        self.explanation_widget.setLayout(self.explanation_layout)
+        splitter.addWidget(self.explanation_widget)
 
         #main_layout.addLayout(explanation_layout, 0, 2)
 
@@ -219,7 +219,7 @@ class GraphicalInterface(QMainWindow):
         self.table_explanation.setHorizontalHeaderItem(0, QTableWidgetItem("Id Method"))
         self.table_explanation.setHorizontalHeaderItem(1, QTableWidgetItem("Name"))
         self.table_explanation.setHorizontalHeaderItem(2, QTableWidgetItem("Id Reason"))
-        self.table_explanation.setHorizontalHeaderItem(3, QTableWidgetItem("Lenght"))
+        self.table_explanation.setHorizontalHeaderItem(3, QTableWidgetItem("Length"))
         self.table_explanation.clicked.connect(self.clicked_explanation)
 
         header = self.table_explanation.horizontalHeader()       
@@ -275,7 +275,6 @@ class GraphicalInterface(QMainWindow):
             self.table_explanation.removeRow(0)
         self.imageLabelRight.clear()
 
-        print("len:", len(self.explainer._history[self.current_instance]))
         for id_method, (_, method, reasons) in enumerate(self.explainer._history[self.current_instance]):
             for id_reason, reason in enumerate(reasons):
                 method = method.replace("reason", "").replace("reasons", "").replace("_", " ").capitalize()
@@ -287,10 +286,12 @@ class GraphicalInterface(QMainWindow):
                 self.table_explanation.setItem(numrows,1, QTableWidgetItem(str(method)))
                 self.table_explanation.setItem(numrows,2, QTableWidgetItem(str(id_reason)))
                 self.table_explanation.setItem(numrows,3, QTableWidgetItem(str(len(reason))))
-        
         if self.image_size is not None:
             self.display_left(self.current_instance[0])
-
+        self.adjustSize()
+        self.update()
+        self.show()
+        
     
     def clicked_explanation(self, qmodelindex):
         self.index = self.table_explanation.currentIndex().row()
@@ -300,7 +301,7 @@ class GraphicalInterface(QMainWindow):
         reasons = self.explainer._history[self.current_instance][self.id_method][2]
         reason = reasons[self.id_reason]
         self.display_right(self.current_instance[0], reason)
-
+        
     def create_menu_bar(self):
         self.save_action = QAction("Save Explainer", self)
         self.load_action = QAction("Load Explainer", self)
