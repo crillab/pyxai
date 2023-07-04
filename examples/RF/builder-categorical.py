@@ -5,8 +5,8 @@
 # This is the classifier representing an approximation of the exact function.
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
-
-from pyxai import Builder, Explainer
+# Check V1.0: Ok but => Only one-hot encoded categorical features are take into account.
+from pyxai import Builder, Learning, Explainer
 
 # Builder part
 
@@ -27,15 +27,10 @@ tree_2 = Builder.DecisionTree(3, node_t2_v2)
 tree_3 = Builder.DecisionTree(3, Builder.LeafNode(1))
 
 forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2)
-forest.add_numerical_feature(1)
-#forest.add_categorical_feature(3) TODO maintenant c'est faux cela
-
-
-print("numerical_features:", forest.numerical_features)
 
 print("bob = (20, 1, 0):")
 bob = (20, 1, 0)
-explainer = Explainer.initialize(forest, instance=bob)
+explainer = Explainer.initialize(forest, instance=bob, features_type={"numerical":["f1"], "categorical": {"f3":['1','2','3']}, "binary":Learning.DEFAULT})
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -43,14 +38,12 @@ print("to_features:", explainer.to_features(explainer.binary_representation, eli
 
 minimals = explainer.minimal_sufficient_reason()
 print("Minimal sufficient reasons:", minimals)
-print("to_features:", explainer.to_features(minimals, eliminate_redundant_features=True))
+print("to_features:", explainer.to_features(minimals))
 
 print()
 print("charles = (30, 0, 2):")
 charles = (30, 0, 2)
 explainer.set_instance(charles)
-explainer.set_theory(Explainer.ORDER_NEW_VARIABLES)
-#explainer.set_theory(Explainer.ORDER)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -59,5 +52,5 @@ print("to_features:", explainer.to_features(explainer.binary_representation, eli
 contrastives = explainer.minimal_contrastive_reason(n=Explainer.ALL)
 print("contrastives:", contrastives)
 
-print("contrastives (to_features):", explainer.to_features(contrastives[0], eliminate_redundant_features=True))
+print("contrastives (to_features):", explainer.to_features(contrastives[0], contrastive=True))
 

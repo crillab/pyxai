@@ -6,6 +6,7 @@
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k 
 # or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
+# Check V1.0: Ok
 
 from pyxai import Builder, Explainer
 
