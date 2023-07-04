@@ -1,5 +1,4 @@
-from time import time
-
+import numpy
 from pyxai import Learning, Explainer, Tools
 
 # To use with the minist dataset for example
@@ -16,7 +15,7 @@ dataset = "../../data/dataML/mnist38.csv"
 # Machine learning part
 learner = Learning.Xgboost(dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instances = learner.get_instances(model, n=10, correct=True, predictions=[1])
+instances = learner.get_instances(model, n=10, correct=True, predictions=[0])
 
 # Explanation part
 explainer = Explainer.initialize(model)
@@ -32,5 +31,14 @@ for (instance, prediction) in instances:
     minimal_tree_specific_reason = explainer.minimal_tree_specific_reason(time_limit=100)
     print("len minimal tree_specific_reason:", len(minimal_tree_specific_reason))
 
+def get_pixel_value(instance, x, y, shape):
+    index = x * shape[0] + y 
+    return instance[index]
 
-explainer.show(image_size=(28, 28))
+def instance_index_to_pixel_position(i, shape):
+    return i // shape[0], i % shape[0]
+
+explainer.show(image={"shape": (28,28),
+                      "dtype": numpy.uint8,
+                      "get_pixel_value": get_pixel_value,
+                      "instance_index_to_pixel_position": instance_index_to_pixel_position})

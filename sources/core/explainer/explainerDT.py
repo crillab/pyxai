@@ -245,7 +245,6 @@ class ExplainerDT(Explainer):
 
     def n_sufficient_reasons(self, time_limit=None):
         self.n_sufficient_reasons_per_attribute(time_limit=time_limit)
-        self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons.__name__, self._n_sufficient_reasons)
         return self._n_sufficient_reasons
 
 
@@ -288,7 +287,6 @@ class ExplainerDT(Explainer):
         for lit in range(1, prime_implicant_cnf.n_literals_mapping):
             n_sufficients_per_attribute[prime_implicant_cnf.mapping_new_to_original[lit]] = n_models[lit]
 
-        #self.add_history(self._instance, self.__class__.__name__, self.n_sufficient_reasons_per_attribute.__name__, n_sufficients_per_attribute)
         return n_sufficients_per_attribute
 
 
