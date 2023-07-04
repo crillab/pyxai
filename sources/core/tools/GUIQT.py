@@ -10,6 +10,7 @@ import numpy
 import colorsys
 import math
 import pickle
+import dill
 from pyxai.sources.core.tools.ImageViewSync import QImageViewSync
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
@@ -17,13 +18,13 @@ class EmptyExplainer():pass
 
 class GraphicalInterface(QMainWindow):
     """Main Window."""
-    def __init__(self, explainer, image_size=None, feature_names=None):
+    def __init__(self, explainer, image=None, feature_names=None):
         """Initializer."""
         app = QApplication(sys.argv)
         if explainer is not None:
             pass
         self.explainer = explainer
-        self.image_size = image_size
+        self.image = image
 
         if feature_names is not None:
             self.feature_names = feature_names
@@ -33,10 +34,8 @@ class GraphicalInterface(QMainWindow):
             self.feature_names = []
 
         self.feature_values = dict()
-        if self.image_size is not None:
-            if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
-                raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
-            self.pyplot_image_generator = PyPlotImageGenerator(image_size, 256)
+        if self.image is not None:
+            self.pyplot_image_generator = PyPlotImageGenerator(image)
 
         self.pyplot_diagram_generator = PyPlotDiagramGenerator()
         super().__init__(None)
@@ -117,7 +116,7 @@ class GraphicalInterface(QMainWindow):
         if len(self.feature_names) != 0:
             self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
 
-        if self.image_size is not None:
+        if self.image is not None:
             #Image of the selected instance
             self.imageLabelLeft = QLabel()
             self.imageLabelLeft.setBackgroundRole(QPalette.Base)
@@ -159,7 +158,7 @@ class GraphicalInterface(QMainWindow):
         layout2.addWidget(label_instance)
         layout2.addWidget(self.table_instance)
         
-        if self.image_size is not None:
+        if self.image is not None:
             layout.addWidget(self.scrollAreaLeft, 0, 2)
         self.left_layout = layout
         return layout
@@ -175,7 +174,7 @@ class GraphicalInterface(QMainWindow):
         self.imageLabelLeft.setPixmap(QPixmap.fromImage(image).scaled(size))
         
     def display_right(self, instance, reason=None):
-        if self.image_size is not None:
+        if self.image is not None:
             image = self.pyplot_image_generator.generate_explanation(instance, reason)
             size = self.imageLabelRight.size()
             self.imageLabelRight.setPixmap(QPixmap.fromImage(image).scaled(size))
@@ -214,12 +213,13 @@ class GraphicalInterface(QMainWindow):
     def create_explanation_group(self):
         self.instance_group = QGroupBox()
         
-        self.table_explanation = QTableWidget(0, 4)
+        self.table_explanation = QTableWidget(0, 5)
         self.table_explanation.verticalHeader().setVisible(False)
         self.table_explanation.setHorizontalHeaderItem(0, QTableWidgetItem("Id Method"))
         self.table_explanation.setHorizontalHeaderItem(1, QTableWidgetItem("Name"))
         self.table_explanation.setHorizontalHeaderItem(2, QTableWidgetItem("Id Reason"))
-        self.table_explanation.setHorizontalHeaderItem(3, QTableWidgetItem("Length"))
+        self.table_explanation.setHorizontalHeaderItem(3, QTableWidgetItem("#Binaries"))
+        self.table_explanation.setHorizontalHeaderItem(4, QTableWidgetItem("#Features"))
         self.table_explanation.clicked.connect(self.clicked_explanation)
 
         header = self.table_explanation.horizontalHeader()       
@@ -227,8 +227,9 @@ class GraphicalInterface(QMainWindow):
         self.table_explanation.setColumnWidth(1, 200)
         self.table_explanation.setColumnWidth(2, 80)
         self.table_explanation.setColumnWidth(3, 80)
-        self.table_explanation.setMinimumWidth(80+200+80+80+2)
-        self.table_explanation.setMaximumWidth(80+200+80+80+2)
+        self.table_explanation.setColumnWidth(4, 80)
+        self.table_explanation.setMinimumWidth(80+200+80+80+80+2)
+        self.table_explanation.setMaximumWidth(80+200+80+80+80+2)
         self.table_explanation.setSelectionBehavior(QAbstractItemView.SelectRows);
         #Image of the explanation
         self.imageLabelRight = QLabel()
@@ -279,14 +280,15 @@ class GraphicalInterface(QMainWindow):
             for id_reason, reason in enumerate(reasons):
                 method = method.replace("reason", "").replace("reasons", "").replace("_", " ").capitalize()
                 method = " ".join(word.capitalize() for word in method.split(" "))
-
+                n_binaries = sum(len(reason[key]) for key in reason.keys())
                 numrows = self.table_explanation.rowCount() 
                 self.table_explanation.insertRow(numrows)
                 self.table_explanation.setItem(numrows,0, QTableWidgetItem(str(id_method)))
                 self.table_explanation.setItem(numrows,1, QTableWidgetItem(str(method)))
                 self.table_explanation.setItem(numrows,2, QTableWidgetItem(str(id_reason)))
-                self.table_explanation.setItem(numrows,3, QTableWidgetItem(str(len(reason))))
-        if self.image_size is not None:
+                self.table_explanation.setItem(numrows,3, QTableWidgetItem(str(n_binaries)))
+                self.table_explanation.setItem(numrows,4, QTableWidgetItem(str(len(reason))))
+        if self.image is not None:
             self.display_left(self.current_instance[0])
         self.adjustSize()
         self.update()
@@ -363,22 +365,23 @@ class GraphicalInterface(QMainWindow):
     def save(self):
         fileDialog = QFileDialog()
         fileDialog.setDefaultSuffix("explainer")
-        name, _ = fileDialog.getSaveFileName(None, 'Save File', filter="Pickle Explainer Object (*.explainer)")
+        name, _ = fileDialog.getSaveFileName(None, 'Save File', filter="Dill Explainer Object (*.explainer)")
         
         if not name.endswith(".explainer"): name = name + ".explainer"
 
-        file = open(name, 'wb')
-        pickle.dump([self.image_size, self.feature_names, self.explainer._history], file)
-        file.close()
+        with open(name,'wb') as io:
+            dill.dump([self.image, self.feature_names, self.explainer._history],io)
+
 
     def load(self):
         fileDialog = QFileDialog()
         fileDialog.setDefaultSuffix("explainer")
-        name, _ = fileDialog.getOpenFileName(None, 'Load File', filter="Pickle Explainer Object (*.explainer)")
+        name, _ = fileDialog.getOpenFileName(None, 'Load File', filter="Dill Explainer Object (*.explainer)")
         
-        with open(name, 'rb') as file:
-            data = pickle.load(file)
-        self.image_size = data[0]
+        with open(name,'rb') as io:
+            data=dill.load(io)
+        
+        self.image = data[0]
         self.feature_names = data[1]
         self.explainer = EmptyExplainer()
         self.explainer._history = data[2]
@@ -392,10 +395,8 @@ class GraphicalInterface(QMainWindow):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
         self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
 
-        if self.image_size is not None:
-            if not isinstance(self.image_size, tuple) or len(self.image_size) != 2:
-                raise ValueError("The 'image' parameter must be a tuple of size 2 representing the number of pixels (x_axis, y_axis).") 
-            self.pyplot_image_generator = PyPlotImageGenerator(self.image_size, 256)
+        if self.image is not None:
+            self.pyplot_image_generator = PyPlotImageGenerator(self.image)
 
             #Image of the selected instance
             if self.imageLabelLeft is None:

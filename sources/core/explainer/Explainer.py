@@ -27,23 +27,38 @@ class Explainer:
         self._glucose = None
 
 
-    def show(self, image_size=None):
-        graphical_interface = Tools.GraphicalInterface(self, image_size=image_size)
+    def show(self, image=None):
+        graphical_interface = Tools.GraphicalInterface(self, image=image)
         graphical_interface.mainloop()
 
-    def heat_map(self, name, map, contrastive=False):
+    def heat_map(self, name, reasons, contrastive=False):
+        dict_heat_map = {}
+        if isinstance(reasons, dict):
+            #Case2: Dict with weights
+            dict_heat_map = reasons
+        elif isinstance(reasons, (tuple, list)):
+            #Case1: List or Tuple of reasons 
+            for c in reasons:
+                for lit in c:
+                    if lit not in dict_heat_map:
+                        dict_heat_map[lit] = 1
+                    else:
+                        dict_heat_map[lit] += 1
+        else:
+            raise ValueError("The 'reasons' parameter must be either a list of reasons or a dict such as reasons[literal]->weight.")
+        
         instance = self._instance
         if instance is not None and not isinstance(instance, tuple):
             instance = tuple(instance)
         
-        reason = [self.to_features(map, details=True, contrastive=contrastive)]
+        reasons = [self.to_features(dict_heat_map, details=True, contrastive=contrastive)]
         if self._do_history is True:
-            if reason is None or len(reason) == 0:
+            if reasons is None or len(reasons) == 0:
                 return
             if (instance , self.target_prediction) in self._history.keys():
-                self._history[(instance, self.target_prediction)].append(("DT", name, reason))
+                self._history[(instance, self.target_prediction)].append(("HeatMap", name, reasons))
             else:
-                self._history[(instance, self.target_prediction)] = [("DT", name, reason)]
+                self._history[(instance, self.target_prediction)] = [("HeatMap", name, reasons)]
 
     def add_history(self, instance, class_name, method_name, reasons):
         if instance is not None and not isinstance(instance, tuple):

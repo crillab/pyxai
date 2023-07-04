@@ -372,7 +372,9 @@ class ExplainerRF(Explainer):
                 majoritaries.append(majoritary)
             solver.add_clauses([[-lit for lit in result if abs(lit) <= max_id_variable]])  # block this implicant
         self._elapsed_time = time_used if (time_limit is None or time_used < time_limit) else Explainer.TIMEOUT
-        return Explainer.format(CNFencoding.remove_subsumed(majoritaries), n)
+        reasons = Explainer.format(CNFencoding.remove_subsumed(majoritaries), n)
+        self.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reasons)
+        return reasons
 
 
     def preferred_majoritary_reason(self, *, method, n=1, time_limit=None, weights=None, features_partition=None):
@@ -414,8 +416,8 @@ class ExplainerRF(Explainer):
             clauses = self._random_forest.to_CNF_majoritary_reason_multi_classes(self._instance, self._binary_representation, self.target_prediction)
 
         n_variables = CNFencoding.compute_n_variables(clauses)
-        id_features = [feature["id"] for feature in self.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
-
+        id_features = self._random_forest.get_id_features(self._binary_representation)
+        
         weights = compute_weight(method, self._instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
 
@@ -454,7 +456,12 @@ class ExplainerRF(Explainer):
             if model is None:
                 if first_call:
                     return None
-                return Explainer.format(reasons, n)
+                reasons = Explainer.format(reasons, n)
+                if method == PreferredReasonMethod.Minimal:
+                    self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                else:
+                    self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                return reasons
 
             prefered_reason = [lit for lit in model if lit in self._binary_representation]
             solver.add_hard_clause([-lit for lit in model if abs(lit) <= max_id_variable])
@@ -464,7 +471,12 @@ class ExplainerRF(Explainer):
             if first_call:
                 best_score = score
             elif score != best_score:
-                return Explainer.format(reasons, n)
+                reasons = Explainer.format(reasons, n)
+                if method == PreferredReasonMethod.Minimal:
+                    self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                else:
+                    self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                return reasons
             first_call = False
 
             reasons.append(prefered_reason)

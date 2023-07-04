@@ -286,16 +286,23 @@ class PyPlotDiagramGenerator():
 
 class PyPlotImageGenerator():
 
-    def __init__(self, size, n_colors):
-        self.size = size
-        self.n_colors = n_colors
-        
+    def __init__(self, image):
+        self.image = image
+        self.size = (self.image["shape"][0], self.image["shape"][1])
+        self.n_colors = numpy.iinfo(self.image["dtype"]).max
+        self.get_pixel_value = self.image["get_pixel_value"]
+        self.instance_index_to_pixel_position = self.image["instance_index_to_pixel_position"]
     
-
+    def instance_to_numpy(self, instance):
+        image = numpy.zeros(self.image["shape"], dtype=self.image["dtype"])
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                image[i,j] = self.get_pixel_value(instance, i, j, self.image["shape"])
+        return image 
+    
     def generate_instance(self, instance):
-        image = numpy.zeros(self.size)
-        image = numpy.reshape(instance, self.size)
-        self.PIL_instance = PILImage.fromarray(numpy.uint8(image))
+        array_image = self.instance_to_numpy(instance)
+        self.PIL_instance = PILImage.fromarray(array_image)
         return ImageQt(self.PIL_instance)
     
     def generate_explanation(self, instance, reason):
@@ -311,9 +318,8 @@ class PyPlotImageGenerator():
             id_feature = feature["id"]
             sign = feature["sign"]
             weight = feature["weight"]
-
-            x = (id_feature - 1) // self.size[0]
-            y = (id_feature - 1) % self.size[1]
+            x, y = self.instance_index_to_pixel_position(id_feature - 1, self.image["shape"])
+            
             color = (weight / (max_weights - min_weights)) * self.n_colors if with_weights else self.n_colors-1
             if sign:
                 self.image_negative[x][y] = color
@@ -333,13 +339,11 @@ class PyPlotImageGenerator():
             
         fusion = PILImage.blend(new_image_negative, new_image_positive, 0.5)
         if instance is not None:
-            image = numpy.zeros(self.size)
-            image = numpy.reshape(instance, self.size)
-            x_3 = pyplot.imshow(numpy.uint8(image), alpha=0.5, cmap='Greys', vmin=0, vmax=255)
+            array_image = self.instance_to_numpy(instance)
+            x_3 = pyplot.imshow(numpy.uint8(array_image), alpha=0.2, cmap='Greys', vmin=0, vmax=255)
             new_image_x_3 = x_3.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
             new_image_x_3 = PILImage.fromarray(new_image_x_3[0])
-            
-            fusion = PILImage.blend(fusion, new_image_x_3, 0.2)
+            fusion = PILImage.blend(fusion, new_image_x_3, 0.4)
         return ImageQt(fusion)
     
 class Vizualisation():
