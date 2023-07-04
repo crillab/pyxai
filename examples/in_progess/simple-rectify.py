@@ -30,7 +30,12 @@ for (instance, prediction_classifier) in instances:
 # Explanation part
 explainer = Explainer.initialize(model, instance)
 
-rectifying_tree = explainer.rectify(model, None, None)
+tree1 = model
+tree2 = None
+tree3 = None
+
+rectifying_tree = explainer.rectify(tree1, tree2, tree3)
+
 
 print("Original tree:", model.raw_data_for_CPP())
 
