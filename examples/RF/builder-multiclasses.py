@@ -1,3 +1,5 @@
+# Check V1.0: Ok but minimal_majoritary_reason() return () problem
+
 from pyxai import Builder, Explainer
 
 node_1_1 =   Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
@@ -42,7 +44,7 @@ minimal_majoritary_reason = explainer.minimal_majoritary_reason()
 print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
-exit(1)
+
 instance = [0, 0, 0, 1, 1, 1]
 explainer.set_instance(instance)
 print("instance", instance)
@@ -52,8 +54,10 @@ print("direct_reason: ", explainer.direct_reason())
 print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
 minimal_majoritary_reason = explainer.minimal_majoritary_reason()
 print("minimal majoritary reason: ", minimal_majoritary_reason)
-print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
-print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
+
+if minimal_majoritary_reason is not None:
+    print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
+    print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
 
 sufficient_reason = explainer.sufficient_reason()
 print("sufficient reason: ", sufficient_reason)

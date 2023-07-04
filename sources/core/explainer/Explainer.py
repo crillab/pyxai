@@ -238,8 +238,9 @@ class Explainer:
                             self._reg_exp_categorical_features[feature] = associated_features
                             self._categorical_features.extend(associated_features)
                         else:
+                            raise ValueError("Only one-hot encoded categorical features are take into account.")
                             if feature in feature_names:
-                                self._reg_exp_categorical_features[feature] = feature
+                                self._reg_exp_categorical_features[feature] = [feature]
                                 self._categorical_features.extend([feature])
                             else:
                                 raise ValueError("The feature " + str(feature) + " does not exist.")
