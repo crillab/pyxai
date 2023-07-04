@@ -455,7 +455,7 @@ class ExplainerRF(Explainer):
             time_used += _time
             if model is None:
                 if first_call:
-                    return None
+                    return ()
                 reasons = Explainer.format(reasons, n)
                 if method == PreferredReasonMethod.Minimal:
                     self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
