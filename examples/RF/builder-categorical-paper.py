@@ -5,8 +5,8 @@
 # This is the classifier representing an approximation of the exact function. 
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
-
-from pyxai import Builder, Explainer
+# Check V1.0: Ok
+from pyxai import Builder, Explainer, Learning
 
 # Builder part
 
@@ -26,7 +26,7 @@ tree_2 = Builder.DecisionTree(3, node_t2_v3_2)
 tree_3 = Builder.DecisionTree(3, Builder.LeafNode(1))
 
 forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2)
-forest.add_numerical_feature(1)
+#forest.add_numerical_feature(1)
 #forest.add_categorical_feature(3)
 
 
@@ -34,7 +34,7 @@ print("numerical_features:", forest.numerical_features)
 
 print("bob = (20, 1, 0):")
 bob = (20, 1, 0)
-explainer = Explainer.initialize(forest, instance=bob)
+explainer = Explainer.initialize(forest, instance=bob, features_type={"numerical":["f1"], "binary":Learning.DEFAULT})
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -48,8 +48,6 @@ print()
 print("charles = (5, 0, 0):")
 charles = (5, 0, 0)
 explainer.set_instance(charles)
-explainer.set_theory(Explainer.ORDER_NEW_VARIABLES)
-#explainer.set_theory(Explainer.ORDER)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -58,5 +56,7 @@ print("to_features:", explainer.to_features(explainer.binary_representation, eli
 contrastive = explainer.minimal_contrastive_reason(n=1)
 print("contrastive:", contrastive)
 
-print("contrastive (to_features):", explainer.to_features(contrastive, eliminate_redundant_features=False))
+print("contrastive (to_features):", explainer.to_features(contrastive, contrastive=True))
 print("is contrastive:", explainer.is_contrastive_reason(contrastive))
+
+explainer.show()
