@@ -234,7 +234,14 @@ class Preprocessor:
                     self.n_bool += 1
                     self.features_type[index] = TypeFeature.BINARY
                     self.encoder[index] = None
-                    print("The feature " + feature + " is boolean! No One Hot Encoding for this features.") 
+                    print("-> The feature " + feature + " is boolean! No One Hot Encoding for this features.") 
+                    if isinstance(original_values[0], str):
+                        print("-> However, the boolean feature " + feature + " contains strings. A ordinal encoding must be performed.") 
+                        encoder = OrdinalEncoder(dtype=numpy.int)
+                        data_categorical = data_categorical.fillna("NaN")
+                        self.data[[feature]] = encoder.fit_transform(data_categorical)
+                        self.categories[index] = encoder.categories_
+                        self.encoder[index] = TypeEncoder.OrdinalEncoder
                     continue   
                 else:
                     print("One hot encoding new features for " + feature + ": " + str(len(names)))
