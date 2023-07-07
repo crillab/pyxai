@@ -2,7 +2,7 @@
 
 from pyxai import Builder, Explainer
 
-node_1_1 =   Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
+node_1_1 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
 node_1_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=1, right=node_1_1)
 node_1_3 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=node_1_2)
 node_1_4 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=3, right=node_1_3)
@@ -31,7 +31,7 @@ forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, tree_5], n_classe
 
 instance = [0, 0, 1, 1, 0, 0]
 instance = [0, 0, 0, 0, 0, 0]
-instance = [0, 0, 1, 1, 0, 0]
+instance = [1, 0, 0, 0, 1, 1]
 explainer = Explainer.initialize(forest, instance=instance)
 print("instance", instance)
 print("binary", explainer.binary_representation)
@@ -45,7 +45,7 @@ print("minimal majoritary reason: ", minimal_majoritary_reason)
 print("is majoritary", explainer.is_majoritary_reason(minimal_majoritary_reason))
 print("sufficient reason: ", explainer.sufficient_reason())
 
-instance = [0, 0, 0, 1, 1, 1]
+instance = [0, 0, 0, 1, 1, 1]  # the same number of votes :(
 explainer.set_instance(instance)
 print("instance", instance)
 print("prediction: ", explainer.target_prediction)

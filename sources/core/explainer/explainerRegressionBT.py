@@ -23,7 +23,7 @@ class ExplainerRegressionBT(ExplainerBT):
         return self._boosted_trees
 
 
-    def set_range(self, lower_bound, upper_bound):
+    def set_interval(self, lower_bound, upper_bound):
         self._lower_bound = lower_bound
         self._upper_bound = upper_bound
 
