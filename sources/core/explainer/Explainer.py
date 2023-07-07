@@ -330,6 +330,11 @@ class Explainer:
         self._theory = False
 
 
+    def get_feature_names_from_literal(self, literal):
+        dict_to_features = self.to_features([literal], eliminate_redundant_features=False, details=True)
+        return dict_to_features[tuple(dict_to_features.keys())[0]][0]["name"]
+        
+
     def set_excluded_features(self, excluded_features):
         """
         Sets the features that the user do not want to see in explanations. You must give the name of the features.
@@ -343,9 +348,7 @@ class Explainer:
         if self.instance is None:
             return
         bin_rep = self.extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
-        self._excluded_literals = [lit for lit in bin_rep if
-                                   self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in excluded_features]
-
+        self._excluded_literals = [lit for lit in bin_rep if self.get_feature_names_from_literal(lit) in excluded_features]
 
     def _set_specific_features(self, specific_features):  # TODO a changer en je veux ces features
         excluded = []
@@ -382,7 +385,7 @@ class Explainer:
         @param features_name (str): the name of the feature
         @return: True if feature_name is part of the reason, False otherwise.
         """
-        return any(self.to_features([lit], eliminate_redundant_features=False, details=True)[0]['name'] in features_name for lit in reason)
+        return any(self.get_feature_names_from_literal(lit) in features_name for lit in reason)
 
 
     def _to_binary_representation(self, instance):
