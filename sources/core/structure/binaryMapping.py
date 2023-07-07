@@ -319,10 +319,8 @@ class BinaryMapping():
             result.append(feature)
 
         # Get conditions with the same feature and create the string representation
-        
         dict_features = self.convert_features_to_dict_features(result, feature_names)
-        #print("dict_features:", dict_features)
-
+        
         simple_result = []
         if without_intervals is True or eliminate_redundant_features is False:
             for name in dict_features.keys():
@@ -388,18 +386,35 @@ class BinaryMapping():
                     else:
                         negative_values.append(feature)
 
-                if len(positive_values) != 0 and len(negative_values) != 0:
-                    raise ValueError("Theory prevents to have at the same time a categorical equal to A and not equal to B.")
+                #if len(positive_values) != 0 and len(negative_values) != 0:
+                #    raise ValueError("Theory prevents to have at the same time a categorical equal to A and not equal to B.")
                 if len(positive_values) > 1:
                     raise ValueError("Theory prevents to have at the same time a categorical equal to A and also equal to B.")
                 
-                if len(positive_values) != 0:
-                    # Case color = 'green' 
-                    feature = positive_values[0]
-                    name = feature["theory"][1][0]
-                    value = feature["theory"][1][1]
-                    feature["string"] = str(name) + " = " + str(value)
-                    simple_result.append(feature["string"])  
+                if len(negative_values) != 0 and len(positive_values) != 0:
+                    # Both
+                    if contrastive is True:
+                        name = negative_values[0]["theory"][1][0]
+                        values = [feature["theory"][1][1] for feature in negative_values]
+                        for feature in negative_values:
+                            if len(values) == 1:
+                                str_ = str(name) + " != " + str(values[0])
+                            else:
+                                str_ = str(name) + " != {" + ",".join(str(value) for value in values)+"}"
+                            feature["string"] = str_
+                        simple_result.append(feature["string"])
+
+                        feature = positive_values[0]
+                        feature["string"] = str_
+                    else:
+                        feature = positive_values[0]
+                        name = feature["theory"][1][0]
+                        value = feature["theory"][1][1]
+                        str_ = str(name) + " = " + str(value)
+                        feature["string"] = str_
+                        simple_result.append(feature["string"])
+                        for feature in negative_values:
+                            feature["string"] = str_
                 elif len(negative_values) != 0:
                     # Case color != {'green', 'red'}
                     name = negative_values[0]["theory"][1][0]
@@ -409,8 +424,16 @@ class BinaryMapping():
                             feature["string"] = str(name) + " != " + str(values[0])
                         else:
                             feature["string"] = str(name) + " != {" + ",".join(str(value) for value in values)+"}"
-
                     simple_result.append(feature["string"])
+
+                elif len(positive_values) != 0:
+                    # Case color = 'green' 
+                    feature = positive_values[0]
+                    name = feature["theory"][1][0]
+                    value = feature["theory"][1][1]
+                    feature["string"] = str(name) + " = " + str(value)
+                    simple_result.append(feature["string"])
+                     
                     
             elif len(features) == 1:
                 feature = features[0]
