@@ -224,7 +224,6 @@ class BinaryMapping():
     def get_id_features(self, binary_representation):
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
     
-
     
     def convert_features_to_dict_features(self, features, feature_names):
         dict_features = dict()
