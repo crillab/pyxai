@@ -52,7 +52,7 @@ print("prediction: ", explainer.target_prediction)
 
 print("direct_reason: ", explainer.direct_reason())
 print("majoritary reason: ", explainer.majoritary_reason(seed=6, n_iterations=1))
-minimal_majoritary_reason = explainer.minimal_majoritary_reason()
+minimal_majoritary_reason = explainer.minimal_majoritary_reason(n=1)
 print("minimal majoritary reason: ", minimal_majoritary_reason)
 
 if minimal_majoritary_reason is not None:
