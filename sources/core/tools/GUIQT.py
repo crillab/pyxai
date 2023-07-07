@@ -389,11 +389,15 @@ class GraphicalInterface(QMainWindow):
         self.list_instance.clear()    
         instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
         self.list_instance.addItems(instances)
-        self.table_instance.setRowCount(len(self.feature_names))
+        self.table_instance.setRowCount(len(self.feature_names)-1)
 
         for i, name in enumerate(self.feature_names[:-1]):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
+            self.table_instance.setItem(i, 1, QTableWidgetItem(str("")))
+            
         self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
+        self.table_prediction.setItem(0, 1, QTableWidgetItem(str("")))
+        
 
         if self.image is not None:
             self.pyplot_image_generator = PyPlotImageGenerator(self.image)

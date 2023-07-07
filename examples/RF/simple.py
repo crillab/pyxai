@@ -12,7 +12,7 @@ instance, prediction = learner.get_instances(n=1)
 print("instance:", instance)
 
 # Explainer part
-explainer = Explainer.initialize(model, instance=instance)
+explainer = Explainer.initialize(model, instance=instance, features_type=Tools.Options.types)
 
 direct_reason = explainer.direct_reason()
 print("len direct:", len(direct_reason))
@@ -44,3 +44,5 @@ else:
     print("\nminimal contrastive: ", len(minimal_constrative_reason))
     if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
     print("is  contrastive: ", explainer.is_contrastive_reason(minimal_constrative_reason))
+
+explainer.show()

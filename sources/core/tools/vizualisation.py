@@ -80,13 +80,15 @@ class PyPlotDiagramGenerator():
         mpl.rcParams['axes.spines.top'] = False
         mpl.rcParams['axes.spines.bottom'] = True
         dict_features = reason
-        fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
         if len(dict_features.keys()) == 1:
+            fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,1))
             axes = [axes] # To solve a bug when axes is not a list. 
+        else:
+            fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
+        
         for i, feature in enumerate(dict_features.keys()):
             if "string" not in dict_features[feature][0].keys():
-                
-                raise ValueError("The string version of this feature is not done.")
+                raise ValueError("The string version of this feature is not done: " + feature)
             string_view = dict_features[feature][0]["string"]
             theory = dict_features[feature][0]["theory"] 
             
@@ -106,7 +108,7 @@ class PyPlotDiagramGenerator():
                     else:
                         txt = "True" if threshold_str == "0" else "False"
                         #colors = [color_red, color_blue] if threshold_str == "0" else [color_blue, color_red]
-                    
+                    txt = feature_str + " is " + txt 
                     the_table = axes[i].table(
                         cellText=[[txt]],
                         #cellColours=[colors],
@@ -115,8 +117,9 @@ class PyPlotDiagramGenerator():
                         cellLoc='center',
                         bbox=[0, -0.3, 1, 0.275])
                     
+                    
                     the_table.set_fontsize(10)
-                    axes[i].text(0.5,0.2,feature_str)
+                    #axes[i].text(0.5,0.2,feature_str)
                     
                     axes[i].yaxis.set_visible(False)
                     axes[i].xaxis.set_visible(False)
