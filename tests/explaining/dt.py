@@ -10,7 +10,7 @@ class TestDT(unittest.TestCase):
 
     def init(cls):
         if cls.model is None:
-            cls.learner = Learning.Scikitlearn("../../dataML/compas.csv", learner_type=Learning.CLASSIFICATION)
+            cls.learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
             cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
         return cls.learner, cls.model
 
