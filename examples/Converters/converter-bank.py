@@ -24,4 +24,4 @@ preprocessor.set_numerical_features({
 
 preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-preprocessor.export(dataset_name, output="examples/datasets_converted")
+preprocessor.export(dataset_name, output_directory="examples/datasets_converted")

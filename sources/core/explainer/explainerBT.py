@@ -41,6 +41,7 @@ class ExplainerBT(Explainer):
 
 
     def is_implicant(self, abductive):
+            
         if self._boosted_trees.n_classes == 2:
             # 2-classes case
             sum_weights = []
@@ -54,6 +55,7 @@ class ExplainerBT(Explainer):
 
             return self.target_prediction == prediction
         else:
+            
             # multi-classes case
             worst_one = self.compute_weights_class(abductive, self.target_prediction, king="worst")
             best_ones = [self.compute_weights_class(abductive, cl, king="best") for cl

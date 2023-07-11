@@ -7,6 +7,7 @@ from pyxai import Learning, Explainer, Tools
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist38.csv
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist49.csv
 
+# Check V1.0: Ok
 
 # the location of the dataset
 path = ""

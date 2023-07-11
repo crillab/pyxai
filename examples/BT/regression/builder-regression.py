@@ -1,5 +1,5 @@
 # Simple regression tree based on paper Computing Abductive Explanations for Boosted Regression Trees.
-
+# Check V1.0: Ok
 from pyxai import Builder, Explainer
 
 node1_1 = Builder.DecisionNode(1, operator=Builder.GT, threshold=3000, left=1500, right=1750)
@@ -30,11 +30,13 @@ explainer = Explainer.initialize(BTs, instance)
 print("prediction:", explainer.predict(instance))
 print("direct:", explainer.to_features(explainer.direct_reason()))
 
-explainer.set_range(1500, 2500)
+explainer.set_interval(1500, 2500)
 
 tree_specific = explainer.tree_specific_reason()
 print("tree specific:", explainer.to_features(tree_specific))
 print("is tree : ", explainer.is_tree_specific_reason(tree_specific))
-sufficient_reason = explainer.sufficient_reason()
-print("sufficient: ", sufficient_reason,  explainer.to_features(sufficient_reason))
-print("is implicant:", explainer.is_implicant(sufficient_reason))
+
+explainer.show()
+#sufficient_reason = explainer.sufficient_reason()
+#print("sufficient: ", sufficient_reason,  explainer.to_features(sufficient_reason))
+#print("is implicant:", explainer.is_implicant(sufficient_reason))

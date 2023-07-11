@@ -81,10 +81,11 @@ class ExplainerRegressionBT(ExplainerBT):
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
         c_explainer.set_interval(self.c_BT, self._lower_bound, self._upper_bound)
         # 0 for prediction. We don't care of it. The interval is the important thing here
-        return c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, 0, n_iterations,
+        result = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, 0, n_iterations,
                                           time_limit,
                                           int(reason_expressivity), seed)
-
+        self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, result)
+        return result
 
     def sufficient_reason(self, *, seed=0, time_limit=None):
         if self._instance is None:
@@ -93,6 +94,7 @@ class ExplainerRegressionBT(ExplainerBT):
         cplex = SufficientRegression()
         reason, time_used = cplex.create_model_and_solve(self, self._lower_bound, self._upper_bound)
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
         return reason
 
 
@@ -115,5 +117,4 @@ class ExplainerRegressionBT(ExplainerBT):
             weights = self.compute_weights(tree, tree.root, abductive)
             min_weights.append(min(weights))
             max_weights.append(max(weights))
-        print(min_weights, max_weights)
         return base_score + sum(min_weights) >= self._lower_bound and base_score + sum(max_weights) <= self._upper_bound

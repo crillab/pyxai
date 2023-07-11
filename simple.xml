@@ -1,0 +1,1451 @@
+<instance format="XCSP3" type="CSP">
+  <variables>
+    <array id="s" note="say if a literal of the implicant is activated (1) or not (0)" size="[32]"> 0 1 </array>
+    <array id="w" note="one variable on each leaf to say if the value of the leaf is involved in the Minimum/Maximum constraint or not" size="[300][6]">
+      <domain for="w[0][0]"> -218088762 -218088761 </domain>
+      <domain for="w[0][1]"> -218088762 422068983 </domain>
+      <domain for="w[0][2..5]"> -218088762 </domain>
+      <domain for="w[1][0]"> -211034521 418604643 </domain>
+      <domain for="w[1][1] w[1][4]"> -36000009 418604643 </domain>
+      <domain for="w[1][2]"> 418604642 418604643 </domain>
+      <domain for="w[1][3]"> -210638314 418604643 </domain>
+      <domain for="w[1][5]"> 418604643 </domain>
+      <domain for="w[2][0]"> -217358516 407006383 </domain>
+      <domain for="w[2][1]"> -217358516 179999992 </domain>
+      <domain for="w[2][2]"> -217358516 -217358515 </domain>
+      <domain for="w[2][3..5]"> -217358516 </domain>
+      <domain for="w[3][0]"> -194898934 -194898933 </domain>
+      <domain for="w[3][1]"> -194898934 291612804 </domain>
+      <domain for="w[3][2..5]"> -194898934 </domain>
+      <domain for="w[4][0]"> -187712386 289456965 </domain>
+      <domain for="w[4][1]"> -32765392 289456965 </domain>
+      <domain for="w[4][2]"> 289456964 289456965 </domain>
+      <domain for="w[4][3]"> -188560829 289456965 </domain>
+      <domain for="w[4][4]"> -12649457 289456965 </domain>
+      <domain for="w[4][5]"> 289456965 </domain>
+      <domain for="w[5][0]"> -193869964 142052278 </domain>
+      <domain for="w[5][1]"> -193869964 -193869963 </domain>
+      <domain for="w[5][2]"> -193869964 294233114 </domain>
+      <domain for="w[5][3]"> -193869964 112027079 </domain>
+      <domain for="w[5][4] w[5][5]"> -193869964 </domain>
+      <domain for="w[6][0]"> -179408000 -179407999 </domain>
+      <domain for="w[6][1]"> -179408000 233641073 </domain>
+      <domain for="w[6][2..5]"> -179408000 </domain>
+      <domain for="w[7][0]"> -171403661 231705428 </domain>
+      <domain for="w[7][1]"> -28111038 231705428 </domain>
+      <domain for="w[7][2]"> 231705427 231705428 </domain>
+      <domain for="w[7][3]"> -172419369 231705428 </domain>
+      <domain for="w[7][4]"> -4479016 231705428 </domain>
+      <domain for="w[7][5]"> 231705428 </domain>
+      <domain for="w[8][0]"> -177718655 73253423 </domain>
+      <domain for="w[8][1]"> -177718655 -177718654 </domain>
+      <domain for="w[8][2]"> -177718655 237422228 </domain>
+      <domain for="w[8][3]"> -177718655 98190642 </domain>
+      <domain for="w[8][4] w[8][5]"> -177718655 </domain>
+      <domain for="w[9][0]"> -168272645 -168272644 </domain>
+      <domain for="w[9][1]"> -168272645 201156497 </domain>
+      <domain for="w[9][2..5]"> -168272645 </domain>
+      <domain for="w[10][0]"> -160304934 207449795 </domain>
+      <domain for="w[10][1]"> -159007788 207449795 </domain>
+      <domain for="w[10][2]"> -31615864 207449795 </domain>
+      <domain for="w[10][3]"> 39131116 207449795 </domain>
+      <domain for="w[10][4]"> 207449794 207449795 </domain>
+      <domain for="w[10][5]"> 70062413 207449795 </domain>
+      <domain for="w[11][0]"> -166122557 58525390 </domain>
+      <domain for="w[11][1]"> -166122557 -166122556 </domain>
+      <domain for="w[11][2]"> -166122557 204379812 </domain>
+      <domain for="w[11][3]"> -166122557 86160309 </domain>
+      <domain for="w[11][4] w[11][5]"> -166122557 </domain>
+      <domain for="w[12][0]"> -159868942 -159868941 </domain>
+      <domain for="w[12][1]"> -159868942 180406064 </domain>
+      <domain for="w[12][2..5]"> -159868942 </domain>
+      <domain for="w[13][0]"> -150485009 186478169 </domain>
+      <domain for="w[13][1]"> -148852572 186478169 </domain>
+      <domain for="w[13][2]"> -22098468 186478169 </domain>
+      <domain for="w[13][3]"> 27884883 186478169 </domain>
+      <domain for="w[13][4]"> 186478168 186478169 </domain>
+      <domain for="w[13][5]"> 55689077 186478169 </domain>
+      <domain for="w[14][0]"> -156656326 -156656325 </domain>
+      <domain for="w[14][1]"> -156656326 183399603 </domain>
+      <domain for="w[14][2]"> -156656326 -89958176 </domain>
+      <domain for="w[14][3]"> -156656326 153474808 </domain>
+      <domain for="w[14][4]"> -156656326 17237894 </domain>
+      <domain for="w[14][5]"> -156656326 </domain>
+      <domain for="w[15][0]"> -152943851 -152943850 </domain>
+      <domain for="w[15][1]"> -152943851 165796041 </domain>
+      <domain for="w[15][2..5]"> -152943851 </domain>
+      <domain for="w[16][0]"> -141264170 171151520 </domain>
+      <domain for="w[16][1]"> -139912188 171151520 </domain>
+      <domain for="w[16][2]"> -19633598 171151520 </domain>
+      <domain for="w[16][3]"> 21138584 171151520 </domain>
+      <domain for="w[16][4]"> 171151519 171151520 </domain>
+      <domain for="w[16][5]"> 43880973 171151520 </domain>
+      <domain for="w[17][0]"> -149149851 -149149850 </domain>
+      <domain for="w[17][1]"> -149149851 167926013 </domain>
+      <domain for="w[17][2]"> -149149851 163944259 </domain>
+      <domain for="w[17][3..5]"> -149149851 </domain>
+      <domain for="w[18][0]"> -146807076 -146807075 </domain>
+      <domain for="w[18][1]"> -146807076 154575601 </domain>
+      <domain for="w[18][2..5]"> -146807076 </domain>
+      <domain for="w[19][0]"> -132700934 159554378 </domain>
+      <domain for="w[19][1]"> -131548300 159554378 </domain>
+      <domain for="w[19][2]"> -17908319 159554378 </domain>
+      <domain for="w[19][3]"> 16384026 159554378 </domain>
+      <domain for="w[19][4]"> 159554377 159554378 </domain>
+      <domain for="w[19][5]"> 37321925 159554378 </domain>
+      <domain for="w[20][0]"> -142399640 -142399639 </domain>
+      <domain for="w[20][1]"> -142399640 156109422 </domain>
+      <domain for="w[20][2]"> -142399640 106856450 </domain>
+      <domain for="w[20][3..5]"> -142399640 </domain>
+      <domain for="w[21][0]"> -141167910 -141167909 </domain>
+      <domain for="w[21][1]"> -141167910 145249903 </domain>
+      <domain for="w[21][2..5]"> -141167910 </domain>
+      <domain for="w[22][0]"> -124397360 148717166 </domain>
+      <domain for="w[22][1]"> -123382188 148717166 </domain>
+      <domain for="w[22][2]"> -16948390 148717166 </domain>
+      <domain for="w[22][3]"> 14713083 148717166 </domain>
+      <domain for="w[22][4]"> 148717165 148717166 </domain>
+      <domain for="w[22][5]"> 52177343 148717166 </domain>
+      <domain for="w[23][0]"> -135953561 -135953560 </domain>
+      <domain for="w[23][1]"> -135953561 146351054 </domain>
+      <domain for="w[23][2]"> -135953561 119721420 </domain>
+      <domain for="w[23][3..5]"> -135953561 </domain>
+      <domain for="w[24][0]"> -135722281 -135722280 </domain>
+      <domain for="w[24][1]"> -135722281 136952043 </domain>
+      <domain for="w[24][2..5]"> -135722281 </domain>
+      <domain for="w[25][0]"> -116154775 136147888 </domain>
+      <domain for="w[25][1]"> -115231447 136147888 </domain>
+      <domain for="w[25][2]"> -100707673 136147888 </domain>
+      <domain for="w[25][3]"> 22687617 136147888 </domain>
+      <domain for="w[25][4]"> 136147887 136147888 </domain>
+      <domain for="w[25][5]"> 136147888 </domain>
+      <domain for="w[26][0]"> -129563064 -129563063 </domain>
+      <domain for="w[26][1]"> -129563064 137721762 </domain>
+      <domain for="w[26][2]"> -129563064 112544663 </domain>
+      <domain for="w[26][3..5]"> -129563064 </domain>
+      <domain for="w[27][0]"> -129977272 -129977271 </domain>
+      <domain for="w[27][1]"> -129977272 129178523 </domain>
+      <domain for="w[27][2..5]"> -129977272 </domain>
+      <domain for="w[28][0]"> -107925862 123806828 </domain>
+      <domain for="w[28][1]"> -107063472 123806828 </domain>
+      <domain for="w[28][2]"> -20723544 123806828 </domain>
+      <domain for="w[28][3]"> -32444927 123806828 </domain>
+      <domain for="w[28][4]"> 123806827 123806828 </domain>
+      <domain for="w[28][5]"> 123806828 </domain>
+      <domain for="w[29][0]"> -122685106 -122685105 </domain>
+      <domain for="w[29][1]"> -122685106 129677817 </domain>
+      <domain for="w[29][2]"> -122685106 103335351 </domain>
+      <domain for="w[29][3..5]"> -122685106 </domain>
+      <domain for="w[30][0]"> -124256485 -124256484 </domain>
+      <domain for="w[30][1]"> -124256485 121665932 </domain>
+      <domain for="w[30][2..5]"> -124256485 </domain>
+      <domain for="w[31][0]"> -99770881 115192146 </domain>
+      <domain for="w[31][1]"> -98950497 115192146 </domain>
+      <domain for="w[31][2]"> -21136716 115192146 </domain>
+      <domain for="w[31][3]"> 40889233 115192146 </domain>
+      <domain for="w[31][4]"> 115192145 115192146 </domain>
+      <domain for="w[31][5]"> 115192146 </domain>
+      <domain for="w[32][0]"> -115608693 -115608692 </domain>
+      <domain for="w[32][1]"> -115608693 121926531 </domain>
+      <domain for="w[32][2]"> -115608693 76409541 </domain>
+      <domain for="w[32][3..5]"> -115608693 </domain>
+      <domain for="w[33][0]"> -118377664 -118377663 </domain>
+      <domain for="w[33][1]"> -118377664 114304714 </domain>
+      <domain for="w[33][2..5]"> -118377664 </domain>
+      <domain for="w[34][0]"> -95098912 121198990 </domain>
+      <domain for="w[34][1]"> -91023437 121198990 </domain>
+      <domain for="w[34][2]"> -21869286 121198990 </domain>
+      <domain for="w[34][3]"> 121198989 121198990 </domain>
+      <domain for="w[34][4] w[34][5]"> 121198990 </domain>
+      <domain for="w[35][0]"> -108390474 -108390473 </domain>
+      <domain for="w[35][1]"> -108390474 26995776 </domain>
+      <domain for="w[35][2]"> -108390474 117168553 </domain>
+      <domain for="w[35][3]"> -108390474 22446282 </domain>
+      <domain for="w[35][4] w[35][5]"> -108390474 </domain>
+      <domain for="w[36][0]"> -112227933 -112227932 </domain>
+      <domain for="w[36][1]"> -112227933 107088588 </domain>
+      <domain for="w[36][2..5]"> -112227933 </domain>
+      <domain for="w[37][0]"> -86100377 29981440 </domain>
+      <domain for="w[37][1]"> -83427377 29981440 </domain>
+      <domain for="w[37][2]"> -16760161 29981440 </domain>
+      <domain for="w[37][3]"> 29981439 29981440 </domain>
+      <domain for="w[37][4] w[37][5]"> 29981440 </domain>
+      <domain for="w[38][0]"> -100915440 130990654 </domain>
+      <domain for="w[38][1]"> -100915440 -1137659 </domain>
+      <domain for="w[38][2]"> -100915440 -100915439 </domain>
+      <domain for="w[38][3..5]"> -100915440 </domain>
+      <domain for="w[39][0]"> -106767216 -106767215 </domain>
+      <domain for="w[39][1]"> -106767216 100073375 </domain>
+      <domain for="w[39][2..5]"> -106767216 </domain>
+      <domain for="w[40][0]"> -80497548 105795653 </domain>
+      <domain for="w[40][1]"> -63430920 105795653 </domain>
+      <domain for="w[40][2]"> -47900199 105795653 </domain>
+      <domain for="w[40][3]"> 105795652 105795653 </domain>
+      <domain for="w[40][4] w[40][5]"> 105795653 </domain>
+      <domain for="w[41][0]"> -3180147 8150864 </domain>
+      <domain for="w[41][1]"> -3180147 111210801 </domain>
+      <domain for="w[41][2]"> -3180147 -3180146 </domain>
+      <domain for="w[41][3..5]"> -3180147 </domain>
+      <domain for="w[42][0]"> -101224327 -101224326 </domain>
+      <domain for="w[42][1]"> -101224327 93908019 </domain>
+      <domain for="w[42][2..5]"> -101224327 </domain>
+      <domain for="w[43][0]"> -57034440 107679621 </domain>
+      <domain for="w[43][1]"> -56894686 107679621 </domain>
+      <domain for="w[43][2]"> 8710763 107679621 </domain>
+      <domain for="w[43][3]"> 107679620 107679621 </domain>
+      <domain for="w[43][4] w[43][5]"> 107679621 </domain>
+      <domain for="w[44][0]"> -90048642 -90048641 </domain>
+      <domain for="w[44][1]"> -90048642 -22881787 </domain>
+      <domain for="w[44][2]"> -90048642 117994137 </domain>
+      <domain for="w[44][3]"> -90048642 11561586 </domain>
+      <domain for="w[44][4] w[44][5]"> -90048642 </domain>
+      <domain for="w[45][0]"> -96175321 -96175320 </domain>
+      <domain for="w[45][1]"> -96175321 88100276 </domain>
+      <domain for="w[45][2..5]"> -96175321 </domain>
+      <domain for="w[46][0]"> -50330050 99895403 </domain>
+      <domain for="w[46][1]"> -52193667 99895403 </domain>
+      <domain for="w[46][2]"> 9724160 99895403 </domain>
+      <domain for="w[46][3]"> 99895402 99895403 </domain>
+      <domain for="w[46][4] w[46][5]"> 99895403 </domain>
+      <domain for="w[47][0]"> 1695511 112852432 </domain>
+      <domain for="w[47][1]"> 1695511 1695512 </domain>
+      <domain for="w[47][2..5]"> 1695511 </domain>
+      <domain for="w[48][0]"> -91354445 -91354444 </domain>
+      <domain for="w[48][1]"> -91354445 82749359 </domain>
+      <domain for="w[48][2..5]"> -91354445 </domain>
+      <domain for="w[49][0]"> -46607211 93345471 </domain>
+      <domain for="w[49][1]"> -47057155 93345471 </domain>
+      <domain for="w[49][2]"> 10255141 93345471 </domain>
+      <domain for="w[49][3]"> 93345470 93345471 </domain>
+      <domain for="w[49][4] w[49][5]"> 93345471 </domain>
+      <domain for="w[50][0]"> 284059 106836639 </domain>
+      <domain for="w[50][1]"> 284059 284060 </domain>
+      <domain for="w[50][2..5]"> 284059 </domain>
+      <domain for="w[51][0]"> -86794310 -86794309 </domain>
+      <domain for="w[51][1]"> -86794310 77800013 </domain>
+      <domain for="w[51][2..5]"> -86794310 </domain>
+      <domain for="w[52][0]"> -43421290 81702836 </domain>
+      <domain for="w[52][1]"> -42503576 81702836 </domain>
+      <domain for="w[52][2]"> 2505459 81702836 </domain>
+      <domain for="w[52][3]"> 81702835 81702836 </domain>
+      <domain for="w[52][4] w[52][5]"> 81702836 </domain>
+      <domain for="w[53][0]"> -927257 99884584 </domain>
+      <domain for="w[53][1]"> -927257 -927256 </domain>
+      <domain for="w[53][2..5]"> -927257 </domain>
+      <domain for="w[54][0]"> -78454540 -78454539 </domain>
+      <domain for="w[54][1]"> -78454540 60733456 </domain>
+      <domain for="w[54][2..5]"> -78454540 </domain>
+      <domain for="w[55][0]"> -40810234 75154402 </domain>
+      <domain for="w[55][1]"> -28618985 75154402 </domain>
+      <domain for="w[55][2]"> 5696788 75154402 </domain>
+      <domain for="w[55][3]"> 75154401 75154402 </domain>
+      <domain for="w[55][4] w[55][5]"> 75154402 </domain>
+      <domain for="w[56][0]"> -66022687 80519221 </domain>
+      <domain for="w[56][1]"> -66022687 -66022686 </domain>
+      <domain for="w[56][2]"> -66022687 19294245 </domain>
+      <domain for="w[56][3..5]"> -66022687 </domain>
+      <domain for="w[57][0]"> -11582081 -11582080 </domain>
+      <domain for="w[57][1..5]"> -11582081 </domain>
+      <domain for="w[58][0]"> -34803804 -23922170 </domain>
+      <domain for="w[58][1]"> -23922171 -23922170 </domain>
+      <domain for="w[58][2..5]"> -23922170 </domain>
+      <domain for="w[59][0]"> -56262199 -56262198 </domain>
+      <domain for="w[59][1]"> -56262199 102672517 </domain>
+      <domain for="w[59][2]"> -56262199 -33250916 </domain>
+      <domain for="w[59][3..5]"> -56262199 </domain>
+      <domain for="w[60][0]"> -10698068 -10698067 </domain>
+      <domain for="w[60][1..5]"> -10698068 </domain>
+      <domain for="w[61][0]"> -37074506 48994229 </domain>
+      <domain for="w[61][1]"> 48994228 48994229 </domain>
+      <domain for="w[61][2]"> -24728724 48994229 </domain>
+      <domain for="w[61][3..5]"> 48994229 </domain>
+      <domain for="w[62][0]"> -53752777 -53752776 </domain>
+      <domain for="w[62][1]"> -53752777 97111374 </domain>
+      <domain for="w[62][2]"> -53752777 -26927193 </domain>
+      <domain for="w[62][3..5]"> -53752777 </domain>
+      <domain for="w[63][0]"> -9529116 -9529115 </domain>
+      <domain for="w[63][1..5]"> -9529116 </domain>
+      <domain for="w[64][0]"> -33635791 45645796 </domain>
+      <domain for="w[64][1]"> 45645795 45645796 </domain>
+      <domain for="w[64][2]"> -25234090 45645796 </domain>
+      <domain for="w[64][3..5]"> 45645796 </domain>
+      <domain for="w[65][0]"> -49263638 -49263637 </domain>
+      <domain for="w[65][1]"> -49263638 93620963 </domain>
+      <domain for="w[65][2]"> -49263638 -25209406 </domain>
+      <domain for="w[65][3..5]"> -49263638 </domain>
+      <domain for="w[66][0]"> -8593753 -8593752 </domain>
+      <domain for="w[66][1..5]"> -8593753 </domain>
+      <domain for="w[67][0]"> -30634654 42684757 </domain>
+      <domain for="w[67][1]"> 42684756 42684757 </domain>
+      <domain for="w[67][2]"> -25489360 42684757 </domain>
+      <domain for="w[67][3..5]"> 42684757 </domain>
+      <domain for="w[68][0]"> -45231954 -45231953 </domain>
+      <domain for="w[68][1]"> -45231954 90289369 </domain>
+      <domain for="w[68][2]"> -45231954 -23631708 </domain>
+      <domain for="w[68][3..5]"> -45231954 </domain>
+      <domain for="w[69][0]"> -7850579 -7850578 </domain>
+      <domain for="w[69][1..5]"> -7850579 </domain>
+      <domain for="w[70][0]"> 24682991 24682992 </domain>
+      <domain for="w[70][1]"> -32273743 24682992 </domain>
+      <domain for="w[70][2]"> 6883481 24682992 </domain>
+      <domain for="w[70][3..5]"> 24682992 </domain>
+      <domain for="w[71][0]"> -41608625 -41608624 </domain>
+      <domain for="w[71][1]"> -41608625 87112441 </domain>
+      <domain for="w[71][2]"> -41608625 -22177778 </domain>
+      <domain for="w[71][3..5]"> -41608625 </domain>
+      <domain for="w[72][0]"> -6720651 -6720650 </domain>
+      <domain for="w[72][1..5]"> -6720651 </domain>
+      <domain for="w[73][0]"> 24192925 24192926 </domain>
+      <domain for="w[73][1]"> -30262848 24192926 </domain>
+      <domain for="w[73][2]"> 4968205 24192926 </domain>
+      <domain for="w[73][3..5]"> 24192926 </domain>
+      <domain for="w[74][0]"> -39809995 37647567 </domain>
+      <domain for="w[74][1]"> -39809995 -39809994 </domain>
+      <domain for="w[74][2..5]"> -39809995 </domain>
+      <domain for="w[75][0]"> -6024775 -6024774 </domain>
+      <domain for="w[75][1..5]"> -6024775 </domain>
+      <domain for="w[76][0]"> 25009354 25009355 </domain>
+      <domain for="w[76][1]"> -28315715 25009355 </domain>
+      <domain for="w[76][2]"> 3328991 25009355 </domain>
+      <domain for="w[76][3..5]"> 25009355 </domain>
+      <domain for="w[77][0]"> -39413337 45659504 </domain>
+      <domain for="w[77][1]"> -39413337 -39413336 </domain>
+      <domain for="w[77][2]"> -39413337 -3059091 </domain>
+      <domain for="w[77][3..5]"> -39413337 </domain>
+      <domain for="w[78][0]"> -5213211 -5213210 </domain>
+      <domain for="w[78][1..5]"> -5213211 </domain>
+      <domain for="w[79][0]"> -28626684 45479455 </domain>
+      <domain for="w[79][1]"> -19979570 45479455 </domain>
+      <domain for="w[79][2]"> 45479454 45479455 </domain>
+      <domain for="w[79][3..5]"> 45479455 </domain>
+      <domain for="w[80][0]"> -38438932 33887621 </domain>
+      <domain for="w[80][1]"> -38438932 -38438931 </domain>
+      <domain for="w[80][2..5]"> -38438932 </domain>
+      <domain for="w[81][0]"> -5227483 -5227482 </domain>
+      <domain for="w[81][1..5]"> -5227483 </domain>
+      <domain for="w[82][0]"> 27979668 27979669 </domain>
+      <domain for="w[82][1]"> -29069753 27979669 </domain>
+      <domain for="w[82][2]"> 2312652 27979669 </domain>
+      <domain for="w[82][3..5]"> 27979669 </domain>
+      <domain for="w[83][0]"> -27702164 39533939 </domain>
+      <domain for="w[83][1]"> -27702164 -27702163 </domain>
+      <domain for="w[83][2..5]"> -27702164 </domain>
+      <domain for="w[84][0]"> -4636345 -4636344 </domain>
+      <domain for="w[84][1..5]"> -4636345 </domain>
+      <domain for="w[85][0]"> -28817033 41037351 </domain>
+      <domain for="w[85][1]"> -22130698 41037351 </domain>
+      <domain for="w[85][2]"> 41037350 41037351 </domain>
+      <domain for="w[85][3..5]"> 41037351 </domain>
+      <domain for="w[86][0]"> -36656879 31830634 </domain>
+      <domain for="w[86][1]"> -36656879 -36656878 </domain>
+      <domain for="w[86][2..5]"> -36656879 </domain>
+      <domain for="w[87][0]"> -4748817 -4748816 </domain>
+      <domain for="w[87][1..5]"> -4748817 </domain>
+      <domain for="w[88][0]"> 27575990 27575991 </domain>
+      <domain for="w[88][1]"> -27537319 27575991 </domain>
+      <domain for="w[88][2]"> 1228837 27575991 </domain>
+      <domain for="w[88][3..5]"> 27575991 </domain>
+      <domain for="w[89][0]"> -36312722 28002737 </domain>
+      <domain for="w[89][1]"> -36312722 -36312721 </domain>
+      <domain for="w[89][2..5]"> -36312722 </domain>
+      <domain for="w[90][0]"> -4316157 -4316156 </domain>
+      <domain for="w[90][1..5]"> -4316157 </domain>
+      <domain for="w[91][0]"> -25236794 43222577 </domain>
+      <domain for="w[91][1]"> -11046523 43222577 </domain>
+      <domain for="w[91][2]"> 43222576 43222577 </domain>
+      <domain for="w[91][3..5]"> 43222577 </domain>
+      <domain for="w[92][0]"> -35781034 29841823 </domain>
+      <domain for="w[92][1]"> -35781034 -35781033 </domain>
+      <domain for="w[92][2..5]"> -35781034 </domain>
+      <domain for="w[93][0]"> -4974296 -4974295 </domain>
+      <domain for="w[93][1..5]"> -4974296 </domain>
+      <domain for="w[94][0]"> 28371201 28371202 </domain>
+      <domain for="w[94][1]"> -26136251 28371202 </domain>
+      <domain for="w[94][2]"> 1096917 28371202 </domain>
+      <domain for="w[94][3..5]"> 28371202 </domain>
+      <domain for="w[95][0]"> -26105978 35326074 </domain>
+      <domain for="w[95][1]"> -26105978 -26105977 </domain>
+      <domain for="w[95][2..5]"> -26105978 </domain>
+      <domain for="w[96][0]"> -4501453 -4501452 </domain>
+      <domain for="w[96][1..5]"> -4501453 </domain>
+      <domain for="w[97][0]"> -25252634 42804070 </domain>
+      <domain for="w[97][1]"> -9939918 42804070 </domain>
+      <domain for="w[97][2]"> 42804069 42804070 </domain>
+      <domain for="w[97][3..5]"> 42804070 </domain>
+      <domain for="w[98][0]"> -34305912 28775932 </domain>
+      <domain for="w[98][1]"> -34305912 -34305911 </domain>
+      <domain for="w[98][2..5]"> -34305912 </domain>
+      <domain for="w[99][0]"> -5162423 -5162422 </domain>
+      <domain for="w[99][1..5]"> -5162423 </domain>
+      <domain for="w[100][0]"> 27974102 27974103 </domain>
+      <domain for="w[100][1]"> 152559 27974103 </domain>
+      <domain for="w[100][2]"> -27666965 27974103 </domain>
+      <domain for="w[100][3..5]"> 27974103 </domain>
+      <domain for="w[101][0]"> 33800332 33800333 </domain>
+      <domain for="w[101][1..5]"> 33800332 </domain>
+      <domain for="w[102][0]"> -5848955 -5848954 </domain>
+      <domain for="w[102][1..5]"> -5848955 </domain>
+      <domain for="w[103][0]"> 25481112 25481113 </domain>
+      <domain for="w[103][1]"> -25106569 25481113 </domain>
+      <domain for="w[103][2]"> 3082730 25481113 </domain>
+      <domain for="w[103][3..5]"> 25481113 </domain>
+      <domain for="w[104][0]"> -33166107 28490733 </domain>
+      <domain for="w[104][1]"> -33166107 -33166106 </domain>
+      <domain for="w[104][2..5]"> -33166107 </domain>
+      <domain for="w[105][0]"> -5357272 -5357271 </domain>
+      <domain for="w[105][1..5]"> -5357272 </domain>
+      <domain for="w[106][0]"> -23168513 41068227 </domain>
+      <domain for="w[106][1]"> -12693351 41068227 </domain>
+      <domain for="w[106][2]"> 41068226 41068227 </domain>
+      <domain for="w[106][3..5]"> 41068227 </domain>
+      <domain for="w[107][0]"> -25173804 33941574 </domain>
+      <domain for="w[107][1]"> -25173804 -25173803 </domain>
+      <domain for="w[107][2..5]"> -25173804 </domain>
+      <domain for="w[108][0]"> -5791508 -5791507 </domain>
+      <domain for="w[108][1..5]"> -5791508 </domain>
+      <domain for="w[109][0]"> -25148674 38254358 </domain>
+      <domain for="w[109][1]"> -18419770 38254358 </domain>
+      <domain for="w[109][2]"> 38254357 38254358 </domain>
+      <domain for="w[109][3..5]"> 38254358 </domain>
+      <domain for="w[110][0]"> -32955371 28773607 </domain>
+      <domain for="w[110][1]"> -32955371 -32955370 </domain>
+      <domain for="w[110][2..5]"> -32955371 </domain>
+      <domain for="w[111][0]"> -5755504 -5755503 </domain>
+      <domain for="w[111][1..5]"> -5755504 </domain>
+      <domain for="w[112][0]"> -22603619 38260002 </domain>
+      <domain for="w[112][1]"> -10954320 38260002 </domain>
+      <domain for="w[112][2]"> 38260001 38260002 </domain>
+      <domain for="w[112][3..5]"> 38260002 </domain>
+      <domain for="w[113][0]"> 32527319 32527320 </domain>
+      <domain for="w[113][1..5]"> 32527319 </domain>
+      <domain for="w[114][0]"> -6348991 -6348990 </domain>
+      <domain for="w[114][1..5]"> -6348991 </domain>
+      <domain for="w[115][0]"> 23333629 23333630 </domain>
+      <domain for="w[115][1]"> -190887 23333630 </domain>
+      <domain for="w[115][2]"> -22127406 23333630 </domain>
+      <domain for="w[115][3..5]"> 23333630 </domain>
+      <domain for="w[116][0]"> -32143437 28686350 </domain>
+      <domain for="w[116][1]"> -32143437 -32143436 </domain>
+      <domain for="w[116][2..5]"> -32143437 </domain>
+      <domain for="w[117][0]"> -6668099 -6668098 </domain>
+      <domain for="w[117][1..5]"> -6668099 </domain>
+      <domain for="w[118][0]"> 23561326 23561327 </domain>
+      <domain for="w[118][1]"> -344022 23561327 </domain>
+      <domain for="w[118][2]"> -21820571 23561327 </domain>
+      <domain for="w[118][3..5]"> 23561327 </domain>
+      <domain for="w[119][0]"> -30433579 27335031 </domain>
+      <domain for="w[119][1]"> -30433579 -30433578 </domain>
+      <domain for="w[119][2..5]"> -30433579 </domain>
+      <domain for="w[120][0]"> -6951520 -6951519 </domain>
+      <domain for="w[120][1..5]"> -6951520 </domain>
+      <domain for="w[121][0]"> 23673715 23673716 </domain>
+      <domain for="w[121][1]"> -486350 23673716 </domain>
+      <domain for="w[121][2]"> -21492783 23673716 </domain>
+      <domain for="w[121][3..5]"> 23673716 </domain>
+      <domain for="w[122][0]"> -32534097 25092884 </domain>
+      <domain for="w[122][1]"> -32534097 -32534096 </domain>
+      <domain for="w[122][2..5]"> -32534097 </domain>
+      <domain for="w[123][0]"> -7085548 -7085547 </domain>
+      <domain for="w[123][1..5]"> -7085548 </domain>
+      <domain for="w[124][0]"> -19008830 35091747 </domain>
+      <domain for="w[124][1]"> -10502679 35091747 </domain>
+      <domain for="w[124][2]"> 35091746 35091747 </domain>
+      <domain for="w[124][3..5]"> 35091747 </domain>
+      <domain for="w[125][0]"> -30184266 26902141 </domain>
+      <domain for="w[125][1]"> -30184266 -30184265 </domain>
+      <domain for="w[125][2..5]"> -30184266 </domain>
+      <domain for="w[126][0]"> -7384248 -7384247 </domain>
+      <domain for="w[126][1..5]"> -7384248 </domain>
+      <domain for="w[127][0]"> -18872555 -18872554 </domain>
+      <domain for="w[127][1..5]"> -18872554 </domain>
+      <domain for="w[128][0]"> 31312606 31312607 </domain>
+      <domain for="w[128][1..5]"> 31312606 </domain>
+      <domain for="w[129][0]"> -7705077 -7705076 </domain>
+      <domain for="w[129][1..5]"> -7705077 </domain>
+      <domain for="w[130][0]"> 21266138 21266139 </domain>
+      <domain for="w[130][1]"> -1083529 21266139 </domain>
+      <domain for="w[130][2]"> -18074320 21266139 </domain>
+      <domain for="w[130][3..5]"> 21266139 </domain>
+      <domain for="w[131][0]"> -29973280 27572361 </domain>
+      <domain for="w[131][1]"> -29973280 -29973279 </domain>
+      <domain for="w[131][2..5]"> -29973280 </domain>
+      <domain for="w[132][0]"> -7808250 -7808249 </domain>
+      <domain for="w[132][1..5]"> -7808250 </domain>
+      <domain for="w[133][0]"> -12165292 -12165291 </domain>
+      <domain for="w[133][1..5]"> -12165291 </domain>
+      <domain for="w[134][0]"> -28387022 26203827 </domain>
+      <domain for="w[134][1]"> -28387022 -28387021 </domain>
+      <domain for="w[134][2..5]"> -28387022 </domain>
+      <domain for="w[135][0]"> -7846153 -7846152 </domain>
+      <domain for="w[135][1..5]"> -7846153 </domain>
+      <domain for="w[136][0]"> 21782448 21782449 </domain>
+      <domain for="w[136][1]"> -3676457 21782449 </domain>
+      <domain for="w[136][2]"> -14526204 21782449 </domain>
+      <domain for="w[136][3..5]"> 21782449 </domain>
+      <domain for="w[137][0]"> -21498874 31919281 </domain>
+      <domain for="w[137][1]"> -21498874 -21498873 </domain>
+      <domain for="w[137][2..5]"> -21498874 </domain>
+      <domain for="w[138][0]"> -7655308 -7655307 </domain>
+      <domain for="w[138][1..5]"> -7655308 </domain>
+      <domain for="w[139][0]"> 21014530 21014531 </domain>
+      <domain for="w[139][1]"> -3909331 21014531 </domain>
+      <domain for="w[139][2]"> -14478735 21014531 </domain>
+      <domain for="w[139][3..5]"> 21014531 </domain>
+      <domain for="w[140][0]"> -21456875 32033160 </domain>
+      <domain for="w[140][1]"> -21456875 -21456874 </domain>
+      <domain for="w[140][2..5]"> -21456875 </domain>
+      <domain for="w[141][0]"> -7574116 -7574115 </domain>
+      <domain for="w[141][1..5]"> -7574116 </domain>
+      <domain for="w[142][0]"> -17056804 -17056803 </domain>
+      <domain for="w[142][1..5]"> -17056803 </domain>
+      <domain for="w[143][0]"> -27272147 26260970 </domain>
+      <domain for="w[143][1]"> -27272147 -27272146 </domain>
+      <domain for="w[143][2..5]"> -27272147 </domain>
+      <domain for="w[144][0]"> -7788946 -7788945 </domain>
+      <domain for="w[144][1..5]"> -7788946 </domain>
+      <domain for="w[145][0]"> -16992418 -16992417 </domain>
+      <domain for="w[145][1..5]"> -16992417 </domain>
+      <domain for="w[146][0]"> 30232421 30232422 </domain>
+      <domain for="w[146][1..5]"> 30232421 </domain>
+      <domain for="w[147][0]"> -7980414 -7980413 </domain>
+      <domain for="w[147][1..5]"> -7980414 </domain>
+      <domain for="w[148][0]"> 18575664 18575665 </domain>
+      <domain for="w[148][1]"> -14328364 18575665 </domain>
+      <domain for="w[148][2]"> -2228877 18575665 </domain>
+      <domain for="w[148][3..5]"> 18575665 </domain>
+      <domain for="w[149][0]"> -26757045 26372512 </domain>
+      <domain for="w[149][1]"> -26757045 -26757044 </domain>
+      <domain for="w[149][2..5]"> -26757045 </domain>
+      <domain for="w[150][0]"> -7924181 -7924180 </domain>
+      <domain for="w[150][1..5]"> -7924181 </domain>
+      <domain for="w[151][0]"> 19030850 19030851 </domain>
+      <domain for="w[151][1]"> -13647283 19030851 </domain>
+      <domain for="w[151][2]"> -2970630 19030851 </domain>
+      <domain for="w[151][3..5]"> 19030851 </domain>
+      <domain for="w[152][0]"> -20140753 31477436 </domain>
+      <domain for="w[152][1]"> -20140753 -20140752 </domain>
+      <domain for="w[152][2..5]"> -20140753 </domain>
+      <domain for="w[153][0]"> -7740798 -7740797 </domain>
+      <domain for="w[153][1..5]"> -7740798 </domain>
+      <domain for="w[154][0]"> -16145043 -16145042 </domain>
+      <domain for="w[154][1..5]"> -16145042 </domain>
+      <domain for="w[155][0]"> -25779693 25751818 </domain>
+      <domain for="w[155][1]"> -25779693 -25779692 </domain>
+      <domain for="w[155][2..5]"> -25779693 </domain>
+      <domain for="w[156][0]"> -7914409 -7914408 </domain>
+      <domain for="w[156][1..5]"> -7914409 </domain>
+      <domain for="w[157][0]"> -16110565 -16110564 </domain>
+      <domain for="w[157][1..5]"> -16110564 </domain>
+      <domain for="w[158][0]"> 29164793 29164794 </domain>
+      <domain for="w[158][1..5]"> 29164793 </domain>
+      <domain for="w[159][0]"> -8052913 -8052912 </domain>
+      <domain for="w[159][1..5]"> -8052913 </domain>
+      <domain for="w[160][0]"> -16079576 31125410 </domain>
+      <domain for="w[160][1]"> 31125409 31125410 </domain>
+      <domain for="w[160][2]"> -11887152 31125410 </domain>
+      <domain for="w[160][3..5]"> 31125410 </domain>
+      <domain for="w[161][0]"> -19382012 31949438 </domain>
+      <domain for="w[161][1]"> -19382012 -19382011 </domain>
+      <domain for="w[161][2..5]"> -19382012 </domain>
+      <domain for="w[162][0]"> -7379272 -7379271 </domain>
+      <domain for="w[162][1..5]"> -7379272 </domain>
+      <domain for="w[163][0]"> -11694805 -11694804 </domain>
+      <domain for="w[163][1..5]"> -11694804 </domain>
+      <domain for="w[164][0]"> -19821983 31957007 </domain>
+      <domain for="w[164][1]"> -19821983 -19821982 </domain>
+      <domain for="w[164][2..5]"> -19821983 </domain>
+      <domain for="w[165][0]"> -7355047 -7355046 </domain>
+      <domain for="w[165][1..5]"> -7355047 </domain>
+      <domain for="w[166][0]"> -10512888 -10512887 </domain>
+      <domain for="w[166][1..5]"> -10512887 </domain>
+      <domain for="w[167][0]"> -25056219 25483001 </domain>
+      <domain for="w[167][1]"> -25056219 -25056218 </domain>
+      <domain for="w[167][2..5]"> -25056219 </domain>
+      <domain for="w[168][0]"> -7395769 -7395768 </domain>
+      <domain for="w[168][1..5]"> -7395769 </domain>
+      <domain for="w[169][0]"> -14842589 -14842588 </domain>
+      <domain for="w[169][1..5]"> -14842588 </domain>
+      <domain for="w[170][0]"> -23921576 23927677 </domain>
+      <domain for="w[170][1]"> -23921576 -23921575 </domain>
+      <domain for="w[170][2..5]"> -23921576 </domain>
+      <domain for="w[171][0]"> -7562959 -7562958 </domain>
+      <domain for="w[171][1..5]"> -7562959 </domain>
+      <domain for="w[172][0]"> -10688764 -10688763 </domain>
+      <domain for="w[172][1..5]"> -10688763 </domain>
+      <domain for="w[173][0]"> -18401042 29536102 </domain>
+      <domain for="w[173][1]"> -18401042 -18401041 </domain>
+      <domain for="w[173][2..5]"> -18401042 </domain>
+      <domain for="w[174][0]"> -7492393 -7492392 </domain>
+      <domain for="w[174][1..5]"> -7492393 </domain>
+      <domain for="w[175][0]"> -14813537 -14813536 </domain>
+      <domain for="w[175][1..5]"> -14813536 </domain>
+      <domain for="w[176][0]"> 28024048 28024049 </domain>
+      <domain for="w[176][1..5]"> 28024048 </domain>
+      <domain for="w[177][0]"> -7618250 -7618249 </domain>
+      <domain for="w[177][1..5]"> -7618250 </domain>
+      <domain for="w[178][0]"> -12961352 13744882 </domain>
+      <domain for="w[178][1]"> 13744881 13744882 </domain>
+      <domain for="w[178][2..5]"> 13744882 </domain>
+      <domain for="w[179][0]"> -24299257 24891305 </domain>
+      <domain for="w[179][1]"> -24299257 -24299256 </domain>
+      <domain for="w[179][2..5]"> -24299257 </domain>
+      <domain for="w[180][0]"> -6501962 -6501961 </domain>
+      <domain for="w[180][1..5]"> -6501962 </domain>
+      <domain for="w[181][0]"> -15339186 -15339185 </domain>
+      <domain for="w[181][1..5]"> -15339185 </domain>
+      <domain for="w[182][0]"> 25701825 25701826 </domain>
+      <domain for="w[182][1..5]"> 25701825 </domain>
+      <domain for="w[183][0]"> -6731922 -6731921 </domain>
+      <domain for="w[183][1..5]"> -6731922 </domain>
+      <domain for="w[184][0]"> -10372985 -10372984 </domain>
+      <domain for="w[184][1..5]"> -10372984 </domain>
+      <domain for="w[185][0]"> -22784845 22874470 </domain>
+      <domain for="w[185][1]"> -22784845 -22784844 </domain>
+      <domain for="w[185][2..5]"> -22784845 </domain>
+      <domain for="w[186][0]"> -6827844 -6827843 </domain>
+      <domain for="w[186][1..5]"> -6827844 </domain>
+      <domain for="w[187][0]"> -10094992 -10094991 </domain>
+      <domain for="w[187][1..5]"> -10094991 </domain>
+      <domain for="w[188][0]"> -23468877 22184662 </domain>
+      <domain for="w[188][1]"> -23468877 -23468876 </domain>
+      <domain for="w[188][2..5]"> -23468877 </domain>
+      <domain for="w[189][0]"> -6798102 -6798101 </domain>
+      <domain for="w[189][1..5]"> -6798102 </domain>
+      <domain for="w[190][0]"> -13284899 -13284898 </domain>
+      <domain for="w[190][1..5]"> -13284898 </domain>
+      <domain for="w[191][0]"> -23063751 22090600 </domain>
+      <domain for="w[191][1]"> -23063751 -23063750 </domain>
+      <domain for="w[191][2..5]"> -23063751 </domain>
+      <domain for="w[192][0]"> -6970751 -6970750 </domain>
+      <domain for="w[192][1..5]"> -6970751 </domain>
+      <domain for="w[193][0]"> -13330689 -13330688 </domain>
+      <domain for="w[193][1..5]"> -13330688 </domain>
+      <domain for="w[194][0]"> -21730330 21152719 </domain>
+      <domain for="w[194][1]"> -21730330 -21730329 </domain>
+      <domain for="w[194][2..5]"> -21730330 </domain>
+      <domain for="w[195][0]"> -7126508 -7126507 </domain>
+      <domain for="w[195][1..5]"> -7126508 </domain>
+      <domain for="w[196][0]"> -9862685 -9862684 </domain>
+      <domain for="w[196][1..5]"> -9862684 </domain>
+      <domain for="w[197][0]"> 24044143 24044144 </domain>
+      <domain for="w[197][1..5]"> 24044143 </domain>
+      <domain for="w[198][0]"> -7120284 -7120283 </domain>
+      <domain for="w[198][1..5]"> -7120284 </domain>
+      <domain for="w[199][0]"> -13345955 11456228 </domain>
+      <domain for="w[199][1]"> 11456227 11456228 </domain>
+      <domain for="w[199][2..5]"> 11456228 </domain>
+      <domain for="w[200][0]"> -21718512 21252229 </domain>
+      <domain for="w[200][1]"> -21718512 -21718511 </domain>
+      <domain for="w[200][2..5]"> -21718512 </domain>
+      <domain for="w[201][0]"> -6091716 -6091715 </domain>
+      <domain for="w[201][1..5]"> -6091716 </domain>
+      <domain for="w[202][0]"> -10512981 -10512980 </domain>
+      <domain for="w[202][1..5]"> -10512980 </domain>
+      <domain for="w[203][0]"> 22240155 22240156 </domain>
+      <domain for="w[203][1..5]"> 22240155 </domain>
+      <domain for="w[204][0]"> -6203915 -6203914 </domain>
+      <domain for="w[204][1..5]"> -6203915 </domain>
+      <domain for="w[205][0]"> -9454563 -9454562 </domain>
+      <domain for="w[205][1..5]"> -9454562 </domain>
+      <domain for="w[206][0]"> -20889005 19889628 </domain>
+      <domain for="w[206][1]"> -20889005 -20889004 </domain>
+      <domain for="w[206][2..5]"> -20889005 </domain>
+      <domain for="w[207][0]"> -6314571 -6314570 </domain>
+      <domain for="w[207][1..5]"> -6314571 </domain>
+      <domain for="w[208][0]"> -12934191 -12934190 </domain>
+      <domain for="w[208][1..5]"> -12934190 </domain>
+      <domain for="w[209][0]"> -17432638 21835591 </domain>
+      <domain for="w[209][1]"> -17432638 -17432637 </domain>
+      <domain for="w[209][2..5]"> -17432638 </domain>
+      <domain for="w[210][0]"> -6404355 -6404354 </domain>
+      <domain for="w[210][1..5]"> -6404355 </domain>
+      <domain for="w[211][0]"> -9839166 -9839165 </domain>
+      <domain for="w[211][1..5]"> -9839165 </domain>
+      <domain for="w[212][0]"> -15921185 20936781 </domain>
+      <domain for="w[212][1]"> -15921185 -15921184 </domain>
+      <domain for="w[212][2..5]"> -15921185 </domain>
+      <domain for="w[213][0]"> -6408975 -6408974 </domain>
+      <domain for="w[213][1..5]"> -6408975 </domain>
+      <domain for="w[214][0]"> -9732332 -9732331 </domain>
+      <domain for="w[214][1..5]"> -9732331 </domain>
+      <domain for="w[215][0]"> 20625778 20625779 </domain>
+      <domain for="w[215][1..5]"> 20625778 </domain>
+      <domain for="w[216][0]"> -6448658 -6448657 </domain>
+      <domain for="w[216][1..5]"> -6448658 </domain>
+      <domain for="w[217][0]"> -12205864 15432360 </domain>
+      <domain for="w[217][1]"> 15432359 15432360 </domain>
+      <domain for="w[217][2..5]"> 15432360 </domain>
+      <domain for="w[218][0]"> -15882910 20975522 </domain>
+      <domain for="w[218][1]"> -15882910 -15882909 </domain>
+      <domain for="w[218][2..5]"> -15882910 </domain>
+      <domain for="w[219][0]"> -5251058 -5251057 </domain>
+      <domain for="w[219][1..5]"> -5251058 </domain>
+      <domain for="w[220][0]"> -9952629 -9952628 </domain>
+      <domain for="w[220][1..5]"> -9952628 </domain>
+      <domain for="w[221][0]"> 19398088 19398089 </domain>
+      <domain for="w[221][1..5]"> 19398088 </domain>
+      <domain for="w[222][0]"> -5400980 -5400979 </domain>
+      <domain for="w[222][1..5]"> -5400980 </domain>
+      <domain for="w[223][0]"> -11695221 14652488 </domain>
+      <domain for="w[223][1]"> 14652487 14652488 </domain>
+      <domain for="w[223][2..5]"> 14652488 </domain>
+      <domain for="w[224][0]"> -15604396 19919903 </domain>
+      <domain for="w[224][1]"> -15604396 -15604395 </domain>
+      <domain for="w[224][2..5]"> -15604396 </domain>
+      <domain for="w[225][0]"> -4328492 -4328491 </domain>
+      <domain for="w[225][1..5]"> -4328492 </domain>
+      <domain for="w[226][0]"> -13205424 -13205423 </domain>
+      <domain for="w[226][1..5]"> -13205423 </domain>
+      <domain for="w[227][0]"> -14641879 18084434 </domain>
+      <domain for="w[227][1]"> -14641879 -14641878 </domain>
+      <domain for="w[227][2..5]"> -14641879 </domain>
+      <domain for="w[228][0]"> -4608850 -4608849 </domain>
+      <domain for="w[228][1..5]"> -4608850 </domain>
+      <domain for="w[229][0]"> -11167298 13449886 </domain>
+      <domain for="w[229][1]"> 13449885 13449886 </domain>
+      <domain for="w[229][2..5]"> 13449886 </domain>
+      <domain for="w[230][0]"> 18304419 18304420 </domain>
+      <domain for="w[230][1..5]"> 18304419 </domain>
+      <domain for="w[231][0]"> -3677895 -3677894 </domain>
+      <domain for="w[231][1..5]"> -3677895 </domain>
+      <domain for="w[232][0]"> -13049378 -13049377 </domain>
+      <domain for="w[232][1..5]"> -13049377 </domain>
+      <domain for="w[233][0]"> -13825326 17208563 </domain>
+      <domain for="w[233][1]"> -13825326 -13825325 </domain>
+      <domain for="w[233][2..5]"> -13825326 </domain>
+      <domain for="w[234][0]"> -4005897 -4005896 </domain>
+      <domain for="w[234][1..5]"> -4005897 </domain>
+      <domain for="w[235][0]"> -11273386 13030452 </domain>
+      <domain for="w[235][1]"> 13030451 13030452 </domain>
+      <domain for="w[235][2..5]"> 13030452 </domain>
+      <domain for="w[236][0]"> 17199068 17199069 </domain>
+      <domain for="w[236][1..5]"> 17199068 </domain>
+      <domain for="w[237][0]"> -3137267 -3137266 </domain>
+      <domain for="w[237][1..5]"> -3137267 </domain>
+      <domain for="w[238][0]"> -9983444 -9983443 </domain>
+      <domain for="w[238][1..5]"> -9983443 </domain>
+      <domain for="w[239][0]"> -13091109 16356704 </domain>
+      <domain for="w[239][1]"> -13091109 -13091108 </domain>
+      <domain for="w[239][2..5]"> -13091109 </domain>
+      <domain for="w[240][0]"> -3079941 -3079940 </domain>
+      <domain for="w[240][1..5]"> -3079941 </domain>
+      <domain for="w[241][0]"> -13749720 -13749719 </domain>
+      <domain for="w[241][1..5]"> -13749719 </domain>
+      <domain for="w[242][0]"> 16993897 16993898 </domain>
+      <domain for="w[242][1..5]"> 16993897 </domain>
+      <domain for="w[243][0]"> -3511557 -3511556 </domain>
+      <domain for="w[243][1..5]"> -3511557 </domain>
+      <domain for="w[244][0]"> -10127377 -10127376 </domain>
+      <domain for="w[244][1..5]"> -10127376 </domain>
+      <domain for="w[245][0]"> -11968283 15727948 </domain>
+      <domain for="w[245][1]"> -11968283 -11968282 </domain>
+      <domain for="w[245][2..5]"> -11968283 </domain>
+      <domain for="w[246][0]"> -3424147 -3424146 </domain>
+      <domain for="w[246][1..5]"> -3424147 </domain>
+      <domain for="w[247][0]"> -13113020 -13113019 </domain>
+      <domain for="w[247][1..5]"> -13113019 </domain>
+      <domain for="w[248][0]"> 16387953 16387954 </domain>
+      <domain for="w[248][1..5]"> 16387953 </domain>
+      <domain for="w[249][0]"> -3790373 -3790372 </domain>
+      <domain for="w[249][1..5]"> -3790373 </domain>
+      <domain for="w[250][0]"> -11895821 13326593 </domain>
+      <domain for="w[250][1]"> 13326592 13326593 </domain>
+      <domain for="w[250][2..5]"> 13326593 </domain>
+      <domain for="w[251][0]"> -10983388 15074180 </domain>
+      <domain for="w[251][1]"> -10983388 -10983387 </domain>
+      <domain for="w[251][2..5]"> -10983388 </domain>
+      <domain for="w[252][0]"> -2904721 -2904720 </domain>
+      <domain for="w[252][1..5]"> -2904721 </domain>
+      <domain for="w[253][0]"> -12835908 -12835907 </domain>
+      <domain for="w[253][1..5]"> -12835907 </domain>
+      <domain for="w[254][0]"> 15364428 15364429 </domain>
+      <domain for="w[254][1..5]"> 15364428 </domain>
+      <domain for="w[255][0]"> -3299313 -3299312 </domain>
+      <domain for="w[255][1..5]"> -3299313 </domain>
+      <domain for="w[256][0]"> -10773581 -10773580 </domain>
+      <domain for="w[256][1..5]"> -10773580 </domain>
+      <domain for="w[257][0]"> -10496684 14346595 </domain>
+      <domain for="w[257][1]"> -10496684 -10496683 </domain>
+      <domain for="w[257][2..5]"> -10496684 </domain>
+      <domain for="w[258][0]"> -3242676 -3242675 </domain>
+      <domain for="w[258][1..5]"> -3242676 </domain>
+      <domain for="w[259][0]"> -11138255 12548209 </domain>
+      <domain for="w[259][1]"> 12548208 12548209 </domain>
+      <domain for="w[259][2..5]"> 12548209 </domain>
+      <domain for="w[260][0]"> 14886483 14886484 </domain>
+      <domain for="w[260][1..5]"> 14886483 </domain>
+      <domain for="w[261][0]"> -2461149 -2461148 </domain>
+      <domain for="w[261][1..5]"> -2461149 </domain>
+      <domain for="w[262][0]"> -9897248 -9897247 </domain>
+      <domain for="w[262][1..5]"> -9897247 </domain>
+      <domain for="w[263][0]"> 14050249 14050250 </domain>
+      <domain for="w[263][1..5]"> 14050249 </domain>
+      <domain for="w[264][0]"> -2484660 -2484659 </domain>
+      <domain for="w[264][1..5]"> -2484660 </domain>
+      <domain for="w[265][0]"> -9540637 -9540636 </domain>
+      <domain for="w[265][1..5]"> -9540636 </domain>
+      <domain for="w[266][0]"> 13715751 13715752 </domain>
+      <domain for="w[266][1..5]"> 13715751 </domain>
+      <domain for="w[267][0]"> -2501358 -2501357 </domain>
+      <domain for="w[267][1..5]"> -2501358 </domain>
+      <domain for="w[268][0]"> -12565180 -12565179 </domain>
+      <domain for="w[268][1..5]"> -12565179 </domain>
+      <domain for="w[269][0]"> 13395729 13395730 </domain>
+      <domain for="w[269][1..5]"> 13395729 </domain>
+      <domain for="w[270][0]"> -2905697 -2905696 </domain>
+      <domain for="w[270][1..5]"> -2905697 </domain>
+      <domain for="w[271][0]"> -10226002 -10226001 </domain>
+      <domain for="w[271][1..5]"> -10226001 </domain>
+      <domain for="w[272][0]"> -10034747 13223897 </domain>
+      <domain for="w[272][1]"> -10034747 -10034746 </domain>
+      <domain for="w[272][2..5]"> -10034747 </domain>
+      <domain for="w[273][0]"> -2878803 -2878802 </domain>
+      <domain for="w[273][1..5]"> -2878803 </domain>
+      <domain for="w[274][0]"> -10869302 12474324 </domain>
+      <domain for="w[274][1]"> 12474323 12474324 </domain>
+      <domain for="w[274][2..5]"> 12474324 </domain>
+      <domain for="w[275][0]"> 13086884 13086885 </domain>
+      <domain for="w[275][1..5]"> 13086884 </domain>
+      <domain for="w[276][0]"> -2140148 -2140147 </domain>
+      <domain for="w[276][1..5]"> -2140148 </domain>
+      <domain for="w[277][0]"> -12346825 -12346824 </domain>
+      <domain for="w[277][1..5]"> -12346824 </domain>
+      <domain for="w[278][0]"> 12015201 12015202 </domain>
+      <domain for="w[278][1..5]"> 12015201 </domain>
+      <domain for="w[279][0]"> -2556867 -2556866 </domain>
+      <domain for="w[279][1..5]"> -2556867 </domain>
+      <domain for="w[280][0]"> -11306528 12537147 </domain>
+      <domain for="w[280][1]"> 12537146 12537147 </domain>
+      <domain for="w[280][2..5]"> 12537147 </domain>
+      <domain for="w[281][0]"> -9561242 12510000 </domain>
+      <domain for="w[281][1]"> -9561242 -9561241 </domain>
+      <domain for="w[281][2..5]"> -9561242 </domain>
+      <domain for="w[282][0]"> -1819696 -1819695 </domain>
+      <domain for="w[282][1..5]"> -1819696 </domain>
+      <domain for="w[283][0]"> -12090460 -12090459 </domain>
+      <domain for="w[283][1..5]"> -12090459 </domain>
+      <domain for="w[284][0]"> -9087062 11256654 </domain>
+      <domain for="w[284][1]"> -9087062 -9087061 </domain>
+      <domain for="w[284][2..5]"> -9087062 </domain>
+      <domain for="w[285][0]"> -2234273 -2234272 </domain>
+      <domain for="w[285][1..5]"> -2234273 </domain>
+      <domain for="w[286][0]"> -10781233 11777065 </domain>
+      <domain for="w[286][1]"> 11777064 11777065 </domain>
+      <domain for="w[286][2..5]"> 11777065 </domain>
+      <domain for="w[287][0]"> -8312215 11058144 </domain>
+      <domain for="w[287][1]"> -8312215 -8312214 </domain>
+      <domain for="w[287][2..5]"> -8312215 </domain>
+      <domain for="w[288][0]"> -1553440 -1553439 </domain>
+      <domain for="w[288][1..5]"> -1553440 </domain>
+      <domain for="w[289][0]"> -12417964 -12417963 </domain>
+      <domain for="w[289][1..5]"> -12417963 </domain>
+      <domain for="w[290][0]"> -7932153 9927575 </domain>
+      <domain for="w[290][1]"> -7932153 -7932152 </domain>
+      <domain for="w[290][2..5]"> -7932153 </domain>
+      <domain for="w[291][0]"> -2001732 -2001731 </domain>
+      <domain for="w[291][1..5]"> -2001732 </domain>
+      <domain for="w[292][0]"> -10315230 11132691 </domain>
+      <domain for="w[292][1]"> 11132690 11132691 </domain>
+      <domain for="w[292][2..5]"> 11132691 </domain>
+      <domain for="w[293][0]"> -7253103 9840062 </domain>
+      <domain for="w[293][1]"> -7253103 -7253102 </domain>
+      <domain for="w[293][2..5]"> -7253103 </domain>
+      <domain for="w[294][0]"> -1365576 -1365575 </domain>
+      <domain for="w[294][1..5]"> -1365576 </domain>
+      <domain for="w[295][0]"> -12597114 -12597113 </domain>
+      <domain for="w[295][1..5]"> -12597113 </domain>
+      <domain for="w[296][0]"> -6951696 8813572 </domain>
+      <domain for="w[296][1]"> -6951696 -6951695 </domain>
+      <domain for="w[296][2..5]"> -6951696 </domain>
+      <domain for="w[297][0]"> -1835467 -1835466 </domain>
+      <domain for="w[297][1..5]"> -1835467 </domain>
+      <domain for="w[298][0]"> -11867673 -11867672 </domain>
+      <domain for="w[298][1..5]"> -11867672 </domain>
+      <domain for="w[299][0]"> -6353684 8815121 </domain>
+      <domain for="w[299][1]"> -6353684 -6353683 </domain>
+      <domain for="w[299][2..5]"> -6353684 </domain>
+    </array>
+    <array id="m" note="the weight of each tree computed thank to the Minimum/Maximum constraint" size="[300]">
+      <domain for="m[0]"> -218088761 422068983 </domain>
+      <domain for="m[1]"> -211034521 -210638314 -36000009 418604642 </domain>
+      <domain for="m[2]"> -217358515 179999992 407006383 </domain>
+      <domain for="m[3]"> -194898933 291612804 </domain>
+      <domain for="m[4]"> -188560829 -187712386 -32765392 -12649457 289456964 </domain>
+      <domain for="m[5]"> -193869963 112027079 142052278 294233114 </domain>
+      <domain for="m[6]"> -179407999 233641073 </domain>
+      <domain for="m[7]"> -172419369 -171403661 -28111038 -4479016 231705427 </domain>
+      <domain for="m[8]"> -177718654 73253423 98190642 237422228 </domain>
+      <domain for="m[9]"> -168272644 201156497 </domain>
+      <domain for="m[10]"> -160304934 -159007788 -31615864 39131116 70062413 207449794 </domain>
+      <domain for="m[11]"> -166122556 58525390 86160309 204379812 </domain>
+      <domain for="m[12]"> -159868941 180406064 </domain>
+      <domain for="m[13]"> -150485009 -148852572 -22098468 27884883 55689077 186478168 </domain>
+      <domain for="m[14]"> -156656325 -89958176 17237894 153474808 183399603 </domain>
+      <domain for="m[15]"> -152943850 165796041 </domain>
+      <domain for="m[16]"> -141264170 -139912188 -19633598 21138584 43880973 171151519 </domain>
+      <domain for="m[17]"> -149149850 163944259 167926013 </domain>
+      <domain for="m[18]"> -146807075 154575601 </domain>
+      <domain for="m[19]"> -132700934 -131548300 -17908319 16384026 37321925 159554377 </domain>
+      <domain for="m[20]"> -142399639 106856450 156109422 </domain>
+      <domain for="m[21]"> -141167909 145249903 </domain>
+      <domain for="m[22]"> -124397360 -123382188 -16948390 14713083 52177343 148717165 </domain>
+      <domain for="m[23]"> -135953560 119721420 146351054 </domain>
+      <domain for="m[24]"> -135722280 136952043 </domain>
+      <domain for="m[25]"> -116154775 -115231447 -100707673 22687617 136147887 </domain>
+      <domain for="m[26]"> -129563063 112544663 137721762 </domain>
+      <domain for="m[27]"> -129977271 129178523 </domain>
+      <domain for="m[28]"> -107925862 -107063472 -32444927 -20723544 123806827 </domain>
+      <domain for="m[29]"> -122685105 103335351 129677817 </domain>
+      <domain for="m[30]"> -124256484 121665932 </domain>
+      <domain for="m[31]"> -99770881 -98950497 -21136716 40889233 115192145 </domain>
+      <domain for="m[32]"> -115608692 76409541 121926531 </domain>
+      <domain for="m[33]"> -118377663 114304714 </domain>
+      <domain for="m[34]"> -95098912 -91023437 -21869286 121198989 </domain>
+      <domain for="m[35]"> -108390473 22446282 26995776 117168553 </domain>
+      <domain for="m[36]"> -112227932 107088588 </domain>
+      <domain for="m[37]"> -86100377 -83427377 -16760161 29981439 </domain>
+      <domain for="m[38]"> -100915439 -1137659 130990654 </domain>
+      <domain for="m[39]"> -106767215 100073375 </domain>
+      <domain for="m[40]"> -80497548 -63430920 -47900199 105795652 </domain>
+      <domain for="m[41]"> -3180146 8150864 111210801 </domain>
+      <domain for="m[42]"> -101224326 93908019 </domain>
+      <domain for="m[43]"> -57034440 -56894686 8710763 107679620 </domain>
+      <domain for="m[44]"> -90048641 -22881787 11561586 117994137 </domain>
+      <domain for="m[45]"> -96175320 88100276 </domain>
+      <domain for="m[46]"> -52193667 -50330050 9724160 99895402 </domain>
+      <domain for="m[47]"> 1695512 112852432 </domain>
+      <domain for="m[48]"> -91354444 82749359 </domain>
+      <domain for="m[49]"> -47057155 -46607211 10255141 93345470 </domain>
+      <domain for="m[50]"> 284060 106836639 </domain>
+      <domain for="m[51]"> -86794309 77800013 </domain>
+      <domain for="m[52]"> -43421290 -42503576 2505459 81702835 </domain>
+      <domain for="m[53]"> -927256 99884584 </domain>
+      <domain for="m[54]"> -78454539 60733456 </domain>
+      <domain for="m[55]"> -40810234 -28618985 5696788 75154401 </domain>
+      <domain for="m[56]"> -66022686 19294245 80519221 </domain>
+      <domain for="m[57]"> -11582080 </domain>
+      <domain for="m[58]"> -34803804 -23922171 </domain>
+      <domain for="m[59]"> -56262198 -33250916 102672517 </domain>
+      <domain for="m[60]"> -10698067 </domain>
+      <domain for="m[61]"> -37074506 -24728724 48994228 </domain>
+      <domain for="m[62]"> -53752776 -26927193 97111374 </domain>
+      <domain for="m[63]"> -9529115 </domain>
+      <domain for="m[64]"> -33635791 -25234090 45645795 </domain>
+      <domain for="m[65]"> -49263637 -25209406 93620963 </domain>
+      <domain for="m[66]"> -8593752 </domain>
+      <domain for="m[67]"> -30634654 -25489360 42684756 </domain>
+      <domain for="m[68]"> -45231953 -23631708 90289369 </domain>
+      <domain for="m[69]"> -7850578 </domain>
+      <domain for="m[70]"> -32273743 6883481 24682991 </domain>
+      <domain for="m[71]"> -41608624 -22177778 87112441 </domain>
+      <domain for="m[72]"> -6720650 </domain>
+      <domain for="m[73]"> -30262848 4968205 24192925 </domain>
+      <domain for="m[74]"> -39809994 37647567 </domain>
+      <domain for="m[75]"> -6024774 </domain>
+      <domain for="m[76]"> -28315715 3328991 25009354 </domain>
+      <domain for="m[77]"> -39413336 -3059091 45659504 </domain>
+      <domain for="m[78]"> -5213210 </domain>
+      <domain for="m[79]"> -28626684 -19979570 45479454 </domain>
+      <domain for="m[80]"> -38438931 33887621 </domain>
+      <domain for="m[81]"> -5227482 </domain>
+      <domain for="m[82]"> -29069753 2312652 27979668 </domain>
+      <domain for="m[83]"> -27702163 39533939 </domain>
+      <domain for="m[84]"> -4636344 </domain>
+      <domain for="m[85]"> -28817033 -22130698 41037350 </domain>
+      <domain for="m[86]"> -36656878 31830634 </domain>
+      <domain for="m[87]"> -4748816 </domain>
+      <domain for="m[88]"> -27537319 1228837 27575990 </domain>
+      <domain for="m[89]"> -36312721 28002737 </domain>
+      <domain for="m[90]"> -4316156 </domain>
+      <domain for="m[91]"> -25236794 -11046523 43222576 </domain>
+      <domain for="m[92]"> -35781033 29841823 </domain>
+      <domain for="m[93]"> -4974295 </domain>
+      <domain for="m[94]"> -26136251 1096917 28371201 </domain>
+      <domain for="m[95]"> -26105977 35326074 </domain>
+      <domain for="m[96]"> -4501452 </domain>
+      <domain for="m[97]"> -25252634 -9939918 42804069 </domain>
+      <domain for="m[98]"> -34305911 28775932 </domain>
+      <domain for="m[99]"> -5162422 </domain>
+      <domain for="m[100]"> -27666965 152559 27974102 </domain>
+      <domain for="m[101]"> 33800333 </domain>
+      <domain for="m[102]"> -5848954 </domain>
+      <domain for="m[103]"> -25106569 3082730 25481112 </domain>
+      <domain for="m[104]"> -33166106 28490733 </domain>
+      <domain for="m[105]"> -5357271 </domain>
+      <domain for="m[106]"> -23168513 -12693351 41068226 </domain>
+      <domain for="m[107]"> -25173803 33941574 </domain>
+      <domain for="m[108]"> -5791507 </domain>
+      <domain for="m[109]"> -25148674 -18419770 38254357 </domain>
+      <domain for="m[110]"> -32955370 28773607 </domain>
+      <domain for="m[111]"> -5755503 </domain>
+      <domain for="m[112]"> -22603619 -10954320 38260001 </domain>
+      <domain for="m[113]"> 32527320 </domain>
+      <domain for="m[114]"> -6348990 </domain>
+      <domain for="m[115]"> -22127406 -190887 23333629 </domain>
+      <domain for="m[116]"> -32143436 28686350 </domain>
+      <domain for="m[117]"> -6668098 </domain>
+      <domain for="m[118]"> -21820571 -344022 23561326 </domain>
+      <domain for="m[119]"> -30433578 27335031 </domain>
+      <domain for="m[120]"> -6951519 </domain>
+      <domain for="m[121]"> -21492783 -486350 23673715 </domain>
+      <domain for="m[122]"> -32534096 25092884 </domain>
+      <domain for="m[123]"> -7085547 </domain>
+      <domain for="m[124]"> -19008830 -10502679 35091746 </domain>
+      <domain for="m[125]"> -30184265 26902141 </domain>
+      <domain for="m[126]"> -7384247 </domain>
+      <domain for="m[127]"> -18872555 </domain>
+      <domain for="m[128]"> 31312607 </domain>
+      <domain for="m[129]"> -7705076 </domain>
+      <domain for="m[130]"> -18074320 -1083529 21266138 </domain>
+      <domain for="m[131]"> -29973279 27572361 </domain>
+      <domain for="m[132]"> -7808249 </domain>
+      <domain for="m[133]"> -12165292 </domain>
+      <domain for="m[134]"> -28387021 26203827 </domain>
+      <domain for="m[135]"> -7846152 </domain>
+      <domain for="m[136]"> -14526204 -3676457 21782448 </domain>
+      <domain for="m[137]"> -21498873 31919281 </domain>
+      <domain for="m[138]"> -7655307 </domain>
+      <domain for="m[139]"> -14478735 -3909331 21014530 </domain>
+      <domain for="m[140]"> -21456874 32033160 </domain>
+      <domain for="m[141]"> -7574115 </domain>
+      <domain for="m[142]"> -17056804 </domain>
+      <domain for="m[143]"> -27272146 26260970 </domain>
+      <domain for="m[144]"> -7788945 </domain>
+      <domain for="m[145]"> -16992418 </domain>
+      <domain for="m[146]"> 30232422 </domain>
+      <domain for="m[147]"> -7980413 </domain>
+      <domain for="m[148]"> -14328364 -2228877 18575664 </domain>
+      <domain for="m[149]"> -26757044 26372512 </domain>
+      <domain for="m[150]"> -7924180 </domain>
+      <domain for="m[151]"> -13647283 -2970630 19030850 </domain>
+      <domain for="m[152]"> -20140752 31477436 </domain>
+      <domain for="m[153]"> -7740797 </domain>
+      <domain for="m[154]"> -16145043 </domain>
+      <domain for="m[155]"> -25779692 25751818 </domain>
+      <domain for="m[156]"> -7914408 </domain>
+      <domain for="m[157]"> -16110565 </domain>
+      <domain for="m[158]"> 29164794 </domain>
+      <domain for="m[159]"> -8052912 </domain>
+      <domain for="m[160]"> -16079576 -11887152 31125409 </domain>
+      <domain for="m[161]"> -19382011 31949438 </domain>
+      <domain for="m[162]"> -7379271 </domain>
+      <domain for="m[163]"> -11694805 </domain>
+      <domain for="m[164]"> -19821982 31957007 </domain>
+      <domain for="m[165]"> -7355046 </domain>
+      <domain for="m[166]"> -10512888 </domain>
+      <domain for="m[167]"> -25056218 25483001 </domain>
+      <domain for="m[168]"> -7395768 </domain>
+      <domain for="m[169]"> -14842589 </domain>
+      <domain for="m[170]"> -23921575 23927677 </domain>
+      <domain for="m[171]"> -7562958 </domain>
+      <domain for="m[172]"> -10688764 </domain>
+      <domain for="m[173]"> -18401041 29536102 </domain>
+      <domain for="m[174]"> -7492392 </domain>
+      <domain for="m[175]"> -14813537 </domain>
+      <domain for="m[176]"> 28024049 </domain>
+      <domain for="m[177]"> -7618249 </domain>
+      <domain for="m[178]"> -12961352 13744881 </domain>
+      <domain for="m[179]"> -24299256 24891305 </domain>
+      <domain for="m[180]"> -6501961 </domain>
+      <domain for="m[181]"> -15339186 </domain>
+      <domain for="m[182]"> 25701826 </domain>
+      <domain for="m[183]"> -6731921 </domain>
+      <domain for="m[184]"> -10372985 </domain>
+      <domain for="m[185]"> -22784844 22874470 </domain>
+      <domain for="m[186]"> -6827843 </domain>
+      <domain for="m[187]"> -10094992 </domain>
+      <domain for="m[188]"> -23468876 22184662 </domain>
+      <domain for="m[189]"> -6798101 </domain>
+      <domain for="m[190]"> -13284899 </domain>
+      <domain for="m[191]"> -23063750 22090600 </domain>
+      <domain for="m[192]"> -6970750 </domain>
+      <domain for="m[193]"> -13330689 </domain>
+      <domain for="m[194]"> -21730329 21152719 </domain>
+      <domain for="m[195]"> -7126507 </domain>
+      <domain for="m[196]"> -9862685 </domain>
+      <domain for="m[197]"> 24044144 </domain>
+      <domain for="m[198]"> -7120283 </domain>
+      <domain for="m[199]"> -13345955 11456227 </domain>
+      <domain for="m[200]"> -21718511 21252229 </domain>
+      <domain for="m[201]"> -6091715 </domain>
+      <domain for="m[202]"> -10512981 </domain>
+      <domain for="m[203]"> 22240156 </domain>
+      <domain for="m[204]"> -6203914 </domain>
+      <domain for="m[205]"> -9454563 </domain>
+      <domain for="m[206]"> -20889004 19889628 </domain>
+      <domain for="m[207]"> -6314570 </domain>
+      <domain for="m[208]"> -12934191 </domain>
+      <domain for="m[209]"> -17432637 21835591 </domain>
+      <domain for="m[210]"> -6404354 </domain>
+      <domain for="m[211]"> -9839166 </domain>
+      <domain for="m[212]"> -15921184 20936781 </domain>
+      <domain for="m[213]"> -6408974 </domain>
+      <domain for="m[214]"> -9732332 </domain>
+      <domain for="m[215]"> 20625779 </domain>
+      <domain for="m[216]"> -6448657 </domain>
+      <domain for="m[217]"> -12205864 15432359 </domain>
+      <domain for="m[218]"> -15882909 20975522 </domain>
+      <domain for="m[219]"> -5251057 </domain>
+      <domain for="m[220]"> -9952629 </domain>
+      <domain for="m[221]"> 19398089 </domain>
+      <domain for="m[222]"> -5400979 </domain>
+      <domain for="m[223]"> -11695221 14652487 </domain>
+      <domain for="m[224]"> -15604395 19919903 </domain>
+      <domain for="m[225]"> -4328491 </domain>
+      <domain for="m[226]"> -13205424 </domain>
+      <domain for="m[227]"> -14641878 18084434 </domain>
+      <domain for="m[228]"> -4608849 </domain>
+      <domain for="m[229]"> -11167298 13449885 </domain>
+      <domain for="m[230]"> 18304420 </domain>
+      <domain for="m[231]"> -3677894 </domain>
+      <domain for="m[232]"> -13049378 </domain>
+      <domain for="m[233]"> -13825325 17208563 </domain>
+      <domain for="m[234]"> -4005896 </domain>
+      <domain for="m[235]"> -11273386 13030451 </domain>
+      <domain for="m[236]"> 17199069 </domain>
+      <domain for="m[237]"> -3137266 </domain>
+      <domain for="m[238]"> -9983444 </domain>
+      <domain for="m[239]"> -13091108 16356704 </domain>
+      <domain for="m[240]"> -3079940 </domain>
+      <domain for="m[241]"> -13749720 </domain>
+      <domain for="m[242]"> 16993898 </domain>
+      <domain for="m[243]"> -3511556 </domain>
+      <domain for="m[244]"> -10127377 </domain>
+      <domain for="m[245]"> -11968282 15727948 </domain>
+      <domain for="m[246]"> -3424146 </domain>
+      <domain for="m[247]"> -13113020 </domain>
+      <domain for="m[248]"> 16387954 </domain>
+      <domain for="m[249]"> -3790372 </domain>
+      <domain for="m[250]"> -11895821 13326592 </domain>
+      <domain for="m[251]"> -10983387 15074180 </domain>
+      <domain for="m[252]"> -2904720 </domain>
+      <domain for="m[253]"> -12835908 </domain>
+      <domain for="m[254]"> 15364429 </domain>
+      <domain for="m[255]"> -3299312 </domain>
+      <domain for="m[256]"> -10773581 </domain>
+      <domain for="m[257]"> -10496683 14346595 </domain>
+      <domain for="m[258]"> -3242675 </domain>
+      <domain for="m[259]"> -11138255 12548208 </domain>
+      <domain for="m[260]"> 14886484 </domain>
+      <domain for="m[261]"> -2461148 </domain>
+      <domain for="m[262]"> -9897248 </domain>
+      <domain for="m[263]"> 14050250 </domain>
+      <domain for="m[264]"> -2484659 </domain>
+      <domain for="m[265]"> -9540637 </domain>
+      <domain for="m[266]"> 13715752 </domain>
+      <domain for="m[267]"> -2501357 </domain>
+      <domain for="m[268]"> -12565180 </domain>
+      <domain for="m[269]"> 13395730 </domain>
+      <domain for="m[270]"> -2905696 </domain>
+      <domain for="m[271]"> -10226002 </domain>
+      <domain for="m[272]"> -10034746 13223897 </domain>
+      <domain for="m[273]"> -2878802 </domain>
+      <domain for="m[274]"> -10869302 12474323 </domain>
+      <domain for="m[275]"> 13086885 </domain>
+      <domain for="m[276]"> -2140147 </domain>
+      <domain for="m[277]"> -12346825 </domain>
+      <domain for="m[278]"> 12015202 </domain>
+      <domain for="m[279]"> -2556866 </domain>
+      <domain for="m[280]"> -11306528 12537146 </domain>
+      <domain for="m[281]"> -9561241 12510000 </domain>
+      <domain for="m[282]"> -1819695 </domain>
+      <domain for="m[283]"> -12090460 </domain>
+      <domain for="m[284]"> -9087061 11256654 </domain>
+      <domain for="m[285]"> -2234272 </domain>
+      <domain for="m[286]"> -10781233 11777064 </domain>
+      <domain for="m[287]"> -8312214 11058144 </domain>
+      <domain for="m[288]"> -1553439 </domain>
+      <domain for="m[289]"> -12417964 </domain>
+      <domain for="m[290]"> -7932152 9927575 </domain>
+      <domain for="m[291]"> -2001731 </domain>
+      <domain for="m[292]"> -10315230 11132690 </domain>
+      <domain for="m[293]"> -7253102 9840062 </domain>
+      <domain for="m[294]"> -1365575 </domain>
+      <domain for="m[295]"> -12597114 </domain>
+      <domain for="m[296]"> -6951695 8813572 </domain>
+      <domain for="m[297]"> -1835466 </domain>
+      <domain for="m[298]"> -11867673 </domain>
+      <domain for="m[299]"> -6353683 8815121 </domain>
+    </array>
+  </variables>
+  <constraints>
+    <instantiation>
+      <list> w[0][0] w[1..2][2] w[3][0] w[4][2] w[5][1] w[6][0] w[7][2] w[8][1] w[9][0] w[10][4] w[11][1] w[12][0] w[13][4] w[14..15][0] w[16][4] w[17..18][0] w[19][4] w[20..21][0] w[22][4] w[23..24][0] w[25][4] w[26..27][0] w[28][4] w[29..30][0] w[31][4] w[32..33][0] w[34][3] w[35..36][0] w[37][3] w[38][2] w[39][0] w[40][3] w[41..42][0] w[43][3] w[44..45][0] w[46][3] w[47][1] w[48][0] w[49][3] w[50][1] w[51][0] w[52][3] w[53][1] w[54][0] w[55][3] w[56][1] w[57][0] w[58][1] w[59..60][0] w[61][1] w[62..63][0] w[64][1] w[65..66][0] w[67][1] w[68..69][0] w[70][2] w[71..72][0] w[73][2] w[74][1] w[75][0] w[76][2] w[77][1] w[78][0] w[79][2] w[80][1] w[81][0] w[82][2] w[83][1] w[84][0] w[85][2] w[86][1] w[87][0] w[88][2] w[89][1] w[90..91][0] w[92][1] w[93][0] w[94][2] w[95][1] w[96..97][0] w[98][1] w[99][0] w[100][1] w[101..102][0] w[103][2] w[104][1] w[105..106][0] w[107][1] w[108][0] w[109][2] w[110][1] w[111..114][0] w[115..116][1] w[117][0] w[118..119][1] w[120][0] w[121..122][1] w[123..124][0] w[125][1] w[126..129][0] w[130..131][1] w[132..133][0] w[134][1] w[135][0] w[136..137][1] w[138][0] w[139..140][1] w[141..142][0] w[143][1] w[144..147][0] w[148][2] w[149][1] w[150][0] w[151][2] w[152][1] w[153..154][0] w[155][1] w[156..159][0] w[160..161][1] w[162..163][0] w[164][1] w[165..166][0] w[167][1] w[168..169][0] w[170][1] w[171..172][0] w[173][1] w[174..177][0] w[178..179][1] w[180..184][0] w[185][1] w[186..187][0] w[188][1] w[189..190][0] w[191][1] w[192..193][0] w[194][1] w[195..198][0] w[199..200][1] w[201..205][0] w[206][1] w[207..208][0] w[209][1] w[210..211][0] w[212][1] w[213..216][0] w[217..218][1] w[219..222][0] w[223..224][1] w[225..226][0] w[227][1] w[228][0] w[229][1] w[230..232][0] w[233][1] w[234][0] w[235][1] w[236..238][0] w[239][1] w[240..244][0] w[245][1] w[246..249][0] w[250..251][1] w[252..256][0] w[257][1] w[258][0] w[259][1] w[260..271][0] w[272][1] w[273][0] w[274][1] w[275..279][0] w[280..281][1] w[282..283][0] w[284][1] w[285][0] w[286..287][1] w[288..289][0] w[290][1] w[291][0] w[292..293][1] w[294..295][0] w[296][1] w[297..298][0] w[299][1] </list>
+      <values> -218088761 418604642 -217358515 -194898933 289456964 -193869963 -179407999 231705427 -177718654 -168272644 207449794 -166122556 -159868941 186478168 -156656325 -152943850 171151519 -149149850 -146807075 159554377 -142399639 -141167909 148717165 -135953560 -135722280 136147887 -129563063 -129977271 123806827 -122685105 -124256484 115192145 -115608692 -118377663 121198989 -108390473 -112227932 29981439 -100915439 -106767215 105795652 8150864 -101224326 107679620 -90048641 -96175320 99895402 1695512 -91354444 93345470 284060 -86794309 81702835 -927256 -78454539 75154401 -66022686 -11582080 -23922171 -56262198 -10698067 48994228 -53752776 -9529115 45645795 -49263637 -8593752 42684756 -45231953 -7850578 6883481 -41608624 -6720650 4968205 -39809994 -6024774 3328991 -39413336 -5213210 45479454 -38438931 -5227482 2312652 -27702163 -4636344 41037350 -36656878 -4748816 1228837 -36312721 -4316156 -25236794 -35781033 -4974295 1096917 -26105977 -4501452 -25252634 -34305911 -5162422 152559 33800333 -5848954 3082730 -33166106 -5357271 -23168513 -25173803 -5791507 38254357 -32955370 -5755503 -22603619 32527320 -6348990 -190887 -32143436 -6668098 -344022 -30433578 -6951519 -486350 -32534096 -7085547 -19008830 -30184265 -7384247 -18872555 31312607 -7705076 -1083529 -29973279 -7808249 -12165292 -28387021 -7846152 -3676457 -21498873 -7655307 -3909331 -21456874 -7574115 -17056804 -27272146 -7788945 -16992418 30232422 -7980413 -2228877 -26757044 -7924180 -2970630 -20140752 -7740797 -16145043 -25779692 -7914408 -16110565 29164794 -8052912 31125409 -19382011 -7379271 -11694805 -19821982 -7355046 -10512888 -25056218 -7395768 -14842589 -23921575 -7562958 -10688764 -18401041 -7492392 -14813537 28024049 -7618249 13744881 -24299256 -6501961 -15339186 25701826 -6731921 -10372985 -22784844 -6827843 -10094992 -23468876 -6798101 -13284899 -23063750 -6970750 -13330689 -21730329 -7126507 -9862685 24044144 -7120283 11456227 -21718511 -6091715 -10512981 22240156 -6203914 -9454563 -20889004 -6314570 -12934191 -17432637 -6404354 -9839166 -15921184 -6408974 -9732332 20625779 -6448657 15432359 -15882909 -5251057 -9952629 19398089 -5400979 14652487 -15604395 -4328491 -13205424 -14641878 -4608849 13449885 18304420 -3677894 -13049378 -13825325 -4005896 13030451 17199069 -3137266 -9983444 -13091108 -3079940 -13749720 16993898 -3511556 -10127377 -11968282 -3424146 -13113020 16387954 -3790372 13326592 -10983387 -2904720 -12835908 15364429 -3299312 -10773581 -10496683 -3242675 12548208 14886484 -2461148 -9897248 14050250 -2484659 -9540637 13715752 -2501357 -12565180 13395730 -2905696 -10226002 -10034746 -2878802 12474323 13086885 -2140147 -12346825 12015202 -2556866 12537146 -9561241 -1819695 -12090460 -9087061 -2234272 11777064 -8312214 -1553439 -12417964 -7932152 -2001731 11132690 -7253102 -1365575 -12597114 -6951695 -1835466 -11867673 -6353683 </values>
+    </instantiation>
+    <group>
+      <intension> if(eq(%0,0),eq(%1,%2),eq(%1,%3)) </intension>
+      <args> s[0] w[0][1] 422068983 -218088762 </args>
+      <args> s[0] w[1][0] -211034521 418604643 </args>
+      <args> s[2] w[1][1] -36000009 418604643 </args>
+      <args> s[1] w[1][4] -36000009 418604643 </args>
+      <args> s[1] w[2][0] 407006383 -217358516 </args>
+      <args> s[2] w[2][1] 179999992 -217358516 </args>
+      <args> s[0] w[3][1] 291612804 -194898934 </args>
+      <args> s[0] w[4][0] -187712386 289456965 </args>
+      <args> s[2] w[4][1] -32765392 289456965 </args>
+      <args> s[1] w[4][4] -12649457 289456965 </args>
+      <args> s[2] w[5][0] 142052278 -193869964 </args>
+      <args> s[1] w[5][3] 112027079 -193869964 </args>
+      <args> s[0] w[6][1] 233641073 -179408000 </args>
+      <args> s[0] w[7][0] -171403661 231705428 </args>
+      <args> s[2] w[7][1] -28111038 231705428 </args>
+      <args> s[1] w[7][4] -4479016 231705428 </args>
+      <args> s[2] w[8][0] 73253423 -177718655 </args>
+      <args> s[5] w[8][3] 98190642 -177718655 </args>
+      <args> s[0] w[9][1] 201156497 -168272645 </args>
+      <args> s[3] w[10][0] -160304934 207449795 </args>
+      <args> s[0] w[10][1] -159007788 207449795 </args>
+      <args> s[4] w[10][2] -31615864 207449795 </args>
+      <args> s[7] w[10][3] 39131116 207449795 </args>
+      <args> s[8] w[10][5] 70062413 207449795 </args>
+      <args> s[2] w[11][0] 58525390 -166122557 </args>
+      <args> s[5] w[11][3] 86160309 -166122557 </args>
+      <args> s[0] w[12][1] 180406064 -159868942 </args>
+      <args> s[3] w[13][0] -150485009 186478169 </args>
+      <args> s[0] w[13][1] -148852572 186478169 </args>
+      <args> s[4] w[13][2] -22098468 186478169 </args>
+      <args> s[7] w[13][3] 27884883 186478169 </args>
+      <args> s[8] w[13][5] 55689077 186478169 </args>
+      <args> s[9] w[14][4] 17237894 -156656326 </args>
+      <args> s[0] w[15][1] 165796041 -152943851 </args>
+      <args> s[3] w[16][0] -141264170 171151520 </args>
+      <args> s[0] w[16][1] -139912188 171151520 </args>
+      <args> s[4] w[16][2] -19633598 171151520 </args>
+      <args> s[7] w[16][3] 21138584 171151520 </args>
+      <args> s[8] w[16][5] 43880973 171151520 </args>
+      <args> s[9] w[17][2] 163944259 -149149851 </args>
+      <args> s[0] w[18][1] 154575601 -146807076 </args>
+      <args> s[3] w[19][0] -132700934 159554378 </args>
+      <args> s[0] w[19][1] -131548300 159554378 </args>
+      <args> s[4] w[19][2] -17908319 159554378 </args>
+      <args> s[7] w[19][3] 16384026 159554378 </args>
+      <args> s[8] w[19][5] 37321925 159554378 </args>
+      <args> s[9] w[20][2] 106856450 -142399640 </args>
+      <args> s[0] w[21][1] 145249903 -141167910 </args>
+      <args> s[3] w[22][0] -124397360 148717166 </args>
+      <args> s[0] w[22][1] -123382188 148717166 </args>
+      <args> s[4] w[22][2] -16948390 148717166 </args>
+      <args> s[14] w[22][3] 14713083 148717166 </args>
+      <args> s[15] w[22][5] 52177343 148717166 </args>
+      <args> s[9] w[23][2] 119721420 -135953561 </args>
+      <args> s[0] w[24][1] 136952043 -135722281 </args>
+      <args> s[3] w[25][0] -116154775 136147888 </args>
+      <args> s[0] w[25][1] -115231447 136147888 </args>
+      <args> s[2] w[25][2] -100707673 136147888 </args>
+      <args> s[16] w[25][3] 22687617 136147888 </args>
+      <args> s[9] w[26][2] 112544663 -129563064 </args>
+      <args> s[0] w[27][1] 129178523 -129977272 </args>
+      <args> s[3] w[28][0] -107925862 123806828 </args>
+      <args> s[0] w[28][1] -107063472 123806828 </args>
+      <args> s[4] w[28][2] -20723544 123806828 </args>
+      <args> s[9] w[28][3] -32444927 123806828 </args>
+      <args> s[9] w[29][2] 103335351 -122685106 </args>
+      <args> s[0] w[30][1] 121665932 -124256485 </args>
+      <args> s[3] w[31][0] -99770881 115192146 </args>
+      <args> s[0] w[31][1] -98950497 115192146 </args>
+      <args> s[4] w[31][2] -21136716 115192146 </args>
+      <args> s[9] w[31][3] 40889233 115192146 </args>
+      <args> s[9] w[32][2] 76409541 -115608693 </args>
+      <args> s[0] w[33][1] 114304714 -118377664 </args>
+      <args> s[1] w[34][0] -95098912 121198990 </args>
+      <args> s[0] w[34][1] -91023437 121198990 </args>
+      <args> s[2] w[34][2] -21869286 121198990 </args>
+      <args> s[9] w[35][1] 26995776 -108390474 </args>
+      <args> s[0] w[36][1] 107088588 -112227933 </args>
+      <args> s[3] w[37][0] -86100377 29981440 </args>
+      <args> s[0] w[37][1] -83427377 29981440 </args>
+      <args> s[4] w[37][2] -16760161 29981440 </args>
+      <args> s[4] w[38][0] 130990654 -100915440 </args>
+      <args> s[9] w[38][1] -1137659 -100915440 </args>
+      <args> s[0] w[39][1] 100073375 -106767216 </args>
+      <args> s[3] w[40][0] -80497548 105795653 </args>
+      <args> s[21] w[40][1] -63430920 105795653 </args>
+      <args> s[22] w[40][2] -47900199 105795653 </args>
+      <args> s[5] w[41][2] -3180146 -3180147 </args>
+      <args> s[0] w[42][1] 93908019 -101224327 </args>
+      <args> s[1] w[43][0] -57034440 107679621 </args>
+      <args> s[21] w[43][1] -56894686 107679621 </args>
+      <args> s[22] w[43][2] 8710763 107679621 </args>
+      <args> s[9] w[44][3] 11561586 -90048642 </args>
+      <args> s[0] w[45][1] 88100276 -96175321 </args>
+      <args> s[1] w[46][0] -50330050 99895403 </args>
+      <args> s[21] w[46][1] -52193667 99895403 </args>
+      <args> s[22] w[46][2] 9724160 99895403 </args>
+      <args> s[4] w[47][0] 112852432 1695511 </args>
+      <args> s[0] w[48][1] 82749359 -91354445 </args>
+      <args> s[1] w[49][0] -46607211 93345471 </args>
+      <args> s[21] w[49][1] -47057155 93345471 </args>
+      <args> s[22] w[49][2] 10255141 93345471 </args>
+      <args> s[4] w[50][0] 106836639 284059 </args>
+      <args> s[0] w[51][1] 77800013 -86794310 </args>
+      <args> s[1] w[52][0] -43421290 81702836 </args>
+      <args> s[21] w[52][1] -42503576 81702836 </args>
+      <args> s[23] w[52][2] 2505459 81702836 </args>
+      <args> s[4] w[53][0] 99884584 -927257 </args>
+      <args> s[24] w[54][1] 60733456 -78454540 </args>
+      <args> s[1] w[55][0] -40810234 75154402 </args>
+      <args> s[15] w[55][1] -28618985 75154402 </args>
+      <args> s[23] w[55][2] 5696788 75154402 </args>
+      <args> s[3] w[56][0] 80519221 -66022687 </args>
+      <args> s[25] w[56][2] 19294245 -66022687 </args>
+      <args> s[4] w[58][0] -34803804 -23922170 </args>
+      <args> s[22] w[59][2] -33250916 -56262199 </args>
+      <args> s[1] w[61][0] -37074506 48994229 </args>
+      <args> s[15] w[61][2] -24728724 48994229 </args>
+      <args> s[22] w[62][2] -26927193 -53752777 </args>
+      <args> s[1] w[64][0] -33635791 45645796 </args>
+      <args> s[15] w[64][2] -25234090 45645796 </args>
+      <args> s[22] w[65][2] -25209406 -49263638 </args>
+      <args> s[1] w[67][0] -30634654 42684757 </args>
+      <args> s[15] w[67][2] -25489360 42684757 </args>
+      <args> s[22] w[68][2] -23631708 -45231954 </args>
+      <args> s[19] w[70][0] 24682991 24682992 </args>
+      <args> s[26] w[70][1] -32273743 24682992 </args>
+      <args> s[22] w[71][2] -22177778 -41608625 </args>
+      <args> s[19] w[73][0] 24192925 24192926 </args>
+      <args> s[26] w[73][1] -30262848 24192926 </args>
+      <args> s[22] w[74][0] 37647567 -39809995 </args>
+      <args> s[19] w[76][0] 25009354 25009355 </args>
+      <args> s[26] w[76][1] -28315715 25009355 </args>
+      <args> s[1] w[77][0] 45659504 -39413337 </args>
+      <args> s[25] w[77][2] -3059091 -39413337 </args>
+      <args> s[15] w[79][0] -28626684 45479455 </args>
+      <args> s[5] w[79][1] -19979570 45479455 </args>
+      <args> s[22] w[80][0] 33887621 -38438932 </args>
+      <args> s[19] w[82][0] 27979668 27979669 </args>
+      <args> s[26] w[82][1] -29069753 27979669 </args>
+      <args> s[4] w[83][0] 39533939 -27702164 </args>
+      <args> s[15] w[85][0] -28817033 41037351 </args>
+      <args> s[1] w[85][1] -22130698 41037351 </args>
+      <args> s[22] w[86][0] 31830634 -36656879 </args>
+      <args> s[19] w[88][0] 27575990 27575991 </args>
+      <args> s[26] w[88][1] -27537319 27575991 </args>
+      <args> s[27] w[89][0] 28002737 -36312722 </args>
+      <args> s[28] w[91][2] 43222576 43222577 </args>
+      <args> s[22] w[92][0] 29841823 -35781034 </args>
+      <args> s[19] w[94][0] 28371201 28371202 </args>
+      <args> s[26] w[94][1] -26136251 28371202 </args>
+      <args> s[4] w[95][0] 35326074 -26105978 </args>
+      <args> s[28] w[97][2] 42804069 42804070 </args>
+      <args> s[22] w[98][0] 28775932 -34305912 </args>
+      <args> s[19] w[100][0] 27974102 27974103 </args>
+      <args> s[15] w[100][2] -27666965 27974103 </args>
+      <args> s[19] w[103][0] 25481112 25481113 </args>
+      <args> s[26] w[103][1] -25106569 25481113 </args>
+      <args> s[22] w[104][0] 28490733 -33166107 </args>
+      <args> s[28] w[106][2] 41068226 41068227 </args>
+      <args> s[4] w[107][0] 33941574 -25173804 </args>
+      <args> s[15] w[109][0] -25148674 38254358 </args>
+      <args> s[1] w[109][1] -18419770 38254358 </args>
+      <args> s[22] w[110][0] 28773607 -32955371 </args>
+      <args> s[28] w[112][2] 38260001 38260002 </args>
+      <args> s[19] w[115][0] 23333629 23333630 </args>
+      <args> s[15] w[115][2] -22127406 23333630 </args>
+      <args> s[22] w[116][0] 28686350 -32143437 </args>
+      <args> s[19] w[118][0] 23561326 23561327 </args>
+      <args> s[15] w[118][2] -21820571 23561327 </args>
+      <args> s[22] w[119][0] 27335031 -30433579 </args>
+      <args> s[19] w[121][0] 23673715 23673716 </args>
+      <args> s[15] w[121][2] -21492783 23673716 </args>
+      <args> s[27] w[122][0] 25092884 -32534097 </args>
+      <args> s[28] w[124][2] 35091746 35091747 </args>
+      <args> s[22] w[125][0] 26902141 -30184266 </args>
+      <args> s[19] w[130][0] 21266138 21266139 </args>
+      <args> s[15] w[130][2] -18074320 21266139 </args>
+      <args> s[22] w[131][0] 27572361 -29973280 </args>
+      <args> s[22] w[134][0] 26203827 -28387022 </args>
+      <args> s[19] w[136][0] 21782448 21782449 </args>
+      <args> s[29] w[136][2] -14526204 21782449 </args>
+      <args> s[1] w[137][0] 31919281 -21498874 </args>
+      <args> s[19] w[139][0] 21014530 21014531 </args>
+      <args> s[29] w[139][2] -14478735 21014531 </args>
+      <args> s[4] w[140][0] 32033160 -21456875 </args>
+      <args> s[22] w[143][0] 26260970 -27272147 </args>
+      <args> s[19] w[148][0] 18575664 18575665 </args>
+      <args> s[30] w[148][1] -14328364 18575665 </args>
+      <args> s[22] w[149][0] 26372512 -26757045 </args>
+      <args> s[19] w[151][0] 19030850 19030851 </args>
+      <args> s[30] w[151][1] -13647283 19030851 </args>
+      <args> s[4] w[152][0] 31477436 -20140753 </args>
+      <args> s[22] w[155][0] 25751818 -25779693 </args>
+      <args> s[5] w[160][0] -16079576 31125410 </args>
+      <args> s[29] w[160][2] -11887152 31125410 </args>
+      <args> s[1] w[161][0] 31949438 -19382012 </args>
+      <args> s[4] w[164][0] 31957007 -19821983 </args>
+      <args> s[22] w[167][0] 25483001 -25056219 </args>
+      <args> s[22] w[170][0] 23927677 -23921576 </args>
+      <args> s[4] w[173][0] 29536102 -18401042 </args>
+      <args> s[22] w[178][0] -12961352 13744882 </args>
+      <args> s[22] w[179][0] 24891305 -24299257 </args>
+      <args> s[22] w[185][0] 22874470 -22784845 </args>
+      <args> s[2] w[188][0] 22184662 -23468877 </args>
+      <args> s[22] w[191][0] 22090600 -23063751 </args>
+      <args> s[22] w[194][0] 21152719 -21730330 </args>
+      <args> s[5] w[199][0] -13345955 11456228 </args>
+      <args> s[22] w[200][0] 21252229 -21718512 </args>
+      <args> s[22] w[206][0] 19889628 -20889005 </args>
+      <args> s[5] w[209][0] 21835591 -17432638 </args>
+      <args> s[5] w[212][0] 20936781 -15921185 </args>
+      <args> s[27] w[217][0] -12205864 15432360 </args>
+      <args> s[5] w[218][0] 20975522 -15882910 </args>
+      <args> s[27] w[223][0] -11695221 14652488 </args>
+      <args> s[5] w[224][0] 19919903 -15604396 </args>
+      <args> s[5] w[227][0] 18084434 -14641879 </args>
+      <args> s[27] w[229][0] -11167298 13449886 </args>
+      <args> s[5] w[233][0] 17208563 -13825326 </args>
+      <args> s[27] w[235][0] -11273386 13030452 </args>
+      <args> s[5] w[239][0] 16356704 -13091109 </args>
+      <args> s[5] w[245][0] 15727948 -11968283 </args>
+      <args> s[27] w[250][0] -11895821 13326593 </args>
+      <args> s[5] w[251][0] 15074180 -10983388 </args>
+      <args> s[5] w[257][0] 14346595 -10496684 </args>
+      <args> s[27] w[259][0] -11138255 12548209 </args>
+      <args> s[5] w[272][0] 13223897 -10034747 </args>
+      <args> s[27] w[274][0] -10869302 12474324 </args>
+      <args> s[27] w[280][0] -11306528 12537147 </args>
+      <args> s[5] w[281][0] 12510000 -9561242 </args>
+      <args> s[5] w[284][0] 11256654 -9087062 </args>
+      <args> s[27] w[286][0] -10781233 11777065 </args>
+      <args> s[5] w[287][0] 11058144 -8312215 </args>
+      <args> s[5] w[290][0] 9927575 -7932153 </args>
+      <args> s[27] w[292][0] -10315230 11132691 </args>
+      <args> s[5] w[293][0] 9840062 -7253103 </args>
+      <args> s[5] w[296][0] 8813572 -6951696 </args>
+      <args> s[5] w[299][0] 8815121 -6353684 </args>
+    </group>
+    <group>
+      <intension> if(and(eq(%0,0),eq(%1,0)),eq(%2,%3),eq(%2,%4)) </intension>
+      <args> s[3] s[1] w[1][3] -210638314 418604643 </args>
+      <args> s[4] s[1] w[4][3] -188560829 289456965 </args>
+      <args> s[4] s[1] w[5][2] 294233114 -193869964 </args>
+      <args> s[3] s[1] w[7][3] -172419369 231705428 </args>
+      <args> s[4] s[5] w[8][2] 237422228 -177718655 </args>
+      <args> s[4] s[5] w[11][2] 204379812 -166122557 </args>
+      <args> s[3] s[9] w[14][1] 183399603 -156656326 </args>
+      <args> s[10] s[9] w[14][2] -89958176 -156656326 </args>
+      <args> s[11] s[9] w[14][3] 153474808 -156656326 </args>
+      <args> s[3] s[9] w[17][1] 167926013 -149149851 </args>
+      <args> s[3] s[9] w[20][1] 156109422 -142399640 </args>
+      <args> s[3] s[9] w[23][1] 146351054 -135953561 </args>
+      <args> s[3] s[9] w[26][1] 137721762 -129563064 </args>
+      <args> s[3] s[9] w[29][1] 129677817 -122685106 </args>
+      <args> s[3] s[9] w[32][1] 121926531 -115608693 </args>
+      <args> s[1] s[9] w[35][3] 22446282 -108390474 </args>
+      <args> s[4] s[5] w[41][1] 111210801 -3180147 </args>
+      <args> s[12] s[9] w[44][1] -22881787 -90048642 </args>
+      <args> s[4] s[9] w[44][2] 117994137 -90048642 </args>
+      <args> s[4] s[22] w[59][1] 102672517 -56262199 </args>
+      <args> s[4] s[22] w[62][1] 97111374 -53752777 </args>
+      <args> s[4] s[22] w[65][1] 93620963 -49263638 </args>
+      <args> s[4] s[22] w[68][1] 90289369 -45231954 </args>
+      <args> s[4] s[22] w[71][1] 87112441 -41608625 </args>
+      <args> s[5] s[28] w[91][1] -11046523 43222577 </args>
+      <args> s[5] s[28] w[97][1] -9939918 42804070 </args>
+      <args> s[4] s[28] w[106][1] -12693351 41068227 </args>
+      <args> s[4] s[28] w[112][1] -10954320 38260002 </args>
+      <args> s[4] s[28] w[124][1] -10502679 35091747 </args>
+    </group>
+    <intension> if(and(eq(s[4],0),eq(s[1],0),eq(s[9],0)),eq(w[35][2],117168553),eq(w[35][2],-108390474)) </intension>
+  </constraints>
+</instance>
