@@ -2,7 +2,7 @@ from pyxai import Learning, Explainer, Tools
 
 # usage
 # python3 examples/RF/theories-types-file.py -dataset=examples/datasets_converted/australian_0.csv -types=examples/datasets_converted/australian_0.types
-
+# Check V1.0: Ok 
 
 # Machine learning part
 learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
@@ -36,3 +36,5 @@ for (instance, prediction) in instances:
 
     print("contrastive:", contrastive)
     print("features contrastive:", features)
+
+explainer.show()
