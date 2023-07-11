@@ -2,7 +2,7 @@ from pyxai import Learning, Explainer, Tools
 
 # usage
 # python3 pyxai/examples/RF/Simple.py -dataset=path/to/dataset.csv
-
+# Check V1.0: Ok 
 
 # Machine learning part
 learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)

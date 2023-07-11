@@ -1,7 +1,8 @@
-from pyxai import Learning, Explainer, Tools
 
-# usage
 #python3 examples/RF/theories-majoritary.py -dataset=../../data/dataMLothers/iris.csv 
+## Check V1.0: Ok but bug in explainer.majoritary_reason(n_iterations=10): free(): invalid pointer Abandon (core dumped)
+
+from pyxai import Learning, Explainer, Tools
 
 # Machine learning part
 learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
@@ -54,7 +55,6 @@ print("\nlen sufficient reason:", len(sufficient_reason))
 if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
 print("is reason (for 50 checks)", explainer.is_reason(sufficient_reason, n_samples=50))
 
-exit(0)
 minimal_constrative_reason = explainer.minimal_contrastive_reason(time_limit=5)
 if len(minimal_constrative_reason) == 0:
     print("\nminimal contrastive not found")
@@ -62,3 +62,5 @@ else:
     print("\nminimal contrastive: ", len(minimal_constrative_reason))
     if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
     print("is  contrastive: ", explainer.is_contrastive_reason(minimal_constrative_reason))
+
+explainer.show()
