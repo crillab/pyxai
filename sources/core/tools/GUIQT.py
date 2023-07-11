@@ -7,11 +7,7 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 import sys
 import webbrowser
 import numpy
-import colorsys
-import math
-import pickle
 import dill
-from pyxai.sources.core.tools.ImageViewSync import QImageViewSync
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
 class EmptyExplainer():pass

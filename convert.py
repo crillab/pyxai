@@ -14,8 +14,10 @@ for filename in os.listdir(dataset):
     
     if not completename.endswith("~"):
         print(completename)
-        name = completename.split("/")[-1].split(".")[0]
+        name = completename.split("/")[-1].split(".")[0].split("_")[0]
         print("name:", name)
+        if name == "mnist49" or name == "mnist38":
+            name = "mnist"
         command = "python3 examples/Converters/converter-"+name+".py -dataset=" + completename
         os.system(command)
-        #input("Press Enter to continue...")
+        input("Press Enter to continue...")

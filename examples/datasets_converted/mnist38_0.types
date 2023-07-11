@@ -3136,11 +3136,11 @@
     "encoder:": "None"
   },
   "784": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
-      3,
-      8
+      "3",
+      "8"
     ]
   }
 }

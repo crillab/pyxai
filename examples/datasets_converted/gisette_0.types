@@ -20000,7 +20000,7 @@
     "encoder:": "None"
   },
   "5000": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "-1",

@@ -3424,7 +3424,7 @@
     "encoder:": "None"
   },
   "category": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "1",
