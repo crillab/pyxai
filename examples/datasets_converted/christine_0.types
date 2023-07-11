@@ -6544,7 +6544,7 @@
     "encoder:": "None"
   },
   "1636": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "0",

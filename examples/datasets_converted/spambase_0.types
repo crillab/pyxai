@@ -228,7 +228,7 @@
     "encoder:": "None"
   },
   "V57": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "0",

@@ -20,7 +20,7 @@
     "encoder:": "None"
   },
   "drinks": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "0.0",

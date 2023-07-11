@@ -1,6 +1,5 @@
 from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
-from pyxai.sources.core.tools.GUI import GraphicalInterface
 
 from numpy import argmax, argmin
 import collections
@@ -291,7 +290,7 @@ class BinaryMapping():
         result = []
         if eliminate_redundant_features:
             reason = self.eliminate_redundant_features(reason, contrastive)
-
+        
         # First pass on each literal
         for lit in reason:
             feature = dict()

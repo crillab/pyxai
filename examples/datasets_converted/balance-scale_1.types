@@ -16,7 +16,7 @@
     "encoder:": "None"
   },
   "Class": {
-    "type:": "TARGET",
+    "type:": "Classification",
     "encoder:": "LabelEncoder",
     "classes:": [
       "B",
