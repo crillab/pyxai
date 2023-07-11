@@ -420,7 +420,6 @@ class ExplainerRF(Explainer):
         
         weights = compute_weight(method, self._instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
-
         solver = OPENWBOSolver()
         max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
         map_abs_implicant = [0 for _ in range(0, n_variables + 1)]

@@ -534,7 +534,7 @@ class Explainer:
         to_add = [literal for literal in self._binary_representation if literal not in complete and -literal not in complete]
         complete = self.extend_reason_with_theory(complete)
         for literal in to_add:
-            if literal in complete or -literal in complete:
+            if literal in complete or -literal in complete: #This line is too costly: TODO: Create a map 
                 continue
             sign = random.choice([1, -1])
             complete.append(sign * abs(literal))
