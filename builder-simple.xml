@@ -1,0 +1,38 @@
+<instance format="XCSP3" type="CSP">
+  <variables>
+    <array id="d" note="To go on the leaf or the right side of a condition for the removed literals. Allow to explore all possible weights." size="[3]"> 0 1 </array>
+    <array id="w" note="The weight of each tree" size="[3]">
+      <domain for="w[0]"> -300000000 -200000000 300000000 400000000 </domain>
+      <domain for="w[1]"> -200000000 300000000 500000000 </domain>
+      <domain for="w[2]"> -400000000 -200000000 100000000 200000000 300000000 </domain>
+    </array>
+  </variables>
+  <constraints>
+    <group>
+      <intension> imp(and(eq(d[2],%0),eq(%1,%2),eq(%3,%4)),eq(%5,%6)) </intension>
+      <args> 1 d[1] 1 d[0] 1 w[0] 300000000 </args>
+      <args> 0 d[1] 1 d[0] 1 w[0] -200000000 </args>
+      <args> 1 d[0] 1 d[1] 0 w[2] 300000000 </args>
+      <args> 0 d[0] 1 d[1] 0 w[2] 200000000 </args>
+      <args> 1 d[0] 0 d[1] 0 w[2] 200000000 </args>
+      <args> 0 d[0] 0 d[1] 0 w[2] -200000000 </args>
+    </group>
+    <group>
+      <intension> imp(and(eq(%0,%1),eq(%2,%3)),eq(%4,%5)) </intension>
+      <args> d[1] 0 d[0] 1 w[0] -300000000 </args>
+      <args> d[2] 1 d[0] 0 w[1] 300000000 </args>
+      <args> d[2] 0 d[0] 0 w[1] -200000000 </args>
+      <args> d[0] 1 d[1] 1 w[2] 100000000 </args>
+      <args> d[0] 0 d[1] 1 w[2] -400000000 </args>
+    </group>
+    <group>
+      <intension> imp(eq(d[0],%0),eq(%1,%2)) </intension>
+      <args> 0 w[0] 400000000 </args>
+      <args> 1 w[1] 500000000 </args>
+    </group>
+    <sum>
+      <list> w[] </list>
+      <condition> (lt,0) </condition>
+    </sum>
+  </constraints>
+</instance>

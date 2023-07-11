@@ -1,6 +1,7 @@
 #from https://github.com/github/gitignore/blob/main/Python.gitignore
 
 .idea
+tmp_diagram.png
 .vscode/
 examples/datasets/
 # Byte-compiled / optimized / DLL files

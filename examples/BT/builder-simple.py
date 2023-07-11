@@ -1,3 +1,8 @@
+# Boosted Trees from the paper: Computing Abductive Explanations for Boosted Trees
+# https://arxiv.org/pdf/2209.07740.pdf
+
+# Check V1.0: Ok
+
 from pyxai import Builder, Explainer
 
 node1_1 = Builder.DecisionNode(1, operator=Builder.GT, threshold=2, left=-0.2, right=0.3)
@@ -40,7 +45,7 @@ direct = explainer.direct_reason()
 print("direct reason:", direct)
 direct_features = explainer.to_features(direct)
 print("to_features:", direct_features)
-assert direct_features == ('f4 == 1', 'f2 > 1', 'f3 == 1', 'f1 > 2'), "The direct reason is not correct."
+assert direct_features == ('f1 > 2', 'f2 > 1', 'f3 == 1', 'f4 == 1'), "The direct reason is not correct."
 
 print("---------------------------------------------------")
 tree_specific = explainer.tree_specific_reason()
@@ -71,3 +76,5 @@ feat = explainer.to_features(reason)
 print("feat:", feat)
 print("is_tree_specific:", explainer.is_tree_specific_reason(reason))
 print("is_sufficient_reason:", explainer.is_sufficient_reason(reason))
+
+explainer.show()

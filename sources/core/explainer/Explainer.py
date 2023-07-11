@@ -142,7 +142,7 @@ class Explainer:
 
     def get_feature_names(self):
         model = self.get_model()
-        if model.learner_information is None:
+        if model.learner_information is None or model.learner_information.feature_names is None:
             return ["f" + str(i + 1) for i in range(model.get_used_features())]+["p"]
         return model.learner_information.feature_names
 

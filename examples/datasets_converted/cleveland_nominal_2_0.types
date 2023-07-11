@@ -11,25 +11,57 @@
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "cp",
-    "original_value:": 0
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "cp_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "cp",
-    "original_value:": 1
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "cp_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "cp",
-    "original_value:": 2
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "cp_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "cp",
-    "original_value:": 3
+    "original_values:": [
+      3,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "trestbps": {
     "type:": "NUMERICAL",
@@ -47,19 +79,40 @@
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "restecg",
-    "original_value:": 0
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "restecg_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "restecg",
-    "original_value:": 1
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "restecg_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "restecg",
-    "original_value:": 2
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "thalach": {
     "type:": "NUMERICAL",
@@ -77,19 +130,40 @@
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "slope",
-    "original_value:": 0
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "slope_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "slope",
-    "original_value:": 1
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "slope_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "slope",
-    "original_value:": 2
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2
+      ]
+    ]
   },
   "ca": {
     "type:": "NUMERICAL",
@@ -99,25 +173,57 @@
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "thal",
-    "original_value:": 0
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "thal_1": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "thal",
-    "original_value:": 1
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "thal_2": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "thal",
-    "original_value:": 2
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "thal_3": {
     "type:": "CATEGORICAL",
     "encoder:": "OneHotEncoder",
     "original_feature:": "thal",
-    "original_value:": 3
+    "original_values:": [
+      3,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
   },
   "binaryClass": {
     "type:": "Classification",
