@@ -309,8 +309,8 @@ class PyPlotImageGenerator():
         #self.image_negative = numpy.ma.masked_where(self.image_negative < 0.9, self.image_negative)
         #self.image_positive = numpy.ma.masked_where(self.image_positive < 0.9, self.image_positive)
         
-        x_1 = pyplot.imshow(PILImage.fromarray(numpy.uint8(self.image_negative)), alpha=0.6, cmap='Blues', vmin=0, vmax=self.n_colors-1, interpolation='None')
-        x_2 = pyplot.imshow(PILImage.fromarray(numpy.uint8(self.image_positive)), alpha=0.6, cmap='Reds', vmin=0, vmax=self.n_colors-1, interpolation='None')
+        x_1 = pyplot.imshow(PILImage.fromarray(numpy.uint8(self.image_negative)), alpha=0.6, cmap='Reds', vmin=0, vmax=self.n_colors-1, interpolation='None')
+        x_2 = pyplot.imshow(PILImage.fromarray(numpy.uint8(self.image_positive)), alpha=0.6, cmap='Blues', vmin=0, vmax=self.n_colors-1, interpolation='None')
 
         new_image_negative = x_1.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
         new_image_positive = x_2.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
