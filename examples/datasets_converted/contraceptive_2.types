@@ -1,0 +1,265 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "wife-education_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "wife-education",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "wife-education_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "wife-education",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "wife-education_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "wife-education",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "wife-education_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "wife-education",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "husband-education_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "husband-education",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "husband-education_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "husband-education",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "husband-education_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "husband-education",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "husband-education_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "husband-education",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "children": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "religion": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "job": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "occupation_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "occupation_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "occupation_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "occupation_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "occupation",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "index_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "index",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "index_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "index",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "index_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "index",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "index_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "index",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4
+      ]
+    ]
+  },
+  "media": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "contraceptive_method": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "1",
+      "2",
+      "3"
+    ],
+    "binary_conversion:": {
+      "Method": "OneVsRest",
+      "0": [
+        0,
+        1
+      ],
+      "1": [
+        2
+      ]
+    }
+  }
+}

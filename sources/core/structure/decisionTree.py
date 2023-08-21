@@ -28,6 +28,7 @@ class DecisionTree(BinaryMapping):
         self.n_features = n_features
         self.nodes = []
         self.root = root
+        self._leaves = None
         self.target_class = target_class  # can be a integer (for BT) or a list (for DT and RF) TODO
         if not self.root.is_leaf():
             self.define_parents(self.root)
@@ -273,8 +274,8 @@ class DecisionTree(BinaryMapping):
         """
         Return a list of tuple representing the children of start_node
         """
-
         output = []
+        
         if node.left.is_leaf() or node.right.is_leaf():
             output.append(node)
         if not node.left.is_leaf():
@@ -296,6 +297,8 @@ class DecisionTree(BinaryMapping):
     def is_implicant(self, reason, target_prediction):
         return self.root.is_implicant(reason, target_prediction, self.map_features_to_id_binaries)
 
+    def get_reachable_classes(self, reason, target_prediction):
+        return self.root.get_reachable_classes(reason, target_prediction, self.map_features_to_id_binaries)
 
     def predict_instance(self, instance):
         """
@@ -303,14 +306,16 @@ class DecisionTree(BinaryMapping):
         """
         return self.root.take_decisions_instance(instance)
 
+    def predict_implicant(self, implicant, map_features_to_id_binaries=None):
+        return self.take_decisions_binary_representation(implicant, self.map_features_to_id_binaries)
 
-    def take_decisions_binary_representation(self, binary_representation, map_id_binaries_to_features=None):
+    def take_decisions_binary_representation(self, binary_representation, map_features_to_id_binaries=None):
         """
         Return the prediction (the classification) of an binary representation according to this tree
         """
-        if map_id_binaries_to_features is None:
-            map_id_binaries_to_features = self.map_id_binaries_to_features
-        return self.root.take_decisions_binary_representation(binary_representation, map_id_binaries_to_features)
+        if map_features_to_id_binaries is None:
+            map_features_to_id_binaries = self.map_features_to_id_binaries
+        return self.root.take_decisions_binary_representation(binary_representation, map_features_to_id_binaries)
 
 
     def to_CNF(self, instance, target_prediction=None, *, tree_encoding=Encoding.COMPLEMENTARY, format=True, inverse_coding=False):
@@ -331,6 +336,9 @@ class DecisionTree(BinaryMapping):
             target_prediction = self.predict_instance(instance)
         # Start to create the DNF according to the method TSEITIN or COMPLEMENTARY
         dnf = []
+        if self.root.is_leaf():
+            return []
+            
         for node in self.compute_nodes_with_leaves(self.root):
             if node.left.is_leaf() and \
                     ((code_prediction and node.left.is_prediction(target_prediction))
@@ -358,3 +366,21 @@ class DecisionTree(BinaryMapping):
             previous = parent
             parent = parent.parent
         return cube
+
+
+    def _get_leaves(self, node) :
+        if node.is_leaf() :
+            return [node]
+        return self._get_leaves(node.left) + self._get_leaves(node.right)
+
+    def get_leaves(self):
+        if self._leaves is None:
+            self._leaves = self._get_leaves(self.root)
+        return self._leaves
+
+    def get_min_value(self):
+        print([l.value for l in self.get_leaves()])
+        return min([l.value for l in self.get_leaves()])
+
+    def get_max_value(self):
+        return max([l.value for l in self.get_leaves()])

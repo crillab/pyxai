@@ -8,6 +8,8 @@ class LeafNode:
         self.value = value
         self.parent = None
 
+    def get_reachable_classes(self, reason, target_prediction, map_features_to_id_binaries):
+        return set([self.value])
 
     def is_implicant(self, reason, target_prediction, map_features_to_id_binaries):
         """_summary_
@@ -107,6 +109,17 @@ class DecisionNode:
         return "f{}<{}".format(self.id_feature, self.threshold)
 
 
+    def get_reachable_classes(self, binary_representation, target_prediction, map_features_to_id_binaries):
+        id_variable = map_features_to_id_binaries[(self.id_feature, self.operator, self.threshold)][0]
+        if id_variable in binary_representation:
+            return self.right.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+        elif -id_variable in binary_representation:
+            return self.left.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+        else:
+            right = self.right.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+            left = self.left.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
+            return right.union(left)
+
     def is_implicant(self, binary_representation, target_prediction, map_features_to_id_binaries):
         """_summary_
 
@@ -150,8 +163,11 @@ class DecisionNode:
         This return value is either 0 or 1: 0 for the first (boolean) prediction value, 1 for the second one.
         Warning: right nodes are considered as the 'yes' responses of conditions, left nodes as 'no'.
         """
-        # print("self.id_feature:", self.id_feature)
-
+        #print("self.id_feature:", self.id_feature)
+        #print("self.threshold:", type(self.threshold))
+        #print("self.operator:", self.operator)
+        #print("instance[self.id_feature - 1]:", type(instance[self.id_feature - 1]))
+        
         if self.operator == OperatorCondition.GE:
             if instance[self.id_feature - 1] >= self.threshold:
                 return self.right.take_decisions_instance(instance)

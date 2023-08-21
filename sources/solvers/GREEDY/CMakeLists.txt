@@ -1,23 +1,25 @@
 cmake_minimum_required(VERSION 3.4...3.18)
 project(cmake_example)
 
-execute_process(COMMAND python3 -m pybind11 --includes OUTPUT_VARIABLE pybind11_DIR)
 
-message("pybind dir:" ${pybind11_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-message("include pybind:" ${FOO})
+file(GLOB_RECURSE Greedy_SOURCES
+        ${PROJECT_SOURCE_DIR}/*.cc
+        ${PROJECT_SOURCE_DIR}/bcp*.cc)
 
-find_package(pybind11 REQUIRED)
+file(GLOB_RECURSE Greedy_HEADERS
+        ${PROJECT_SOURCE_DIR}/*.h
+        ${PROJECT_SOURCE_DIR}/bcp*.h)
 
+file(GLOB_RECURSE Greedy_HEADERS "./*.h")
 
+include_directories(
+        ${Greedy_HEADERS}
+)
+#add_library(MyExample STATIC ${Greedy_SOURCES})
 
-include_directories(${FOO})
-find_package(pybind11 REQUIRED)
-
-set(src/MajoritaryExplainerBT.cc src/majoritary_bt_wrapper.c)
-
-#include_directories()
-
+add_executable(MyExample ${Greedy_SOURCES})
 # EXAMPLE_VERSION_INFO is defined by setup.py and passed into the C++ code as a
 # define (VERSION_INFO) here.
 
