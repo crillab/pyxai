@@ -76,6 +76,26 @@ class EvaluationMethod(Enum):
         return self.name
 
 
+class LearnerType(Enum):
+    Classification, Regression = auto(2)
+
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+
+    def __str__(self):
+        return self.name
+
+
+    def from_str(str):
+        if str == "Classification":
+            return LearnerType.Classification
+        elif str == "Regression":
+            return LearnerType.Regression
+        else:
+            assert False, "No EvaluationOutput for this string !"
+
 @unique
 class EvaluationOutput(Enum):
     DT, RF, BT, SAVE = auto(4)
@@ -167,7 +187,7 @@ class TypeStatus(Enum):
     def __str__(self):
         return self.name
 
-
+@unique
 class OperatorCondition(Enum):
     EQ, NEQ, LT, LE, GT, GE = auto(6)
 
@@ -177,8 +197,87 @@ class OperatorCondition(Enum):
 
 
     def __eq__(self, other):
+        if isinstance(other, int):
+            return self.value == other
+        
         return self.value == other.value
 
+    def to_str_readable(self):
+        if self.value == OperatorCondition.EQ:
+            return "=="
+        if self.value == OperatorCondition.GE:
+            return ">="
+        if self.value == OperatorCondition.GT:
+            return ">"
+        if self.value == OperatorCondition.LE:
+            return "<="
+        if self.value == OperatorCondition.LT:
+            return "<"
+        if self.value == OperatorCondition.EQ:
+            return "="
+        if self.value == OperatorCondition.NEQ:
+            return "!="
+        raise NotImplementedError("The operator " + str(self.value) + " is not implemented.")
+    
+    def __str__(self):
+        return self.name
+
+@unique
+class TypeTheory(Enum):
+    SIMPLE, NEW_VARIABLES = auto(2)
 
     def __str__(self):
         return self.name
+
+@unique
+class TypeFeature(Enum):
+    NUMERICAL, CATEGORICAL, BINARY, TARGET, TO_DELETE, DEFAULT = auto(6)
+
+    def __str__(self):
+        return self.name
+
+    def from_str(str):
+        if str == "CATEGORICAL":
+            return TypeFeature.CATEGORICAL
+        elif str == "NUMERICAL":
+            return TypeFeature.NUMERICAL
+        elif str == "BINARY":
+            return TypeFeature.BINARY
+        elif str == "TARGET":
+            return TypeFeature.TARGET
+        elif str == "TO_DELETE":
+            return TypeFeature.TO_DELETE
+        elif str == "DEFAULT":
+            return TypeFeature.DEFAULT
+        else:
+            assert False, "No TypeFeature for this string !"
+
+
+@unique
+class TypeClassification(Enum):
+    BinaryClass, MultiClass = auto(2)
+
+    def __str__(self):
+        return self.name
+
+@unique
+class MethodToBinaryClassification(Enum):
+    OneVsRest, OneVsOne = auto(2)
+
+    def __str__(self):
+        return self.name
+
+@unique
+class TypeEncoder(Enum):
+    OrdinalEncoder, OneHotEncoder = auto(2)
+
+    def __str__(self):
+        return self.name
+    
+    def from_str(str):
+        if str == "OrdinalEncoder":
+            return TypeEncoder.OrdinalEncoder
+        elif str == "OneHotEncoder":
+            return TypeEncoder.OneHotEncoder
+        else:
+            assert False, "No TypeEncoder for this string !"
