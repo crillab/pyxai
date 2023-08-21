@@ -1,0 +1,780 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "job_admin.": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "admin.",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_blue-collar": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "blue-collar",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_entrepreneur": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "entrepreneur",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_housemaid": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "housemaid",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_management": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "management",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_retired": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "retired",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_self-employed": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "self-employed",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_services": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "services",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_student": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "student",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_technician": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "technician",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_unemployed": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "unemployed",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "job_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "job",
+    "original_values:": [
+      "unknown",
+      [
+        "admin.",
+        "blue-collar",
+        "entrepreneur",
+        "housemaid",
+        "management",
+        "retired",
+        "self-employed",
+        "services",
+        "student",
+        "technician",
+        "unemployed",
+        "unknown"
+      ]
+    ]
+  },
+  "marital_divorced": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital",
+    "original_values:": [
+      "divorced",
+      [
+        "divorced",
+        "married",
+        "single"
+      ]
+    ]
+  },
+  "marital_married": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital",
+    "original_values:": [
+      "married",
+      [
+        "divorced",
+        "married",
+        "single"
+      ]
+    ]
+  },
+  "marital_single": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "marital",
+    "original_values:": [
+      "single",
+      [
+        "divorced",
+        "married",
+        "single"
+      ]
+    ]
+  },
+  "education_primary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_values:": [
+      "primary",
+      [
+        "primary",
+        "secondary",
+        "tertiary",
+        "unknown"
+      ]
+    ]
+  },
+  "education_secondary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_values:": [
+      "secondary",
+      [
+        "primary",
+        "secondary",
+        "tertiary",
+        "unknown"
+      ]
+    ]
+  },
+  "education_tertiary": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_values:": [
+      "tertiary",
+      [
+        "primary",
+        "secondary",
+        "tertiary",
+        "unknown"
+      ]
+    ]
+  },
+  "education_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "education",
+    "original_values:": [
+      "unknown",
+      [
+        "primary",
+        "secondary",
+        "tertiary",
+        "unknown"
+      ]
+    ]
+  },
+  "default": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "no",
+      "yes"
+    ]
+  },
+  "balance": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "housing": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "no",
+      "yes"
+    ]
+  },
+  "loan": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "no",
+      "yes"
+    ]
+  },
+  "contact_cellular": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact",
+    "original_values:": [
+      "cellular",
+      [
+        "cellular",
+        "telephone",
+        "unknown"
+      ]
+    ]
+  },
+  "contact_telephone": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact",
+    "original_values:": [
+      "telephone",
+      [
+        "cellular",
+        "telephone",
+        "unknown"
+      ]
+    ]
+  },
+  "contact_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "contact",
+    "original_values:": [
+      "unknown",
+      [
+        "cellular",
+        "telephone",
+        "unknown"
+      ]
+    ]
+  },
+  "day": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "month_apr": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "apr",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_aug": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "aug",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_dec": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "dec",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_feb": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "feb",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_jan": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "jan",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_jul": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "jul",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_jun": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "jun",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_mar": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "mar",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_may": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "may",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_nov": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "nov",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_oct": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "oct",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "month_sep": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "month",
+    "original_values:": [
+      "sep",
+      [
+        "apr",
+        "aug",
+        "dec",
+        "feb",
+        "jan",
+        "jul",
+        "jun",
+        "mar",
+        "may",
+        "nov",
+        "oct",
+        "sep"
+      ]
+    ]
+  },
+  "duration": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "campaign": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "pdays": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "previous": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "poutcome_failure": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome",
+    "original_values:": [
+      "failure",
+      [
+        "failure",
+        "other",
+        "success",
+        "unknown"
+      ]
+    ]
+  },
+  "poutcome_other": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome",
+    "original_values:": [
+      "other",
+      [
+        "failure",
+        "other",
+        "success",
+        "unknown"
+      ]
+    ]
+  },
+  "poutcome_success": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome",
+    "original_values:": [
+      "success",
+      [
+        "failure",
+        "other",
+        "success",
+        "unknown"
+      ]
+    ]
+  },
+  "poutcome_unknown": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "poutcome",
+    "original_values:": [
+      "unknown",
+      [
+        "failure",
+        "other",
+        "success",
+        "unknown"
+      ]
+    ]
+  },
+  "y": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "no",
+      "yes"
+    ]
+  }
+}

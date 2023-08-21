@@ -1,0 +1,109 @@
+{
+  "Misdemeanor": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "Number_of_Priors": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "score_factor": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "Age_Above_FourtyFive": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "Age_Below_TwentyFive": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "African_American": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic",
+    "original_values:": [
+      "African_American",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
+  },
+  "Asian": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic",
+    "original_values:": [
+      "Asian",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
+  },
+  "Hispanic": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic",
+    "original_values:": [
+      "Hispanic",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
+  },
+  "Native_American": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic",
+    "original_values:": [
+      "Native_American",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
+  },
+  "Other": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "Ethnic",
+    "original_values:": [
+      "Other",
+      [
+        "African_American",
+        "Asian",
+        "Hispanic",
+        "Native_American",
+        "Other"
+      ]
+    ]
+  },
+  "Female": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "Two_yr_Recidivism": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}

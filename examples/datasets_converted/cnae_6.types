@@ -1,0 +1,3457 @@
+{
+  "W855": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W0": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W7": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W8": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W9": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W10": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W11": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W12": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W13": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W14": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W15": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W16": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W17": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W18": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W19": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W20": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W21": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W22": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W23": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W24": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W25": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W26": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W27": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W28": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W29": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W30": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W31": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W32": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W33": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W34": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W35": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W36": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W37": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W38": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W39": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W40": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W41": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W42": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W43": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W44": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W45": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W46": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W47": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W48": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W49": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W50": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W51": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W52": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W53": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W54": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W55": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W56": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W57": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W58": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W59": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W60": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W61": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W62": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W63": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W64": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W65": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W66": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W67": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W68": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W69": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W70": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W71": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W72": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W73": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W74": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W75": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W76": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W77": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W78": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W79": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W80": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W81": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W82": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W83": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W84": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W85": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W86": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W87": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W88": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W89": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W90": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W91": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W92": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W93": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W94": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W95": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W96": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W97": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W98": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W99": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W100": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W101": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W102": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W103": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W104": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W105": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W106": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W107": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W108": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W109": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W110": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W111": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W112": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W113": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W114": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W115": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W116": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W117": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W118": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W119": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W120": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W121": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W122": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W123": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W124": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W125": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W126": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W127": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W128": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W129": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W130": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W131": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W132": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W133": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W134": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W135": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W136": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W137": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W138": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W139": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W140": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W141": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W142": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W143": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W144": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W145": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W146": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W147": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W148": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W149": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W150": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W151": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W152": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W153": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W154": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W155": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W156": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W157": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W158": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W159": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W160": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W161": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W162": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W163": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W164": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W165": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W166": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W167": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W168": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W169": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W170": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W171": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W172": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W173": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W174": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W175": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W176": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W177": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W178": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W179": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W180": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W181": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W182": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W183": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W184": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W185": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W186": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W187": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W188": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W189": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W190": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W191": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W192": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W193": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W194": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W195": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W196": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W197": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W198": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W199": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W200": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W201": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W202": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W203": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W204": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W205": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W206": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W207": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W208": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W209": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W210": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W211": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W212": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W213": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W214": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W215": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W216": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W217": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W218": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W219": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W220": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W221": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W222": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W223": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W224": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W225": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W226": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W227": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W228": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W229": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W230": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W231": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W232": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W233": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W234": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W235": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W236": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W237": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W238": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W239": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W240": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W241": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W242": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W243": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W244": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W245": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W246": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W247": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W248": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W249": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W250": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W251": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W252": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W253": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W254": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W255": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W256": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W257": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W258": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W259": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W260": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W261": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W262": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W263": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W264": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W265": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W266": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W267": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W268": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W269": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W270": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W271": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W272": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W273": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W274": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W275": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W276": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W277": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W278": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W279": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W280": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W281": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W282": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W283": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W284": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W285": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W286": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W287": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W288": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W289": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W290": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W291": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W292": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W293": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W294": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W295": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W296": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W297": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W298": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W299": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W300": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W301": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W302": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W303": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W304": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W305": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W306": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W307": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W308": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W309": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W310": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W311": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W312": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W313": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W314": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W315": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W316": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W317": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W318": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W319": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W320": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W321": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W322": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W323": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W324": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W325": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W326": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W327": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W328": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W329": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W330": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W331": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W332": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W333": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W334": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W335": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W336": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W337": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W338": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W339": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W340": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W341": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W342": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W343": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W344": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W345": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W346": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W347": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W348": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W349": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W350": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W351": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W352": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W353": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W354": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W355": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W356": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W357": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W358": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W359": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W360": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W361": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W362": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W363": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W364": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W365": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W366": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W367": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W368": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W369": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W370": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W371": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W372": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W373": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W374": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W375": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W376": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W377": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W378": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W379": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W380": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W381": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W382": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W383": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W384": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W385": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W386": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W387": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W388": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W389": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W390": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W391": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W392": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W393": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W394": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W395": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W396": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W397": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W398": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W399": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W400": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W401": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W402": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W403": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W404": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W405": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W406": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W407": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W408": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W409": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W410": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W411": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W412": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W413": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W414": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W415": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W416": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W417": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W418": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W419": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W420": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W421": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W422": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W423": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W424": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W425": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W426": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W427": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W428": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W429": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W430": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W431": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W432": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W433": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W434": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W435": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W436": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W437": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W438": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W439": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W440": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W441": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W442": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W443": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W444": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W445": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W446": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W447": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W448": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W449": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W450": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W451": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W452": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W453": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W454": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W455": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W456": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W457": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W458": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W459": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W460": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W461": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W462": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W463": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W464": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W465": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W466": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W467": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W468": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W469": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W470": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W471": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W472": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W473": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W474": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W475": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W476": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W477": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W478": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W479": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W480": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W481": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W482": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W483": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W484": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W485": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W486": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W487": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W488": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W489": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W490": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W491": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W492": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W493": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W494": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W495": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W496": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W497": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W498": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W499": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W500": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W501": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W502": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W503": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W504": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W505": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W506": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W507": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W508": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W509": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W510": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W511": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W512": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W513": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W514": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W515": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W516": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W517": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W518": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W519": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W520": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W521": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W522": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W523": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W524": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W525": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W526": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W527": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W528": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W529": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W530": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W531": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W532": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W533": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W534": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W535": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W536": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W537": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W538": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W539": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W540": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W541": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W542": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W543": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W544": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W545": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W546": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W547": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W548": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W549": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W550": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W551": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W552": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W553": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W554": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W555": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W556": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W557": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W558": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W559": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W560": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W561": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W562": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W563": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W564": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W565": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W566": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W567": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W568": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W569": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W570": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W571": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W572": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W573": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W574": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W575": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W576": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W577": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W578": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W579": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W580": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W581": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W582": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W583": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W584": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W585": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W586": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W587": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W588": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W589": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W590": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W591": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W592": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W593": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W594": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W595": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W596": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W597": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W598": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W599": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W600": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W601": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W602": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W603": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W604": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W605": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W606": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W607": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W608": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W609": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W610": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W611": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W612": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W613": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W614": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W615": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W616": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W617": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W618": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W619": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W620": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W621": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W622": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W623": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W624": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W625": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W626": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W627": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W628": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W629": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W630": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W631": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W632": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W633": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W634": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W635": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W636": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W637": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W638": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W639": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W640": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W641": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W642": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W643": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W644": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W645": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W646": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W647": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W648": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W649": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W650": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W651": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W652": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W653": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W654": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W655": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W656": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W657": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W658": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W659": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W660": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W661": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W662": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W663": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W664": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W665": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W666": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W667": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W668": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W669": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W670": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W671": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W672": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W673": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W674": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W675": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W676": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W677": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W678": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W679": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W680": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W681": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W682": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W683": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W684": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W685": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W686": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W687": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W688": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W689": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W690": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W691": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W692": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W693": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W694": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W695": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W696": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W697": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W698": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W699": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W700": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W701": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W702": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W703": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W704": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W705": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W706": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W707": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W708": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W709": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W710": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W711": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W712": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W713": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W714": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W715": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W716": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W717": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W718": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W719": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W720": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W721": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W722": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W723": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W724": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W725": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W726": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W727": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W728": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W729": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W730": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W731": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W732": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W733": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W734": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W735": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W736": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W737": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W738": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W739": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W740": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W741": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W742": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W743": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W744": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W745": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W746": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W747": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W748": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W749": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W750": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W751": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W752": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W753": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W754": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W755": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W756": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W757": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W758": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W759": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W760": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W761": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W762": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W763": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W764": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W765": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W766": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W767": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W768": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W769": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W770": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W771": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W772": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W773": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W774": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W775": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W776": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W777": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W778": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W779": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W780": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W781": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W782": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W783": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W784": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W785": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W786": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W787": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W788": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W789": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W790": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W791": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W792": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W793": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W794": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W795": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W796": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W797": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W798": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W799": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W800": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W801": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W802": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W803": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W804": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W805": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W806": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W807": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W808": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W809": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W810": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W811": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W812": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W813": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W814": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W815": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W816": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W817": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W818": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W819": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W820": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W821": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W822": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W823": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W824": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W825": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W826": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W827": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W828": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W829": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W830": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W831": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W832": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W833": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W834": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W835": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W836": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W837": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W838": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W839": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W840": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W841": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W842": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W843": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W844": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W845": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W846": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W847": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W848": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W849": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W850": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W851": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W852": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W853": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "W854": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "category": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "binary_conversion:": {
+      "Method": "OneVsRest",
+      "0": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "1": [
+        6
+      ]
+    }
+  }
+}

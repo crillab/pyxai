@@ -1,0 +1,755 @@
+{
+  "age": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "menopause_<40": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause",
+    "original_values:": [
+      "<40",
+      [
+        "<40",
+        ">=40",
+        "premenopausal"
+      ]
+    ]
+  },
+  "menopause_>=40": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause",
+    "original_values:": [
+      ">=40",
+      [
+        "<40",
+        ">=40",
+        "premenopausal"
+      ]
+    ]
+  },
+  "menopause_premenopausal": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "menopause",
+    "original_values:": [
+      "premenopausal",
+      [
+        "<40",
+        ">=40",
+        "premenopausal"
+      ]
+    ]
+  },
+  "inv-nodes_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      3,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      4,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      5,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      6,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      7,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      8,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_9": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      9,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_10": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      10,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_11": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      11,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_13": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      13,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_14": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      14,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_15": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      15,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_16": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      16,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_17": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      17,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "inv-nodes_25": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "inv-nodes",
+    "original_values:": [
+      25,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        25
+      ]
+    ]
+  },
+  "node-caps_?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps",
+    "original_values:": [
+      "?",
+      [
+        "?",
+        "no",
+        "yes"
+      ]
+    ]
+  },
+  "node-caps_no": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps",
+    "original_values:": [
+      "no",
+      [
+        "?",
+        "no",
+        "yes"
+      ]
+    ]
+  },
+  "node-caps_yes": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "node-caps",
+    "original_values:": [
+      "yes",
+      [
+        "?",
+        "no",
+        "yes"
+      ]
+    ]
+  },
+  "deg-malig_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "deg-malig_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "deg-malig_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "deg-malig",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "breast": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "left",
+      "right"
+    ]
+  },
+  "breast-quad_?": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "?",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "breast-quad_central": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "central",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "breast-quad_left-lower": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "left-lower",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "breast-quad_left-upper": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "left-upper",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "breast-quad_right-lower": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "right-lower",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "breast-quad_right-upper": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "breast-quad",
+    "original_values:": [
+      "right-upper",
+      [
+        "?",
+        "central",
+        "left-lower",
+        "left-upper",
+        "right-lower",
+        "right-upper"
+      ]
+    ]
+  },
+  "irradiation": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "no",
+      "yes"
+    ]
+  },
+  "recurrence": {
+    "type:": "BINARY",
+    "encoder:": "OrdinalEncoder",
+    "categories:": [
+      "n",
+      "r"
+    ]
+  },
+  "binaryClass": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "N",
+      "P"
+    ]
+  }
+}
