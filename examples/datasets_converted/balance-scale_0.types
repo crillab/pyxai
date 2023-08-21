@@ -1,0 +1,37 @@
+{
+  "Right-Distance": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Left-Weight": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Left-Distance": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Right-Weight": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Class": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "B",
+      "L",
+      "R"
+    ],
+    "binary_conversion:": {
+      "Method": "OneVsRest",
+      "0": [
+        2,
+        1
+      ],
+      "1": [
+        0
+      ]
+    }
+  }
+}

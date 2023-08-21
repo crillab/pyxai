@@ -6,44 +6,57 @@
 #define CPP_CODE_TREE_H
 
 #include "Node.h"
+#include "bcp/Propagator.h"
+#include "constants.h"
 #include <Python.h>
 
-namespace PyLE {
-    enum Kind_of_Tree_RF { WRONG, GOOD, CURRENTLY_WRONG};
+namespace pyxai {
+    enum Kind_of_Tree_RF { DEFINITIVELY_WRONG, GOOD, CURRENTLY_WRONG};
+    class Node;
 
     class Tree {
     public :
-
+        Type _type;
+        unsigned int n_classes;
         unsigned int target_class;
         u_char *memory = nullptr;
         Node *root = nullptr;
         std::vector<Node *> all_nodes;
-        Kind_of_Tree_RF status; // Useful only with RF : this tree hasn't the good class
+        Kind_of_Tree_RF status; // Useful only with Classifier_RF : this tree hasn't the good class
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
-        Tree(PyObject *tree_obj, Type _type){
-          root = parse(tree_obj, _type);
+        Propagator *propagator = nullptr;
+
+
+        // Variables used to stored the comutation value during common is_impicant function
+        // FOR Classifier_BT
+        bool get_min;
+        double current_weight;
+        bool firstLeaf;
+        double current_min_weight, current_max_weight; // For regression BT
+
+        std::set<unsigned int> reachable_classes; // FOR Multiclasses Classifier_RF
+
+
+        Tree(PyObject *tree_obj, Type _t): _type(_t) {
+          root = parse(tree_obj, _t);
         }
 
-        void display(Type _type) { root->display(_type); std::cout << std::endl;}
+        void display(Type _type);
         ~Tree();
         Node* parse(PyObject *tree_obj, Type _type);
         Node* parse_recurrence(PyObject *tree_obj, Type _type);
-        int nb_nodes() { return root->nb_nodes();}
+        int nb_nodes();
 
-        // BT functions
-        double compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
-            return root->compute_weight(instance, active_lits, get_min);
-        }
+
+
         void initialize_BT(std::vector<bool> &instance, bool get_min);
 
 
-        // RF functions
-        bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction) {
-            used_lits.clear();
+        bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
-            return root->is_implicant(instance, active_lits, prediction, used_lits);
-        }
+
+
 
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 

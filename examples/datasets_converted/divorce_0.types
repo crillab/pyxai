@@ -1,0 +1,226 @@
+{
+  "Atr1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr7": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr8": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr9": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr10": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr11": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr12": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr13": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr14": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr15": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr16": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr17": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr18": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr19": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr20": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr21": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr22": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr23": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr24": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr25": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr26": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr27": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr28": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr29": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr30": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr31": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr32": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr33": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr34": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr35": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr36": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr37": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr38": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr39": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr40": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr41": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr42": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr43": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr44": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr45": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr46": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr47": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr48": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr49": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr50": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr51": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr52": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr53": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Atr54": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Class": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}

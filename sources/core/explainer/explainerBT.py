@@ -36,8 +36,12 @@ class ExplainerBT(Explainer):
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
+    def _theory_clauses(self):
+        return self._boosted_trees.get_theory(self._binary_representation)
+
 
     def is_implicant(self, abductive):
+            
         if self._boosted_trees.n_classes == 2:
             # 2-classes case
             sum_weights = []
@@ -51,6 +55,7 @@ class ExplainerBT(Explainer):
 
             return self.target_prediction == prediction
         else:
+            
             # multi-classes case
             worst_one = self.compute_weights_class(abductive, self.target_prediction, king="worst")
             best_ones = [self.compute_weights_class(abductive, cl, king="best") for cl
@@ -130,8 +135,9 @@ class ExplainerBT(Explainer):
         return [i for i, _ in enumerate(self._instance) if i + 1 in features]
 
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False):
-        return self._boosted_trees.to_features(binary_representation, details=details)
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
+        return self._boosted_trees.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details,
+                                               contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def redundancy_analysis(self):
@@ -148,6 +154,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The direct reason.
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         direct_reason = set()
         for tree in self._boosted_trees.forest:
             direct_reason |= set(tree.direct_reason(self._instance))
@@ -156,7 +165,9 @@ class ExplainerBT(Explainer):
         if any(not self._is_specific(lit) for lit in direct_reason):
             return None
 
-        return Explainer.format(list(direct_reason))
+        reason = Explainer.format(list(direct_reason))
+        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        return reason
 
 
     def sufficient_reason(self, *, n=1, seed=0, time_limit=None):
@@ -166,6 +177,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The sufficient reason.
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         assert n == 1, "To do implement that"
         if self._boosted_trees.n_classes > 2:
             raise NotImplementedError
@@ -189,27 +203,35 @@ class ExplainerBT(Explainer):
                 is_removed[i] = False
 
         abductive = [l for i, l in enumerate(abductive) if not is_removed[i]]
-
-        return Explainer.format(abductive, n)
+        reasons = Explainer.format(abductive, n)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        return reasons
 
 
     def minimal_tree_specific_reason(self, *, time_limit=None, from_reason=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         cp_solver = TSMinimal()
         implicant_id_features = []  # TODO V2 self.implicant_id_features if reason_expressivity == ReasonExpressivity.Features else []
-        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees, self.target_prediction, self._boosted_trees.n_classes,
+        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees, self.target_prediction,
+                                                    self._boosted_trees.n_classes,
                                                     implicant_id_features, from_reason)
         time_used = -time.time()
         # TODO V2 reason_expressivity = reason_expressivity,
-        tree_specific = self.tree_specific_reason(n_iterations=5)
+        tree_specific = self.tree_specific_reason(n_iterations=5, history=False)
 
         result, solution = cp_solver.solve(time_limit=time_limit, upper_bound=len(tree_specific) + 1)
         time_used += time.time()
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
+        result = () if (result == UNSAT or result == UNKNOWN) else Explainer.format(
+            [l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
+        self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
 
-        return None if (result == UNSAT or result == UNKNOWN) else Explainer.format([l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
+        return result
 
 
-    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
+    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True):
         """
         Tree-specific (TS) explanations are abductive explanations that can be computed in polynomial time. While tree-specific explanations are not
         subset-minimal in the general case, they turn out to be close to sufficient reasons in practice. Furthermore, because sufficient reasons can
@@ -228,8 +250,9 @@ class ExplainerBT(Explainer):
         Returns:
             list: The tree-specific reason
         """
-        # TODO V2,
         reason_expressivity = ReasonExpressivity.Conditions
+        if self._instance is None:
+            raise ValueError("Instance is not set")
 
         if seed is None:
             seed = -1
@@ -238,20 +261,26 @@ class ExplainerBT(Explainer):
 
         if self.c_BT is None:
             # Preprocessing to give all trees in the c++ library
-            self.c_BT = c_explainer.new_BT(self._boosted_trees.n_classes)
+            self.c_BT = c_explainer.new_classifier_BT(self._boosted_trees.n_classes)
             for tree in self._boosted_trees.forest:
                 c_explainer.add_tree(self.c_BT, tree.raw_data_for_CPP())
         c_explainer.set_excluded(self.c_BT, tuple(self._excluded_literals))
-        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations, time_limit,
+        if self._theory:
+            c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
+
+        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations,
+                                            time_limit,
                                             int(reason_expressivity), seed)
-        if reason_expressivity == ReasonExpressivity.Conditions:
-            return reason
-        elif reason_expressivity == ReasonExpressivity.Features:
-            return self.to_features_indexes(reason)
+        if reason_expressivity == ReasonExpressivity.Features:
+            reason = self.to_features_indexes(reason)
+        reason = Explainer.format(reason)
+        if history:
+            self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
+        return reason
 
 
     def compute_weights_class(self, implicant, cls, king="worst"):
-        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if tree.target_class == cls]
+        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if tree.target_class[0] == cls]
         weights = [min(weights_per_tree) if king == "worst" else max(weights_per_tree) for weights_per_tree in weights]
         return sum(weights)
 
@@ -302,10 +331,15 @@ class ExplainerBT(Explainer):
 
 
     def is_tree_specific_reason(self, reason, check_minimal_inclusion=False):
-        if not self.is_implicant(reason):
+
+        extended_reason = self.extend_reason_with_theory(reason)
+
+        if not self.is_implicant(extended_reason):
             return False
+
         if not check_minimal_inclusion:
             return True
+
         tmp = list(reason)
         random.shuffle(tmp)
         for lit in tmp:

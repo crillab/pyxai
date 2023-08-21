@@ -1,0 +1,1569 @@
+{
+  "LIMIT_BAL": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "SEX": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "EDUCATION_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      3,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      4,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      5,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "EDUCATION_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "EDUCATION",
+    "original_values:": [
+      6,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ]
+  },
+  "MARRIAGE_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE",
+    "original_values:": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "MARRIAGE_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE",
+    "original_values:": [
+      1,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "MARRIAGE_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE",
+    "original_values:": [
+      2,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "MARRIAGE_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "MARRIAGE",
+    "original_values:": [
+      3,
+      [
+        0,
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "AGE": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_0_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_0_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_0",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_2_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_2",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_3_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_3",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      1,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_4_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_4",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_5_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_5",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_-2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      -2,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_-1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      -1,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_0": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      0,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      2,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      3,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      4,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      5,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      6,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      7,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "PAY_6_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "PAY_6",
+    "original_values:": [
+      8,
+      [
+        -2,
+        -1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    ]
+  },
+  "BILL_AMT1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "BILL_AMT6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT1": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT4": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT5": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "PAY_AMT6": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "default.payment.next.month": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}
