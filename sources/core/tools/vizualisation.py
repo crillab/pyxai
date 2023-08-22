@@ -4,7 +4,7 @@ from matplotlib.ticker import MaxNLocator
 import numpy
 from PIL import Image as PILImage
 from PIL.ImageQt import ImageQt
-
+import os
 
 class PyPlotDiagramGenerator():
     def __init__(self):
@@ -247,20 +247,12 @@ class PyPlotDiagramGenerator():
                         
 
 
-                #axes[i].tick_params(top='off', bottom='off', left='off', right='off', labelleft='off', labelbottom='on')
-                #invisible = axes[i].plot([0, 100], [2, 2], marker = 'o')
         pyplot.subplots_adjust(top=1, hspace=1)
 
-        #pyplot.figure(figsize=(3.6,0.75*)))
-        #pyplot.axis('off')
         pyplot.savefig('tmp_diagram.png', bbox_inches='tight')
         image = PILImage.open('tmp_diagram.png')
-
-        #ess = axes.imshow()
-        #print("ess:", ess)
-        #new_image = axes.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
-        #new_image = PILImage.fromarray(axes[0])
         pyplot.close()
+        os.remove('tmp_diagram.png')
         
         return ImageQt(image)
 
