@@ -1,8 +1,8 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QDesktopWidget, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QAction, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
 
-from PyQt5.QtGui import QImage, QPixmap, QPalette, QPainter, QColor
-from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
+from PyQt6.QtGui import QImage, QAction, QPixmap, QPalette, QPainter, QColor
+from PyQt6.QtPrintSupport import QPrintDialog, QPrinter
 
 import sys
 import webbrowser
@@ -17,11 +17,11 @@ class GraphicalInterface(QMainWindow):
     def __init__(self, explainer, image=None, feature_names=None):
         """Initializer."""
         app = QApplication(sys.argv)
+        app.setPalette(app.style().standardPalette())
         if explainer is not None:
             pass
         self.explainer = explainer
         self.image = image
-
         if feature_names is not None:
             self.feature_names = feature_names
         elif explainer is not None:
@@ -35,10 +35,8 @@ class GraphicalInterface(QMainWindow):
 
         self.pyplot_diagram_generator = PyPlotDiagramGenerator()
         super().__init__(None)
-        self.originalPalette = QApplication.palette()
-        main_layout = QGridLayout()
+        #main_layout = QGridLayout()
         self.imageLabelLeft = None
-
         self.setWindowTitle("PyXAI")
         self.resize(400, 200)
         
@@ -52,7 +50,7 @@ class GraphicalInterface(QMainWindow):
         instance_widget = QWidget()
         instance_widget.setLayout(instance_layout)
         splitter.addWidget(instance_widget)
-
+        
         #main_layout.addLayout(instance_layout, 0, 0)
 
         #self.separator = QFrame()
@@ -76,12 +74,12 @@ class GraphicalInterface(QMainWindow):
         self.setCentralWidget(splitter)
         
         self.show()
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
 
     def create_instance_group(self):
+
         self.instance_group = QGroupBox("Instances")
         self.instance_group.repaint()
-
         self.list_instance = QListWidget()
         if self.explainer is not None:
             instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
@@ -94,14 +92,16 @@ class GraphicalInterface(QMainWindow):
         self.list_instance.setMinimumWidth(150)
         
         #Table of the selected instance
-        self.table_instance = QTableWidget(len(self.feature_names)-1, 2)
+
+        self.table_instance = QTableWidget(len(self.feature_names)-1 if len(self.feature_names) != 0 else 0, 2)
+        
         self.table_instance.verticalHeader().setVisible(False)
         self.table_instance.setHorizontalHeaderItem(0, QTableWidgetItem("Name"))
         self.table_instance.setHorizontalHeaderItem(1, QTableWidgetItem("Value"))
         self.table_instance.setMinimumWidth(220)
+        
         for i, name in enumerate(self.feature_names[:-1]):
             self.table_instance.setItem(i, 0, QTableWidgetItem(str(name)))
-        
         self.table_prediction = QTableWidget(1, 2)
         self.table_prediction.verticalHeader().setVisible(False)
         self.table_prediction.setHorizontalHeaderItem(0, QTableWidgetItem("Name"))
@@ -115,15 +115,15 @@ class GraphicalInterface(QMainWindow):
         if self.image is not None:
             #Image of the selected instance
             self.imageLabelLeft = QLabel()
-            self.imageLabelLeft.setBackgroundRole(QPalette.Base)
-            self.imageLabelLeft.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+            #self.imageLabelLeft.setBackgroundRole(QPalette.ColorRole.Base)
+            self.imageLabelLeft.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
             #self.imageLabelLeft.setScaledContents(True)
 
             self.imageLabelLeft.setMinimumWidth(300)
             self.imageLabelLeft.setMinimumHeight(300)
             
             self.scrollAreaLeft = QScrollArea()
-            self.scrollAreaLeft.setBackgroundRole(QPalette.Dark)
+            #self.scrollAreaLeft.setBackgroundRole(QPalette.ColorRole.Dark)
             self.scrollAreaLeft.setWidget(self.imageLabelLeft)
             self.scrollAreaLeft.setVisible(True)
 
@@ -134,7 +134,7 @@ class GraphicalInterface(QMainWindow):
             self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
             self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-            self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+            self.imageLabelLeft.setCursor(Qt.CursorShape.OpenHandCursor)
             
         layout = QGridLayout()
         layout2 = QVBoxLayout()
@@ -144,10 +144,10 @@ class GraphicalInterface(QMainWindow):
         label_prediction = QLabel(self)
         #label_prediction.setFrameStyle(QFrame.Panel | QFrame.Raised)
         label_prediction.setText("Prediction:")
-        label_prediction.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        label_prediction.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
         label_instance = QLabel(self)
         label_instance.setText("Instance:")
-        label_instance.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        label_instance.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
         
         layout2.addWidget(label_prediction)
         layout2.addWidget(self.table_prediction)
@@ -226,18 +226,18 @@ class GraphicalInterface(QMainWindow):
         self.table_explanation.setColumnWidth(4, 80)
         self.table_explanation.setMinimumWidth(80+200+80+80+80+2)
         self.table_explanation.setMaximumWidth(80+200+80+80+80+2)
-        self.table_explanation.setSelectionBehavior(QAbstractItemView.SelectRows);
+        self.table_explanation.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         #Image of the explanation
         self.imageLabelRight = QLabel()
-        self.imageLabelRight.setBackgroundRole(QPalette.Base)
-        self.imageLabelRight.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        #self.imageLabelRight.setBackgroundRole(QPalette.ColorRole.Base)
+        self.imageLabelRight.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         #self.imageLabelRight.setScaledContents(True)
 
         self.imageLabelRight.setMinimumWidth(300)
         self.imageLabelRight.setMinimumHeight(300)
         
         self.scrollAreaRight = QScrollArea()
-        self.scrollAreaRight.setBackgroundRole(QPalette.Dark)
+        #self.scrollAreaRight.setBackgroundRole(QPalette.ColorRole.Dark)
         self.scrollAreaRight.setWidget(self.imageLabelRight)
         self.scrollAreaRight.setVisible(True)
 
@@ -248,7 +248,7 @@ class GraphicalInterface(QMainWindow):
         self.scrollAreaRight.mousePressEvent = self.mousePressEventLeft
         self.scrollAreaRight.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-        self.imageLabelRight.setCursor(Qt.OpenHandCursor)
+        self.imageLabelRight.setCursor(Qt.CursorShape.OpenHandCursor)
 
         layout = QGridLayout()
         layout.addWidget(self.table_explanation, 0, 0)
@@ -401,15 +401,15 @@ class GraphicalInterface(QMainWindow):
             #Image of the selected instance
             if self.imageLabelLeft is None:
                 self.imageLabelLeft = QLabel()
-                self.imageLabelLeft.setBackgroundRole(QPalette.Base)
-                self.imageLabelLeft.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+                #self.imageLabelLeft.setBackgroundRole(QPalette.ColorRole.Base)
+                self.imageLabelLeft.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
                 #self.imageLabelLeft.setScaledContents(True)
 
                 self.imageLabelLeft.setMinimumWidth(300)
                 self.imageLabelLeft.setMinimumHeight(300)
                 
                 self.scrollAreaLeft = QScrollArea()
-                self.scrollAreaLeft.setBackgroundRole(QPalette.Dark)
+                #self.scrollAreaLeft.setBackgroundRole(QPalette.ColorRole.Dark)
                 self.scrollAreaLeft.setWidget(self.imageLabelLeft)
                 self.scrollAreaLeft.setVisible(True)
 
@@ -420,7 +420,7 @@ class GraphicalInterface(QMainWindow):
                 self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
                 self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-                self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+                self.imageLabelLeft.setCursor(Qt.CursorShape.OpenHandCursor)
                 self.left_layout.addWidget(self.scrollAreaLeft, 0, 2) 
         else:
             if self.imageLabelLeft is not None:
