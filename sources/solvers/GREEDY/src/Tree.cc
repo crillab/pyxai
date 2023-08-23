@@ -10,14 +10,12 @@ pyxai::Node *pyxai::Tree::parse(PyObject *tree_obj, Type _type) {
 
     Py_ssize_t size_obj = PyTuple_Size(tree_obj);
     if (size_obj != 2) {
-        std::cout << "A"<<std::endl;
         PyErr_Format(PyExc_TypeError, "The size of the tuple have to be equal to 2 !");
         return NULL;
     }
 
     PyObject *target_class_obj = PyTuple_GetItem(tree_obj, 0);
     if (!PyLong_Check(target_class_obj)) {
-        std::cout << "B"<<std::endl;
         PyErr_Format(PyExc_TypeError,
                      "The element of the tuple must be a integer representing the target class to evaluate !");
         return NULL;
