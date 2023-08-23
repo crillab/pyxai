@@ -5,47 +5,47 @@ from decimal import Decimal
 Tools.set_verbose(0)
 from collections.abc import Iterable
 import unittest
-
+import shutil
 
 class TestSaveLoadXgboost(unittest.TestCase):
     PRECISION = 3
 
 
-    def test_HOLD_OUT_CLASSIFICATION(self):
+    def test_hold_out_classification(self):
         self.launch_save("tests/dermatology.csv", Learning.HOLD_OUT, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/dermatology.csv", Learning.CLASSIFICATION)
         self.launch_save("tests/iris.csv", Learning.HOLD_OUT, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/iris.csv", Learning.CLASSIFICATION)
+        shutil.rmtree("try_save")
 
-
-    def test_K_FOLDS_CLASSIFICATION(self):
+    def test_k_folds_classification(self):
         self.launch_save("tests/dermatology.csv", Learning.K_FOLDS, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/dermatology.csv", Learning.CLASSIFICATION)
         self.launch_save("tests/iris.csv", Learning.K_FOLDS, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/iris.csv", Learning.CLASSIFICATION)
+        shutil.rmtree("try_save")
 
-
-    def test_LEAVE_ONE_GROUP_OUT_CLASSIFICATION(self):
+    def test_leave_one_group_out_classification(self):
         self.launch_save("tests/dermatology.csv", Learning.LEAVE_ONE_GROUP_OUT, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/dermatology.csv", Learning.CLASSIFICATION)
         self.launch_save("tests/iris.csv", Learning.LEAVE_ONE_GROUP_OUT, Learning.BT, Learning.CLASSIFICATION)
         self.launch_load("tests/iris.csv", Learning.CLASSIFICATION)
+        shutil.rmtree("try_save")
 
-
-    def test_HOLD_OUT_REGRESSION(self):
+    def test_hold_out_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.HOLD_OUT, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
+        shutil.rmtree("try_save")
 
-
-    def test_K_FOLDS_REGRESSION(self):
+    def test_k_folds_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.K_FOLDS, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
+        shutil.rmtree("try_save")
 
-
-    def test_LEAVE_ONE_GROUP_OUT_REGRESSION(self):
+    def test_leave_one_group_out_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.LEAVE_ONE_GROUP_OUT, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
-
+        shutil.rmtree("try_save")
 
     def launch_save(self, dataset, method, output, learner_type):
         learner = Learning.Xgboost(dataset, learner_type=learner_type)

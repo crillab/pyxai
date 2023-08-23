@@ -373,7 +373,8 @@ class GraphicalInterface(QMainWindow):
         fileDialog = QFileDialog()
         fileDialog.setDefaultSuffix("explainer")
         name, _ = fileDialog.getOpenFileName(None, 'Load File', filter="Dill Explainer Object (*.explainer)")
-        
+        if name == "":
+            return
         with open(name,'rb') as io:
             data=dill.load(io)
         
