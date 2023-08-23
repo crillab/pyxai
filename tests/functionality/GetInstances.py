@@ -14,8 +14,8 @@ import unittest
 
 class TestGetInstances(unittest.TestCase):
     
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
+    #def setUp(self):
+    #    print("..|In method:", self._testMethodName)
 
     def test_get_instances_simple_1(self):
         dataset = "tests/dermatology.csv"

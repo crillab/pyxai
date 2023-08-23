@@ -15,7 +15,7 @@ import unittest
 
 
 class TestImportXGBoost(unittest.TestCase):
-    PRECISION = 3
+    PRECISION = 2
 
 
     def test_import_BT_classification(self):

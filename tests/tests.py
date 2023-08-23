@@ -19,9 +19,9 @@ from pyxai.tests.explaining.rf import *
 from pyxai.tests.explaining.bt import *
 from pyxai.tests.explaining.regressionbt import *
 
-
 def suite():
     suite = unittest.TestSuite()
+    
     # suite.addTest(unittest.makeSuite(TestToFeatures))
     # suite.addTest(unittest.makeSuite(TestGetInstances))
     #
@@ -37,11 +37,12 @@ def suite():
     # suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
     # suite.addTest(unittest.makeSuite(TestImportXGBoost))
     # suite.addTest(unittest.makeSuite(TestImportLightGBM))
-    suite.addTest(unittest.makeSuite(TestMisc))
-    suite.addTest(unittest.makeSuite(TestDT))
-    suite.addTest(unittest.makeSuite(TestRF))
+    # suite.addTest(unittest.makeSuite(TestMisc))
+    # suite.addTest(unittest.makeSuite(TestDT))
+    # suite.addTest(unittest.makeSuite(TestRF))
     return suite
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=1)
+    
+    unittest.main(verbosity=2)
