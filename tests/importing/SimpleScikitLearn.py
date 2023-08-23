@@ -33,19 +33,13 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
 
         learner, model = Learning.import_models(model_rf, feature_names)
         instance, prediction = learner.get_instances(dataset=data.frame, model=model, n=1)
-        print("instance:", instance)
-        print("prediction:", prediction)
-
+        
         explainer = Explainer.initialize(model, instance=instance)
 
         direct = explainer.direct_reason()
-        print("len direct reason:", len(direct))
-
+        
         sufficient = explainer.sufficient_reason()
-        print("len sufficient reason:", len(sufficient))
-
-        print("to_features:", explainer.to_features(sufficient))
-
+        
 
     def test_simple_RF_iris(self):
         model_rf = RandomForestClassifier(random_state=0)
@@ -58,19 +52,13 @@ class TestImportSimpleScikitlearn(unittest.TestCase):
 
         learner, model = Learning.import_models(model_rf)
         instance, prediction = learner.get_instances(dataset=data.frame, model=model, n=1)
-        print("instance:", instance)
-        print("prediction:", prediction)
-
+        
         explainer = Explainer.initialize(model, instance=instance)
 
         direct = explainer.direct_reason()
-        print("len direct reason:", len(direct))
-
+        
         sufficient = explainer.sufficient_reason()
-        print("len sufficient reason:", len(sufficient))
-
-        print("to_features:", explainer.to_features(sufficient))
-
+        
 
 if __name__ == '__main__':
     print("Tests: " + TestImportSimpleScikitlearn.__name__ + ":")

@@ -1,5 +1,6 @@
 from pyxai import Learning, Explainer, Tools
 import math
+import shutil
 from decimal import Decimal
 
 Tools.set_verbose(0)
@@ -9,20 +10,22 @@ import unittest
 
 class TestSaveLoadLightGBM(unittest.TestCase):
 
-    def test_HOLD_OUT_REGRESSION(self):
+    def test_hold_out_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.HOLD_OUT, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
+        shutil.rmtree("try_save")
 
 
-    def test_K_FOLDS_REGRESSION(self):
+    def test_k_folds_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.K_FOLDS, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
+        shutil.rmtree("try_save")
 
 
-    def test_LEAVE_ONE_GROUP_OUT_REGRESSION(self):
+    def test_leave_one_group_out_regression(self):
         self.launch_save("tests/winequality-red.csv", Learning.LEAVE_ONE_GROUP_OUT, Learning.BT, Learning.REGRESSION)
         self.launch_load("tests/winequality-red.csv", Learning.REGRESSION)
-
+        shutil.rmtree("try_save")
 
     def launch_save(self, dataset, method, output, learner_type):
         learner = Learning.LightGBM(dataset, learner_type=learner_type)

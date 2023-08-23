@@ -22,28 +22,28 @@ class TestToFeatures(unittest.TestCase):
         forest = Builder.RandomForest([tree1, tree2], n_classes=2)
 
         alice = (18,)
-        print("alice:", alice)
+        #print("alice:", alice)
         explainer = Explainer.initialize(forest, instance=alice)
-        print("binary representation: ", explainer.binary_representation)
-        print("binary representation features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
-        print("target_prediction:", explainer.target_prediction)
+        #print("binary representation: ", explainer.binary_representation)
+        #print("binary representation features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
+        #print("target_prediction:", explainer.target_prediction)
 
         explainer = Explainer.initialize(forest, instance=alice, features_type={"numerical": ["f1"]})
 
         test_1 = explainer.binary_representation
-        print("test_1:", test_1)
-        print("test_1:", explainer.to_features(test_1))
-        self.assertEqual(explainer.to_features(test_1),('f1 >= 10', 'f1 < 20')) 
+        #print("test_1:", test_1)
+        #print("test_1:", explainer.to_features(test_1))
+        self.assertEqual(explainer.to_features(test_1),('f1 in [10, 20[',)) 
         
         test_2 = explainer.minimal_contrastive_reason(n=1)
         
-        print("test_2:", test_2)
-        print("test_2:", explainer.to_features(test_2, contrastive=True))
+        #print("test_2:", test_2)
+        #print("test_2:", explainer.to_features(test_2, contrastive=True))
         self.assertEqual(explainer.to_features(test_2, contrastive=True),('f1 <= 30',)) 
 
         test_3 = explainer.minimal_sufficient_reason()
-        print("test_3:", test_3)
-        print("test_3:", explainer.to_features(test_3))
+        #print("test_3:", test_3)
+        #print("test_3:", explainer.to_features(test_3))
         self.assertEqual(explainer.to_features(test_3),('f1 < 20',)) 
         
 if __name__ == '__main__':
