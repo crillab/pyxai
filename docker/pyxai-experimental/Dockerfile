@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 RUN apt update
 RUN apt install python3 -y
 RUN apt install python3-pip -y
-RUN apt install ffmpeg libsm6 libxext6 qt6-base-dev -y
+RUN apt install ffmpeg libsm6 libxext6 qt6-base-dev libxcb-cursor0 libxcb-xinerama0 -y
 
 RUN pip install jupyter
 RUN pip install pyxai-experimental
