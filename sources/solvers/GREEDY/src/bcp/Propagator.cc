@@ -382,4 +382,4 @@ namespace pyxai {
         if (m_trailPos > m_trailSize) m_trailPos = m_trailSize;
     }  // cancelUntilPos
 
-}  // namespace rfx
+}  // namespace pyxai
