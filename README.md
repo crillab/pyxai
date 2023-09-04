@@ -10,8 +10,8 @@
   <figcaption>PyXAI's main steps for producing explanations.</figcaption>
 </figure>
 <figure>
-  <img src="https://drive.google.com/file/d/1ulGspS_Wp3xoKqVINGgpCTohHIl8z0JC/view?usp=drive_link" alt="pyxai" />
-  <img src="https://drive.google.com/file/d/1EGnp8ONUxuGIN4TKxbJ-ZjeT16TGiuA8/view?usp=drive_link" alt="pyxai" />
+  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-yqn-ZOIW2u7a2XxVH9UNcr5SQQnxUH8b1wfLoReVa2f7zm68-S4GAbr7RWUYW1lKLJ957gLPaFn3077l4qZXUyv82T=s1600" alt="pyxai" />
+  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xDdbVt_DCAmsvJhRlMj3jxgADUVkFzHbnxmQnabdjfuPaylcyeHTyBgDZs4Xna_N_oT6pwxXBv_ls2nqRUwd8RiWgM=s1600" alt="pyxai" />
   <figcaption>PyXAI's Graphical User Interface (GUI) for visualizing explanations.</figcaption>
 </figure>
 
@@ -119,7 +119,7 @@ print("to_features:", explainer.to_features(contrastive_reason, contrastive=True
 explainer.show()
 ```
 
-<img src="{{ site.baseurl }}/assets/figures/pyxaiGUI.png" alt="pyxai" />
+<img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xbHs56zfQ_EHQ0-XqdHxy7mdL3fBxFRVnfW6pPCCCpSg89GStqQCBD5ElFLn3NaZmB-2mwY9hdu5TH0gPajOI2xwSCJQ=s1600" alt="pyxai" />
 
 <p>As illustrated by this example, with a few lines of code, PyXAI allows you to train a model, extract instances, and get explanations about the classifications made.</p>
 
