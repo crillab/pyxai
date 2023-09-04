@@ -6,7 +6,7 @@
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
 <figure>
-  <img src="https://drive.google.com/file/d/1R-W63eNOY0OIM21nxmD48Xh5JQwg1Oh7/view?usp=sharing" alt="pyxai" />
+  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xLC9-pvcsp0MGlTOBODqrs8aJogGpnAlAnVrh41EetySebz-VNzJW9PkHLmYUIBb_SaqlOpGBLsAm8IY5WIo73xNj0=s1600" alt="pyxai" />
   <figcaption>PyXAI's main steps for producing explanations.</figcaption>
 </figure>
 <figure>
