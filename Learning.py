@@ -136,7 +136,7 @@ def load(models_directory, *,tests=False, dataset=NoneData):
         raise ValueError("All learners must have the same learner type.")
     
     if learner_names[0] == Generic.__name__:
-        learner = Generic(dataset)
+        learner = Generic(dataset, learner_type=LearnerType.from_str(learner_types[0]))
     elif learner_names[0] == Xgboost.__name__:
         learner = Xgboost(dataset, learner_type=LearnerType.from_str(learner_types[0]))
     elif learner_names[0] == Scikitlearn.__name__:

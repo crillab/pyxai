@@ -7,8 +7,8 @@ from pyxai.sources.learning.learner import Learner, NoneData
 
 
 class Generic(Learner):
-    def __init__(self, data=NoneData):
-        super().__init__(data)
+    def __init__(self, data=NoneData, learner_type=None):
+        super().__init__(data, learner_type)
 
     @staticmethod
     def get_learner_name():
@@ -16,24 +16,35 @@ class Generic(Learner):
     
 
 
-    def fit_and_predict_DT(self, instances_training, instances_test, labels_training, labels_test):
-        assert False, "No possible evaluation for a generic learner"
+    def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
+
+    def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
+
+    def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
+
+    def fit_and_predict_DT_REG(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
+
+    def fit_and_predict_RF_REG(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
+
+    def fit_and_predict_BT_REG(self, instances_training, instances_test, labels_training, labels_test):
+        assert False, "No evaluation possible for a generic learner."
 
 
-    def fit_and_predict_RF(self, instances_training, instances_test, labels_training, labels_test):
-        assert False, "No possible evaluation for a generic learner"
-
-
-    def fit_and_predict_BT(self, instances_training, instances_test, labels_training, labels_test):
-        assert False, "No possible evaluation for a generic learner"
-
-
-    """
-    Convert the Scikitlearn's decision trees into the program-specific objects called 'DecisionTree'.
-    """
-
-
-    def to_DT(self, learner_information=None):
+    def to_DT_REG(self, learner_information=None):
+        raise NotImplementedError("Regression is not implemented for a generic learner. Please use a non-generic learner to save and load your model.")
+    
+    def to_RF_REG(self, learner_information=None):
+        raise NotImplementedError("Regression is not implemented for a generic learner. Please use a non-generic learner to save and load your model.")
+    
+    def to_BT_REG(self, learner_information=None):
+        raise NotImplementedError("Regression is not implemented for a generic learner. Please use a non-generic learner to save and load your model.")
+    
+    def to_DT_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
         decision_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
@@ -42,7 +53,7 @@ class Generic(Learner):
         return decision_trees
 
 
-    def to_RF(self, learner_information=None):
+    def to_RF_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
         random_forests = []
         for id_solver_results, _ in enumerate(self.learner_information):
@@ -56,7 +67,7 @@ class Generic(Learner):
         return random_forests
 
 
-    def to_BT(self, learner_information=None):
+    def to_BT_CLS(self, learner_information=None):
         if learner_information is not None: self.learner_information = learner_information
         boosted_trees = []
         for id_solver_results, _ in enumerate(self.learner_information):
@@ -92,7 +103,7 @@ class Generic(Learner):
             assert False, "It is not possible !"
 
     @staticmethod
-    def load_model(model_file):
+    def load_model(model_file, learner_options):
         f = open(model_file)
         classifier = json.loads(json.load(f))
         f.close()
