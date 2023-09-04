@@ -125,8 +125,10 @@ explainer.show()
 
 <br /><br />
 <div class="center logo">
-    <a href="http://www.cril.univ-artois.fr"><img src="/pyxai/assets/figures/cril.png" /></a>
-    <a href="https://www.cnrs.fr/"><img style="width: 80px;" src="/pyxai/assets/figures/cnrs.png" /></a>
-    <a href="http://univ-artois.fr"><img src="/pyxai/assets/figures/artois.png" /></a>
+    <a href="http://www.cril.univ-artois.fr"><img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wsxZnVjsY1ypy7nGs2m__Iz5pDphw1wbc3a78HHVVqBhAFOx35hcvCGFaTfgDFlqGB_ChMWBfC-tlXUfX0twpqAnNfVg=s2560" /></a>
+    <a href="https://www.irt-systemx.fr/"><img style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xuRWtP8WNuRXXaff32Tzd7OT4guc8vNEeXurAKIQiaeuIdeEYXo9hiA1HeGCgUY7I7NeT70U5yQt5BbwK6H4lv5jabQA=s2560" /></a>
+    <a href="https://www.cnrs.fr/"><img style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xBV_ILK1g_mKMJ0Hk0wJtFmdKLnAT68QA7fMa5i663Tbla_Q2RjALnH6cER8BGAPThh_ZaOKpcO9ggkI1DAmU4zaEG=s1600" /></a>
+    <a href="https://www.confiance.ai/"><img style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wiEyfiP29DKvwP5webvNRDXwXsS1PxQnTIZEdMpQ9xV9JN23-86HOqzNEBi9F4Ng8h-Kd8W5NKaWqefnGhhhQmxneu=s1600" /></a>
+    <a href="http://univ-artois.fr"><img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wA-x2qgHNNrxLEaI33jDH64TM7sudMsTt781ICTAvzBsPaEtL2Ky_1Ba-QWm6YyqCmTuFGpylJ2sSXRgjzu7BM7iC8Xg=s2560" /></a>
 </div>
 
