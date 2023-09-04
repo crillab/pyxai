@@ -3,9 +3,9 @@
 
 ![PyXAI](http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai.png)
 
-Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
-
-Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
+- Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
+- Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
+- Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
 PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from classifiers resulting of machine learning techniques  (Decision Tree, Random Forest, Boosted Tree).
 
