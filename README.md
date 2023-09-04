@@ -1,48 +1,110 @@
 
 # PyXAI - Python eXplainable AI
 
-![PyXAI](http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai.png)
-
 - Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
 - Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
-PyXAI is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms from classifiers resulting of machine learning techniques  (Decision Tree, Random Forest, Boosted Tree).
+<figure>
+  <img src="https://drive.google.com/file/d/1R-W63eNOY0OIM21nxmD48Xh5JQwg1Oh7/view?usp=drive_link" alt="pyxai" />
+  <figcaption>PyXAI's main steps for producing explanations.</figcaption>
+</figure>
+<figure>
+  <img src="https://drive.google.com/file/d/1ulGspS_Wp3xoKqVINGgpCTohHIl8z0JC/view?usp=drive_link" alt="pyxai" />
+  <img src="https://drive.google.com/file/d/1EGnp8ONUxuGIN4TKxbJ-ZjeT16TGiuA8/view?usp=drive_link" alt="pyxai" />
+  <figcaption>PyXAI's Graphical User Interface (GUI) for visualizing explanations.</figcaption>
+</figure>
 
-More precisely, several types of explanations for the classification task of a given instance X can be computed:
-
+<h3>What is PyXAI ?</h3>
+<p align="justify">
+<b>PyXAI (Python eXplainable AI)</b> is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms suited to <b>(regression or classification) tree-based ML models</b> (Decision Trees, Random Forests, Boosted Trees, ...). In contrast to many approaches to XAI (SHAP, Lime, ...), PyXAI algorithms are <b>model-specific</b>. Furthermore, PyXAI algorithms <b>guarantee certain properties</b> about the explanations generated, that can be of several types:
+</p>
 <ul>
-  <li>Abductive explanations for X are intended to explain why X has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question).</li>
-  <li>Contrastive explanations for X is to explain why X has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
+  <li><b>Abductive explanations</b> for an instance $X$ are intended to explain why $X$ has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question). For the regression tasks, abductive explanations for $X$ are intended to explain why the regression value on $X$ is in a given interval.</li>
+  <li><b>Contrastive explanations</b> for $X$ is to explain why $X$ has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
 </ul>
 
-<p>
-In addition to finding explanations, PyXAI also contains methods that perform operations (production, saving, loading) on models and instances. 
-Currently, these helping methods are available using two ML libraries:
+<h3>What is the difference between PyXAI and other methods ?</h3>
+<p align="justify">
+
+The most popular approaches (SHAP, Lime, ...) to XAI <b>are model-agnostic, but do not offer any guarantees</b> of rigor. A number of <a href="https://arxiv.org/pdf/2307.07514.pdf">works</a> have highlighted several misconceptions about informal approaches to XAI (see the <a href="{{ site.baseurl }}/papers/">related papers</a>). Contrastingly, <b>PyXAI algorithms rely on logic-based, model-precise</b> approaches for computing explanations. Although formal explainability has a number of drawbacks, particularly in terms of the computational complexity of logical reasoning needed to derive explanations, <b>steady progress has been made since its inception</b>. 
+</p>
+
+
+<h3>Which models can be explained with PyXAI ?</h3>
+<p align="justify">
+Models are the resulting objects of an experimental ML protocol through a chosen <b>cross-validation method</b> (for example, the result of a training phase on a classifier). Importantly, in PyXAI, there is a complete separation between the learning phase and the explaining phase: <b>you produce/load/save models, and you find explanations for some instances given such models</b>. Currently, with PyXAI, you can use methods to find explanations suited to different <b>ML models for classification or regression tasks</b>:
+</p>
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Decision_tree_learning">Decision Tree</a> (DT)</li> 
+  <li><a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest</a> (RF)</li>
+  <li><a href="https://en.wikipedia.org/wiki/Gradient_boosting">Boosted Tree (Gradient boosting)</a> (BT)</li>
+</ul> 
+<p align="justify">
+In addition to finding explanations, PyXAI also provides methods that perform operations (production, saving, loading) on models and instances. Currently, these methods are available for three <b>ML libraries</b>:
 </p>
 <ul>
   <li><a href="https://scikit-learn.org/stable/">Scikit-learn</a>: a software machine learning library</li> 
   <li><a href="https://xgboost.readthedocs.io/en/stable/">XGBoost</a>: an optimized distributed gradient boosting library</li>
+  <li><a href="https://lightgbm.readthedocs.io/en/stable/">LightGBM</a>: a gradient boosting framework that uses tree based learning algorithms</li>
 </ul> 
-
-<p>
-Note that it is quite possible to find explanations of models coming from other libraries.
+<p align="justify">
+It is possible to also leverage PyXAI to find explanations suited to models learned using other libraries.
 </p>
 
-<p>
-As an illustration, below, you can find an example of use:
+<h3>What does this website offer ?</h3>
+<p align="justify">
+In this website, you can find all what you need to know about PyXAI, with more than 10 <a href="https://jupyter.org/">Jupyter</a> Notebooks, including:
 </p>
+<ul>
+ <li>The <a href="{{ site.baseurl }}/documentation/installation/">installation guide</a> and the <a href="{{ site.baseurl }}/documentation/quickstart/">quick start</a></li>
+ 
+  <li>About obtaining models:</li>
+  <ul>
+  <li>How to <b>prepare and clean a dataset</b> using the PyXAI <a href="{{ site.baseurl }}/documentation/preprocessor/">preprocessor</a> object?</li>
+  <li>How to <b>import a model</b>, whatever its format? <a href="{{ site.baseurl }}/documentation/importing/"> Importing Models</a> </li>
+  <li>How to <b>generate a model using a ML cross-validation method</b>? <a href="{{ site.baseurl }}/documentation/learning/generating/">Generating Models</a> </li>
+  
+  <li>How to <b>build a model from trees directly built by the user</b>? <a href="{{ site.baseurl }}/documentation/learning/builder/">Building Models</a></li>
+  <li>How to <b>save and load models</b> with the PyXAI learning module? <a href="{{ site.baseurl }}/documentation/saving/">Saving/Loading Models</a></li>
+  </ul>
+
+<li>About obtaining explanations:</li>
+  <ul>
+  <li>The <b>concepts of the PyXAI explainer module</b>: <a href="{{ site.baseurl }}/documentation/explainer/concepts/">Concepts</a> </li>
+  <li>How to use a <b>time limit</b>? <a href="{{ site.baseurl }}/documentation/explainer/time_limit/">Time Limit</a> </li>
+  
+  <li>The PyXAI library offers the possibility to process user preferences (<b>prefer some explanations to others or exclude some features</b>): <a href="{{ site.baseurl }}/documentation/explainer/preferences/">Preferences</a> </li>
+
+  <li><b>Theories are knowledge about the dataset.</b> PyXAI offers the possibility of encoding a theory when calculating explanations in order to avoid calculating impossible explanations: <a href="{{ site.baseurl }}/documentation/explainer/theories/">Theories</a> </li>
+
+  <li>How to <b>compute explanations for classification tasks</b>? <a href="{{ site.baseurl }}/documentation/classification/">Explaining Classification</a> </li>
+  
+  <li>How to <b>compute explanations for regression tasks</b>? <a href="{{ site.baseurl }}/documentation/regression/">Explaining Regression</a> </li>
+  
+  </ul>
+
+ <li>How to use the <b>PyXAI's Graphical User Interface (GUI)</b> for <a href="{{ site.baseurl }}/documentation/visualization/">visualizing explanations</a>?</li>
+ 
+ 
+</ul>
+
+<h3>How to use PyXAI ?</h3>
+<p align="justify">
+Here is an example (it comes from the <a href="{{ site.baseurl }}/documentation/quickstart">Quick Start page</a>):
+</p>
+<h4 class="example">PyXAI in action</h4>
 
 ```python
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explainer
 
-learner = Learning.Scikitlearn("../dataset/iris.csv")
+learner = Learning.Scikitlearn("tests/iris.csv", learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
 instance, prediction = learner.get_instances(model, n=1, correct=True, predictions=[0])
 
 explainer = Explainer.initialize(model, instance)
 print("instance:", instance)
-print("implicant:", explainer.binary_representation)
+print("binary representation:", explainer.binary_representation)
 
 sufficient_reason = explainer.sufficient_reason(n=1)
 print("sufficient_reason:", sufficient_reason)
@@ -52,169 +114,19 @@ instance, prediction = learner.get_instances(model, n=1, correct=False)
 explainer.set_instance(instance)
 contrastive_reason = explainer.contrastive_reason()
 print("contrastive reason", contrastive_reason)
-print("to_features:", explainer.to_features(contrastive_reason))
+print("to_features:", explainer.to_features(contrastive_reason, contrastive=True))
+
+explainer.show()
 ```
 
-# Installation
+<img src="{{ site.baseurl }}/assets/figures/pyxaiGUI.png" alt="pyxai" />
 
-## Installation from PyPi
+<p>As illustrated by this example, with a few lines of code, PyXAI allows you to train a model, extract instances, and get explanations about the classifications made.</p>
 
-The Python Package Index (PyPi) is the easiest way of installing PyXAI.
+<br /><br />
+<div class="center logo">
+    <a href="http://www.cril.univ-artois.fr"><img src="/pyxai/assets/figures/cril.png" /></a>
+    <a href="https://www.cnrs.fr/"><img style="width: 80px;" src="/pyxai/assets/figures/cnrs.png" /></a>
+    <a href="http://univ-artois.fr"><img src="/pyxai/assets/figures/artois.png" /></a>
+</div>
 
-Note that you need first Python 3 (version 3.6, or later) to be installed.
-You can do it, for example, from [python.org](https://www.python.org/downloads/).
-
-See the Virtual Environment section if you want to install PyXAI inside a Python virtual environment.
-
-### Installing PyXAI (Linux)
-
-Check if 'python3-pip' is installed. If it is not the case, execute:
-
-```console
-sudo apt install python3-pip
-```
-
-Or check if you have the last installed version:
-
-```console
-python3 -m pip install --upgrade pip
-```
-
-Then, install PyXAI with the command 'pip3':
-
-```console
-python3 -m pip install pyxai
-```
-
-### Installing PyXAI (Mac OS)
-
-PyXAI is currently partially compatible with Mac OS but without PyPi (see this section). You can also use a docker container that runs a jupyter notebook with all features.
-
-### Installing PyXAI (Windows)
-
-PyXAI is currently not compatible with Windows (work in progress). Instead, you can use a docker container with PyXAI inside.
-
-### Updating the Version of PyXAI (for PyPi)
-
-For updating your version of PyXAI, simply execute:
-
-For linux/Mac:
-
-```console
-python3 -m pip install -U pyxai
-```
-
-## Installation (alternative) by Cloning from GitHub
-
-An alternative to PyPi is to clone the code from GitHub.
-
-Here is an illustration for linux. We assume that Python 3 is installed, and consequently 'pip3' is also installed.
-In a console, type:
-
-```console
-git clone https://gitlab.univ-artois.fr/expekctation/software/PyLearningExplanation.git
-```
-
-You may need to update the environment variable 'PYTHONPATH', by typing for example:
-
-```console
-export PYTHONPATH="${PYTHONPATH}:${PWD}/.."
-```
-
-Get the last version of pip:
-
-```console
-python3 -m pip install --upgrade pip
-```
-
-There are a few packages that PyXAI depends on that must be installed:
-
-```console
-python3 -m pip install numpy
-python3 -m pip install wheel
-python3 -m pip install pandas
-python3 -m pip install termcolor
-python3 -m pip install shap
-python3 -m pip install wordfreq
-python3 -m pip install python-sat[pblib,aiger]
-python3 -m pip install xgboost
-python3 -m pip install lxml
-python3 -m pip install pycsp3
-python3 -m pip install matplotlib
-```
-
-To compile the c++ code (python C extensions):
-
-```console
-python3 setup.py install --user
-```
-
-Of course, for this step, you need a C++ compiler.
-
-Unfortunately, the compiled C extensions are not take into account in a virtual environment, therefore you must type
-(we consider here that the virtual environment is in the 'env' directory and you are in the 'PyXAI' directory):
-
-```console
-cp build/lib.linux-x86_64-3.6/c_explainer.cpython-36m-x86_64-linux-gnu.so env/lib/python3.6/site-packages/.
-```
-
-This last command depend of your python version (here: 3.6).
-
-Finally, you can test an example:
-
-```console
-python3 examples/DT/BuilderOrchids.py 
-```
-
-## Using a Docker Image
-
-A docker container is available on Git ([https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)). 
-It launches a Jupyter notebook that supports all PyXAI features.
-
-Below is the code line to build the container:
-```console
-docker build -t pyxai .
-```
-
-And run the container (we consider that the working directory is the current one):
-```console
-docker run -it -p 8888:8888 -v $PWD:/data pyxai```
-```
-
-## Virtual Environment
-
-Create and activate a new virtual environment:
-
-```console
-sudo apt-get install python3.6-venv
-python3.6 -m venv env
-source env/bin/activate
-```
-
-Update pip:
-
-```console
-python3.6 -m pip install -U pip
-```
-
-With this new version of pip, it is possible that you have to clear the pip cache:
-
-```console
-python3 -m pip cache purge
-```
-
-Now you can do the "Installation from PyPi" or the "Installation (alternative) by Cloning from GitHub".
-
-Note that if you want install dependencies without internet connection, you can build a requirement.txt file:
-
-```console
-python3.6 -m pip freeze > requirements.txt 
-python3.6 -m pip download -r requirements.txt -d requirements-download/
-pip install -r requirements.txt --find-links=requirements-download --no-index
-```
-
-For deactivating the environment:
-
-```console
-deactivate
-```
