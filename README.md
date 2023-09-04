@@ -11,15 +11,15 @@
 </figure>
 
 <div style="border:3px double blue;padding:2%;">
-<b> New features in version 1:</b>
-<ul>
-  <li>Regression for Boosted Trees</li>
-  <li>Support of Theories</li>
-  <li>Easier importation of models</li>
-  <li>PyXAI's Graphical User Interface (GUI)</li>
-  <li>Supports multiple image formats for imaging datasets</li>
-  <li>Supports data pre-processing (tool for preparing and cleansing a dataset)</li>
-</ul> 
+> <b> New features in version 1:</b>
+> <ul>
+>   <li>Regression for Boosted Trees</li>
+>   <li>Support of Theories</li>
+>   <li>Easier importation of models</li>
+>   <li>PyXAI's Graphical User Interface (GUI)</li>
+>   <li>Supports multiple image formats for imaging datasets</li>
+>   <li>Supports data pre-processing (tool for preparing and cleansing a dataset)</li>
+> </ul> 
 </div>
 
 <figure>
