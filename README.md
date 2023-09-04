@@ -9,6 +9,19 @@
   <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xLC9-pvcsp0MGlTOBODqrs8aJogGpnAlAnVrh41EetySebz-VNzJW9PkHLmYUIBb_SaqlOpGBLsAm8IY5WIo73xNj0=s1600" alt="pyxai" />
   <figcaption>PyXAI's main steps for producing explanations.</figcaption>
 </figure>
+
+<div style="border:3px double blue;padding:2%;">
+<b> New features in version 1:</b>
+<ul>
+  <li>Regression for Boosted Trees</li>
+  <li>Support of Theories</li>
+  <li>Easier importation of models</li>
+  <li>PyXAI's Graphical User Interface (GUI)</li>
+  <li>Supports multiple image formats for imaging datasets</li>
+  <li>Supports data pre-processing (tool for preparing and cleansing a dataset)</li>
+</ul> 
+</div>
+
 <figure>
   <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-yqn-ZOIW2u7a2XxVH9UNcr5SQQnxUH8b1wfLoReVa2f7zm68-S4GAbr7RWUYW1lKLJ957gLPaFn3077l4qZXUyv82T=s1600" alt="pyxai" />
   <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xDdbVt_DCAmsvJhRlMj3jxgADUVkFzHbnxmQnabdjfuPaylcyeHTyBgDZs4Xna_N_oT6pwxXBv_ls2nqRUwd8RiWgM=s1600" alt="pyxai" />
