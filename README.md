@@ -10,7 +10,6 @@
   <figcaption>PyXAI's main steps for producing explanations.</figcaption>
 </figure>
 
-<div style="border:3px double blue;padding:2%;">
 > <b> New features in version 1:</b>
 > <ul>
 >   <li>Regression for Boosted Trees</li>
@@ -20,7 +19,6 @@
 >   <li>Supports multiple image formats for imaging datasets</li>
 >   <li>Supports data pre-processing (tool for preparing and cleansing a dataset)</li>
 > </ul> 
-</div>
 
 <figure>
   <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-yqn-ZOIW2u7a2XxVH9UNcr5SQQnxUH8b1wfLoReVa2f7zm68-S4GAbr7RWUYW1lKLJ957gLPaFn3077l4qZXUyv82T=s1600" alt="pyxai" />
