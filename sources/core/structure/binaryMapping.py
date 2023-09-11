@@ -360,30 +360,41 @@ class BinaryMapping():
             elif features[0]["theory"] is not None and features[0]["theory"][0] == "categorical":
                 #categorical case 
                 thresholds = [feature["threshold"] for feature in features]
+                sign_is_EQ = None
                 if all(feature["operator_sign_considered"] == OperatorCondition.GE \
                         or feature["operator_sign_considered"] == OperatorCondition.GT \
                         or feature["operator_sign_considered"] == OperatorCondition.LE \
                         or feature["operator_sign_considered"] == OperatorCondition.LT
                         for feature in features):
+                    sign_is_EQ = False
                     if not all(feature["threshold"] == 0.5 for feature in features):
                         raise ValueError("The thresholds of a categorical feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                 elif all(feature["operator_sign_considered"] == OperatorCondition.EQ \
                         or feature["operator_sign_considered"] == OperatorCondition.NEQ \
                         for feature in features):
+                    sign_is_EQ = True
                     if not all(feature["threshold"] == 0 or feature["threshold"] == 1 for feature in features):
                         raise ValueError("The thresholds of a categorical feature with EQ or NEQ must be equal to 0 or 1: " + str(feature["threshold"]))
                 else:
-                    raise ValueError("A categorical feature have some different operators.")
+                    raise ValueError("A categorical feature have some different operators: "+str(list(feature["operator_sign_considered"] for feature in features)))
                 
                 positive_values = []
                 negative_values = []
-                
-                for feature in features:
-                    if feature["operator_sign_considered"].to_str_readable() == ">" or feature["operator_sign_considered"].to_str_readable() == ">=":
-                        positive_values.append(feature)
-                    else:
-                        negative_values.append(feature)
-
+                if sign_is_EQ is False:
+                    for feature in features:
+                        if feature["operator_sign_considered"].to_str_readable() == ">" or feature["operator_sign_considered"].to_str_readable() == ">=":
+                            positive_values.append(feature)
+                        else:
+                            negative_values.append(feature)
+                elif sign_is_EQ is True:
+                    for feature in features:
+                        if feature["operator_sign_considered"].to_str_readable() == "==":
+                            positive_values.append(feature)
+                        else:
+                            negative_values.append(feature)
+                else: #It is None
+                    raise ValueError("A categorical feature have bad operators: "+str(list(feature["operator_sign_considered"] for feature in features)))
+                  
                 #if len(positive_values) != 0 and len(negative_values) != 0:
                 #    raise ValueError("Theory prevents to have at the same time a categorical equal to A and not equal to B.")
                 if len(positive_values) > 1:

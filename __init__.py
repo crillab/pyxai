@@ -32,7 +32,7 @@ if sys.argv:
         target = os.getcwd() + os.sep + "examples" + os.sep
         print("Source of files found: ", examples)
         shutil.copytree(examples, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
-        print("Successfully created the directory " + target + " containing the examples.")
+        print("Successful creation of the " + target + " directory containing the examples.")
         exit(0)
 
     elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-explanations"):
@@ -41,7 +41,7 @@ if sys.argv:
         target = os.getcwd() + os.sep + "explanations" + os.sep
         print("Source of files found: ", explanations)
         shutil.copytree(explanations, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
-        print("Successfully created the directory " + target + " containing the explanations.")
+        print("Successful creation of the " + target + " directory containing the explanations.")
         exit(0)
     
     elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-tests"):
