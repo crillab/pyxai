@@ -198,6 +198,8 @@ class Preprocessor:
         indexes_to_delete = []
         for feature in features_to_delete:
             indexes_to_delete.append(self.features_name.index(feature))
+            #pandas.concat((indexes_to_delete, pandas.DataFrame(self.features_name.index(feature))),axis=0)
+
             self.data.drop(feature, inplace=True, axis=1)
             print("Feature deleted: ", feature)    
         

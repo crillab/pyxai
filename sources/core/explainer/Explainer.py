@@ -237,11 +237,25 @@ class Explainer:
                                 self._values_categorical_features[associated_features[i]] = [feature, values[i], values]
                             self._reg_exp_categorical_features[feature] = associated_features
                             self._categorical_features.extend(associated_features)
+                        elif "{" in feature and "}" in feature:
+                            feature_1 = feature.split("{")[0]
+                            feature_2 = feature.split("{")[1].split("}")[0].split(",")
+                            associated_features = [feature_1+feature_3 for feature_3 in feature_2]
+                            if associated_features == []:
+                                raise ValueError("No feature with the pattern " + str(feature) + ".")
+                            if len(associated_features) != len(values):
+                                raise ValueError("The number of values in " + str(values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(associated_features))
+                            for i in range(len(associated_features)):
+                                self._values_categorical_features[associated_features[i]] = [feature, values[i], values]
+                            self._reg_exp_categorical_features[feature] = associated_features
+                            self._categorical_features.extend(associated_features)
                         else:
                             raise ValueError("Only one-hot encoded categorical features are take into account.")
                             if feature in feature_names:
                                 self._reg_exp_categorical_features[feature] = [feature]
                                 self._categorical_features.extend([feature])
+                                for i in range(len(values)):
+                                    self._values_categorical_features[feature + "_" + str(i)] = [feature, values[i], values]
                             else:
                                 raise ValueError("The feature " + str(feature) + " does not exist.")
             if default is not None:
