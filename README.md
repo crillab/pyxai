@@ -40,7 +40,7 @@
 <h3>What is the difference between PyXAI and other methods ?</h3>
 <p align="justify">
 
-The most popular approaches (SHAP, Lime, ...) to XAI <b>are model-agnostic, but do not offer any guarantees</b> of rigor. A number of <a href="https://arxiv.org/pdf/2307.07514.pdf">works</a> have highlighted several misconceptions about informal approaches to XAI (see the <a href="{{ site.baseurl }}/papers/">related papers</a>). Contrastingly, <b>PyXAI algorithms rely on logic-based, model-precise</b> approaches for computing explanations. Although formal explainability has a number of drawbacks, particularly in terms of the computational complexity of logical reasoning needed to derive explanations, <b>steady progress has been made since its inception</b>. 
+The most popular approaches (SHAP, Lime, ...) to XAI <b>are model-agnostic, but do not offer any guarantees</b> of rigor. A number of <a href="https://arxiv.org/pdf/2307.07514.pdf">works</a> have highlighted several misconceptions about informal approaches to XAI (see the <a href="https://www.cril.univ-artois.fr/pyxai/papers/">related papers</a>). Contrastingly, <b>PyXAI algorithms rely on logic-based, model-precise</b> approaches for computing explanations. Although formal explainability has a number of drawbacks, particularly in terms of the computational complexity of logical reasoning needed to derive explanations, <b>steady progress has been made since its inception</b>. 
 </p>
 
 
@@ -70,41 +70,41 @@ It is possible to also leverage PyXAI to find explanations suited to models lear
 In this website, you can find all what you need to know about PyXAI, with more than 10 <a href="https://jupyter.org/">Jupyter</a> Notebooks, including:
 </p>
 <ul>
- <li>The <a href="{{ site.baseurl }}/documentation/installation/">installation guide</a> and the <a href="{{ site.baseurl }}/documentation/quickstart/">quick start</a></li>
+ <li>The <a href="https://www.cril.univ-artois.fr/pyxai/documentation/installation/">installation guide</a> and the <a href="https://www.cril.univ-artois.fr/pyxai/documentation/quickstart/">quick start</a></li>
  
   <li>About obtaining models:</li>
   <ul>
-  <li>How to <b>prepare and clean a dataset</b> using the PyXAI <a href="{{ site.baseurl }}/documentation/preprocessor/">preprocessor</a> object?</li>
-  <li>How to <b>import a model</b>, whatever its format? <a href="{{ site.baseurl }}/documentation/importing/"> Importing Models</a> </li>
-  <li>How to <b>generate a model using a ML cross-validation method</b>? <a href="{{ site.baseurl }}/documentation/learning/generating/">Generating Models</a> </li>
+  <li>How to <b>prepare and clean a dataset</b> using the PyXAI <a href="https://www.cril.univ-artois.fr/pyxai/documentation/preprocessor/">preprocessor</a> object?</li>
+  <li>How to <b>import a model</b>, whatever its format? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/importing/"> Importing Models</a> </li>
+  <li>How to <b>generate a model using a ML cross-validation method</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/learning/generating/">Generating Models</a> </li>
   
-  <li>How to <b>build a model from trees directly built by the user</b>? <a href="{{ site.baseurl }}/documentation/learning/builder/">Building Models</a></li>
-  <li>How to <b>save and load models</b> with the PyXAI learning module? <a href="{{ site.baseurl }}/documentation/saving/">Saving/Loading Models</a></li>
+  <li>How to <b>build a model from trees directly built by the user</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/learning/builder/">Building Models</a></li>
+  <li>How to <b>save and load models</b> with the PyXAI learning module? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/saving/">Saving/Loading Models</a></li>
   </ul>
 
 <li>About obtaining explanations:</li>
   <ul>
-  <li>The <b>concepts of the PyXAI explainer module</b>: <a href="{{ site.baseurl }}/documentation/explainer/concepts/">Concepts</a> </li>
-  <li>How to use a <b>time limit</b>? <a href="{{ site.baseurl }}/documentation/explainer/time_limit/">Time Limit</a> </li>
+  <li>The <b>concepts of the PyXAI explainer module</b>: <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/concepts/">Concepts</a> </li>
+  <li>How to use a <b>time limit</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/time_limit/">Time Limit</a> </li>
   
-  <li>The PyXAI library offers the possibility to process user preferences (<b>prefer some explanations to others or exclude some features</b>): <a href="{{ site.baseurl }}/documentation/explainer/preferences/">Preferences</a> </li>
+  <li>The PyXAI library offers the possibility to process user preferences (<b>prefer some explanations to others or exclude some features</b>): <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/preferences/">Preferences</a> </li>
 
-  <li><b>Theories are knowledge about the dataset.</b> PyXAI offers the possibility of encoding a theory when calculating explanations in order to avoid calculating impossible explanations: <a href="{{ site.baseurl }}/documentation/explainer/theories/">Theories</a> </li>
+  <li><b>Theories are knowledge about the dataset.</b> PyXAI offers the possibility of encoding a theory when calculating explanations in order to avoid calculating impossible explanations: <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/theories/">Theories</a> </li>
 
-  <li>How to <b>compute explanations for classification tasks</b>? <a href="{{ site.baseurl }}/documentation/classification/">Explaining Classification</a> </li>
+  <li>How to <b>compute explanations for classification tasks</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/classification/">Explaining Classification</a> </li>
   
-  <li>How to <b>compute explanations for regression tasks</b>? <a href="{{ site.baseurl }}/documentation/regression/">Explaining Regression</a> </li>
+  <li>How to <b>compute explanations for regression tasks</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/regression/">Explaining Regression</a> </li>
   
   </ul>
 
- <li>How to use the <b>PyXAI's Graphical User Interface (GUI)</b> for <a href="{{ site.baseurl }}/documentation/visualization/">visualizing explanations</a>?</li>
+ <li>How to use the <b>PyXAI's Graphical User Interface (GUI)</b> for <a href="https://www.cril.univ-artois.fr/pyxai/documentation/visualization/">visualizing explanations</a>?</li>
  
  
 </ul>
 
 <h3>How to use PyXAI ?</h3>
 <p align="justify">
-Here is an example (it comes from the <a href="{{ site.baseurl }}/documentation/quickstart">Quick Start page</a>):
+Here is an example (it comes from the <a href="https://www.cril.univ-artois.fr/pyxai/documentation/quickstart">Quick Start page</a>):
 </p>
 <h4 class="example">PyXAI in action</h4>
 
