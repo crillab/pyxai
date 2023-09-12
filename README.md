@@ -17,7 +17,7 @@
 > </ul> 
 
 <figure>
-  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xLC9-pvcsp0MGlTOBODqrs8aJogGpnAlAnVrh41EetySebz-VNzJW9PkHLmYUIBb_SaqlOpGBLsAm8IY5WIo73xNj0=s1600" alt="pyxai" />
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai2.png" alt="pyxai" />
   <figcaption>PyXAI's main steps for producing explanations.</figcaption>
 </figure>
 
@@ -26,15 +26,6 @@
   <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xDdbVt_DCAmsvJhRlMj3jxgADUVkFzHbnxmQnabdjfuPaylcyeHTyBgDZs4Xna_N_oT6pwxXBv_ls2nqRUwd8RiWgM=s1600" alt="pyxai" />
   <figcaption>PyXAI's Graphical User Interface (GUI) for visualizing explanations.</figcaption>
 </figure>
-
-<h3>What is PyXAI ?</h3>
-<p align="justify">
-<b>PyXAI (Python eXplainable AI)</b> is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms suited to <b>(regression or classification) tree-based ML models</b> (Decision Trees, Random Forests, Boosted Trees, ...). In contrast to many approaches to XAI (SHAP, Lime, ...), PyXAI algorithms are <b>model-specific</b>. Furthermore, PyXAI algorithms <b>guarantee certain properties</b> about the explanations generated, that can be of several types:
-</p>
-<ul>
-  <li><b>Abductive explanations</b> for an instance $X$ are intended to explain why $X$ has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question). For the regression tasks, abductive explanations for $X$ are intended to explain why the regression value on $X$ is in a given interval.</li>
-  <li><b>Contrastive explanations</b> for $X$ is to explain why $X$ has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
-</ul>
 
 <h3>What is the difference between PyXAI and other methods ?</h3>
 <p align="justify">
