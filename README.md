@@ -5,7 +5,6 @@
 - Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
-{: .note-title }
 > <b> New features in version 1.0.0:</b>
 > <ul>
 >   <li>Regression for Boosted Trees with XGBoost or LightGBM</li>
