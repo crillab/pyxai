@@ -114,7 +114,7 @@ class PyPlotDiagramGenerator():
 
             value_instance = feature_values[feature]
             #numerical case: if theory is None, all features are considered as numerical
-            if "in" in string_view:
+            if "in [" in string_view or "in ]" in string_view:
                 if "and" in string_view:
                     #case feature in [infinty, threshold1] and feature in [threshold2, infinity]
                     raise NotImplementedError("TODO feature in [infinty, threshold1] and feature in [threshold2, infinity]")
@@ -123,6 +123,7 @@ class PyPlotDiagramGenerator():
                     
                     feature_str, interval = string_view.split("in")
                     feature_str = feature_str.lstrip().rstrip()
+                    
                     threshold_1, threshold_2 = interval.split(", ")
                     threshold_str_1 = threshold_1
                     threshold_str_2 = threshold_2
