@@ -5,14 +5,16 @@
 - Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
-> <b> New features in version 1:</b>
+{: .note-title }
+> <b> New features in version 1.0.0:</b>
 > <ul>
->   <li>Regression for Boosted Trees</li>
->   <li>Support of Theories</li>
->   <li>Easier importation of models</li>
->   <li>PyXAI's Graphical User Interface (GUI)</li>
+>   <li>Regression for Boosted Trees with XGBoost or LightGBM</li>
+>   <li>Adding Theories (knowledge about the dataset)</li>
+>   <li>Easier model import (automatic detection of model types)</li>
+>   <li>PyXAI's Graphical User Interface (GUI): displaying, loading and saving explanations. </li>
 >   <li>Supports multiple image formats for imaging datasets</li>
 >   <li>Supports data pre-processing (tool for preparing and cleansing a dataset)</li>
+>   <li>Unit Tests with the unittest module</li>
 > </ul> 
 
 <figure>
@@ -137,9 +139,9 @@ explainer.show()
 <br /><br />
 <p align="center">
     <a href="http://www.cril.univ-artois.fr"><img width="120px" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wsxZnVjsY1ypy7nGs2m__Iz5pDphw1wbc3a78HHVVqBhAFOx35hcvCGFaTfgDFlqGB_ChMWBfC-tlXUfX0twpqAnNfVg=s2560" /></a>
-    <a href="https://www.irt-systemx.fr/"><img width="120px" style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xuRWtP8WNuRXXaff32Tzd7OT4guc8vNEeXurAKIQiaeuIdeEYXo9hiA1HeGCgUY7I7NeT70U5yQt5BbwK6H4lv5jabQA=s2560" /></a>
     <a href="https://www.cnrs.fr/"><img width="80px" style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xBV_ILK1g_mKMJ0Hk0wJtFmdKLnAT68QA7fMa5i663Tbla_Q2RjALnH6cER8BGAPThh_ZaOKpcO9ggkI1DAmU4zaEG=s1600" /></a>
     <a href="https://www.confiance.ai/"><img width="120px" style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wiEyfiP29DKvwP5webvNRDXwXsS1PxQnTIZEdMpQ9xV9JN23-86HOqzNEBi9F4Ng8h-Kd8W5NKaWqefnGhhhQmxneu=s1600" /></a>
+    <a href="https://www.hautsdefrance.fr/"><img width="120px" style="width: 80px;" src="https://www.hautsdefrance.fr/app/themes/hautsdefrance-1.5.20220314/img/logo_HDF.svg" /></a>
     <a href="http://univ-artois.fr"><img width="120px" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wA-x2qgHNNrxLEaI33jDH64TM7sudMsTt781ICTAvzBsPaEtL2Ky_1Ba-QWm6YyqCmTuFGpylJ2sSXRgjzu7BM7iC8Xg=s2560" /></a>
 </p>
 
