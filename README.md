@@ -8,7 +8,6 @@
 # PyXAI - Python eXplainable AI
 
 - Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
-- Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
 <h3>What is PyXAI ?</h3>
