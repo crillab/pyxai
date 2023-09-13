@@ -1,7 +1,7 @@
 
 <p align="center">
   <div style="text-align:center">
-    <img width="1000px" src="https://drive.google.com/uc?export=download&id=1R8PuTqnwQwZracP39JYmz91KnINiwt6e" />
+    <img src="https://drive.google.com/uc?export=download&id=1R8PuTqnwQwZracP39JYmz91KnINiwt6e" />
   </div>
 </p>
 
