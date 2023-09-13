@@ -13,15 +13,21 @@ Other model-specific functions are also available. Please see the docstring of E
 """
 from typing import TypeVar
 
-from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.core.tools.GUIQT import GraphicalInterface
+from pyxai.sources.core.explainer.Explainer import Explainer 
 from pyxai.sources.core.explainer.explainerBT import ExplainerBT
 from pyxai.sources.core.explainer.explainerDT import ExplainerDT
 from pyxai.sources.core.explainer.explainerRF import ExplainerRF
+from pyxai.sources.core.explainer.explainerRegressionBT import ExplainerRegressionBT
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
+from pyxai.sources.core.structure.boostedTrees import BoostedTreesRegression
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
-from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod
+from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod, TypeTheory
 
+def show():
+    graphical_interface = GraphicalInterface(None)
+    graphical_interface.mainloop()
 
 def decision_tree(model, instance=None):
     return ExplainerDT(model, instance)
@@ -35,23 +41,31 @@ def boosted_trees(model, instance=None):
     return ExplainerBT(model, instance)
 
 
-def initialize(model, instance=None):
+def initialize(model, instance=None, features_type=None):
     """Return and initialize an explainer according to a model and optionally an instance.
 
     Args:
         model (BoostedTrees, RandomForest, DecisionTree): A model.
-        instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated.. Defaults to None.
-
+        instance (:obj:`list` of :obj:`int`, optional): The instance (an observation) on which explanations must be calculated. Defaults to None.
+        features_type (:obj:`dict` containing the keys `numerical`, `categorical` and `binary` | `String`, optional) Either a dict where each key contains a list (["Method*", "CouncilArea*", "Regionname*"]) or a .types file. 
     Returns:
         ExplainerDT|ExplainerRF|ExplainerBT: The explainer according to ``model``.
     """
+    
+        
+    explainer = None
     if isinstance(model, DecisionTree):
-        return ExplainerDT(model, instance)
+        explainer = ExplainerDT(model, instance)
     if isinstance(model, RandomForest):
-        return ExplainerRF(model, instance)
+        explainer = ExplainerRF(model, instance)
     if isinstance(model, BoostedTrees):
-        return ExplainerBT(model, instance)
-    return None
+        explainer = ExplainerBT(model, instance)
+    if isinstance(model, BoostedTreesRegression):
+        explainer = ExplainerRegressionBT(model, instance)
+    if features_type is not None:
+        explainer.set_features_type(features_type)
+
+    return explainer
 
 
 UNSAT = TypeStatus.UNSAT
@@ -83,3 +97,4 @@ WORD_FREQUENCY_LAYERS = PreferredReasonMethod.WordFrequencyLayers
 INCLUSION_PREFERRED = PreferredReasonMethod.InclusionPreferred
 
 TIMEOUT = Explainer.TIMEOUT
+
