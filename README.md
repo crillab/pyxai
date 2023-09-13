@@ -1,7 +1,7 @@
 
 <p align="center">
   <div style="text-align:center">
-    <img width="300px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" />
+    <img src="https://drive.google.com/uc?export=download&id=1R8PuTqnwQwZracP39JYmz91KnINiwt6e" />
   </div>
 </p>
 
