@@ -42,7 +42,7 @@ class _Options:
                         vars(self)[flag] = True
                         assert flag not in self.values or flag == 'dataexport', "You have to specify a value for the option -" + flag
                     else:
-                        raise ValueError("Unknown option: " + arg)
+                        print("Warning: the " + arg + " option is not a PyXAI option.")
                 else:
                     assert len(t) == 2
                     value = t[0].lower()
@@ -50,7 +50,7 @@ class _Options:
                         assert len(t[1]) > 0, "The value specified for the option -" + value + " is the empty string"
                         vars(self)[value] = t[1]
                     else:
-                        raise ValueError("Unknown option: " + arg)
+                        print("Warning: the " + arg + " option is not a PyXAI option.")
             else:
                 self.parameters.append(arg)
 

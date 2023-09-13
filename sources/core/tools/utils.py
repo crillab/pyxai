@@ -16,13 +16,15 @@ class Stopwatch:
     def __init__(self):
         self.initial_time = time()
 
-
     def elapsed_time(self, *, reset=False):
         elapsed_time = time() - self.initial_time
         if reset:
             self.initial_time = time()
         return "{:.2f}".format(elapsed_time)
 
+def switch_list(l, i1, i2):
+    l[i1], l[i2] = l[i2], l[i1]
+    return l
 
 def flatten(lit):
     return reduce(iconcat, lit, [])
