@@ -10,6 +10,7 @@
 #   url       = {https://ojs.aaai.org/index.php/AAAI/article/view/20484},
 # }
 
+# Check V1.0: Ok
 
 from pyxai import Builder, Explainer
 
@@ -56,7 +57,7 @@ assert explainer.is_sufficient_reason(sufficient)
 assert sufficient == (1, 4), "The sufficient reason is not good !"
 
 minimal = explainer.minimal_sufficient_reason()
-print("minimal:", minimal)
+print("minimal sufficient:", minimal)
 assert minimal == (1, 4), "The minimal reason is not good !"
 
 majoritary = explainer.majoritary_reason()

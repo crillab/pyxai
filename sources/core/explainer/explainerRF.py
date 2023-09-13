@@ -1,11 +1,11 @@
 import random
+import time
 
 import c_explainer
 import numpy
 
 from pyxai.sources.core.explainer.Explainer import Explainer
-from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod
-from pyxai.sources.core.structure.type import ReasonExpressivity
+from pyxai.sources.core.structure.type import Encoding, PreferredReasonMethod, TypeTheory, ReasonExpressivity
 from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
@@ -27,12 +27,10 @@ class ExplainerRF(Explainer):
             NotImplementedError: Currently, the explanations from a random forest are not available in the multi-class scenario (work in progress).
         """
         super().__init__()
-        if random_forest.n_classes > 2:
-            raise NotImplementedError(
-                "Currently, the explanations from a random forest are not available in the multi-class scenario (work in progress).")
 
         self._random_forest = random_forest
         self.c_RF = None
+
         if instance is not None:
             self.set_instance(instance)
 
@@ -42,7 +40,7 @@ class ExplainerRF(Explainer):
         return self._random_forest
 
 
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False):
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
         """
         Convert each literal of the implicant (representing a condition) to a tuple (``id_feature``, ``threshold``, ``sign``, ``weight``).
           - ``id_feature``: the feature identifier.
@@ -59,7 +57,8 @@ class ExplainerRF(Explainer):
             obj:`tuple` of :obj:`tuple` of size 4: Represent the reason in the form of features (with their respective thresholds, signs and possible
             weights)
         """
-        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details)
+        return self._random_forest.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details,
+                                               contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
 
 
     def _to_binary_representation(self, instance):
@@ -84,6 +83,9 @@ class ExplainerRF(Explainer):
             (obj:`list` of :obj:`int`): Reason in the form of literals (binary form). The to_features() method allows to obtain the features
             of this reason.
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         self._elapsed_time = 0
         direct_reason = set()
         for tree in self._random_forest.forest:
@@ -94,8 +96,11 @@ class ExplainerRF(Explainer):
 
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
-            return None
-        return Explainer.format(list(direct_reason))
+            reason = None
+        else:
+            reason = Explainer.format(list(direct_reason))
+        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        return reason
 
 
     def minimal_contrastive_reason(self, *, n=1, time_limit=None):
@@ -112,17 +117,52 @@ class ExplainerRF(Explainer):
             the features of reasons. When only one reason is requested through the 'n' parameter, return just one :obj:`tuple` of `int`
             (and not a :obj:`tuple` of :obj:`tuple`).
         """
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         n = n if type(n) == int else float('inf')
         first_call = True
         time_limit = 0 if time_limit is None else time_limit
         best_score = 0
-        tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0)
-        max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
+        tree_cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, target_prediction=1 if self.target_prediction == 0 else 0,
+                                              tree_encoding=Encoding.SIMPLE)
+
+        # structure to help to do this method faster
+        map_in_binary_representation = dict()
+        for id in self._binary_representation:
+            map_in_binary_representation[id] = True
+            map_in_binary_representation[-id] = False
+
+        # print("tree_cnf:", tree_cnf)
+        max_id_binary_representation = CNFencoding.compute_max_id_variable(self._binary_representation)
+        # print("max_id_binary_representation:", max_id_binary_representation)
+
+        max_id_binary_cnf = CNFencoding.compute_max_id_variable(tree_cnf)
+        # print("max_id_variable:", max_id_binary_cnf)
+
         MAXSATsolver = OPENWBOSolver()
-        for lit in self._binary_representation:
-            MAXSATsolver.add_soft_clause([lit], weight=1)
-        for clause in tree_cnf:
-            MAXSATsolver.add_hard_clause(clause)
+        # print("Length of the binary representation:", len(self._binary_representation))
+        # print("Number of hard clauses in the CNF encoding the random forest:", len(tree_cnf))
+        MAXSATsolver.add_hard_clauses(tree_cnf)
+        if self._theory is False:
+            for lit in self._binary_representation:
+                MAXSATsolver.add_soft_clause([lit], weight=1)
+        else:
+            # Hard clauses
+            theory_cnf, theory_new_variables = self._random_forest.get_theory(
+                self._binary_representation,
+                theory_type=TypeTheory.NEW_VARIABLES,
+                id_new_var=max_id_binary_cnf)
+            theory_new_variables, map_is_represented_by_new_variables = theory_new_variables
+            # print("Number of hard clauses in the theory:", len(theory_cnf))
+            MAXSATsolver.add_hard_clauses(theory_cnf)
+            count = 0
+            for lit in self._binary_representation:
+                if map_is_represented_by_new_variables[abs(lit)] is False:
+                    MAXSATsolver.add_soft_clause([lit], weight=1)
+                    count += 1
+            for new_variable in theory_new_variables:
+                MAXSATsolver.add_soft_clause([new_variable], weight=1)
 
         # Remove excluded features
         for lit in self._excluded_literals:
@@ -138,22 +178,33 @@ class ExplainerRF(Explainer):
             if reason is None:
                 break
             # We have to invert the reason :)
-            true_reason = [-lit for lit in reason if -lit in self._binary_representation]
-            MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_variable])
+            true_reason = [-lit for lit in reason if abs(lit) <= len(self._binary_representation) and map_in_binary_representation[-lit] == True]
+
+            # Add a blocking clause to avoid this reason in the next steps
+            MAXSATsolver.add_hard_clause([-lit for lit in reason if abs(lit) <= max_id_binary_representation])
 
             # Compute the score
             score = len(true_reason)
+            # Stop or not due to score :)
             if first_call:
                 best_score = score
             elif score != best_score:
                 break
             first_call = False
 
+            # Add this contrastive
             results.append(true_reason)
+
+            # Stop or not due to time or n :)
             if (time_limit != 0 and time_used > time_limit) or len(results) == n:
+                # print("End by time_limit or 'n' reached.")
                 break
+
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
-        return Explainer.format(results, n)
+
+        reasons = Explainer.format(results, n)
+        self.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, reasons)
+        return reasons
 
 
     def sufficient_reason(self, *, time_limit=None):
@@ -165,9 +216,19 @@ class ExplainerRF(Explainer):
             (obj:`list` of :obj:`int`): Reason in the form of literals (binary form). The to_features() method allows to obtain the features of this
              reason.
         """
-        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
-        # Check if excluded features produce a SAT problem => No sufficient reason
+        if self._instance is None:
+            raise ValueError("Instance is not set")
 
+        if self._random_forest.n_classes == 2:
+            hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        else:
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation,
+                                                                                      self.target_prediction)
+
+        if self._theory:
+            hard_clauses = hard_clauses + tuple(self._random_forest.get_theory(self._binary_representation))
+
+        # Check if excluded features produce a SAT problem => No sufficient reason
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
             SATSolver.add_clauses(hard_clauses)
@@ -189,7 +250,10 @@ class ExplainerRF(Explainer):
         muser_solver.write_gcnf(n_variables, hard_clauses, soft_clauses)
         model, status, self._elapsed_time = muser_solver.solve(time_limit)
         reason = [mapping[i] for i in model if i > 1]
-        return Explainer.format(reason, 1)
+
+        reason = Explainer.format(reason, 1)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        return reason
 
 
     def minimal_sufficient_reason(self, time_limit=None):
@@ -205,7 +269,18 @@ class ExplainerRF(Explainer):
             this reason.
         """
 
-        hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
+        if self._random_forest.n_classes == 2:
+            hard_clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+        else:
+            hard_clauses = self._random_forest.to_CNF_sufficient_reason_multi_classes(self._instance, self.binary_representation,
+                                                                                      self.target_prediction)
+
+        if self._theory:
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            hard_clauses = hard_clauses + tuple(clauses_theory)
 
         if len(self._excluded_literals) > 0:
             SATSolver = GlucoseSolver()
@@ -220,7 +295,10 @@ class ExplainerRF(Explainer):
         optux_solver.add_hard_clauses(hard_clauses)
         optux_solver.add_soft_clauses(soft_clauses, weight=1)
         reason = optux_solver.solve(self._binary_representation)
-        return Explainer.format(reason)
+
+        reason = Explainer.format(reason)
+        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        return reason
 
 
     def majoritary_reason(self, *, n=1, n_iterations=50, time_limit=None, seed=0):
@@ -233,12 +311,16 @@ class ExplainerRF(Explainer):
             n (int|ALL, optional): The desired number of reasons. Defaults to 1, currently needs to be 1 or Exmplainer.ALL.
             time_limit (int, optional): The maximum time to compute the reasons. None to have a infinite time. Defaults to None.
         """
-        reason_expressivity = ReasonExpressivity.Conditions  # TODO
+
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
+        reason_expressivity = ReasonExpressivity.Conditions
         if seed is None: seed = -1
         if isinstance(n, int) and n == 1:
             if self.c_RF is None:
                 # Preprocessing to give all trees in the c++ library
-                self.c_RF = c_explainer.new_RF(self._random_forest.n_classes)
+                self.c_RF = c_explainer.new_classifier_RF(self._random_forest.n_classes)
                 for tree in self._random_forest.forest:
                     try:
                         c_explainer.add_tree(self.c_RF, tree.raw_data_for_CPP())
@@ -250,16 +332,22 @@ class ExplainerRF(Explainer):
                 time_limit = 0
             implicant_id_features = ()  # FEATURES : TODO
             c_explainer.set_excluded(self.c_RF, tuple(self._excluded_literals))
+            if self._theory:
+                c_explainer.set_theory(self.c_RF, tuple(self._random_forest.get_theory(self._binary_representation)))
+            current_time = time.process_time()
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,
                                                 time_limit, int(reason_expressivity), seed)
-            if reason_expressivity == ReasonExpressivity.Conditions:
-                return reason
-            elif reason_expressivity == ReasonExpressivity.Features:
-                return self.to_features_indexes(reason)  # TODO
+            total_time = time.process_time() - current_time
+            self._elapsed_time = total_time if time_limit == 0 or total_time < time_limit else Explainer.TIMEOUT
+            if reason_expressivity == ReasonExpressivity.Features:
+                reason = self.to_features_indexes(reason)  # TODO
 
-        if isinstance(n, int) and n != 1:
-            raise NotImplementedError("Currently, only n set to 1 or All is available.")
+            reason = Explainer.format(reason)
+            self.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reason)
+            return reason
 
+        if self._theory:
+            raise NotImplementedError("Theory and all majoritary is not yet implanted")
         n = n if type(n) == int else float('inf')
 
         clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
@@ -284,7 +372,9 @@ class ExplainerRF(Explainer):
                 majoritaries.append(majoritary)
             solver.add_clauses([[-lit for lit in result if abs(lit) <= max_id_variable]])  # block this implicant
         self._elapsed_time = time_used if (time_limit is None or time_used < time_limit) else Explainer.TIMEOUT
-        return Explainer.format(CNFencoding.remove_subsumed(majoritaries), n)
+        reasons = Explainer.format(CNFencoding.remove_subsumed(majoritaries), n)
+        self.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reasons)
+        return reasons
 
 
     def preferred_majoritary_reason(self, *, method, n=1, time_limit=None, weights=None, features_partition=None):
@@ -315,25 +405,34 @@ class ExplainerRF(Explainer):
             _type_: _description_
         """
 
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+
         n = n if type(n) == int else float('inf')
 
-        clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
-        n_variables = CNFencoding.compute_n_variables(clauses)
-        id_features = [feature["id"] for feature in
-                       self._random_forest.to_features(self._binary_representation, eliminate_redundant_features=False, details=True)]
+        if self._random_forest.n_classes == 2:
+            clauses = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.SIMPLE)
+        else:
+            clauses = self._random_forest.to_CNF_majoritary_reason_multi_classes(self._instance, self._binary_representation, self.target_prediction)
 
+        n_variables = CNFencoding.compute_n_variables(clauses)
+        id_features = self._random_forest.get_id_features(self._binary_representation)
+        
         weights = compute_weight(method, self._instance, weights, self._random_forest.forest[0].learner_information,
                                  features_partition=features_partition)
-
         solver = OPENWBOSolver()
         max_id_variable = CNFencoding.compute_max_id_variable(self._binary_representation)
         map_abs_implicant = [0 for _ in range(0, n_variables + 1)]
         for lit in self._binary_representation:
             map_abs_implicant[abs(lit)] = lit
-
         # Hard clauses
         for c in clauses:
             solver.add_hard_clause([lit for lit in c if abs(lit) > max_id_variable or map_abs_implicant[abs(lit)] == lit])
+
+        if self._theory:
+            clauses_theory = self._random_forest.get_theory(self._binary_representation)
+            for c in clauses_theory:
+                solver.add_hard_clause(c)
 
         # excluded features
         for lit in self._binary_representation:
@@ -355,8 +454,13 @@ class ExplainerRF(Explainer):
             time_used += _time
             if model is None:
                 if first_call:
-                    return None
-                return Explainer.format(reasons, n)
+                    return ()
+                reasons = Explainer.format(reasons, n)
+                if method == PreferredReasonMethod.Minimal:
+                    self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                else:
+                    self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                return reasons
 
             prefered_reason = [lit for lit in model if lit in self._binary_representation]
             solver.add_hard_clause([-lit for lit in model if abs(lit) <= max_id_variable])
@@ -366,14 +470,24 @@ class ExplainerRF(Explainer):
             if first_call:
                 best_score = score
             elif score != best_score:
-                return Explainer.format(reasons)
+                reasons = Explainer.format(reasons, n)
+                if method == PreferredReasonMethod.Minimal:
+                    self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                else:
+                    self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                return reasons
             first_call = False
 
             reasons.append(prefered_reason)
             if (time_limit is not None and time_used > time_limit) or len(reasons) == n:
                 break
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        return Explainer.format(reasons, n)
+        reasons = Explainer.format(reasons, n)
+        if method == PreferredReasonMethod.Minimal:
+            self.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+        else:
+            self.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+        return reasons
 
 
     def minimal_majoritary_reason(self, *, n=1, time_limit=None):
@@ -381,7 +495,8 @@ class ExplainerRF(Explainer):
 
 
     def is_majoritary_reason(self, reason, n_samples=50):
-        if not self.is_implicant(reason):
+        extended_reason = self.extend_reason_with_theory(reason)
+        if not self.is_implicant(extended_reason):
             return False
         tmp = list(reason)
         random.shuffle(tmp)
