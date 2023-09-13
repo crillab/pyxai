@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" alt="Sublime's PyXAI Logo"/>
+</p>
 
 # PyXAI - Python eXplainable AI
 
