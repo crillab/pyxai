@@ -44,7 +44,10 @@ class Learner:
         data, name = self.parse_data(data)
         if data is not None: 
             self.load_data(data, name)
-        
+    
+    def get_details(self):
+        return [learner_information.to_dict() for learner_information in self.learner_information]
+
     def get_raw_models(self):
         return [learner_information.raw_model for learner_information in self.learner_information]
     
