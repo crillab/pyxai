@@ -15,6 +15,14 @@ class TestRFMulticlasses(unittest.TestCase):
         return cls.learner, cls.model
 
 
+    def test_direct(self):
+        learner, model = self.init()
+        explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
+        instances = learner.get_instances(model, n=30)
+        for instance, prediction in instances:
+            explainer.set_instance(instance)
+            direct_reason = explainer.direct_reason()
+
     def test_sufficient(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
