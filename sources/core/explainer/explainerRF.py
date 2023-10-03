@@ -87,12 +87,17 @@ class ExplainerRF(Explainer):
             raise ValueError("Instance is not set")
 
         self._elapsed_time = 0
-        direct_reason = set()
+        tmp = [False for _ in range(len(self.binary_representation) + 1)]
         for tree in self._random_forest.forest:
             local_target_prediction = tree.predict_instance(self._instance)
-            if local_target_prediction == self.target_prediction:
+            if local_target_prediction == self.target_prediction or self._random_forest.n_classes > 2:
                 local_direct = tree.direct_reason(self._instance)
-                direct_reason |= set(local_direct)
+                for l in local_direct:
+                    tmp[abs(l)] = True
+        direct_reason = []
+        for l in self.binary_representation:
+            if tmp[abs(l)] :
+                direct_reason.append(l)
 
         # remove excluded features
         if any(not self._is_specific(lit) for lit in direct_reason):
