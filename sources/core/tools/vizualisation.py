@@ -5,10 +5,11 @@ import numpy
 from PIL import Image as PILImage
 from PIL.ImageQt import ImageQt
 import os
+import copy
 
 class PyPlotDiagramGenerator():
-    def __init__(self):
-        pass
+    def __init__(self, time_series=None):
+        self.time_series=time_series
 
     def convert_features_to_dict_features(self, features):
         dict_features = dict()
@@ -28,18 +29,128 @@ class PyPlotDiagramGenerator():
         trans_left = mpl.transforms.Affine2D().translate(-5, 0)
         trans_right = mpl.transforms.Affine2D().translate(5, 0)
         
-        mpl.rcParams['axes.spines.left'] = False
+        mpl.rcParams['axes.spines.left'] = True
         mpl.rcParams['axes.spines.right'] = False
         mpl.rcParams['axes.spines.top'] = False
         mpl.rcParams['axes.spines.bottom'] = True
-        dict_features = reason
+        dict_features = copy.deepcopy(reason)
+        
+        print("self.time_series:", self.time_series)
+        n_subplots_time_series = 0
+        _time_series = copy.deepcopy(self.time_series)
+        if _time_series is not None:
+            #remove of dict_features all features of the time series
+            n_subplots_time_series+=len(_time_series.keys())
+            
+            for key in _time_series.keys():
+                for i, feature in enumerate(_time_series[key]):
+                    if feature not in dict_features.keys():
+                        _time_series[key][i] = feature
+                        continue
+                    dict_features_value = dict_features[feature]  
+                    _time_series[key][i] = dict_features_value.copy()                    
+                    dict_features.pop(feature)
+
+        n_subplots = len(dict_features.keys()) + n_subplots_time_series
+        ratio_subplots = [4]*n_subplots_time_series+[1]*len(dict_features.keys())
         if len(dict_features.keys()) == 1:
-            fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,1))
+            fig, axes = pyplot.subplots(n_subplots, figsize=(6,1))
             axes = [axes] # To solve a bug when axes is not a list. 
         else:
-            fig, axes = pyplot.subplots(len(dict_features.keys()), figsize=(6,len(dict_features.keys())+3))
+            fig, axes = pyplot.subplots(n_subplots, figsize=(6,n_subplots+3), gridspec_kw={'height_ratios': ratio_subplots})
+        print(feature_values)
+        if _time_series is not None:
+            # time_series graphs
+            
+            for id_axe, key in enumerate(_time_series.keys()):
+                title = key
+                instance_values = []
+                feature_names = []
+                explanation_min_values = []
+                explanation_max_values = []
+                
+                for i, info in enumerate(_time_series[key]):
+                    if isinstance(info, str):
+                        feature_name = info
+                    else:
+                        feature_name = info[0]["name"]
+                    
+                    instance_value = feature_values[feature_name]
+                    instance_values.append(instance_value)
+                    feature_names.append(feature_name)
+                    if isinstance(info, str):
+                        explanation_min_values.append("inf")
+                        explanation_max_values.append("inf")
+                        continue
+                    string_view = info[0]["string"]
+                    theory = info[0]["theory"] 
+
+                    if theory is not None and (theory[0] == "binary" or theory[0] == "categorical"):
+                        raise ValueError("The feature of time series must be None or Numerical.")
+                    
+                    print("string_view:", string_view)
+                    print("feature_name:", feature_name)
+                    if "in [" in string_view or "in ]" in string_view:
+                        feature_str, interval = string_view.split("in")
+                        feature_str = feature_str.lstrip().rstrip()
+                        
+                        threshold_1, threshold_2 = interval.split(", ")
+                        threshold_str_1 = threshold_1
+                        threshold_str_2 = threshold_2
+                        threshold_1 = float(threshold_1.replace("[", "").replace("]", "").replace(",", ""))
+                        threshold_2 = float(threshold_2.replace("[", "").replace("]", "").replace(",", ""))
+                        bound_left = min(threshold_1, threshold_2, instance_value)
+                        bound_right = max(threshold_1, threshold_2, instance_value)
+                        total = bound_right - bound_left
+                        bound_left = bound_left - (total/10)
+                        bound_right = bound_right + (total/10)
+                        explanation_min_values.append(threshold_1)
+                        explanation_max_values.append(threshold_2)
+                        
+                    else:
+                        #Case with a simple condition feature > threshold
+                        
+                        for operator in ["<=", ">=", "<", ">", "==", "!=", "="]:
+                            if operator in string_view:
+                                feature_str, threshold_str = string_view.split(operator)
+                                feature_str = feature_str.lstrip().rstrip()
+                                operator_str = operator
+                                threshold = float(threshold_str)
+                                break  
+                        if operator == "<=" or operator == "<":
+                            threshold_max = threshold
+                            threshold_min = "inf"
+                        elif operator == ">=" or operator == ">":
+                            threshold_max = "inf"
+                            threshold_min = threshold
+                        explanation_min_values.append(threshold_min)
+                        explanation_max_values.append(threshold_max)
+                    
+                    
+                print("instance_values:", instance_values)
+
+                midle = (0+len(instance_values)-1)/2
+                print("here:", midle)
+                to_min = [x for x in instance_values if x != "inf"] + [x for x in explanation_min_values if x != "inf"] + [x for x in explanation_max_values if x != "inf"] 
+                to_max = [x for x in instance_values if x != "inf"] + [x for x in explanation_min_values if x != "inf"] + [x for x in explanation_max_values if x != "inf"]
+                min_y = numpy.min(to_min)
+                max_y = numpy.max(to_max)
+                
+                margin_y = (numpy.abs(max_y - min_y))/10
+                
+                explanation_min_values = [min_y-margin_y if x == "inf" else x for x in explanation_min_values]
+                explanation_max_values = [max_y+margin_y if x == "inf" else x for x in explanation_max_values]
+                
+                axes[id_axe].set_ylim(bottom=min_y-margin_y, top=max_y+margin_y)
+                axes[id_axe].set_xlim(left=0, right=len(instance_values)-1)
+                axes[id_axe].plot(feature_names,instance_values, color=color_red)
+                axes[id_axe].plot(feature_names,explanation_min_values, color=color_blue)
+                axes[id_axe].plot(feature_names,explanation_max_values, color=color_blue)
+                axes[id_axe].set_title(title, fontsize=10)
+                #axes[id_axe].text(midle,numpy.min(instance_values)-margin_y-margin_y,title)
         
         for i, feature in enumerate(dict_features.keys()):
+            i = i + n_subplots_time_series
             if "string" not in dict_features[feature][0].keys():
                 raise ValueError("The string version of this feature is not done: " + feature)
             string_view = dict_features[feature][0]["string"]
@@ -246,7 +357,6 @@ class PyPlotDiagramGenerator():
                     if bracket_right == "$\mathcal{[}$": x[0].set_transform(x[0].get_transform()+trans_right)
                         
                         
-
 
         pyplot.subplots_adjust(top=1, hspace=1)
 
