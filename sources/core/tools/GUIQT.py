@@ -14,7 +14,7 @@ class EmptyExplainer():pass
 
 class GraphicalInterface(QMainWindow):
     """Main Window."""
-    def __init__(self, explainer, image=None, feature_names=None):
+    def __init__(self, explainer, image=None, feature_names=None, time_series=None):
         """Initializer."""
         app = QApplication(sys.argv)
         app.setPalette(app.style().standardPalette())
@@ -22,6 +22,7 @@ class GraphicalInterface(QMainWindow):
             pass
         self.explainer = explainer
         self.image = image
+        self.time_series = time_series
         if feature_names is not None:
             self.feature_names = feature_names
         elif explainer is not None:
@@ -33,7 +34,7 @@ class GraphicalInterface(QMainWindow):
         if self.image is not None:
             self.pyplot_image_generator = PyPlotImageGenerator(image)
 
-        self.pyplot_diagram_generator = PyPlotDiagramGenerator()
+        self.pyplot_diagram_generator = PyPlotDiagramGenerator(time_series)
         super().__init__(None)
         #main_layout = QGridLayout()
         self.imageLabelLeft = None
@@ -366,7 +367,7 @@ class GraphicalInterface(QMainWindow):
         if not name.endswith(".explainer"): name = name + ".explainer"
 
         with open(name,'wb') as io:
-            dill.dump([self.image, self.feature_names, self.explainer._history],io)
+            dill.dump([self.image, self.feature_names, self.explainer._history, self.time_series],io)
 
 
     def load(self):
@@ -382,6 +383,7 @@ class GraphicalInterface(QMainWindow):
         self.feature_names = data[1]
         self.explainer = EmptyExplainer()
         self.explainer._history = data[2]
+        self.time_series = data[3]
         
         self.list_instance.clear()    
         instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
@@ -395,7 +397,7 @@ class GraphicalInterface(QMainWindow):
         self.table_prediction.setItem(0, 0, QTableWidgetItem(str(self.feature_names[-1])))
         self.table_prediction.setItem(0, 1, QTableWidgetItem(str("")))
         
-
+        self.pyplot_diagram_generator = PyPlotDiagramGenerator(self.time_series)
         if self.image is not None:
             self.pyplot_image_generator = PyPlotImageGenerator(self.image)
 

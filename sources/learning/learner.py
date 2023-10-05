@@ -550,7 +550,7 @@ class Learner:
                       instances_id=None, 
                       seed=0, 
                       training_indexes=None,
-                      test_indexes=None):
+                      test_indexes=None, details=False):
 
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
@@ -570,12 +570,13 @@ class Learner:
         instances = []
         instances_indexes = []
         original_indexes = self._build_original_indexes(data, seed)
-        
+        instances_details = []
         if model is None or self.get_learner_name() == "Generic":
             for j in original_indexes:
                 current_index = possible_indexes[j]
                 instances.append((data[j], None))
                 instances_indexes.append(current_index)
+                instances_details.append({"instance": data[j], "prediction": None, "label": None})
                 if isinstance(n, int) and len(instances) >= n:
                     break
         else:
@@ -592,6 +593,7 @@ class Learner:
                     if predictions is None or prediction_solver in predictions:
                         instances.append((data[j], prediction_solver))
                         instances_indexes.append(current_index)
+                        instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label})
                 if isinstance(n, int) and len(instances) >= n:
                     break
         
@@ -617,6 +619,11 @@ class Learner:
             Tools.verbose("Indexes of selected instances saved in:", complete_name)
         Tools.verbose("number of instances selected:", len(instances))
         Tools.verbose("----------------------------------------------")
+        if details is True:
+            if len(instances_details) == 0 and n == 1:
+                return None, None
+            return instances_details if n is None or n > 1 else instances_details[0] 
+        
         if len(instances) == 0 and n == 1:
             return None, None
         return instances if n is None or n > 1 else instances[0]
