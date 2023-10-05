@@ -27,8 +27,14 @@ class Explainer:
         self._glucose = None
 
 
-    def show(self, image=None):
-        graphical_interface = Tools.GraphicalInterface(self, image=image)
+    def show(self, image=None, time_series=None):
+        feature_names = self.get_feature_names()
+        for key in time_series.keys():
+            for feature in time_series[key]:
+                if feature not in feature_names:
+                    raise ValueError("The feature " +str(feature)+ " in the `time_series` parameter is not an available feature name.")
+                    
+        graphical_interface = Tools.GraphicalInterface(self, image=image, time_series=time_series)
         graphical_interface.mainloop()
 
     def heat_map(self, name, reasons, contrastive=False):
