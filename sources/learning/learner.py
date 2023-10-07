@@ -576,7 +576,7 @@ class Learner:
                 current_index = possible_indexes[j]
                 instances.append((data[j], None))
                 instances_indexes.append(current_index)
-                instances_details.append({"instance": data[j], "prediction": None, "label": None})
+                instances_details.append({"instance": data[j], "prediction": None, "label": None, "index":current_index})
                 if isinstance(n, int) and len(instances) >= n:
                     break
         else:
@@ -593,7 +593,7 @@ class Learner:
                     if predictions is None or prediction_solver in predictions:
                         instances.append((data[j], prediction_solver))
                         instances_indexes.append(current_index)
-                        instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label})
+                        instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label, "index":current_index})
                 if isinstance(n, int) and len(instances) >= n:
                     break
         
