@@ -143,7 +143,7 @@ explainer.show()
 
 <br /><br />
 <p align="center">
-    <a href="http://www.cril.univ-artois.fr"><img width="120px" src="cril.univ-artois.fr/pyxai/assets/figures/cril.png" /></a>
+    <a href="http://www.cril.univ-artois.fr"><img width="120px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cril.png" /></a>
     <a href="https://www.cnrs.fr/"><img width="80px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cnrs.png" /></a>
     <a href="https://www.confiance.ai/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/confianceai.jpg" /></a>
     <a href="https://www.hautsdefrance.fr/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/logo_HDF.svg" /></a>
