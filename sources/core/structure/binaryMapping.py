@@ -341,16 +341,17 @@ class BinaryMapping():
                 
                 operator = feature["operator_sign_considered"]
                 if (operator == OperatorCondition.EQ or operator == OperatorCondition.NEQ):
-                    if feature["threshold"] != 0 and feature["threshold"] != 1:
-                        raise ValueError("The threshold of a binary feature with EQ or NEQ must be equal to 0 or 1: " + str(feature["threshold"]))
+                    #if feature["threshold"] != 0 and feature["threshold"] != 1:
+                    #    raise ValueError("The threshold of a binary feature with EQ or NEQ must be equal to 0 or 1: " + str(feature["threshold"]))
                     feature["string"] = str(feature["name"]) + " " + operator.to_str_readable() + " " + str(feature["threshold"])
                 elif (operator == OperatorCondition.GE or operator == OperatorCondition.GT):
-                    if feature["threshold"] != 0.5:
-                        raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
+                    #if feature["threshold"] != 0.5:
+                    #    print("feature:", feature)
+                    #    raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                     feature["string"] = str(feature["name"]) + " = 1"
                 elif (operator == OperatorCondition.LE or operator == OperatorCondition.LT):
-                    if feature["threshold"] != 0.5:
-                        raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
+                    #if feature["threshold"] != 0.5:
+                    #    raise ValueError("The threshold of a binary feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                     feature["string"] = str(feature["name"]) + " = 0"
                 else:
                     raise ValueError("The operator " + str(operator) + " do not exist.")
@@ -367,8 +368,8 @@ class BinaryMapping():
                         or feature["operator_sign_considered"] == OperatorCondition.LT
                         for feature in features):
                     sign_is_EQ = False
-                    if not all(feature["threshold"] == 0.5 for feature in features):
-                        raise ValueError("The thresholds of a categorical feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
+                    #if not all(feature["threshold"] == 0.5 for feature in features):
+                    #    raise ValueError("The thresholds of a categorical feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                 elif all(feature["operator_sign_considered"] == OperatorCondition.EQ \
                         or feature["operator_sign_considered"] == OperatorCondition.NEQ \
                         for feature in features):
@@ -442,7 +443,8 @@ class BinaryMapping():
                     value = feature["theory"][1][1]
                     feature["string"] = str(name) + " = " + str(value)
                     simple_result.append(feature["string"])
-                     
+                
+                print("feature[string]:", feature["string"])     
                     
             elif len(features) == 1:
                 feature = features[0]
