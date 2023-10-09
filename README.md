@@ -37,8 +37,8 @@
 </figure>
 
 <figure>
-  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-yqn-ZOIW2u7a2XxVH9UNcr5SQQnxUH8b1wfLoReVa2f7zm68-S4GAbr7RWUYW1lKLJ957gLPaFn3077l4qZXUyv82T=s1600" alt="pyxai" />
-  <img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xDdbVt_DCAmsvJhRlMj3jxgADUVkFzHbnxmQnabdjfuPaylcyeHTyBgDZs4Xna_N_oT6pwxXBv_ls2nqRUwd8RiWgM=s1600" alt="pyxai" />
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/GUI.png" alt="pyxai" />
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/GUI2.png" alt="pyxai" />
   <figcaption>PyXAI's Graphical User Interface (GUI) for visualizing explanations.</figcaption>
 </figure>
 
@@ -143,9 +143,9 @@ explainer.show()
 
 <br /><br />
 <p align="center">
-    <a href="http://www.cril.univ-artois.fr"><img width="120px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cril.png" /></a>
+    <a href="http://www.cril.univ-artois.fr"><img width="130px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cril.png" /></a>
     <a href="https://www.cnrs.fr/"><img width="80px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cnrs.png" /></a>
-    <a href="https://www.confiance.ai/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/confianceai.jpg" /></a>
+    <a href="https://www.confiance.ai/"><img width="140px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/confianceai.jpg" /></a>
     <a href="https://www.hautsdefrance.fr/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/logo_HDF.svg" /></a>
     <a href="http://univ-artois.fr"><img width="120px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/artois.png" /></a>
 </p>
