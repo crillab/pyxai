@@ -444,7 +444,6 @@ class BinaryMapping():
                     feature["string"] = str(name) + " = " + str(value)
                     simple_result.append(feature["string"])
                 
-                print("feature[string]:", feature["string"])     
                     
             elif len(features) == 1:
                 feature = features[0]
