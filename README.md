@@ -137,16 +137,16 @@ print("to_features:", explainer.to_features(contrastive_reason, contrastive=True
 explainer.show()
 ```
 
-<img src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xbHs56zfQ_EHQ0-XqdHxy7mdL3fBxFRVnfW6pPCCCpSg89GStqQCBD5ElFLn3NaZmB-2mwY9hdu5TH0gPajOI2xwSCJQ=s1600" alt="pyxai" />
+<img src="https://www.cril.univ-artois.fr/pyxai/assets/figures/pyxaiGUI.png" alt="pyxai" />
 
 <p>As illustrated by this example, with a few lines of code, PyXAI allows you to train a model, extract instances, and get explanations about the classifications made.</p>
 
 <br /><br />
 <p align="center">
-    <a href="http://www.cril.univ-artois.fr"><img width="120px" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wsxZnVjsY1ypy7nGs2m__Iz5pDphw1wbc3a78HHVVqBhAFOx35hcvCGFaTfgDFlqGB_ChMWBfC-tlXUfX0twpqAnNfVg=s2560" /></a>
-    <a href="https://www.cnrs.fr/"><img width="80px" style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-xBV_ILK1g_mKMJ0Hk0wJtFmdKLnAT68QA7fMa5i663Tbla_Q2RjALnH6cER8BGAPThh_ZaOKpcO9ggkI1DAmU4zaEG=s1600" /></a>
-    <a href="https://www.confiance.ai/"><img width="120px" style="width: 80px;" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wiEyfiP29DKvwP5webvNRDXwXsS1PxQnTIZEdMpQ9xV9JN23-86HOqzNEBi9F4Ng8h-Kd8W5NKaWqefnGhhhQmxneu=s1600" /></a>
-    <a href="https://www.hautsdefrance.fr/"><img width="120px" style="width: 80px;" src="https://www.hautsdefrance.fr/app/themes/hautsdefrance-1.5.20220314/img/logo_HDF.svg" /></a>
-    <a href="http://univ-artois.fr"><img width="120px" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-wA-x2qgHNNrxLEaI33jDH64TM7sudMsTt781ICTAvzBsPaEtL2Ky_1Ba-QWm6YyqCmTuFGpylJ2sSXRgjzu7BM7iC8Xg=s2560" /></a>
+    <a href="http://www.cril.univ-artois.fr"><img width="120px" src="cril.univ-artois.fr/pyxai/assets/figures/cril.png" /></a>
+    <a href="https://www.cnrs.fr/"><img width="80px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/cnrs.png" /></a>
+    <a href="https://www.confiance.ai/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/confianceai.jpg" /></a>
+    <a href="https://www.hautsdefrance.fr/"><img width="120px" style="width: 80px;" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/logo_HDF.svg" /></a>
+    <a href="http://univ-artois.fr"><img width="120px" src="https://www.cril.univ-artois.fr/pyxai/assets/figures/artois.png" /></a>
 </p>
 

@@ -2,7 +2,7 @@ import sys
 import os
 import shutil
 import pyxai
-#git test
+
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose
 from pyxai.sources.core.tools.GUIQT import GraphicalInterface
