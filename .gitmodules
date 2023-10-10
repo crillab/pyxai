@@ -1,0 +1,3 @@
+[submodule "pyxai"]
+	path = pyxai
+	url = https://gitlab.univ-artois.fr/pyxai/pyxai-experimental.git
