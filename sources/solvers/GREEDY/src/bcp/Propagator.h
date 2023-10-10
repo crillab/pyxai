@@ -24,16 +24,7 @@
 #include "./Problem.h"
 #include "./ProblemTypes.h"
 
-#if (__sun && __SVR4)
-/* libnet should be using the standard type names, but in the short term
- * define our non-standard type names in terms of the standard names.
- */
-#include <inttypes.h>
-typedef uint8_t  u_int8_t;
-typedef uint16_t u_int16_t;
-typedef uint32_t u_int32_t;
-typedef uint64_t u_int64_t;
-#endif
+
 
 namespace pyxai {
     struct Imply {
@@ -55,7 +46,7 @@ namespace pyxai {
     private:
         std::ostream &m_out;
 
-        u_int8_t *m_data;
+        uint8_t *m_data;
 
         unsigned m_nbVar;
         unsigned m_posClauseNotBin;
@@ -146,7 +137,7 @@ namespace pyxai {
         inline lbool value(const Lit l) {
             if(l.var() > ((int)m_nbVar))
                 return l_Undef;
-            return ((u_int8_t) l.sign()) ^ m_assign[l.var()];
+            return ((uint8_t) l.sign()) ^ m_assign[l.var()];
         }
 
         /**
