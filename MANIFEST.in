@@ -1,0 +1,18 @@
+
+include pyxai/version.txt
+
+recursive-include pyxai/sources/solvers/COMPILER/ *
+recursive-include pyxai/sources/solvers/CPP_CODE/ *
+recursive-include pyxai/sources/solvers/CSP/ *
+recursive-include pyxai/sources/solvers/GRAPH/ *
+recursive-include pyxai/sources/solvers/MAXSAT/ *
+recursive-include pyxai/sources/solvers/MUS/ *
+recursive-include pyxai/sources/solvers/SAT/ *
+
+recursive-include pyxai/examples/ *
+recursive-include pyxai/explanations/ *
+
+global-exclude __pycache__
+global-exclude *.pyc
+prune __pycache__
+prune *.pyc

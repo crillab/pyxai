@@ -1,19 +1,39 @@
-from distutils.core import setup, Extension
+import os
+from distutils.core import Extension
+from setuptools import setup, find_packages
 
+__version__ = open(os.path.join(os.path.dirname(__file__), 'pyxai/version.txt'), encoding='utf-8').read()
 
-def main():
-    setup(name="c_explainer",
-          version="1.0.0",
-          description="Python interface for the c_explainer C library function",
-          author="<your name>",
-          author_email="your_email@gmail.com",
-          ext_modules=[Extension(
-              "c_explainer",
-              ["sources/solvers/GREEDY/src/bt_wrapper.cc", "sources/solvers/GREEDY/src/Explainer.cc", "sources/solvers/GREEDY/src/Tree.cc",
-               "sources/solvers/GREEDY/src/Node.cc", "sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "sources/solvers/GREEDY/src/bcp/Problem.cc",
-               "sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "sources/solvers/GREEDY/src/bcp/Propagator.cc"],
-              language="c++")])
+print("setup version", __version__)
 
-
-if __name__ == "__main__":
-    main()
+setup(name='pyxai',
+      version=__version__,
+      python_requires='>=3.6',
+      project_urls={
+            'Documentation': 'http://www.cril.univ-artois.fr/pyxai/',
+            'Installation': 'http://www.cril.univ-artois.fr/pyxai/documentation/installation/',
+            'Git': 'https://github.com/crillab/pyxai'
+        },
+      author='Gilles Audemard, Steve Bellart, Louenas Bounia, Jean-Marie Lagniez, Pierre Marquis, Nicolas Szczepanski:',
+      author_email='audemard@cril.fr, bellart@cril.fr, bounia@cril.fr, lagniez@cril.fr, marquis@cril.fr, szczepanski@cril.fr',
+      maintainer='Gilles Audemard, Nicolas Szczepanski',
+      maintainer_email='audemard@cril.fr, szczepanski@cril.fr',
+      keywords='XAI AI XML ML explainable learning',
+      classifiers=['Topic :: Scientific/Engineering :: Artificial Intelligence', 'Topic :: Education'],
+      packages=find_packages(),  # exclude=["problems/g7_todo/"]),
+      package_dir={'pyxai': 'pyxai'},
+      install_requires=['lxml', 'numpy', 'wheel', 'pandas', 'termcolor', 'shap', 'wordfreq', 'python-sat[pblib,aiger]', 'xgboost', 'pycsp3', 'matplotlib', 'pyqt6', 'dill', 'lightgbm', 'docplex'],
+      include_package_data=True,
+      description='Explaining Machine Learning Classifiers in Python',
+      long_description=open(os.path.join(os.path.dirname(__file__), 'pyxai/README.md'), encoding='utf-8').read(),
+      long_description_content_type='text/markdown',
+      license='MIT',
+      ext_modules=[Extension(
+          "c_explainer",
+          ["pyxai/sources/solvers/GREEDY/src/bt_wrapper.cc", "pyxai/sources/solvers/GREEDY/src/Explainer.cc",
+           "pyxai/sources/solvers/GREEDY/src/Tree.cc", "pyxai/sources/solvers/GREEDY/src/Node.cc", 
+           "pyxai/sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Problem.cc",
+           "pyxai/sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Propagator.cc"
+           ],
+          language="c++")],
+      platforms='LINUX')
