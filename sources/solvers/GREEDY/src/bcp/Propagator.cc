@@ -83,7 +83,7 @@ namespace pyxai {
                   << nbLitNotBin << "\n";
 
         // reserve the data memory
-        m_data = new u_int8_t[memoryNeeded];
+        m_data = new uint8_t[memoryNeeded];
 
         // init the vectors regarding their size.
         m_notBinClauseRefs.reserve(nbClauseNotBin);
