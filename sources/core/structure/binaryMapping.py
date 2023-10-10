@@ -368,8 +368,6 @@ class BinaryMapping():
                         or feature["operator_sign_considered"] == OperatorCondition.LT
                         for feature in features):
                     sign_is_EQ = False
-                    #if not all(feature["threshold"] == 0.5 for feature in features):
-                    #    raise ValueError("The thresholds of a categorical feature with GE, GT, LE or LT must be equal to 0.5: " + str(feature["threshold"]))
                 elif all(feature["operator_sign_considered"] == OperatorCondition.EQ \
                         or feature["operator_sign_considered"] == OperatorCondition.NEQ \
                         for feature in features):
