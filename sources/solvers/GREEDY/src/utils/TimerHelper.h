@@ -2,7 +2,8 @@
 #define miniMOLS_TimerHelper_h
 
 
-#if defined(__linux__)
+//It is __GLIBC__ instead of __linux__ 
+#if defined(__GLIBC__)
 #include <fpu_control.h>
 #endif
 
