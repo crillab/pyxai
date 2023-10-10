@@ -10,6 +10,18 @@
 #include "constants.h"
 #include <Python.h>
 
+#if (__sun && __SVR4)
+/* libnet should be using the standard type names, but in the short term
+ * define our non-standard type names in terms of the standard names.
+ */
+#include <inttypes.h>
+typedef uint8_t  u_int8_t;
+typedef uint16_t u_int16_t;
+typedef uint32_t u_int32_t;
+typedef uint64_t u_int64_t;
+typedef uint64_t u_int64_t;
+#endif
+
 namespace pyxai {
     enum Kind_of_Tree_RF { DEFINITIVELY_WRONG, GOOD, CURRENTLY_WRONG};
     class Node;
@@ -19,7 +31,7 @@ namespace pyxai {
         Type _type;
         unsigned int n_classes;
         unsigned int target_class;
-        u_char *memory = nullptr;
+        unsigned int *memory = nullptr;
         Node *root = nullptr;
         std::vector<Node *> all_nodes;
         Kind_of_Tree_RF status; // Useful only with Classifier_RF : this tree hasn't the good class
