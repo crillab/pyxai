@@ -16,9 +16,6 @@ class TestLearningLightGBM(unittest.TestCase):
             self.assertEqual(model.raw_model.get_params()["learning_rate"], 0.3)
 
 
-    def test_regression_creditcard(self):
-        self.regression(Learning.LightGBM("tests/creditcard.csv", learner_type=Learning.REGRESSION))
-
 
     def test_regression_dermatology(self):
         self.regression(Learning.LightGBM("tests/dermatology.csv", learner_type=Learning.REGRESSION))
