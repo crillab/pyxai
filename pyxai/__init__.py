@@ -50,6 +50,7 @@ if sys.argv:
         print("Change directory to PyXAI location: ", __pyxai_location__)
         os.system("python3 tests/tests.py")
         os.chdir(save_directory)
+        sys.exit(0) 
     
 
                 
