@@ -10,6 +10,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v3
     - name: Build a wheel via an sdist
       run: |
         pip install build
