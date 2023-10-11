@@ -10,7 +10,7 @@ class TestDT(unittest.TestCase):
 
     def init(cls):
         if cls.model is None:
-            cls.learner = Learning.Xgboost("../../dataML/compas.csv", learner_type=Learning.CLASSIFICATION)
+            cls.learner = Learning.Xgboost("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
             cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
         return cls.learner, cls.model
 

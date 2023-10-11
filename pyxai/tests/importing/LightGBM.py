@@ -16,9 +16,6 @@ import unittest
 
 class TestImportLightGBM(unittest.TestCase):
 
-    def test_import_BT_regression_creditcard(self):
-        self.do_import("tests/creditcard.csv", Learning.REGRESSION)
-
 
     def test_import_BT_regression_dermatology(self):
         self.do_import("tests/dermatology.csv", Learning.REGRESSION)

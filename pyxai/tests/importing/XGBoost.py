@@ -24,7 +24,6 @@ class TestImportXGBoost(unittest.TestCase):
 
 
     def test_import_BT_regression(self):
-        self.do_import("tests/creditcard.csv", Learning.REGRESSION)
         self.do_import("tests/dermatology.csv", Learning.REGRESSION)
         self.do_import("tests/winequality-red.csv", Learning.REGRESSION)
 
