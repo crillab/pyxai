@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include<algorithm>
+
 #include "Tree.h"
 #include "utils/TimerHelper.h"
 #include "bcp/Propagator.h"

@@ -14,7 +14,7 @@ jobs:
       run: |
         pip install build
         python -m build
-        pip install dist/numpy*.whl
+        pip install dist/pyxai*.whl
     - name: Run test suite
       run: |
         python -m pyxai --tests
