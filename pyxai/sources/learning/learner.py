@@ -204,8 +204,6 @@ class Learner:
             raise ValueError("learner_type is unknown:", str(self.learner_type))
 
     def evaluate(self, *, method, output, n_models=10, test_size=0.3, **learner_options):
-        if "verbose" not in learner_options.keys():
-            learner_options["verbose"] = -1
         if "seed" not in learner_options.keys():
             learner_options["seed"] = 0
         if "max_depth" not in learner_options.keys():
