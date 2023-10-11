@@ -25,7 +25,7 @@ setup(name='pyxai',
       install_requires=['lxml', 'numpy', 'wheel', 'pandas', 'termcolor', 'shap', 'wordfreq', 'python-sat[pblib,aiger]', 'xgboost', 'pycsp3', 'matplotlib', 'pyqt6', 'dill', 'lightgbm', 'docplex'],
       include_package_data=True,
       description='Explaining Machine Learning Classifiers in Python',
-      long_description=open(os.path.join(os.path.dirname(__file__), 'pyxai/README.md'), encoding='utf-8').read(),
+      long_description=open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8').read(),
       long_description_content_type='text/markdown',
       license='MIT',
       ext_modules=[Extension(
@@ -33,7 +33,8 @@ setup(name='pyxai',
           ["pyxai/sources/solvers/GREEDY/src/bt_wrapper.cc", "pyxai/sources/solvers/GREEDY/src/Explainer.cc",
            "pyxai/sources/solvers/GREEDY/src/Tree.cc", "pyxai/sources/solvers/GREEDY/src/Node.cc", 
            "pyxai/sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Problem.cc",
-           "pyxai/sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Propagator.cc"
+           "pyxai/sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Propagator.cc",
            ],
           language="c++")],
+      headers=['pyxai/sources/solvers/GREEDY/src/Tree.h'],
       platforms='LINUX')
