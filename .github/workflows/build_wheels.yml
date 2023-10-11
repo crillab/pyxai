@@ -1,10 +1,7 @@
 name: Build
 
-on:
-  push:
-    tags:
-      - 'deployment'
-      
+on: [push]
+
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
