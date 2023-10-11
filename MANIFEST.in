@@ -11,6 +11,7 @@ recursive-include pyxai/sources/solvers/SAT/ *
 
 recursive-include pyxai/examples/ *
 recursive-include pyxai/explanations/ *
+recursive-include pyxai/tests/ *
 
 global-exclude __pycache__
 global-exclude *.pyc
