@@ -48,9 +48,9 @@ if sys.argv:
         save_directory = os.getcwd()
         os.chdir(__pyxai_location__)
         print("Change directory to PyXAI location: ", __pyxai_location__)
-        os.system("python3 tests/tests.py")
+        status = os.WEXITSTATUS(os.system("python3 tests/tests.py"))
         os.chdir(save_directory)
-        sys.exit(0) 
+        sys.exit(status) 
     
 
                 
