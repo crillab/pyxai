@@ -92,7 +92,7 @@ class TestImportLightGBM(unittest.TestCase):
             y_test = [Y[x] for x in index_test]
 
             # Training phase
-            learner = lightgbm.LGBMRegressor(n_estimators=5, random_state=0)
+            learner = lightgbm.LGBMRegressor(verbose=-1, n_estimators=5, random_state=0)
             learner.fit(x_train, y_train)
             # Get the classifier prediction of the test set  
             y_predict = learner.predict(x_test)

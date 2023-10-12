@@ -46,6 +46,7 @@ ORDINAL = TypeEncoder.OrdinalEncoder
 ONE_HOT = TypeEncoder.OneHotEncoder
 
 def import_models(models, feature_names=None):
+        
     if not isinstance(models, (list, tuple)):
         models = [models]
     if not all(type(model) == type(models[0]) for model in models):
@@ -79,6 +80,7 @@ def import_models(models, feature_names=None):
             learner.labels = learner.labels_to_values(models[0].classes_)
             learner.n_labels = len(set(learner.labels))
     elif type(models[0]) in LightGBM.get_learner_types().keys():
+        
         learner_type = LightGBM.get_learner_types()[type(models[0])][0]
         evaluation_output = LightGBM.get_learner_types()[type(models[0])][1]
         learner = LightGBM(NoneData, learner_type=learner_type)

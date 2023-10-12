@@ -77,4 +77,4 @@ print("feat:", feat)
 print("is_tree_specific:", explainer.is_tree_specific_reason(reason))
 print("is_sufficient_reason:", explainer.is_sufficient_reason(reason))
 
-explainer.show()
+#explainer.show()

@@ -6,10 +6,8 @@ Tools.set_verbose(0)
 
 import unittest
 class TestToFeatures(unittest.TestCase):
-    def setUp(self):
-        print("..|In method:", self._testMethodName)
 
-    def test_1(self):
+    def test_to_features(self):
         node_t1_v1_1 = Builder.DecisionNode(1, operator=Builder.GE, threshold=0, left=0, right=0)
         node_t1_v1_1_1 = Builder.DecisionNode(1, operator=Builder.GE, threshold=10, left=node_t1_v1_1, right=0)
         node_t1_v1_2 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node_t1_v1_1_1, right=0)

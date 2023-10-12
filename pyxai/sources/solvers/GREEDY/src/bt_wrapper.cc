@@ -65,7 +65,6 @@ static PyObject *add_tree(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *tree_obj;
 
-    //std::cout << "add_tree" << std::endl;
     if (!PyArg_ParseTuple(args, "OO", &class_obj, &tree_obj))
         return NULL;
 
@@ -74,11 +73,10 @@ static PyObject *add_tree(PyObject *self, PyObject *args) {
                      "The second argument must be a tuple representing a raw tree and given by the python raw_tree() method !");
         return NULL;
     }
-
     // Get pointer to the class
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->addTree(tree_obj);
-    return Py_True;
+    return Py_None;
 }
 
 
@@ -92,7 +90,7 @@ static PyObject *set_base_score(PyObject *self, PyObject *args) {
     // Get pointer to the class
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->base_score = bs;
-    Py_RETURN_NONE;
+    return Py_None;
 }
 
 static PyObject *set_interval(PyObject *self, PyObject *args) {
@@ -106,7 +104,7 @@ static PyObject *set_interval(PyObject *self, PyObject *args) {
     // Get pointer to the class
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->set_interval(lower_bound, upper_bound);
-    Py_RETURN_NONE;
+    return Py_None;
 }
 
 static PyObject *set_excluded(PyObject *self, PyObject *args) {
@@ -131,7 +129,7 @@ static PyObject *set_excluded(PyObject *self, PyObject *args) {
         explainer->excluded_features.push_back(PyLong_AsLong(value_obj));
     }
 
-    Py_RETURN_NONE;
+    return Py_None;
 }
 
 static PyObject *set_theory(PyObject *self, PyObject *args) {
@@ -170,7 +168,7 @@ static PyObject *set_theory(PyObject *self, PyObject *args) {
     explainer->theory_propagator = new pyxai::Propagator(problem, false);
     for(pyxai::Tree *t : explainer->trees)
         t->propagator = explainer->theory_propagator;
-    Py_RETURN_NONE;
+    return Py_None;
 }
 
 
@@ -178,7 +176,6 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_instance_obj;
     PyObject *vector_features_obj;
-
     long prediction;
     long n_iterations;
     long time_limit;
@@ -228,7 +225,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
       ret = explainer->compute_reason_conditions(instance, prediction, reason, seed);
 
     if(ret == false)
-        Py_RETURN_NONE;
+        return Py_None;
 
     return vectorToTuple_Int(reason);
 }
