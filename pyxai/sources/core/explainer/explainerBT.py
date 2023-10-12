@@ -262,8 +262,10 @@ class ExplainerBT(Explainer):
         if self.c_BT is None:
             # Preprocessing to give all trees in the c++ library
             self.c_BT = c_explainer.new_classifier_BT(self._boosted_trees.n_classes)
+            
             for tree in self._boosted_trees.forest:
                 c_explainer.add_tree(self.c_BT, tree.raw_data_for_CPP())
+            
         c_explainer.set_excluded(self.c_BT, tuple(self._excluded_literals))
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))

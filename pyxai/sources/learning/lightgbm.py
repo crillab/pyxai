@@ -31,7 +31,7 @@ class LightGBM(Learner):
             
     @staticmethod
     def get_learner_types():
-        return {type(lightgbm.LGBMRegressor()): (LearnerType.Regression, EvaluationOutput.BT)}
+        return {type(lightgbm.LGBMRegressor(verbose=-1)): (LearnerType.Regression, EvaluationOutput.BT)}
 
     @staticmethod
     def get_learner_name():
@@ -55,9 +55,8 @@ class LightGBM(Learner):
 
     def fit_and_predict_BT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         self.display_parameters(learner_options)
-        learner = lightgbm.LGBMRegressor(**learner_options)
+        learner = lightgbm.LGBMRegressor(verbose=-1, **learner_options)
         learner.fit(instances_training, labels_training)
-        
         result = learner.predict(instances_test)
         metrics = self.compute_metrics(labels_test, result)
 

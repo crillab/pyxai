@@ -14,9 +14,6 @@ import unittest
 
 class TestGetInstances(unittest.TestCase):
     
-    #def setUp(self):
-    #    print("..|In method:", self._testMethodName)
-
     def test_get_instances_simple_1(self):
         dataset = "tests/dermatology.csv"
         learner = Learning.LightGBM(dataset, learner_type=Learning.REGRESSION)
@@ -149,7 +146,7 @@ class TestGetInstances(unittest.TestCase):
             y_test = [Y[x] for x in index_test]
             
             # Training phase
-            learner = lightgbm.LGBMRegressor(n_estimators=5, random_state=0)
+            learner = lightgbm.LGBMRegressor(verbose=-1, n_estimators=5, random_state=0)
             learner.fit(x_train, y_train)
             # Get the classifier prediction of the test set  
             y_predict = learner.predict(x_test)
