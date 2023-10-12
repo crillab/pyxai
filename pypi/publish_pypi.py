@@ -1,32 +1,22 @@
 import os
 
-versionFile = os.getcwd() + os.sep + "pyxai" + os.sep + "version.txt"
-__version__ = open(versionFile, encoding='utf-8').read()
+# How to build, test and publish on pypi a new version:
+# - Put the good version in the pyxai/version.txt file 
+# - Push on the public github of pyxai 
+# - Two github actions are launch: Build and Tests
+# - The github action Build create the wheels for pypi
+# - The github action Build create the wheels for pypi
+# - This script get the last wheels and publish them on pypi. 
 
-print("Type on the keyboard the new version number (current " + str(__version__) + ") ?")
-
-new_version = input()
-if new_version != "":
-    print("Write the new version ...")
-    with open(versionFile, "r+") as f:
-        data = f.read()
-        f.seek(0)
-        f.write(new_version)
-        f.truncate()
-
-# print("sudo rm -rf build/ dist/ wheelhouse/ rm -rf dist/ build/ pyxai-experimental.egg-info/ pyxai.egg-info/")
-
-os.system("sudo rm -rf build/ dist/ wheelhouse/ rm -rf dist/ build/ pyxai-experimental.egg-info/ pyxai.egg-info/")
-
-# print("Type Enter to execute python3 setup.py sdist bdist_wheel")
-# input()
-# os.system("python3 setup.py sdist bdist_wheel")
-
-print("Type Enter to execute the docker that build whells:")
+print("Please use the 'gh auth login' command to connect the github API.")
+print("Type 'enter' to execute: 'gh run download'")
 input()
 
-os.system("sudo docker run --rm -e PLAT=manylinux2014_x86_64 -v `pwd`:/io quay.io/pypa/manylinux2014_x86_64 /io/travis/build-wheels.sh")
+os.system("gh run download")
 
-print("Type Enter to execute the publish on pypi the wheels:")
+print("Type 'enter' to publish the wheels on pypi:")
 input()
-os.system("python3 -m twine upload --skip-existing wheelhouse/*.whl")
+os.system("python3 -m twine upload --skip-existing *.whl")
+
+print("Type 'enter' to delete the whell:")
+input("rm -rf *.whl")
