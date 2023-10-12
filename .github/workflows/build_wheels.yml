@@ -1,6 +1,6 @@
 name: Build
 
-#on: [push]
+on: [push]
 
 jobs:
   build_wheels:
@@ -30,4 +30,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
+          name: wheels
           path: ./wheelhouse/*.whl
