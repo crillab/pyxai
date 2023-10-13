@@ -14,7 +14,7 @@ typedef struct timeval_win {
     long tv_usec;
 } timeval_win;
 
-int gettimeofday_win(struct timeval_win * tp, struct timezone * tzp)
+int gettimeofday_win(timeval_win * tp, timezone * tzp)
 {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
     // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
