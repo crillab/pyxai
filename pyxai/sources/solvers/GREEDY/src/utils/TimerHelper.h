@@ -1,6 +1,7 @@
 #ifndef miniMOLS_TimerHelper_h
 #define miniMOLS_TimerHelper_h
 
+namespace pyxai {
 
 //It is __GLIBC__ instead of __linux__ 
 #if defined(__GLIBC__)
@@ -45,7 +46,7 @@ int gettimeofday_win(timeval_win * tp)
 #endif // _WIN32
 
 
-namespace pyxai {
+
 
     static double initRealTime = 0;
     static double initCpuTime = 0;
