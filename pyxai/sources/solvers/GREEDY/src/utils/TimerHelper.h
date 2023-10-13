@@ -31,7 +31,7 @@ namespace pyxai {
             long tv_usec;
         } timeval_win;
 
-        int gettimeofday_win(timeval_win * tp)
+        inline int gettimeofday_win(timeval_win * tp)
         {
             // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
             // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
@@ -52,7 +52,7 @@ namespace pyxai {
             return 0;
         }
         #endif // _WIN32
-        
+
         inline double cpuTime() {
           if(!isInitialized){
             std::cout << "Warning: initializeTime() has not been called before !" << std::endl;
