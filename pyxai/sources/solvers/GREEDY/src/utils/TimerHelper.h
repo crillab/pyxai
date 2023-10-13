@@ -19,6 +19,8 @@
 #if defined(_WIN32)
 #include <Windows.h>
 #include <chrono>
+#define __STRUCT__ struct
+#define interface __STRUCT__
 
 int gettimeofday(struct timeval* tp, struct timezone* tzp) {
   namespace sc = std::chrono;
