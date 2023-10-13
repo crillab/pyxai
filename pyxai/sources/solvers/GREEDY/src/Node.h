@@ -32,11 +32,11 @@ namespace pyxai {
         Tree *tree;
 
         Node(double w, Tree *t): lit(0), false_branch(nullptr), true_branch(nullptr), true_min(0), true_max(0), artificial_leaf(false), tree(t) {
-            leaf_value = {.weight=w};
+            leaf_value.weight = w;
         }
 
         Node(int p, Tree *t) : lit(0), false_branch(nullptr), true_branch(nullptr), true_min(0), true_max(0), artificial_leaf(false), tree(t) {
-            leaf_value = {.prediction=p};
+            leaf_value.prediction = p;
         }
 
         Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), true_min(0), true_max(0), artificial_leaf(false), tree(f->tree) {}
