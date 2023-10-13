@@ -14,7 +14,7 @@ typedef struct timeval_win {
     long tv_usec;
 } timeval_win;
 
-int gettimeofday_win(timeval_win * tp, timezone * tzp)
+int gettimeofday_win(timeval_win * tp)
 {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
     // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
@@ -67,7 +67,7 @@ namespace pyxai {
           }
           #if defined(_MSC_VER) || defined(__MINGW32__)
           struct timeval_win tv;
-          gettimeofday_win(&tv, NULL);
+          gettimeofday_win(&tv);
           #else
           struct timeval tv;
           gettimeofday(&tv, NULL);
