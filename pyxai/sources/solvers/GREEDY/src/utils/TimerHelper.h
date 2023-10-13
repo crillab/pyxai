@@ -17,6 +17,7 @@
 #endif
 
 #if defined(_WIN32)
+#include <Windows.h>
 #include <chrono>
 
 int gettimeofday(struct timeval* tp, struct timezone* tzp) {
