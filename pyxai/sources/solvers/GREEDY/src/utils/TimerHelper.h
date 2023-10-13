@@ -19,7 +19,7 @@
 #if defined(_WIN32)
 #include <Windows.h>
 #include <stdint.h> // portable: uint64_t   MSVC: __int64 
-
+#include <winsock2.h>
 // MSVC defines this in winsock2.h!?
 typedef struct timeval {
     long tv_sec;
