@@ -9,12 +9,12 @@
 
 #if defined(_WIN32)
 // MSVC defines this in winsock2.h!?
-typedef struct timeval {
+typedef struct timeval_win {
     long tv_sec;
     long tv_usec;
-} timeval;
+} timeval_win;
 
-int gettimeofday(struct timeval * tp, struct timezone * tzp)
+int gettimeofday_win(struct timeval_win * tp, struct timezone * tzp)
 {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
     // This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
@@ -65,8 +65,13 @@ namespace pyxai {
           if(!isInitialized){
             std::cout << "Warning: initializeTime() has not been called before !" << std::endl;
           }
+          #if defined(_MSC_VER) || defined(__MINGW32__)
+          struct timeval_win tv;
+          gettimeofday_win(&tv, NULL);
+          #else
           struct timeval tv;
           gettimeofday(&tv, NULL);
+          #endif
           if (initRealTime != 0)
             return ((double)tv.tv_sec + (double) tv.tv_usec / 1000000) - initRealTime;
           
