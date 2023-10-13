@@ -19,4 +19,4 @@ input()
 os.system("python3 -m twine upload --skip-existing *.whl")
 
 print("Type 'enter' to delete the whell:")
-input("rm -rf *.whl")
+os.system("rm -rf *.whl")

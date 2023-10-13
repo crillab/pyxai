@@ -1,6 +1,6 @@
 name: Linux tests
 
-on: [push]
+#on: [push]
 #on:
 #  workflow_run:
 #    workflows: ["Build"]
