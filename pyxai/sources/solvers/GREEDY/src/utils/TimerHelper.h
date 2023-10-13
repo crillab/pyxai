@@ -7,19 +7,7 @@
 #include <fpu_control.h>
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-#include <time.h>
-#else
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <unistd.h>
-#include <iostream>
-#endif
-
 #if defined(_WIN32)
-#include <Windows.h>
-#include <stdint.h> // portable: uint64_t   MSVC: __int64 
-#include <winsock2.h>
 // MSVC defines this in winsock2.h!?
 typedef struct timeval {
     long tv_sec;
