@@ -16,6 +16,7 @@ Options.set_flags("f", "gui", "examples", "explanations", "tests")
 Options.parse(sys.argv[1:])
 if Options.verbose is not None: set_verbose(Options.verbose)
 
+print("coucou")
 
 
    
