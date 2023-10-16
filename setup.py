@@ -22,7 +22,11 @@ setup(name='pyxai',
       classifiers=['Topic :: Scientific/Engineering :: Artificial Intelligence', 'Topic :: Education'],
       packages=find_packages(),  # exclude=["problems/g7_todo/"]),
       package_dir={'pyxai': 'pyxai'},
-        
+      entry_points = {
+            'console_scripts': [
+                'pyxai=pyxai'
+            ]
+      }     
       install_requires=['lxml', 
                         'numpy', 
                         'wheel', 
