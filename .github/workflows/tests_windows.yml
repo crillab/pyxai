@@ -17,7 +17,7 @@ jobs:
       run: |
         pip install build
         python -m build
-        pip install dist\pyxai*.whl
+        pip install dist/*.whl
       #sudo apt install ffmpeg libsm6 libxext6 qt6-base-dev libxcb-cursor0 -y
     - name: Run test suite
       run: |
