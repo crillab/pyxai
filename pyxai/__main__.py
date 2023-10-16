@@ -47,5 +47,4 @@ def main():
             os.system("python3 tests"+os.sep+"tests.py")
             os.chdir(save_directory)
 
-if __name__ == '__main__':
-    sys.exit(main())     
+sys.exit(main())     
