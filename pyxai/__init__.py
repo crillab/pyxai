@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import pyxai
+import platform
 
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose
@@ -34,7 +35,7 @@ if sys.argv:
             shutil.copytree(examples, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
             print("Successful creation of the " + target + " directory containing the examples.")
             exit(0)
-            
+
         elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-explanations"):
             
             explanations = __pyxai_location__ + os.sep + "explanations" + os.sep
@@ -48,9 +49,13 @@ if sys.argv:
             save_directory = os.getcwd()
             os.chdir(__pyxai_location__)
             print("Change directory to PyXAI location: ", __pyxai_location__)
-            os.system("python3 tests"+os.sep+"tests.py")
+            status = os.system("python3 tests"+os.sep+"tests.py")
             os.chdir(save_directory)
-
+            if platform.system() == "Windows":
+                exit(status)
+            else:
+                exit(os.WEXITSTATUS(status)) 
+            
 
    
         
