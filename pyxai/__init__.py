@@ -16,7 +16,40 @@ Options.set_flags("f", "gui", "examples", "explanations", "tests")
 Options.parse(sys.argv[1:])
 if Options.verbose is not None: set_verbose(Options.verbose)
 
-print("coucou")
+if sys.argv:
+        if  (len(sys.argv) != 0 and sys.argv[0] == "-m"):
+                print("Python version: ", __python_version__)
+                print("PyXAI version: ", __pyxai_version__)
+                print("PyXAI location: ", __pyxai_location__)
+
+        if  (len(sys.argv) == 1 and sys.argv[0] == "-m") or (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-gui"): 
+            graphical_interface = GraphicalInterface(None)
+            graphical_interface.mainloop()
+        elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-examples"):
+            
+            
+            examples = __pyxai_location__ + os.sep + "examples" + os.sep
+            target = os.getcwd() + os.sep + "examples" + os.sep
+            print("Source of files found: ", examples)
+            shutil.copytree(examples, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
+            print("Successful creation of the " + target + " directory containing the examples.")
+            exit(0)print("coucou")
+
+        elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-explanations"):
+            
+            explanations = __pyxai_location__ + os.sep + "explanations" + os.sep
+            target = os.getcwd() + os.sep + "explanations" + os.sep
+            print("Source of files found: ", explanations)
+            shutil.copytree(explanations, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
+            print("Successful creation of the " + target + " directory containing the explanations.")
+            exit(0)
+        
+        elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-tests"):
+            save_directory = os.getcwd()
+            os.chdir(__pyxai_location__)
+            print("Change directory to PyXAI location: ", __pyxai_location__)
+            os.system("python3 tests"+os.sep+"tests.py")
+            os.chdir(save_directory)
 
 
    
