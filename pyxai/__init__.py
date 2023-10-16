@@ -33,8 +33,8 @@ if sys.argv:
             print("Source of files found: ", examples)
             shutil.copytree(examples, target, ignore=shutil.ignore_patterns('in_progress', '__init__.py', '__pycache__*'))
             print("Successful creation of the " + target + " directory containing the examples.")
-            exit(0)print("coucou")
-
+            exit(0)
+            
         elif (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-explanations"):
             
             explanations = __pyxai_location__ + os.sep + "explanations" + os.sep
