@@ -24,7 +24,7 @@ setup(name='pyxai',
       package_dir={'pyxai': 'pyxai'},
       entry_points = {
             'console_scripts': [
-                'pyxai=pyxai'
+                'pyxai=pyxai:main'
             ]
       },     
       install_requires=['lxml', 
