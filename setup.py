@@ -26,7 +26,7 @@ setup(name='pyxai',
             'console_scripts': [
                 'pyxai=pyxai'
             ]
-      }     
+      },     
       install_requires=['lxml', 
                         'numpy', 
                         'wheel', 
