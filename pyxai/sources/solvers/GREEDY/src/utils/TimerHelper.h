@@ -9,6 +9,14 @@
 #include <fpu_control.h>
 #endif
 
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#include <time.h>
+#else
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <unistd.h>
+#include <iostream>
+#endif
 
 namespace pyxai {
     static double initRealTime = 0;
