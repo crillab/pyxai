@@ -16,12 +16,12 @@ Options.set_flags("f", "gui", "examples", "explanations", "tests")
 Options.parse(sys.argv[1:])
 if Options.verbose is not None: set_verbose(Options.verbose)
 
-if sys.argv:
-    if __name__ == '__main__':
+def main():
+    if sys.argv:
         if  (len(sys.argv) != 0 and sys.argv[0] == "-m"):
-            print("Python version: ", __python_version__)
-            print("PyXAI version: ", __pyxai_version__)
-            print("PyXAI location: ", __pyxai_location__)
+                print("Python version: ", __python_version__)
+                print("PyXAI version: ", __pyxai_version__)
+                print("PyXAI location: ", __pyxai_location__)
 
         if  (len(sys.argv) == 1 and sys.argv[0] == "-m") or (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-gui"): 
             graphical_interface = GraphicalInterface(None)
@@ -51,6 +51,9 @@ if sys.argv:
             print("Change directory to PyXAI location: ", __pyxai_location__)
             os.system("python3 tests"+os.sep+"tests.py")
             os.chdir(save_directory)
+
+if __name__ == '__main__':
+    sys.exit(main())        
         
 
                 
