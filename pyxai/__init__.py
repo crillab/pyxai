@@ -49,7 +49,7 @@ if sys.argv:
             save_directory = os.getcwd()
             os.chdir(__pyxai_location__)
             print("Change directory to PyXAI location: ", __pyxai_location__)
-            status = os.system("python3 tests"+os.sep+"tests.py")
+            status = os.system("python3 tests"+os.sep+"tests.py -f")
             os.chdir(save_directory)
             if platform.system() == "Windows":
                 exit(status)
