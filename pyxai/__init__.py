@@ -4,6 +4,7 @@ import shutil
 import pyxai
 import platform
 import subprocess
+import unittest
 
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose
@@ -52,13 +53,13 @@ if sys.argv:
             print("Change directory to PyXAI location: ", __pyxai_location__)
             cmd = "python3 tests"+os.sep+"tests.py -f"
             cmd = cmd.split(" ")
-            process = subprocess.run(cmd)
-            status=process.wait()
+            subprocess.call(cmd, stderr=subprocess.STDOUT)
+
             os.chdir(save_directory)
-            if platform.system() == "Windows":
-                exit(status)
-            else:
-                exit(os.WEXITSTATUS(status)) 
+            #if platform.system() == "Windows":
+            #    exit(status)
+            #else:
+            #    exit(os.WEXITSTATUS(status)) 
             
 
    

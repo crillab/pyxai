@@ -1,3 +1,4 @@
+
 from pyxai import Tools, Learning, Explainer
 from sklearn import preprocessing
 from sklearn.model_selection import LeaveOneGroupOut
@@ -8,10 +9,10 @@ import random
 import functools
 import operator
 import copy
+
 Tools.set_verbose(0)
 
 import unittest
-
 class TestGetInstances(unittest.TestCase):
     
     def test_get_instances_simple_1(self):

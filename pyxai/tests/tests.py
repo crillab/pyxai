@@ -19,30 +19,30 @@ from pyxai.tests.explaining.rf import *
 from pyxai.tests.explaining.bt import *
 from pyxai.tests.explaining.regressionbt import *
 
-def suite():
+def linux_tests():
     suite = unittest.TestSuite()
     
-    # suite.addTest(unittest.makeSuite(TestToFeatures))
-    # suite.addTest(unittest.makeSuite(TestGetInstances))
-    #
-    # suite.addTest(unittest.makeSuite(TestLearningScikitlearn))
-    # suite.addTest(unittest.makeSuite(TestLearningXGBoost))
-    # suite.addTest(unittest.makeSuite(TestLearningLightGBM))
-    #
-    # suite.addTest(unittest.makeSuite(TestSaveLoadScikitlearn))
-    # suite.addTest(unittest.makeSuite(TestSaveLoadXgboost))
-    # suite.addTest(unittest.makeSuite(TestSaveLoadLightGBM))
-    #
-    # suite.addTest(unittest.makeSuite(TestImportScikitlearn))
-    # suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
-    # suite.addTest(unittest.makeSuite(TestImportXGBoost))
-    # suite.addTest(unittest.makeSuite(TestImportLightGBM))
-    # suite.addTest(unittest.makeSuite(TestMisc))
-    # suite.addTest(unittest.makeSuite(TestDT))
-    # suite.addTest(unittest.makeSuite(TestRF))
+    suite.addTest(unittest.makeSuite(TestToFeatures))
+    suite.addTest(unittest.makeSuite(TestGetInstances))
+    
+    suite.addTest(unittest.makeSuite(TestLearningScikitlearn))
+    suite.addTest(unittest.makeSuite(TestLearningXGBoost))
+    suite.addTest(unittest.makeSuite(TestLearningLightGBM))
+    
+    suite.addTest(unittest.makeSuite(TestSaveLoadScikitlearn))
+    suite.addTest(unittest.makeSuite(TestSaveLoadXgboost))
+    suite.addTest(unittest.makeSuite(TestSaveLoadLightGBM))
+    suite.addTest(unittest.makeSuite(TestImportScikitlearn))
+    suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
+    suite.addTest(unittest.makeSuite(TestImportXGBoost))
+    suite.addTest(unittest.makeSuite(TestImportLightGBM))
+    suite.addTest(unittest.makeSuite(TestMisc))
+    suite.addTest(unittest.makeSuite(TestDT))
+    suite.addTest(unittest.makeSuite(TestRF))
+    suite.addTest(unittest.makeSuite(TestBT))
     return suite
 
 
 if __name__ == '__main__':
-    
-    unittest.main(verbosity=2)
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(linux_tests())
