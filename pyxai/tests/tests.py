@@ -1,5 +1,7 @@
 # import os
 import unittest
+import logging 
+import sys 
 
 from pyxai.tests.functionality.GetInstances import *
 from pyxai.tests.functionality.ToFeatures import *
@@ -21,7 +23,6 @@ from pyxai.tests.explaining.regressionbt import *
 
 def linux_tests():
     suite = unittest.TestSuite()
-    
     suite.addTest(unittest.makeSuite(TestToFeatures))
     suite.addTest(unittest.makeSuite(TestGetInstances))
     
@@ -44,5 +45,6 @@ def linux_tests():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(linux_tests())
