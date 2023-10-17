@@ -4,9 +4,8 @@ import unittest
 Tools.set_verbose(0)
 
 
-class TestDT(unittest.TestCase):
+class TestBT(unittest.TestCase):
     model = None
-
 
     def init(cls):
         if cls.model is None:
@@ -45,4 +44,4 @@ class TestDT(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=0)
+    unittest.main(verbosity=2)
