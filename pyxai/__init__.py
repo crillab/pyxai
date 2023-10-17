@@ -3,6 +3,7 @@ import os
 import shutil
 import pyxai
 import platform
+import subprocess
 
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose
@@ -49,7 +50,8 @@ if sys.argv:
             save_directory = os.getcwd()
             os.chdir(__pyxai_location__)
             print("Change directory to PyXAI location: ", __pyxai_location__)
-            status = os.system("python3 tests"+os.sep+"tests.py -f")
+            process = subprocess.run("python3 tests"+os.sep+"tests.py -f")
+            status=process.wait()
             os.chdir(save_directory)
             if platform.system() == "Windows":
                 exit(status)
