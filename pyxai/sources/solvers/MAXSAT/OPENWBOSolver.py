@@ -15,11 +15,11 @@ class OPENWBOSolver(MAXSATSolver):
     def __init__(self, _hash=str(uuid.uuid4().fields[-1])[:8]):
         super().__init__()
         self._hash = _hash
-        self.filename_wcnf = "/tmp/wbo-" + self._hash + ".wcnf"
+        self.filename_wcnf = os.sep + "tmp" + os.sep + "wbo-" + self._hash + ".wcnf"
 
 
     def solve(self, *, time_limit=0):
-        wcnf_file = f"/tmp/wbo-{self._hash}.wcnf"
+        wcnf_file = f""+os.sep+"tmp"+os.sep+"wbo-{self._hash}.wcnf"
         self.WCNF.to_file(wcnf_file)
         params = [OPENWBO_EXEC]
         time_used = -time.time()

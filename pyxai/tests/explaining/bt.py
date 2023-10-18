@@ -15,7 +15,6 @@ class TestBT(unittest.TestCase):
 
 
     def test_tree_specific(self):
-        self.assertTrue(False)
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
         instances = learner.get_instances(model, n=30)
