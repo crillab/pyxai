@@ -5,6 +5,9 @@ import pyxai
 import platform
 import subprocess
 import unittest
+import matplotlib
+
+matplotlib.set_loglevel("critical") #To win a lot of times. 
 
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose
@@ -60,9 +63,8 @@ if sys.argv:
             print("stdout:", stdout)
             print("stderr:", stderr)
             print("return code:", process.returncode)
-            #subprocess.call(cmd, stderr=subprocess.STDOUT)
-
             os.chdir(save_directory)
+            exit(process.returncode)
             #if platform.system() == "Windows":
             #    exit(status)
             #else:
