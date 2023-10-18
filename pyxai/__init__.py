@@ -64,7 +64,7 @@ if sys.argv:
             print("stderr:", errors.decode('utf-8'))
 
             #print("stderr:", stderr)
-            print("return code:", process.returncode)
+            #print("return code:", process.returncode)
             #print("return code2:", errors)
             os.chdir(save_directory)
             exit(process.poll())
