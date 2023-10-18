@@ -59,6 +59,7 @@ if sys.argv:
             stderr = process.stderr.read().decode('utf-8')
             print("stdout:", stdout)
             print("stderr:", stderr)
+            print("return code:", process.returncode)
             #subprocess.call(cmd, stderr=subprocess.STDOUT)
 
             os.chdir(save_directory)
