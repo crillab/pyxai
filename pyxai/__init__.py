@@ -67,7 +67,7 @@ if sys.argv:
             print("return code:", process.returncode)
             #print("return code2:", errors)
             os.chdir(save_directory)
-            exit(process.returncode)
+            exit(process.poll())
             #if platform.system() == "Windows":
             #    exit(status)
             #else:
