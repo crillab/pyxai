@@ -19,7 +19,7 @@ class OPENWBOSolver(MAXSATSolver):
 
 
     def solve(self, *, time_limit=0):
-        print(self.WCNF)
+        open(self.filename_wcnf, "a") #Else bug in Windows
         self.WCNF.to_file(self.filename_wcnf)
         
         params = [OPENWBO_EXEC]
@@ -29,10 +29,10 @@ class OPENWBOSolver(MAXSATSolver):
         params += [self.filename_wcnf]
         p = subprocess.run(params, timeout=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         time_used += time.time()
-        output_str = [line.split(" ") for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "v"]
+        output_str = [line.split(" ") for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "v"]
         if len(output_str) == 0:
             return p.stderr, None, time_used
 
-        status = [line.split(" ")[1] for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "s"][0]
+        status = [line.split(" ")[1] for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "s"][0]
         model = [int(lit) for lit in output_str[0] if lit != 'v' and lit != '']
         return status, model, Explainer.TIMEOUT if status == "SATISFIABLE" else time_used
