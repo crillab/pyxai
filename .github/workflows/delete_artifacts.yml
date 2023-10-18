@@ -1,0 +1,10 @@
+name: Delete Artifacts
+
+on: [workflow_dispatch] #Manually
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: geekyeggo/delete-artifact@v1
