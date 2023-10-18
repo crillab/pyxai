@@ -8,3 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: geekyeggo/delete-artifact@v1
+        with:
+          expire-in: 0

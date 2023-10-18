@@ -1,6 +1,7 @@
 name: Windows tests
 
-on: [push]
+#on: [push]
+on: [workflow_dispatch] #Manually
 #on:
 #  workflow_run:
 #    workflows: ["Build"]
