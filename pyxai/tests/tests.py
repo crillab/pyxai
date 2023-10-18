@@ -2,6 +2,7 @@
 import unittest
 import logging 
 import sys 
+import platform
 
 from pyxai.tests.functionality.GetInstances import *
 from pyxai.tests.functionality.ToFeatures import *
@@ -43,8 +44,15 @@ def linux_tests():
     suite.addTest(unittest.makeSuite(TestBT))
     return suite
 
+def linux_windows():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestToFeatures))
+    return suite
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(linux_tests())
+    if platform.system() == 'Windows':
+        runner.run(linux_windows())
+    else:
+        runner.run(linux_tests())
