@@ -57,12 +57,13 @@ if sys.argv:
             cmd = "python3 tests"+os.sep+"tests.py -f"
             cmd = cmd.split(" ")
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            process.wait()
+            ess = process.wait()
             stdout = process.stdout.read().decode('utf-8')
             stderr = process.stderr.read().decode('utf-8')
             print("stdout:", stdout)
             print("stderr:", stderr)
             print("return code:", process.returncode)
+            print("return code2:", ess)
             os.chdir(save_directory)
             exit(process.returncode)
             #if platform.system() == "Windows":

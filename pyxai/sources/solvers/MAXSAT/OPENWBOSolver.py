@@ -19,7 +19,9 @@ class OPENWBOSolver(MAXSATSolver):
 
 
     def solve(self, *, time_limit=0):
+        print(self.WCNF)
         self.WCNF.to_file(self.filename_wcnf)
+        
         params = [OPENWBO_EXEC]
         time_used = -time.time()
         if time_limit != 0:
