@@ -363,7 +363,7 @@ class Explainer:
         @param excluded_features (list[str] | tuple[str]): the features names to be excluded
         """
         if len(excluded_features) == 0:
-            self.unset_specific_features()
+            self.unset_excluded_features()
             return
         self._excluded_features = excluded_features
         if self.instance is None:
@@ -386,7 +386,7 @@ class Explainer:
         self.set_excluded_features(excluded)
 
 
-    def unset_specific_features(self):
+    def unset_excluded_features(self):
         """
         Unset the features set with the set_excluded_features method.
         """
