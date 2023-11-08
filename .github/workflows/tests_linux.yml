@@ -9,7 +9,10 @@ on: [push]
 
 jobs:
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v3
