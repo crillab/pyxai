@@ -3,7 +3,7 @@ import pickle
 
 import numpy
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, export_text
 from pyxai import Tools
 
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
@@ -121,13 +121,21 @@ class Scikitlearn(Learner):
         raise NotImplementedError("Boosted Trees with regression is not implemented for ScikitLearn.")
 
 
-   
-
     """
     Convert a specific Scikitlearn's decision tree into a program-specific object called 'DecisionTree'.
     """
 
     def classifier_to_DT(self, sk_tree, sk_raw_tree, id_solver_results=0):
+        """
+        Warning: we use here numpy.argmax(sk_raw_tree.value[0][0]) to get the predition of a tree. 
+        But sklearn do not that of this way.
+        - For us, a leaf of a tree represents a class
+        - Not for sklearn where a leaf is a list of probability of classes (example: [0.3 0.4 0.6] for 3 classes)
+        This is can change the prediction between our model and the sklearn model. 
+        - For us, we take the argmax of the number of trees that predict a class.
+        - sklearn does a average of lists of probabilities. 
+        However, the predictions are 99% identical.  
+        """
         nodes = {i: DecisionNode(int(feature + 1), threshold=sk_raw_tree.threshold[i], operator=OperatorCondition.GT, left=None, right=None)
                  for i, feature in enumerate(sk_raw_tree.feature) if feature >= 0}
         for i in range(len(sk_raw_tree.feature)):
@@ -138,8 +146,8 @@ class Scikitlearn(Learner):
 
                 nodes[i].left = nodes[id_left] if id_left in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_left][0]))
                 nodes[i].right = nodes[id_right] if id_right in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[id_right][0]))
-                
-        root = nodes[0] if 0 in nodes else DecisionNode(1, 0, sk_raw_tree.value[0][0])
+        
+        root = nodes[0] if 0 in nodes else LeafNode(numpy.argmax(sk_raw_tree.value[0][0]))
         return DecisionTree(sk_tree.n_features_in_, root, sk_tree.classes_, id_solver_results=id_solver_results,
                             learner_information=self.learner_information[id_solver_results])
 
