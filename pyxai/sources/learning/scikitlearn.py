@@ -8,7 +8,6 @@ from pyxai import Tools
 
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
 from pyxai.sources.core.structure.randomForest import RandomForest
-from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.learner import Learner, NoneData
 from pyxai.sources.core.structure.type import OperatorCondition, LearnerType, EvaluationOutput
 
@@ -39,7 +38,7 @@ class Scikitlearn(Learner):
         self.display_parameters(learner_options)
         learner = DecisionTreeClassifier(**learner_options)
         learner.fit(instances_training, labels_training)
-
+        
         result = learner.predict(instances_test)
         metrics = self.compute_metrics(labels_test, result)
 
