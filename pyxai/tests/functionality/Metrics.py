@@ -93,6 +93,7 @@ class TestLearningScikitlearn(unittest.TestCase):
         self.assertEqual(metrics["true_negative"], 2)
         self.assertEqual(metrics["false_positive"], 2)
         self.assertEqual(metrics["false_negative"], 2)
+        
 
     def test_prediction_dermatology(self):
         learner = Learning.Scikitlearn("tests/dermatology.csv", learner_type=Learning.CLASSIFICATION)
