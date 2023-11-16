@@ -351,6 +351,8 @@ class ExplainerBT(Explainer):
 
 
     def contrastive_reason(self, time_limit = None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
         contrastive_bt = ContrastiveBT()
         c = contrastive_bt.create_model_and_solve(self)
         return c
