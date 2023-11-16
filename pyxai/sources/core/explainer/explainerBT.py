@@ -10,7 +10,7 @@ from pyxai.sources.core.tools.utils import flatten
 from pyxai.sources.solvers.CSP.AbductiveV1 import AbductiveModelV1
 from pyxai.sources.solvers.CSP.TSMinimalV2 import TSMinimal
 from pyxai.sources.solvers.GRAPH.TreeDecomposition import TreeDecomposition
-
+from pyxai.sources.solvers.CPLEX.ContrastiveBT import ContrastiveBT
 
 class ExplainerBT(Explainer):
 
@@ -241,8 +241,6 @@ class ExplainerBT(Explainer):
         The method used (in c++), for a given seed, compute several tree specific reasons and return the best.
         For that, the algorithm is executed either during a given time or or until a certain number of reasons is calculated.
 
-        The parameter 'reason_expressivity' have to be fixed either by ReasonExpressivity.Features or ReasonExpressivity.Conditions.
-
         Args:
             n_iterations (int, optional): _description_. Defaults to 50.
             time_limit (int, optional): _description_. Defaults to None.
@@ -350,6 +348,13 @@ class ExplainerBT(Explainer):
             if self.is_implicant(tuple(copy_reason)):
                 return False
         return True
+
+
+    def contrastive_reason(self, time_limit = None):
+        contrastive_bt = ContrastiveBT()
+        c = contrastive_bt.create_model_and_solve(self)
+        return c
+
 
 # def check_sufficient(self, reason, n_samples=1000):
 #   """
