@@ -9,9 +9,204 @@ from termcolor import colored
 from time import time
 from typing import Iterable
 
+from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error
+
 from pyxai.sources.core.structure.type import PreferredReasonMethod
 
+class Metric:
 
+    @staticmethod
+    def compute_metrics_regression(labels, predictions):
+        return {
+                "mean_squared_error": mean_squared_error(labels, predictions),
+                "root_mean_squared_error": mean_squared_error(labels, predictions, squared=False),
+                "mean_absolute_error": mean_absolute_error(labels, predictions)
+            }
+
+    @staticmethod
+    def compute_metrics_binary_classification(labels, predictions):
+        tp = Metric.compute_tp(labels, predictions)
+        tn = Metric.compute_tn(labels, predictions)
+        fp = Metric.compute_fp(labels, predictions)
+        fn = Metric.compute_fn(labels, predictions)
+
+        accuracy = ((tp+tn)/(tp+tn+fp+fn))*100
+        precision = ((tp)/(tp+fp))*100 if tp+fp != 0 else 0
+        recall = ((tp)/(tp+fn))*100 if tp+fn != 0 else 0
+        f1score = (2*precision*recall)/(precision+recall) if precision+recall != 0 else 0
+        specificity = ((tn)/(fp+tn))*100 if fp+tn != 0 else 0
+
+        return {"accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1score,
+            "specificity": specificity,
+            "true_positive": tp,
+            "true_negative": tn,
+            "false_positive": fp,
+            "false_negative": fn,
+            "sklearn_confusion_matrix": confusion_matrix(labels, predictions).tolist()
+            }
+    
+    @staticmethod
+    def compute_metrics_multi_classification(labels, predictions, dict_labels):
+        # TP, TN, FP and FN is not available the multi class case.
+        # We therefore compute TP, TN, FP and FN for each class 
+        true_positives = {}
+        true_negatives = {}
+        false_positives = {}
+        false_negatives = {}
+        accuracies = {}
+        precisions = {}
+        recalls = {}
+        macro_averaging_accuracy = 0
+        macro_averaging_precision = 0
+        macro_averaging_recall = 0
+        n_labels = len(dict_labels.keys())
+        for key in dict_labels.keys():
+            label = dict_labels[key]
+            true_positives[key] = Metric.compute_tp(labels, predictions, label=label)
+            true_negatives[key] = Metric.compute_tn(labels, predictions, label=label)
+            false_positives[key] = Metric.compute_fp(labels, predictions, label=label)
+            false_negatives[key] = Metric.compute_fn(labels, predictions, label=label)
+            total = true_positives[key] + true_negatives[key] + false_positives[key] + false_negatives[key]
+            if total != len(predictions):
+                raise ValueError("The sum of TP, TN, FP and FN is not equal to the number of instances.")
+            accuracies[key] = (true_positives[key] + true_negatives[key])/total
+            if true_positives[key]+false_positives[key] == 0:
+                precisions[key] = 1
+            else:        
+                precisions[key] = (true_positives[key])/(true_positives[key]+false_positives[key])
+            if true_positives[key]+false_negatives[key] == 0:
+                recalls[key] = 1
+            else:
+                recalls[key] = (true_positives[key])/(true_positives[key]+false_negatives[key])
+            macro_averaging_accuracy += accuracies[key]
+            macro_averaging_precision += precisions[key]
+            macro_averaging_recall += recalls[key]
+        
+        macro_averaging_accuracy = (macro_averaging_accuracy/n_labels)*100
+        macro_averaging_precision = (macro_averaging_precision/n_labels)*100
+        macro_averaging_recall = (macro_averaging_recall/n_labels)*100
+
+        micro_averaging_accuracy = 0
+        micro_averaging_accuracy_numerator = 0
+        micro_averaging_accuracy_denominator = 0
+        micro_averaging_precision = 0
+        micro_averaging_precision_numerator = 0
+        micro_averaging_precision_denominator = 0
+        micro_averaging_recall = 0
+        micro_averaging_recall_numerator = 0
+        micro_averaging_recall_denominator = 0
+
+        for key in dict_labels.keys():
+            label = dict_labels[key]
+            micro_averaging_accuracy_numerator += true_positives[key]
+            micro_averaging_accuracy_numerator += true_negatives[key]
+            micro_averaging_accuracy_denominator += true_positives[key]
+            micro_averaging_accuracy_denominator += true_negatives[key]
+            micro_averaging_accuracy_denominator += false_positives[key]
+            micro_averaging_accuracy_denominator += false_negatives[key]
+            micro_averaging_precision_numerator += true_positives[key]
+            micro_averaging_precision_denominator += true_positives[key]
+            micro_averaging_precision_denominator += false_positives[key]
+            micro_averaging_recall_numerator += true_positives[key]
+            micro_averaging_recall_denominator += true_positives[key]
+            micro_averaging_recall_denominator += false_negatives[key]
+            
+
+        micro_averaging_accuracy = (micro_averaging_accuracy_numerator/micro_averaging_accuracy_denominator)*100
+        micro_averaging_precision = (micro_averaging_precision_numerator/micro_averaging_precision_denominator)*100
+        micro_averaging_recall = (micro_averaging_recall_numerator/micro_averaging_recall_denominator)*100
+        return {"micro_averaging_accuracy": micro_averaging_accuracy,
+                "micro_averaging_precision": micro_averaging_precision,
+                "micro_averaging_recall": micro_averaging_recall,
+                "macro_averaging_accuracy": macro_averaging_accuracy,
+                "macro_averaging_precision": macro_averaging_precision,
+                "macro_averaging_recall": macro_averaging_recall,
+                "true_positives": true_positives,
+                "true_negatives": true_negatives,
+                "false_positives": false_positives,
+                "false_negatives": false_negatives,
+                "accuracy": Metric.compute_accuracy_multiclass(labels, predictions),
+                "sklearn_confusion_matrix": confusion_matrix(labels, predictions).tolist()
+                }
+    
+    #A possible definition in the multi-class case is to take into account the well classified class.
+    @staticmethod
+    def compute_accuracy_multiclass(labels, predictions):
+        well_classified = 0
+        for i, _ in enumerate(predictions):
+            if predictions[i] == labels[i]:
+                well_classified += 1
+        return (well_classified/len(predictions))*100
+    
+
+    # True Positive (TP): Cases where the prediction is positive, and the actual value is indeed positive.
+    # Example: your doctor tells you that you're pregnant, and you are.
+    # In the multi-class case, the `label` parameter have to be set by the good class.  
+    # We consider this specific class as "positive" and all other classes as a single "negative" class.  
+    @staticmethod
+    def compute_tp(labels, predictions, label=None):
+        tp = 0
+        for i, _ in enumerate(predictions):
+            if label is None:
+                if predictions[i] == 1 and labels[i] == 1:
+                    tp += 1
+            else:
+                if predictions[i] == label and labels[i] == label:
+                    tp += 1
+        return tp
+
+    # True Negative (TN): Cases where the prediction is negative, and the actual value is actually negative. 
+    # Example: the doctor tells you that you are not pregnant, and you are indeed not pregnant.
+    # In the multi-class case, the `label` parameter have to be set by the good class.  
+    # We consider this specific class as "positive" and all other classes as a single "negative" class.  
+    @staticmethod
+    def compute_tn(labels, predictions, label=None):
+        tn = 0
+        for i, _ in enumerate(predictions):
+            if label is None:
+                if predictions[i] == 0 and labels[i] == 0:
+                    tn += 1
+            else:
+                if predictions[i] != label and labels[i] != label:
+                    tn += 1
+        return tn
+
+    # False Positive (FP): Cases where the prediction is positive, but the actual value is negative. 
+    # Example: the doctor tells that you're pregnant, but you're not.
+    # In the multi-class case, the `label` parameter have to be set by the good class.  
+    # We consider this specific class as "positive" and all other classes as a single "negative" class.  
+    @staticmethod
+    def compute_fp(labels, predictions, label=None):
+        fp = 0
+        for i, _ in enumerate(predictions):
+            if label is None:
+                if predictions[i] == 1 and labels[i] == 0:
+                    fp += 1
+            else:
+                if predictions[i] == label and labels[i] != label:
+                    fp += 1
+        return fp
+
+    # False Negative (FN): Cases where the prediction is negative, but the actual value is positive. 
+    # Example: the doctor tells you that you're not pregnant, but you are.
+    # In the multi-class case, the `label` parameter have to be set by the good class.  
+    # We consider this specific class as "positive" and all other classes as a single "negative" class.  
+    @staticmethod
+    def compute_fn(labels, predictions, label=None):
+        fn = 0
+        for i, _ in enumerate(predictions):
+            if label is None:
+                if predictions[i] == 0 and labels[i] == 1:
+                    fn += 1
+            else:
+                if predictions[i] != label and labels[i] == label:
+                    fn += 1    
+        return fn
+
+    
 class Stopwatch:
     def __init__(self):
         self.initial_time = time()
@@ -73,8 +268,8 @@ def add_lists_by_index(list1, list2):
     return [x + y for (x, y) in zip(list1, list2)]
 
 
-def compute_accuracy(prediction, right_prediction):
-    return (sum(prediction == right_prediction) / len(right_prediction)) * 100
+
+
 
 
 def display_observation(observation, size=28):
