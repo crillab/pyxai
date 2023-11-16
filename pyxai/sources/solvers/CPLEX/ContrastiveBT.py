@@ -33,7 +33,7 @@ class ContrastiveBT:
                 nb_pos = sum((1 for l in cube if l > 0))
                 constraint = solver.RowConstraint(-solver.infinity(), nb_neg)
                 constraint.SetCoefficient(y[j][i], nb_pos + nb_neg)
-                print(cube)
+                #print(cube)
                 for l in cube:
                     constraint.SetCoefficient(x[abs(l)-1], -1 if l > 0 else 1)
 
@@ -72,9 +72,8 @@ class ContrastiveBT:
 
         # Solve the problem
 
-        print(solver.ExportModelAsLpFormat(obfuscated=False))
+        #print(solver.ExportModelAsLpFormat(obfuscated=False))
         solver.Solve()
-        print(explainer.binary_representation)
-        for v in solver.variables():
-            print(v.name(), v.solution_value())
+        #for v in solver.variables():
+        #    print(v.name(), v.solution_value())
         return [explainer.binary_representation[i] for i in range(len(z)) if z[i].solution_value() > 0]
