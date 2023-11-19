@@ -354,7 +354,7 @@ class ExplainerBT(Explainer):
         if self._instance is None:
             raise ValueError("Instance is not set")
         contrastive_bt = ContrastiveBT()
-        c = contrastive_bt.create_model_and_solve(self)
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses())
         return c
 
 

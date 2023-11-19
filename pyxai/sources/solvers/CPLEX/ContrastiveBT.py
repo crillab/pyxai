@@ -1,13 +1,13 @@
 from ortools.linear_solver import pywraplp
 from pyxai.sources.core.structure.type import TypeLeaf
 
+
 class ContrastiveBT:
     def __init__(self):
         pass
 
 
-
-    def create_model_and_solve(self, explainer, *, time_limit= None):
+    def create_model_and_solve(self, explainer, theory, *, time_limit=None):
         forest = explainer._boosted_trees.forest
         leaves = [tree.get_leaves() for tree in forest]
         bin_len = len(explainer.binary_representation)
@@ -18,24 +18,23 @@ class ContrastiveBT:
 
         y = []
         for j, tree in enumerate(forest):
-            y.append([solver.BoolVar(f"y[{j}][{i}]") for i in range(len(tree.get_leaves()))]) # Actives leaves
+            y.append([solver.BoolVar(f"y[{j}][{i}]") for i in range(len(tree.get_leaves()))])  # Actives leaves
 
         z = [solver.BoolVar(f"z[{i}]") for i in range(bin_len)]  # The flipped variables
-
 
         # Constraints related to tree structure
 
         for j, tree in enumerate(forest):
             for i, leave in enumerate(tree.get_leaves()):
-                t = TypeLeaf.LEFT if  leave.parent.left == leave else TypeLeaf.RIGHT
+                t = TypeLeaf.LEFT if leave.parent.left == leave else TypeLeaf.RIGHT
                 cube = forest[j].create_cube(leave.parent, t)
                 nb_neg = sum((1 for l in cube if l < 0))
                 nb_pos = sum((1 for l in cube if l > 0))
                 constraint = solver.RowConstraint(-solver.infinity(), nb_neg)
                 constraint.SetCoefficient(y[j][i], nb_pos + nb_neg)
-                #print(cube)
+                # print(cube)
                 for l in cube:
-                    constraint.SetCoefficient(x[abs(l)-1], -1 if l > 0 else 1)
+                    constraint.SetCoefficient(x[abs(l) - 1], -1 if l > 0 else 1)
 
         # Only one leave activated per tree
         for j, tree in enumerate(forest):
@@ -53,6 +52,8 @@ class ContrastiveBT:
                 constraint_target.SetCoefficient(y[j][i], leave.value)
 
         # Constraints related to theory
+        if theory is not None:
+            assert (False)  # TODO
 
         # links between x and z
         for i in range(bin_len):
@@ -72,8 +73,8 @@ class ContrastiveBT:
 
         # Solve the problem
 
-        #print(solver.ExportModelAsLpFormat(obfuscated=False))
+        # print(solver.ExportModelAsLpFormat(obfuscated=False))
         solver.Solve()
-        #for v in solver.variables():
+        # for v in solver.variables():
         #    print(v.name(), v.solution_value())
         return [explainer.binary_representation[i] for i in range(len(z)) if z[i].solution_value() > 0]
