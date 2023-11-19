@@ -379,11 +379,12 @@ class GraphicalInterface(QMainWindow):
         with open(name,'rb') as io:
             data=dill.load(io)
         
+
         self.image = data[0]
-        self.feature_names = data[1]
+        self.feature_names = data[1] 
         self.explainer = EmptyExplainer()
-        self.explainer._history = data[2]
-        self.time_series = data[3]
+        self.explainer._history = data[2] 
+        self.time_series = data[3] if 3 < len(data) else None
         
         self.list_instance.clear()    
         instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
