@@ -53,7 +53,13 @@ class ContrastiveBT:
 
         # Constraints related to theory
         if theory is not None:
-            assert (False)  # TODO
+            print(theory)
+            for clause in theory:
+                constraint = solver.RowConstraint(1, solver.infinity())
+                for l in clause:
+                    print(1)
+                    constraint.SetCoefficient(x[abs(l) - 1], -1 if l < 0 else 1)
+
 
         # links between x and z
         for i in range(bin_len):
@@ -73,8 +79,9 @@ class ContrastiveBT:
 
         # Solve the problem
 
-        # print(solver.ExportModelAsLpFormat(obfuscated=False))
-        solver.Solve()
+        #print(solver.ExportModelAsLpFormat(obfuscated=False))
+        r= solver.Solve()
+        print(r)
         # for v in solver.variables():
         #    print(v.name(), v.solution_value())
         return [explainer.binary_representation[i] for i in range(len(z)) if z[i].solution_value() > 0]
