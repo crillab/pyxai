@@ -12,6 +12,7 @@ from pyxai.sources.solvers.CSP.TSMinimalV2 import TSMinimal
 from pyxai.sources.solvers.GRAPH.TreeDecomposition import TreeDecomposition
 from pyxai.sources.solvers.CPLEX.ContrastiveBT import ContrastiveBT
 
+
 class ExplainerBT(Explainer):
 
     def __init__(self, boosted_trees, instance=None):
@@ -36,12 +37,13 @@ class ExplainerBT(Explainer):
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
+
     def _theory_clauses(self):
         return self._boosted_trees.get_theory(self._binary_representation)
 
 
     def is_implicant(self, abductive):
-            
+
         if self._boosted_trees.n_classes == 2:
             # 2-classes case
             sum_weights = []
@@ -55,7 +57,7 @@ class ExplainerBT(Explainer):
 
             return self.target_prediction == prediction
         else:
-            
+
             # multi-classes case
             worst_one = self.compute_weights_class(abductive, self.target_prediction, king="worst")
             best_ones = [self.compute_weights_class(abductive, cl, king="best") for cl
@@ -260,10 +262,10 @@ class ExplainerBT(Explainer):
         if self.c_BT is None:
             # Preprocessing to give all trees in the c++ library
             self.c_BT = c_explainer.new_classifier_BT(self._boosted_trees.n_classes)
-            
+
             for tree in self._boosted_trees.forest:
                 c_explainer.add_tree(self.c_BT, tree.raw_data_for_CPP())
-            
+
         c_explainer.set_excluded(self.c_BT, tuple(self._excluded_literals))
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
@@ -350,13 +352,16 @@ class ExplainerBT(Explainer):
         return True
 
 
-    def contrastive_reason(self, time_limit = None):
+    def contrastive_reason(self, time_limit=None):
         if self._instance is None:
             raise ValueError("Instance is not set")
-        contrastive_bt = ContrastiveBT()
-        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses())
-        return c
 
+        starting_time = -time.process_time()
+        contrastive_bt = ContrastiveBT()
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses(), time_limit)
+        time_used = starting_time + time.process_time()
+        self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
+        return c
 
 # def check_sufficient(self, reason, n_samples=1000):
 #   """
