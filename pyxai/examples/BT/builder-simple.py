@@ -56,7 +56,7 @@ print("is_tree_specific:", explainer.is_tree_specific_reason(tree_specific))
 print("is_sufficient_reason:", explainer.is_sufficient_reason(tree_specific))
 
 print("---------------------------------------------------")
-contrastive_reason = explainer.contrastive_reason()
+contrastive_reason = explainer.minimal_contrastive_reason()
 print("contrastive reason:", explainer.to_features(contrastive_reason))
 print("is contrastive: ", explainer.is_contrastive_reason(contrastive_reason))
 

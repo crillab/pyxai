@@ -352,13 +352,12 @@ class ExplainerBT(Explainer):
         return True
 
 
-    def contrastive_reason(self, time_limit=None):
+    def minimal_contrastive_reason(self, *, n=1, time_limit=None):
         if self._instance is None:
             raise ValueError("Instance is not set")
-
         starting_time = -time.process_time()
         contrastive_bt = ContrastiveBT()
-        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses(), time_limit)
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses(), 1, time_limit)
         time_used = starting_time + time.process_time()
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
         return c

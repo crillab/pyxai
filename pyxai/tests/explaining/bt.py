@@ -49,7 +49,7 @@ class TestDT(unittest.TestCase):
         instances = learner.get_instances(model, n=5)
         for instance, prediction in instances:
             explainer.set_instance(instance)
-            contrastive_reason = explainer.contrastive_reason()
+            contrastive_reason = explainer.minimal_contrastive_reason()
             self.assertTrue(len(contrastive_reason) > 0 and explainer.is_contrastive_reason(contrastive_reason))
 
 if __name__ == '__main__':
