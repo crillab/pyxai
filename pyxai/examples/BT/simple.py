@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 # Machine learning part
 learner = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instance, prediction = learner.get_instances(model=model, n=1, correct=True)
+instance, prediction = learner.get_instances(model=model, n=1, correct=False)
 
 # Explanation part
 print(instance)
