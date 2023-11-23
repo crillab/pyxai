@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 # Machine learning part
 learner = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instance, prediction = learner.get_instances(model=model, n=1, correct=True)
+instance, prediction = learner.get_instances(model=model, n=1, correct=False)
 
 # Explanation part
 print(instance)
@@ -19,7 +19,7 @@ tree_specific_reason = explainer.tree_specific_reason(n_iterations=10)
 print("\nlen tree_specific: ", len(tree_specific_reason))
 print("\ntree_specific: ", explainer.to_features(tree_specific_reason, eliminate_redundant_features=True))
 
-contrastive_reason = explainer.contrastive_reason(time_limit=3)
+contrastive_reason = explainer.minimal_contrastive_reason(n=2)
 print("\n\ncontrastive reason: ", explainer.to_features(contrastive_reason, contrastive=True))
 print("is contrastive: ", explainer.is_contrastive_reason(contrastive_reason))
 print("elapsed time: ", explainer.elapsed_time)

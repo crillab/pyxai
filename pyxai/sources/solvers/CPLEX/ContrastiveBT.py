@@ -1,5 +1,6 @@
 from ortools.linear_solver import pywraplp
 from pyxai.sources.core.structure.type import TypeLeaf
+from pyxai.sources.core.explainer.Explainer import Explainer
 
 
 class ContrastiveBT:
@@ -7,7 +8,7 @@ class ContrastiveBT:
         pass
 
 
-    def create_model_and_solve(self, explainer, theory, time_limit):
+    def create_model_and_solve(self, explainer, theory, n, time_limit):
         forest = explainer._boosted_trees.forest
         leaves = [tree.get_leaves() for tree in forest]
         bin_len = len(explainer.binary_representation)
@@ -54,7 +55,6 @@ class ContrastiveBT:
 
         # Constraints related to theory
         if theory is not None:
-            print(theory)
             for clause in theory:
                 constraint = solver.RowConstraint(-solver.infinity(), 0)
                 for l in clause:
@@ -80,7 +80,28 @@ class ContrastiveBT:
 
         # Solve the problem
         # print(solver.ExportModelAsLpFormat(obfuscated=False))
-        status = solver.Solve()
-        if status not in [pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE]:
-            return None
-        return [explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5]
+        n = 2
+        results = []
+        first = True
+        best_objective = -1
+        while True:
+            if first:
+                status = solver.Solve()
+            else:
+                print("try")
+                status = solver.NextSolution()
+            print("status:", status)
+            print("Obj: ", solver.Objective().Value())
+            print([explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5])
+            if status not in [pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE]:
+                break
+            solution = [explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5]
+            if first:
+                best_objective = len(solution)
+            first = False
+            if len(solution) > best_objective:
+                break
+            results.append(solution)
+            if len(results) == n:
+                break
+        return Explainer.format(results, n)
