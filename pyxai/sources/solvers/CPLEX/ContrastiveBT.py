@@ -8,7 +8,7 @@ class ContrastiveBT:
         pass
 
 
-    def create_model_and_solve(self, explainer, theory, n, time_limit):
+    def create_model_and_solve(self, explainer, theory, excluded, n, time_limit):
         forest = explainer._boosted_trees.forest
         leaves = [tree.get_leaves() for tree in forest]
         bin_len = len(explainer.binary_representation)
@@ -69,6 +69,10 @@ class ContrastiveBT:
             const2.SetCoefficient(instance[i], -1)
             const2.SetCoefficient(flipped[i], -1)
 
+        # Set excluded features
+        for lit in excluded:
+            constraint = solver.RowConstraint(0, 0)
+            constraint.SetCoefficient(flipped[abs(lit) - 1], 1)
         # links between features and flipped
 
 
@@ -77,10 +81,11 @@ class ContrastiveBT:
         for i in range(bin_len):
             objective.SetCoefficient(flipped[i], 1)
         objective.SetMinimization()
-
-        # Solve the problem
         # print(solver.ExportModelAsLpFormat(obfuscated=False))
-        n = 2
+
+
+
+        # Solve the problem and extract n solutions
         results = []
         first = True
         best_objective = -1
@@ -88,10 +93,7 @@ class ContrastiveBT:
             if first:
                 status = solver.Solve()
             else:
-                print("try")
                 status = solver.NextSolution()
-            print("status:", status)
-            print("Obj: ", solver.Objective().Value())
             print([explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5])
             if status not in [pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE]:
                 break
