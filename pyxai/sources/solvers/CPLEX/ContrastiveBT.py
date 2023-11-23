@@ -13,6 +13,7 @@ class ContrastiveBT:
         leaves = [tree.get_leaves() for tree in forest]
         bin_len = len(explainer.binary_representation)
         solver = pywraplp.Solver.CreateSolver("SCIP")
+        features_to_bin = explainer._boosted_trees.get_id_binaries()
 
         if time_limit is not None:
             solver.SetTimeLimit(time_limit * 1000)  # time limit in milisecond
@@ -73,17 +74,33 @@ class ContrastiveBT:
         for lit in excluded:
             constraint = solver.RowConstraint(0, 0)
             constraint.SetCoefficient(flipped[abs(lit) - 1], 1)
-        # links between features and flipped
 
 
-        # Objective function
-        objective = solver.Objective()
-        for i in range(bin_len):
-            objective.SetCoefficient(flipped[i], 1)
-        objective.SetMinimization()
+        if theory is None: # the same encoding for RF : if theory minimal wrt features else wrt bin...
+        # TODO : let the possibilit for the user to choose
+            # Objective function
+            objective = solver.Objective()
+            for i in range(bin_len):
+                objective.SetCoefficient(flipped[i], 1)
+            objective.SetMinimization()
+        else:
+            # links between features and flipped
+            dist_features = [solver.BoolVar(f"fd{i}") for i in range(len(features_to_bin))]
+            i = 0
+            for f, binaries in features_to_bin.items():
+                constraint = solver.RowConstraint(-solver.infinity(), 0)
+                constraint.SetCoefficient(dist_features[i], -1)
+                for lit in binaries:
+                    constraint.SetCoefficient(flipped[abs(lit -1)], 1 / len(binaries))
+                i = i + 1
+            # Objective function
+            objective = solver.Objective()
+            for d in dist_features:
+                objective.SetCoefficient(d, 1)
+            objective.SetMinimization()
+
+
         # print(solver.ExportModelAsLpFormat(obfuscated=False))
-
-
 
         # Solve the problem and extract n solutions
         results = []
@@ -94,7 +111,6 @@ class ContrastiveBT:
                 status = solver.Solve()
             else:
                 status = solver.NextSolution()
-            print([explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5])
             if status not in [pywraplp.Solver.OPTIMAL, pywraplp.Solver.FEASIBLE]:
                 break
             solution = [explainer.binary_representation[i] for i in range(len(flipped)) if flipped[i].solution_value() >= 0.5]
