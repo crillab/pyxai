@@ -181,7 +181,7 @@ class ExplainerBT(Explainer):
         """
         if self._instance is None:
             raise ValueError("Instance is not set")
-
+        raise NotImplementedError("In progress")
         assert n == 1, "To do implement that"
         if self._boosted_trees.n_classes > 2:
             raise NotImplementedError
