@@ -10,6 +10,7 @@ from pyxai.sources.core.tools.utils import flatten
 from pyxai.sources.solvers.CSP.AbductiveV1 import AbductiveModelV1
 from pyxai.sources.solvers.CSP.TSMinimalV2 import TSMinimal
 from pyxai.sources.solvers.GRAPH.TreeDecomposition import TreeDecomposition
+from pyxai.sources.solvers.CPLEX.ContrastiveBT import ContrastiveBT
 
 
 class ExplainerBT(Explainer):
@@ -36,12 +37,13 @@ class ExplainerBT(Explainer):
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
+
     def _theory_clauses(self):
         return self._boosted_trees.get_theory(self._binary_representation)
 
 
     def is_implicant(self, abductive):
-            
+
         if self._boosted_trees.n_classes == 2:
             # 2-classes case
             sum_weights = []
@@ -55,7 +57,7 @@ class ExplainerBT(Explainer):
 
             return self.target_prediction == prediction
         else:
-            
+
             # multi-classes case
             worst_one = self.compute_weights_class(abductive, self.target_prediction, king="worst")
             best_ones = [self.compute_weights_class(abductive, cl, king="best") for cl
@@ -179,7 +181,7 @@ class ExplainerBT(Explainer):
         """
         if self._instance is None:
             raise ValueError("Instance is not set")
-
+        raise NotImplementedError("In progress")
         assert n == 1, "To do implement that"
         if self._boosted_trees.n_classes > 2:
             raise NotImplementedError
@@ -241,8 +243,6 @@ class ExplainerBT(Explainer):
         The method used (in c++), for a given seed, compute several tree specific reasons and return the best.
         For that, the algorithm is executed either during a given time or or until a certain number of reasons is calculated.
 
-        The parameter 'reason_expressivity' have to be fixed either by ReasonExpressivity.Features or ReasonExpressivity.Conditions.
-
         Args:
             n_iterations (int, optional): _description_. Defaults to 50.
             time_limit (int, optional): _description_. Defaults to None.
@@ -262,10 +262,10 @@ class ExplainerBT(Explainer):
         if self.c_BT is None:
             # Preprocessing to give all trees in the c++ library
             self.c_BT = c_explainer.new_classifier_BT(self._boosted_trees.n_classes)
-            
+
             for tree in self._boosted_trees.forest:
                 c_explainer.add_tree(self.c_BT, tree.raw_data_for_CPP())
-            
+
         c_explainer.set_excluded(self.c_BT, tuple(self._excluded_literals))
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
@@ -350,6 +350,21 @@ class ExplainerBT(Explainer):
             if self.is_implicant(tuple(copy_reason)):
                 return False
         return True
+
+
+    def minimal_contrastive_reason(self, *, n=1, time_limit=None):
+        if self._instance is None:
+            raise ValueError("Instance is not set")
+        if self._boosted_trees.n_classes > 2:
+            raise NotImplementedError("Minimal contrastive reason is not implemented for the multi class case")
+
+        starting_time = -time.process_time()
+        contrastive_bt = ContrastiveBT()
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses(), self._excluded_literals, 1, time_limit)
+        time_used = starting_time + time.process_time()
+        self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
+        self.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, c)
+        return c
 
 # def check_sufficient(self, reason, n_samples=1000):
 #   """

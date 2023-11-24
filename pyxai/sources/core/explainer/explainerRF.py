@@ -124,7 +124,8 @@ class ExplainerRF(Explainer):
         """
         if self._instance is None:
             raise ValueError("Instance is not set")
-
+        if self._random_forest.n_classes > 2:
+            raise NotImplementedError("Minimal contrastive reason is not implemented for the multi class case")
         n = n if type(n) == int else float('inf')
         first_call = True
         time_limit = 0 if time_limit is None else time_limit
