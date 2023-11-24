@@ -1,9 +1,10 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+#from PyQt6.QtCore import Qt
 
+from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
 from PyQt6.QtGui import QImage, QAction, QPixmap, QPalette, QPainter, QColor
 from PyQt6.QtPrintSupport import QPrintDialog, QPrinter
 
+import PyQt6
 import sys
 import webbrowser
 import numpy
@@ -135,7 +136,7 @@ class GraphicalInterface(QMainWindow):
             self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
             self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-            self.imageLabelLeft.setCursor(Qt.CursorShape.OpenHandCursor)
+            self.imageLabelLeft.setCursor(PyQt6.QtCore.Qt.CursorShape.OpenHandCursor)
             
         layout = QGridLayout()
         layout2 = QVBoxLayout()
@@ -145,10 +146,10 @@ class GraphicalInterface(QMainWindow):
         label_prediction = QLabel(self)
         #label_prediction.setFrameStyle(QFrame.Panel | QFrame.Raised)
         label_prediction.setText("Prediction:")
-        label_prediction.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
+        label_prediction.setAlignment(PyQt6.QtCore.Qt.AlignmentFlag.AlignBottom | PyQt6.QtCore.Qt.AlignmentFlag.AlignLeft)
         label_instance = QLabel(self)
         label_instance.setText("Instance:")
-        label_instance.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
+        label_instance.setAlignment(PyQt6.QtCore.Qt.AlignmentFlag.AlignBottom | PyQt6.QtCore.Qt.AlignmentFlag.AlignLeft)
         
         layout2.addWidget(label_prediction)
         layout2.addWidget(self.table_prediction)
@@ -191,14 +192,14 @@ class GraphicalInterface(QMainWindow):
     def mousePressEventLeft(self, event):
         if self.imageLabelLeft is not None:
             self.pressed = True
-            self.imageLabelLeft.setCursor(Qt.ClosedHandCursor)
+            self.imageLabelLeft.setCursor(PyQt6.QtCore.Qt.ClosedHandCursor)
             self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value() + event.pos().x()
             self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value() + event.pos().y()
 
     def mouseReleaseEventLeft(self, event):
         if self.imageLabelLeft is not None:
             self.pressed = False
-            self.imageLabelLeft.setCursor(Qt.OpenHandCursor)
+            self.imageLabelLeft.setCursor(PyQt6.QtCore.Qt.OpenHandCursor)
             self.initialPosX = self.scrollAreaLeft.horizontalScrollBar().value()
             self.initialPosY = self.scrollAreaLeft.verticalScrollBar().value()
 
@@ -249,7 +250,7 @@ class GraphicalInterface(QMainWindow):
         self.scrollAreaRight.mousePressEvent = self.mousePressEventLeft
         self.scrollAreaRight.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-        self.imageLabelRight.setCursor(Qt.CursorShape.OpenHandCursor)
+        self.imageLabelRight.setCursor(PyQt6.QtCore.Qt.CursorShape.OpenHandCursor)
 
         layout = QGridLayout()
         layout.addWidget(self.table_explanation, 0, 0)
@@ -379,11 +380,12 @@ class GraphicalInterface(QMainWindow):
         with open(name,'rb') as io:
             data=dill.load(io)
         
+
         self.image = data[0]
-        self.feature_names = data[1]
+        self.feature_names = data[1] 
         self.explainer = EmptyExplainer()
-        self.explainer._history = data[2]
-        self.time_series = data[3]
+        self.explainer._history = data[2] 
+        self.time_series = data[3] if 3 < len(data) else None
         
         self.list_instance.clear()    
         instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
@@ -423,7 +425,7 @@ class GraphicalInterface(QMainWindow):
                 self.scrollAreaLeft.mousePressEvent = self.mousePressEventLeft
                 self.scrollAreaLeft.mouseReleaseEvent = self.mouseReleaseEventLeft
 
-                self.imageLabelLeft.setCursor(Qt.CursorShape.OpenHandCursor)
+                self.imageLabelLeft.setCursor(PyQt6.QtCore.Qt.CursorShape.OpenHandCursor)
                 self.left_layout.addWidget(self.scrollAreaLeft, 0, 2) 
         else:
             if self.imageLabelLeft is not None:

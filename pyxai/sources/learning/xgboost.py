@@ -9,7 +9,6 @@ from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees, BoostedTreesRegression
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.decisionTree import DecisionTree, DecisionNode, LeafNode
-from pyxai.sources.core.tools.utils import compute_accuracy
 from pyxai.sources.learning.learner import Learner, NoneData
 from pyxai.sources.core.structure.type import OperatorCondition, LearnerType, EvaluationOutput
 
