@@ -10,13 +10,13 @@ import numpy
 import pandas
 from sklearn.model_selection import LeaveOneGroupOut, train_test_split, KFold
 
+
 from pyxai import Tools
 from pyxai.sources.core.structure.boostedTrees import BoostedTrees
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import EvaluationMethod, LearnerType, EvaluationOutput, Indexes, TypeFeature
-from pyxai.sources.core.tools.utils import flatten, compute_accuracy
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from pyxai.sources.core.tools.utils import flatten, Metric
 from pyxai.sources.learning.learner_information import LearnerInformation
         
 class NoneData: pass
@@ -159,6 +159,9 @@ class Learner:
     def get_label_from_value(self, value):
         return self.inverse_dict_labels[value]
 
+    def get_value_from_label(self, label):
+        return self.dict_labels[label]
+    
     def create_dict_labels(self, labels):
         index = 0
         self.dict_labels = OrderedDict()
@@ -190,16 +193,18 @@ class Learner:
         prediction = data[str(n_features - 1)].copy().to_numpy()
         data = data.drop(columns=[str(n_features - 1)])
         return data, prediction
+    
+    
 
-    def compute_metrics(self, true, prediction):
+    def compute_metrics(self, labels, predictions):
         if self.learner_type == LearnerType.Classification:
-            return {"accuracy": compute_accuracy(prediction, true)}
+            if self.n_labels == 2: # binary class case
+                # TP, TN, FP and FN is available only for the two binary class case. 
+                return Metric.compute_metrics_binary_classification(labels, predictions)
+            else: #multiclass case
+                return Metric.compute_metrics_multi_classification(labels, predictions, self.dict_labels)
         elif self.learner_type == LearnerType.Regression:
-            return {
-                "mean_squared_error": mean_squared_error(true, prediction),
-                "root_mean_squared_error": mean_squared_error(true, prediction, squared=False),
-                "mean_absolute_error": mean_absolute_error(true, prediction)
-            }
+            return Metric.compute_metrics_regression(labels, predictions)
         else:
             raise ValueError("learner_type is unknown:", str(self.learner_type))
 
