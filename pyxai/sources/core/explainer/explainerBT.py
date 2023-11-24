@@ -10,7 +10,7 @@ from pyxai.sources.core.tools.utils import flatten
 from pyxai.sources.solvers.CSP.AbductiveV1 import AbductiveModelV1
 from pyxai.sources.solvers.CSP.TSMinimalV2 import TSMinimal
 from pyxai.sources.solvers.GRAPH.TreeDecomposition import TreeDecomposition
-from pyxai.sources.solvers.CPLEX.ContrastiveBT import ContrastiveBT
+from pyxai.sources.solvers.MIP.ContrastiveBT import ContrastiveBT
 
 
 class ExplainerBT(Explainer):
@@ -360,7 +360,7 @@ class ExplainerBT(Explainer):
 
         starting_time = -time.process_time()
         contrastive_bt = ContrastiveBT()
-        c = contrastive_bt.create_model_and_solve(self, None if self._theory == False else self._theory_clauses(), self._excluded_literals, 1, time_limit)
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), self._excluded_literals, n, time_limit)
         time_used = starting_time + time.process_time()
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
         self.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, c)

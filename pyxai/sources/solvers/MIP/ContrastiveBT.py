@@ -1,7 +1,6 @@
 from ortools.linear_solver import pywraplp
-from pyxai.sources.core.structure.type import TypeLeaf
 from pyxai.sources.core.explainer.Explainer import Explainer
-
+from .help_functions import *
 
 class ContrastiveBT:
     def __init__(self):
@@ -10,7 +9,7 @@ class ContrastiveBT:
 
     def create_model_and_solve(self, explainer, theory, excluded, n, time_limit):
         forest = explainer._boosted_trees.forest
-        leaves = [tree.get_leaves() for tree in forest]
+
         bin_len = len(explainer.binary_representation)
         solver = pywraplp.Solver.CreateSolver("SCIP")
         features_to_bin = explainer._boosted_trees.get_id_binaries()
@@ -19,31 +18,17 @@ class ContrastiveBT:
             solver.SetTimeLimit(time_limit * 1000)  # time limit in milisecond
 
         # Model variables
-        instance = [solver.BoolVar(f"x[{i}]") for i in range(bin_len)]  # The instance
+        instance = instance_variables(solver, bin_len)           # The instance
+        active_leaves = active_leaves_variables(solver, forest)  # active leaves
 
-        active_leaves = []
-        for j, tree in enumerate(forest):
-            active_leaves.append([solver.BoolVar(f"y[{j}][{i}]") for i in range(len(tree.get_leaves()))])  # Actives leaves
 
         flipped = [solver.BoolVar(f"z[{i}]") for i in range(bin_len)]  # The flipped variables
 
         # Constraints related to tree structure
-        for j, tree in enumerate(forest):
-            for i, leave in enumerate(tree.get_leaves()):
-                t = TypeLeaf.LEFT if leave.parent.left == leave else TypeLeaf.RIGHT
-                cube = forest[j].create_cube(leave.parent, t)
-                nb_neg = sum((1 for l in cube if l < 0))
-                nb_pos = sum((1 for l in cube if l > 0))
-                constraint = solver.RowConstraint(-solver.infinity(), nb_neg)
-                constraint.SetCoefficient(active_leaves[j][i], nb_pos + nb_neg)
-                for l in cube:
-                    constraint.SetCoefficient(instance[abs(l) - 1], -1 if l > 0 else 1)
+        tree_structure_constraints(explainer, solver, active_leaves, instance)
 
-        # Only one leave activated per tree
-        for j, tree in enumerate(forest):
-            constraint = solver.RowConstraint(1, 1)
-            for v in active_leaves[j]:
-                constraint.SetCoefficient(v, 1)
+        # Constraints related to theory
+        theory_constraints(solver, instance, theory)
 
         # Change the prediction
         if explainer.target_prediction == 1:
@@ -54,12 +39,6 @@ class ContrastiveBT:
             for i, leave in enumerate(tree.get_leaves()):
                 constraint_target.SetCoefficient(active_leaves[j][i], leave.value)
 
-        # Constraints related to theory
-        if theory is not None:
-            for clause in theory:
-                constraint = solver.RowConstraint(-solver.infinity(), 0)
-                for l in clause:
-                    constraint.SetCoefficient(instance[abs(l) - 1], 1 if l < 0 else -1)
 
         # links between instance and flipped
         for i in range(bin_len):
