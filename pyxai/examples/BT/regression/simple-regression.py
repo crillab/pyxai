@@ -29,6 +29,8 @@ print("direct: ", explainer.to_features(direct_reason))
 print("len direct: ", len(direct_reason), len(explainer.to_features(direct_reason)))
 #print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
 
+print("extremum", explainer.extremum_range())
+print("possible range", explainer.range_for_partial_instance([]))
 
 percent = 2.5
 
