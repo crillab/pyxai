@@ -13,7 +13,6 @@ Other model-specific functions are also available. Please see the docstring of E
 """
 from typing import TypeVar
 
-from pyxai.sources.core.tools.GUIQT import GraphicalInterface
 from pyxai.sources.core.explainer.Explainer import Explainer 
 from pyxai.sources.core.explainer.explainerBT import ExplainerBT
 from pyxai.sources.core.explainer.explainerDT import ExplainerDT
@@ -26,6 +25,7 @@ from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod, TypeTheory
 
 def show():
+    from pyxai.sources.core.tools.GUIQT import GraphicalInterface
     graphical_interface = GraphicalInterface(None)
     graphical_interface.mainloop()
 

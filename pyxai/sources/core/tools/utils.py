@@ -2,6 +2,9 @@ import platform
 import random
 import shap
 import wordfreq
+import importlib.util
+import sys
+
 from functools import reduce
 from numpy import sum, mean
 from operator import iconcat
@@ -12,6 +15,36 @@ from typing import Iterable
 from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error
 
 from pyxai.sources.core.structure.type import PreferredReasonMethod
+
+
+def check_PyQt6():
+    ok, error = _check_PyQt6()
+    if ok is False:
+        print()
+        print("The PyQt6 module is not installed or produces an import error.")
+        print("Please use 'python3 -m pip install pyxai[gui]' to install this extras dependency.")
+        raise error
+
+def _check_PyQt6():
+    try:
+        import PyQt6
+        from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QMainWindow, QTableWidgetItem, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+        from PyQt6.QtGui import QAction, QPixmap, QColor
+        from PyQt6.QtPrintSupport import QPrinter
+    except ImportError as e:
+        return False, e
+
+    try:
+        import PyQt6
+        from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QMainWindow, QTableWidgetItem, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+        from PyQt6.QtGui import QAction, QPixmap, QColor
+        from PyQt6.QtPrintSupport import QPrinter
+    except ModuleNotFoundError as e:
+        return False, e
+    return True, None
+        
+        
+    
 
 class Metric:
 

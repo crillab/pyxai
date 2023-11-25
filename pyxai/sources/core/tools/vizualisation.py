@@ -3,7 +3,6 @@ import matplotlib as mpl
 from matplotlib.ticker import MaxNLocator
 import numpy
 from PIL import Image as PILImage
-from PIL.ImageQt import ImageQt
 import os
 import copy
 
@@ -21,7 +20,7 @@ class PyPlotDiagramGenerator():
                 dict_features[name].append(feature)
         return dict_features
     
-    def generate_explanation(self, feature_values, instance, reason):
+    def generate_explanation(self, feature_values, instance, reason, pil_image=False):
 
         color_blue = "#4169E1"
         color_red = "#CD5C5C"
@@ -364,9 +363,12 @@ class PyPlotDiagramGenerator():
         image = PILImage.open('tmp_diagram.png')
         pyplot.close()
         os.remove('tmp_diagram.png')
+        if pil_image is False:
+            from PIL.ImageQt import ImageQt
+            return ImageQt(image)
+        else:
+            return image
         
-        return ImageQt(image)
-
 class PyPlotImageGenerator():
 
     def __init__(self, image):
@@ -383,12 +385,16 @@ class PyPlotImageGenerator():
                 image[i,j] = self.get_pixel_value(instance, i, j, self.image["shape"])
         return image 
     
-    def generate_instance(self, instance):
+    def generate_instance(self, instance, pil_image=False):
         array_image = self.instance_to_numpy(instance)
         self.PIL_instance = PILImage.fromarray(array_image)
-        return ImageQt(self.PIL_instance)
+
+        if pil_image is False:
+            from PIL.ImageQt import ImageQt
+            return ImageQt(self.PIL_instance)
+        return self.PIL_instance
     
-    def generate_explanation(self, instance, reason):
+    def generate_explanation(self, instance, reason, pil_image=False):
         reason = [reason[key][0] for key in reason.keys()]
         self.image_positive = numpy.zeros(self.size)
         self.image_negative = numpy.zeros(self.size)
@@ -423,9 +429,14 @@ class PyPlotImageGenerator():
         fusion = PILImage.blend(new_image_negative, new_image_positive, 0.5)
         if instance is not None:
             array_image = self.instance_to_numpy(instance)
-            x_3 = pyplot.imshow(numpy.uint8(array_image), alpha=0.2, cmap='Greys', vmin=0, vmax=255)
+            x_3 = pyplot.imshow(numpy.uint8(array_image), alpha=0.6, vmin=0, vmax=255)
             new_image_x_3 = x_3.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
             new_image_x_3 = PILImage.fromarray(new_image_x_3[0])
             fusion = PILImage.blend(fusion, new_image_x_3, 0.4)
-        return ImageQt(fusion)
-    
+        
+        pyplot.clf()
+        if pil_image is False:
+            from PIL.ImageQt import ImageQt
+            return ImageQt(fusion)
+        else:
+            return fusion
