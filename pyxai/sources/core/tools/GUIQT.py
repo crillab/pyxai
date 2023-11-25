@@ -1,19 +1,19 @@
-#from PyQt6.QtCore import Qt
 
-from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QHeaderView, QBoxLayout, QFrame, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QStyleFactory, QMainWindow, QTableWidgetItem, QHBoxLayout, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
-from PyQt6.QtGui import QImage, QAction, QPixmap, QPalette, QPainter, QColor
-from PyQt6.QtPrintSupport import QPrintDialog, QPrinter
-
-import PyQt6
 import sys
 import webbrowser
 import numpy
 import dill
+
+import PyQt6
+from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QMessageBox, QFileDialog, QLabel, QSizePolicy, QScrollArea,  QMainWindow, QTableWidgetItem, QMenu, QGroupBox, QListWidget, QWidget, QVBoxLayout, QGridLayout, QTableWidget
+from PyQt6.QtGui import QAction, QPixmap, QColor
+from PyQt6.QtPrintSupport import QPrinter
+
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
 class EmptyExplainer():pass
 
-class GraphicalInterface(QMainWindow):
+class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
     """Main Window."""
     def __init__(self, explainer, image=None, feature_names=None, time_series=None):
         """Initializer."""
