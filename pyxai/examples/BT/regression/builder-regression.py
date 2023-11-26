@@ -36,6 +36,8 @@ tree_specific = explainer.tree_specific_reason()
 print("tree specific:", explainer.to_features(tree_specific))
 print("is tree : ", explainer.is_tree_specific_reason(tree_specific))
 
+print("extremum", explainer.extremum_range())
+print("possible range", explainer.range_for_partial_instance(instance))
 explainer.show()
 #sufficient_reason = explainer.sufficient_reason()
 #print("sufficient: ", sufficient_reason,  explainer.to_features(sufficient_reason))
