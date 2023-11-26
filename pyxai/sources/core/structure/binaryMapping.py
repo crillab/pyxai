@@ -199,6 +199,9 @@ class BinaryMapping():
                 operator = key[1]
                 threshold = key[2]
 
+                if instance[id_feature - 1] is None:  # It is possible to compute a partial binary representation
+                    continue
+
                 if operator == OperatorCondition.GE:
                     sign = 1 if instance[id_feature - 1] >= threshold else -1
                 elif operator == OperatorCondition.GT:
