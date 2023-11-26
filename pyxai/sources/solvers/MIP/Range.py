@@ -29,9 +29,9 @@ class Range:
 
         # Fix partial binary representation
         for lit in partial_binary_representation:
-            v = 1 if abs(lit) > 0 else 0
+            v = 1 if lit > 0 else 0
             constraint = solver.RowConstraint(v, v)
-            constraint.SetCoefficient(instance[abs(l) - 1], 1)
+            constraint.SetCoefficient(instance[abs(lit) - 1], 1)
 
         # set the objective
         objective = solver.Objective()

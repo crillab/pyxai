@@ -118,11 +118,13 @@ class ExplainerRegressionBT(ExplainerBT):
     def range_for_partial_instance(self, partial_instance, *, time_limit=None):
         starting_time = -time.process_time()
         range = Range()
-        min_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), [], True, time_limit)
-        max_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), [], False, time_limit)
+        partial = self._boosted_trees.instance_to_binaries(partial_instance)
+        min_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), partial, True, time_limit)
+        max_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), partial, False, time_limit)
         time_used = starting_time + time.process_time()
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        return [None, None] if self._elapsed_time == Explainer.TIMEOUT else [min_prediction, max_prediction]
+        base_score = self._boosted_trees.learner_information.extras["base_score"]
+        return [None, None] if self._elapsed_time == Explainer.TIMEOUT else [min_prediction + base_score, max_prediction+base_score]
 
 
 
