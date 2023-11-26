@@ -22,8 +22,8 @@ def tree_structure_constraints(explainer, solver, active_leaves, instance):
             nb_pos = sum((1 for l in cube if l > 0))
             constraint = solver.RowConstraint(-solver.infinity(), nb_neg)
             constraint.SetCoefficient(active_leaves[j][i], nb_pos + nb_neg)
-            for l in cube:
-                constraint.SetCoefficient(instance[abs(l) - 1], -1 if l > 0 else 1)
+            for lit in cube:
+                constraint.SetCoefficient(instance[abs(lit) - 1], -1 if lit > 0 else 1)
 
     # Only one leave activated per tree
     for j, tree in enumerate(forest):

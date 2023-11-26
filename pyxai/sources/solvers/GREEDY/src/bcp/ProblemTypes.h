@@ -21,7 +21,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
-
+#include <cstdint>
 namespace pyxai {
 
 typedef int Var;
