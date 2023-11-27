@@ -42,6 +42,14 @@ class TestBT(unittest.TestCase):
             tree_specific_reason = explainer.tree_specific_reason()
             self.assertFalse(explainer.reason_contains_features(tree_specific_reason, 'Female'))
 
+    def test_contrastive(self):
+        learner, model = self.init()
+        explainer = Explainer.initialize(model)
+        instances = learner.get_instances(model, n=5)
+        for instance, prediction in instances:
+            explainer.set_instance(instance)
+            contrastive_reason = explainer.minimal_contrastive_reason()
+            self.assertTrue(len(contrastive_reason) > 0 and explainer.is_contrastive_reason(contrastive_reason))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -2,7 +2,9 @@ import c_explainer
 from pyxai.sources.core.explainer.Explainer import Explainer
 from pyxai.sources.core.explainer.explainerBT import ExplainerBT
 from pyxai.sources.core.structure.type import ReasonExpressivity
-from pyxai.sources.solvers.CPLEX.SufficientRegressionBT import SufficientRegression
+from pyxai.sources.solvers.MIP.SufficientRegressionBT import SufficientRegression
+from pyxai.sources.solvers.MIP.Range import Range
+import time
 
 
 class ExplainerRegressionBT(ExplainerBT):
@@ -106,6 +108,24 @@ class ExplainerRegressionBT(ExplainerBT):
             min_weights.append(min([l.value for l in leaves]))
             max_weights.append(max([l.value for l in leaves]))
         return (sum(min_weights), sum(max_weights))
+
+
+    """
+    Given a partial instance, extract the range for all possible extension of this range
+    the partial instance is defined with None value on undefined values
+    Return a tuple (min_value, max_value)
+    """
+    def range_for_partial_instance(self, partial_instance, *, time_limit=None):
+        starting_time = -time.process_time()
+        range = Range()
+        partial = self._boosted_trees.instance_to_binaries(partial_instance)
+        min_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), partial, True, time_limit)
+        max_prediction = range.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), partial, False, time_limit)
+        time_used = starting_time + time.process_time()
+        self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
+        base_score = self._boosted_trees.learner_information.extras["base_score"]
+        return [None, None] if self._elapsed_time == Explainer.TIMEOUT else [min_prediction + base_score, max_prediction+base_score]
+
 
 
     def is_implicant(self, abductive):

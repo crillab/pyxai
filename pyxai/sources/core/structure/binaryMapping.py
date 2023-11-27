@@ -199,6 +199,9 @@ class BinaryMapping():
                 operator = key[1]
                 threshold = key[2]
 
+                if instance[id_feature - 1] is None:  # It is possible to compute a partial binary representation
+                    continue
+
                 if operator == OperatorCondition.GE:
                     sign = 1 if instance[id_feature - 1] >= threshold else -1
                 elif operator == OperatorCondition.GT:
@@ -222,8 +225,21 @@ class BinaryMapping():
 
     def get_id_features(self, binary_representation):
         return tuple(self.map_id_binaries_to_features[abs(lit)][0] for lit in binary_representation)
-    
-    
+
+
+    # Return a map 'dict_id_features_to_id_binaries': : dict[id_feature] -> [list of id_binaries]
+    def get_id_binaries(self):
+        dict_id_features_to_id_binaries = dict()
+        for key in self.map_features_to_id_binaries.keys():
+            id_feature, _, _ = key
+            id_binary = self.map_features_to_id_binaries[key][0]
+            if id_feature in dict_id_features_to_id_binaries.keys():
+                dict_id_features_to_id_binaries[id_feature].append(id_binary)
+            else:
+                dict_id_features_to_id_binaries[id_feature] = [id_binary]
+        return dict_id_features_to_id_binaries
+
+
     def convert_features_to_dict_features(self, features, feature_names):
         dict_features = dict()
         dict_features_categorical = dict()

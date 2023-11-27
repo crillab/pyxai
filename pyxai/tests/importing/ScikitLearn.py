@@ -19,6 +19,24 @@ class TestImportScikitlearn(unittest.TestCase):
     PRECISION = 3
 
 
+    def test_tree_is_leaf(self):
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.datasets import load_iris
+        from pyxai import Learning
+
+        iris = load_iris()
+        features = iris.data
+        rf = RandomForestClassifier(n_estimators=300, max_depth=8, min_samples_leaf=0.5,
+                                    min_samples_split=0.3, min_weight_fraction_leaf=0.1, criterion='entropy',
+                                    random_state=2023)
+        
+        rf.fit(features, iris.target)
+
+        learner, model = Learning.import_models(rf, feature_names=['sepal_length', 'sepal_width',
+                                                                        'petal_length', 'petal_width'])
+        
+
+
     def test_import_RF_iris(self):
         self.do_import("tests/iris.csv", Learning.RF)
 
@@ -44,9 +62,12 @@ class TestImportScikitlearn(unittest.TestCase):
                 prediction_model_1 = learner.get_label_from_value(model.predict_instance(instance))
                 implicant = model.instance_to_binaries(instance)
                 prediction_model_2 = learner.get_label_from_value(model.predict_implicant(implicant))
+                
+                self.assertEqual(str(prediction_model_1), str(prediction_model_2))
+
                 self.assertEqual(prediction_classifier, prediction_model_1)
                 self.assertEqual(prediction_classifier, prediction_model_2)
-
+       
 
     def load_dataset(self, dataset):
         data = pandas.read_csv(dataset).copy()

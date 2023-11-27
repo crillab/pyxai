@@ -1,7 +1,7 @@
 name: Linux tests
 
-on: [workflow_dispatch] #Manually
-#on: [push]
+#on: [workflow_dispatch] #Manually
+on: [push]
 #on:
 #  workflow_run:
 #    workflows: ["Build"]
@@ -14,6 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v3
+      with:
+        python-version: '3.11' 
     - name: Build a wheel via an sdist
       run: |
         pip install build

@@ -1,11 +1,12 @@
 #python3 examples/BT/regression/simple-regression.py -dataset=tests/winequality-red.csv 
 ## Check V1.0: Ok
+import sys
 
 from pyxai import Learning, Explainer, Tools
 
 # Machine learning part
 learner = Learning.Xgboost(Tools.Options.dataset,  learner_type=Learning.REGRESSION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, n_estimators=1)
 instances= learner.get_instances(model=model, n=10)
 i = 0
 instance = instances[i][0]
@@ -17,6 +18,8 @@ p = instances[i][1]
 print("instance", instance)
 
 explainer = Explainer.initialize(model, instance)
+#  explainer = Explainer.initialize(model, instance=instance, features_type={"numerical": Learning.DEFAULT})
+
 prediction = explainer.predict(instance)
 print("prediction: ", explainer.predict(instance))
 print("learner prediction: ", p)
@@ -29,7 +32,10 @@ print("direct: ", explainer.to_features(direct_reason))
 print("len direct: ", len(direct_reason), len(explainer.to_features(direct_reason)))
 #print("is a reason (for 50 checks):", explainer.is_reason(direct_reason))
 
-
+print("extremum", explainer.extremum_range())
+test = [None for _ in instance]
+print("possible range", explainer.range_for_partial_instance(instance))
+sys.exit(1)
 percent = 2.5
 
 delta = (percent/100)*Lf

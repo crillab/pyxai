@@ -3,7 +3,7 @@ import json
 from typing import Iterable
 from collections import OrderedDict
 
-from pyxai.sources.core.tools.utils import count_dimensions
+from pyxai.sources.core.tools.utils import count_dimensions, check_PyQt6
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
 from pyxai import Tools
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
@@ -26,16 +26,73 @@ class Explainer:
         self._do_history = True
         self._glucose = None
 
-
-    def show(self, image=None, time_series=None):
+    def get_PILImage(self, instance, reason, image=None, time_series=None, contrastive=False):
         feature_names = self.get_feature_names()
         if time_series is not None:
             for key in time_series.keys():
                 for feature in time_series[key]:
                     if feature not in feature_names:
                         raise ValueError("The feature " +str(feature)+ " in the `time_series` parameter is not an available feature name.")
-                        
-        graphical_interface = Tools.GraphicalInterface(self, image=image, time_series=time_series)
+
+        if image is not None:
+            from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator
+            pyplot_image_generator = PyPlotImageGenerator(image)
+            instance_image = pyplot_image_generator.generate_instance(instance, pil_image=True)
+            image = pyplot_image_generator.generate_explanation(instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
+            return [instance_image, image]
+        else:
+
+            from pyxai.sources.core.tools.vizualisation import PyPlotDiagramGenerator
+            pyplot_image_generator = PyPlotDiagramGenerator(image, time_series=time_series)
+            
+            feature_values = dict()
+            for i, value in enumerate(instance):
+                feature_values[self.feature_names[i]] = value
+
+            image = pyplot_image_generator.generate_explanation(feature_values, instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
+            return [image]
+
+    def save_png(self, file, instance, reason, image=None, time_series=None, contrastive=False):
+        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
+        if len(PILImage_list) == 1:
+            PILImage_list[0].save(file)
+        else:
+            for i, image in enumerate(PILImage_list):
+                image.save(str(i) + "_" + file)
+
+    def resize_PILimage(self, image, width=250):
+        from PIL import Image
+        wpercent = (width / float(image.size[0]))
+        hsize = int((float(image.size[1]) * float(wpercent)))
+        image = image.resize((width, hsize), Image.Resampling.LANCZOS)
+        return image
+
+    def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
+        from IPython.display import display
+        for i, image in enumerate(PILImage_list):
+            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
+
+        if len(PILImage_list) == 1:
+            display(PILImage_list[0])
+        else:
+            display(*PILImage_list)
+        
+
+    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False):
+        PILImage = self.get_PILImage(instance, reason, image, time_series, contrastive)
+        PILImage.show()
+
+    def open_GUI(self, image=None, time_series=None):
+        feature_names = self.get_feature_names()
+        if time_series is not None:
+            for key in time_series.keys():
+                for feature in time_series[key]:
+                    if feature not in feature_names:
+                        raise ValueError("The feature " +str(feature)+ " in the `time_series` parameter is not an available feature name.")
+        check_PyQt6()          
+        from pyxai.sources.core.tools.GUIQT import GraphicalInterface
+        graphical_interface = GraphicalInterface(self, image=image, time_series=time_series)
         graphical_interface.mainloop()
 
     def heat_map(self, name, reasons, contrastive=False):
@@ -363,7 +420,7 @@ class Explainer:
         @param excluded_features (list[str] | tuple[str]): the features names to be excluded
         """
         if len(excluded_features) == 0:
-            self.unset_specific_features()
+            self.unset_excluded_features()
             return
         self._excluded_features = excluded_features
         if self.instance is None:
@@ -386,7 +443,7 @@ class Explainer:
         self.set_excluded_features(excluded)
 
 
-    def unset_specific_features(self):
+    def unset_excluded_features(self):
         """
         Unset the features set with the set_excluded_features method.
         """
