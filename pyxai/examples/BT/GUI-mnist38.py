@@ -16,7 +16,7 @@ dataset = "../../data/dataML/mnist38.csv"
 # Machine learning part
 learner = Learning.Xgboost(dataset, learner_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
-instances = learner.get_instances(model, n=10, correct=True, predictions=[0])
+instances = learner.get_instances(model, n=2, correct=True, predictions=[0])
 
 # Explanation part
 explainer = Explainer.initialize(model)
@@ -29,7 +29,7 @@ for (instance, prediction) in instances:
     tree_specific_reason = explainer.tree_specific_reason()
     print("len tree_specific_reason:", len(tree_specific_reason))
 
-    minimal_tree_specific_reason = explainer.minimal_tree_specific_reason(time_limit=100)
+    minimal_tree_specific_reason = explainer.minimal_tree_specific_reason(time_limit=20)
     print("len minimal tree_specific_reason:", len(minimal_tree_specific_reason))
 
 def get_pixel_value(instance, x, y, shape):
@@ -39,7 +39,14 @@ def get_pixel_value(instance, x, y, shape):
 def instance_index_to_pixel_position(i, shape):
     return i // shape[0], i % shape[0]
 
-explainer.show(image={"shape": (28,28),
+#explainer.show(image={"shape": (28,28),
+#                      "dtype": numpy.uint8,
+#                      "get_pixel_value": get_pixel_value,
+#                      "instance_index_to_pixel_position": instance_index_to_pixel_position})
+    
+explainer.show_on_screen(instance, minimal_tree_specific_reason,
+                      image={"shape": (28,28),
                       "dtype": numpy.uint8,
                       "get_pixel_value": get_pixel_value,
                       "instance_index_to_pixel_position": instance_index_to_pixel_position})
+    
