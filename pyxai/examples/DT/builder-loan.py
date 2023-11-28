@@ -57,4 +57,4 @@ contrastives = explainer.contrastive_reason(n=Explainer.ALL)
 for contrastive in contrastives:
     print("contrastive:", explainer.to_features(contrastive, contrastive=True))
 
-explainer.show()
+explainer.open_GUI()
