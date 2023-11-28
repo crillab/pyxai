@@ -24,5 +24,4 @@ jobs:
         sudo apt install ffmpeg libsm6 libxext6 qt6-base-dev libxcb-cursor0 -y
     - name: Run test suite
       run: |
-        cd 
         python3 -m pyxai -tests
