@@ -10,7 +10,7 @@ jobs:
       # Ensure that a wheel builder finishes even if another fails
       fail-fast: false
       matrix:
-        os: [windows-2016]
+        os: [ubuntu-20.04]
         #os: [ubuntu-20.04, windows-2019, macOS-11]
 
     steps:
