@@ -43,7 +43,7 @@ def instance_index_to_pixel_position(i, shape):
 
 # Visualization part
 explainer.heat_map("heat map 1", sufficient_reasons_per_attribute)
-explainer.show(image={"shape": (28,28),
+explainer.open_GUI(image={"shape": (28,28),
                       "dtype": numpy.uint8,
                       "get_pixel_value": get_pixel_value,
                       "instance_index_to_pixel_position": instance_index_to_pixel_position})

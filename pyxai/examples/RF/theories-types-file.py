@@ -34,5 +34,5 @@ for (instance, prediction) in instances:
     features = explainer.to_features(majoritary_reason)
     #print("features majoritary:", features)
 
-explainer.show()
+explainer.open_GUI()
 

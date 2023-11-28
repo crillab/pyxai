@@ -35,7 +35,6 @@ print()
 #    tree_specific_reason = explainer.tree_specific_reason(n_iterations=100)
 #    print("is a tree specific", explainer.is_tree_specific_reason(tree_specific_reason))
 
-#explainer.show()
 #minimal_tree_specific_reason = explainer.minimal_tree_specific_reason(time_limit=20)
 #print("\nlen minimal tree_specific: ", len(minimal_tree_specific_reason))
 #print("is a tree specific", explainer.is_tree_specific_reason(minimal_tree_specific_reason))
