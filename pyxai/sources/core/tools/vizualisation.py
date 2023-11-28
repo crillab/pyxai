@@ -34,7 +34,6 @@ class PyPlotDiagramGenerator():
         mpl.rcParams['axes.spines.bottom'] = True
         dict_features = copy.deepcopy(reason)
         
-        print("self.time_series:", self.time_series)
         n_subplots_time_series = 0
         _time_series = copy.deepcopy(self.time_series)
         if _time_series is not None:
@@ -52,12 +51,13 @@ class PyPlotDiagramGenerator():
 
         n_subplots = len(dict_features.keys()) + n_subplots_time_series
         ratio_subplots = [4]*n_subplots_time_series+[1]*len(dict_features.keys())
-        if len(dict_features.keys()) == 1:
+
+        if n_subplots == 1:
             fig, axes = pyplot.subplots(n_subplots, figsize=(6,1))
             axes = [axes] # To solve a bug when axes is not a list. 
         else:
             fig, axes = pyplot.subplots(n_subplots, figsize=(6,n_subplots+3), gridspec_kw={'height_ratios': ratio_subplots})
-        print(feature_values)
+        
         if _time_series is not None:
             # time_series graphs
             
@@ -87,8 +87,8 @@ class PyPlotDiagramGenerator():
                     if theory is not None and (theory[0] == "binary" or theory[0] == "categorical"):
                         raise ValueError("The feature of time series must be None or Numerical.")
                     
-                    print("string_view:", string_view)
-                    print("feature_name:", feature_name)
+                    #print("string_view:", string_view)
+                    #print("feature_name:", feature_name)
                     if "in [" in string_view or "in ]" in string_view:
                         feature_str, interval = string_view.split("in")
                         feature_str = feature_str.lstrip().rstrip()
@@ -126,10 +126,9 @@ class PyPlotDiagramGenerator():
                         explanation_max_values.append(threshold_max)
                     
                     
-                print("instance_values:", instance_values)
+                #print("instance_values:", instance_values)
 
                 midle = (0+len(instance_values)-1)/2
-                print("here:", midle)
                 to_min = [x for x in instance_values if x != "inf"] + [x for x in explanation_min_values if x != "inf"] + [x for x in explanation_max_values if x != "inf"] 
                 to_max = [x for x in instance_values if x != "inf"] + [x for x in explanation_min_values if x != "inf"] + [x for x in explanation_max_values if x != "inf"]
                 min_y = numpy.min(to_min)
@@ -429,7 +428,7 @@ class PyPlotImageGenerator():
         fusion = PILImage.blend(new_image_negative, new_image_positive, 0.5)
         if instance is not None:
             array_image = self.instance_to_numpy(instance)
-            x_3 = pyplot.imshow(numpy.uint8(array_image), alpha=0.6, vmin=0, vmax=255)
+            x_3 = pyplot.imshow(numpy.uint8(array_image), alpha=0.2, cmap='Greys', vmin=0, vmax=255)
             new_image_x_3 = x_3.make_image(pyplot.gcf().canvas.get_renderer(), unsampled=True)
             new_image_x_3 = PILImage.fromarray(new_image_x_3[0])
             fusion = PILImage.blend(fusion, new_image_x_3, 0.4)

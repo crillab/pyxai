@@ -41,19 +41,21 @@ class Explainer:
             image = pyplot_image_generator.generate_explanation(instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
             return [instance_image, image]
         else:
-
             from pyxai.sources.core.tools.vizualisation import PyPlotDiagramGenerator
-            pyplot_image_generator = PyPlotDiagramGenerator(image, time_series=time_series)
+            pyplot_image_generator = PyPlotDiagramGenerator(time_series=time_series)
             
             feature_values = dict()
             for i, value in enumerate(instance):
-                feature_values[self.feature_names[i]] = value
+                feature_values[feature_names[i]] = value
 
             image = pyplot_image_generator.generate_explanation(feature_values, instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
             return [image]
 
-    def save_png(self, file, instance, reason, image=None, time_series=None, contrastive=False):
+    def save_png(self, file, instance, reason, image=None, time_series=None, contrastive=False, width=250):
         PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
+        for i, image in enumerate(PILImage_list):
+            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
+        
         if len(PILImage_list) == 1:
             PILImage_list[0].save(file)
         else:
@@ -78,10 +80,12 @@ class Explainer:
         else:
             display(*PILImage_list)
         
-
-    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False):
-        PILImage = self.get_PILImage(instance, reason, image, time_series, contrastive)
-        PILImage.show()
+    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
+        for i, image in enumerate(PILImage_list):
+            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
+        for image in PILImage_list:
+            image.show()
 
     def open_GUI(self, image=None, time_series=None):
         feature_names = self.get_feature_names()
