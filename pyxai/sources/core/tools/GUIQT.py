@@ -24,6 +24,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
         self.explainer = explainer
         self.image = image
         self.time_series = time_series
+        self.pressed = False
         if feature_names is not None:
             self.feature_names = feature_names
         elif explainer is not None:

@@ -37,4 +37,3 @@ for (instance, prediction) in instances:
     print("contrastive:", contrastive)
     print("features contrastive:", features)
 
-explainer.show()
