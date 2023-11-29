@@ -34,4 +34,4 @@ for (instance, prediction) in instances:
 #print("\ntree_specific: ", explainer.to_features(majoritary_reason))
 #print("is majoritary:", explainer.is_majoritary_reason(majoritary_reason))
 
-explainer.show()
+explainer.open_GUI()

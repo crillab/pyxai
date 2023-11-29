@@ -64,4 +64,4 @@ print("\nlen tree_specific: ", len(tree_specific_reason))
 print("\ntree_specific: ", explainer.to_features(tree_specific_reason, eliminate_redundant_features=True))
 print("is a tree specific", explainer.is_tree_specific_reason(tree_specific_reason))
 
-explainer.show()
+explainer.open_GUI()
