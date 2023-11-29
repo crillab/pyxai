@@ -134,7 +134,7 @@ contrastive_reason = explainer.contrastive_reason()
 print("contrastive reason", contrastive_reason)
 print("to_features:", explainer.to_features(contrastive_reason, contrastive=True))
 
-explainer.show()
+explainer.open_GUI()
 ```
 
 <img src="https://www.cril.univ-artois.fr/pyxai/assets/figures/pyxaiGUI.png" alt="pyxai" />
