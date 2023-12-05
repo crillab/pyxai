@@ -123,7 +123,7 @@ class Learner:
         dataframe: A pandas.core.frame.DataFrame object.
         """
         self.dataset_name = datasetname
-        self.data = dataframe
+        self.data = dataframe.copy()
         Tools.verbose("data:")
         Tools.verbose(self.data)
         self.n_instances, self.n_features = self.data.shape
