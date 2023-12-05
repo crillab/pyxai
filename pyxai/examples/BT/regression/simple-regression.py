@@ -6,7 +6,7 @@ from pyxai import Learning, Explainer, Tools
 
 # Machine learning part
 learner = Learning.Xgboost(Tools.Options.dataset,  learner_type=Learning.REGRESSION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, n_estimators=1)
+model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
 instances= learner.get_instances(model=model, n=10)
 i = 0
 instance = instances[i][0]
