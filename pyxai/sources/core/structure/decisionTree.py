@@ -6,11 +6,11 @@ from pyxai.sources.core.structure.binaryMapping import BinaryMapping
 from pyxai.sources.core.structure.decisionNode import DecisionNode, LeafNode
 from pyxai.sources.core.structure.type import TypeLeaf, Encoding, OperatorCondition
 from pyxai.sources.core.tools.encoding import CNFencoding
-
+from pyxai.sources.learning.learner_information import LearnerInformation
 
 class DecisionTree(BinaryMapping):
 
-    def __init__(self, n_features, root, target_class=0, id_solver_results=0, learner_information=None, force_features_equal_to_binaries=False):
+    def __init__(self, n_features, root, target_class=0, id_solver_results=0, learner_information=None, force_features_equal_to_binaries=False, feature_names=None):
         """
 
         Args:
@@ -33,6 +33,12 @@ class DecisionTree(BinaryMapping):
         if not self.root.is_leaf():
             self.define_parents(self.root)
         self.force_features_equal_to_binaries = force_features_equal_to_binaries
+        if feature_names is not None:
+            if n_features != len(feature_names):
+                raise ValueError("When the `feature_names` parameter is used, it must be a list with `n_features` names.")
+            learner_information = LearnerInformation(None)
+            learner_information.feature_names = feature_names
+
         self.map_id_binaries_to_features, self.map_features_to_id_binaries = self.compute_id_binaries(force_features_equal_to_binaries)
         super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, learner_information)
 
