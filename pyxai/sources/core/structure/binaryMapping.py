@@ -22,6 +22,8 @@ class BinaryMapping():
         self.n_redundant_features = 0  # Variable to store the number of redondances in eliminate_redundant_features()
         self.feature_names = None
 
+    def n_binary_variables(self):
+        return len(self.map_id_binaries_to_features)-1
 
     @property
     def raw_model(self):
