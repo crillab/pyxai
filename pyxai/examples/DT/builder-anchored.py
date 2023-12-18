@@ -30,3 +30,8 @@ minimals = explainer.minimal_sufficient_reason(n=10)
 for minimal in minimals:
     print("Minimal sufficient reasons:", minimal)
     print("to_features:", explainer.to_features(minimal))
+
+reference_instances = {0:[(0,0,0,0),(0,0,1,0),(0,1,1,0)],
+                       1:[(0,0,1,1),(1,0,1,0),(1,1,0,0),(1,1,0,1)]}
+
+explainer.anchored_reason(n_anchors=2, reference_instances=reference_instances)
