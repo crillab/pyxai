@@ -7,6 +7,8 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
+from pyxai.sources.solvers.ENCORE.ENCORESolver import EncoreSolver
+
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 
 
@@ -262,10 +264,12 @@ class ExplainerDT(Explainer):
             binarized_instances = []
             for instance in reference_instances[label]:
                 binarized_instances.append(self._to_binary_representation(instance))
-            reference_instances[label] = binarized_instances
+            reference_instances[label] = tuple(binarized_instances)
 
-        print(reference_instances)
+        solver = EncoreSolver(cnf, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
 
+        solver.solve(n_anchors=n_anchors)
+        
 
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):
         return self.preferred_sufficient_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
