@@ -250,25 +250,33 @@ class ExplainerDT(Explainer):
         Returns:
             A n_anchors-anchored andutive explanation
         """
-    def anchored_reason(self, *, n_anchors=2, reference_instances):
+    def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None):
         if not isinstance(reference_instances, dict):
             raise ValueError("The `reference_instances` parameter have to be a dict.")
          
-        print("n_anchors:", n_anchors)
-        print("reference_instances:", reference_instances)
-
-        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction)
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
         
-
         for label in reference_instances.keys():
             binarized_instances = []
             for instance in reference_instances[label]:
                 binarized_instances.append(self._to_binary_representation(instance))
             reference_instances[label] = tuple(binarized_instances)
 
-        solver = EncoreSolver(cnf, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        
+        
+        status, reason, time = solver.solve(n_anchors=n_anchors, time_limit=time_limit)
+        if status == "SATISFIABLE":
+            self._elapsed_time = time
+        elif status == "UNSATISFIABLE":
+            self._elapsed_time = Explainer.TIMEOUT
+        elif status == "TIMEOUT":
+            self._elapsed_time = Explainer.TIMEOUT
+        else:
+            raise ValueError("Bad status of solve of EncoreSolver.")
 
-        solver.solve(n_anchors=n_anchors)
+        return None if reason is None else Explainer.format(reason)
+        
         
 
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):
