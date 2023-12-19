@@ -13,7 +13,6 @@ node_f3_1 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=node_
 
 node_r = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=node_f1_1, right=node_f3_1)
 
-
 tree = Builder.DecisionTree(4, node_r, force_features_equal_to_binaries=True, feature_names=["a", "b", "c", "d"])
 
 print("x = (1, 0, 0, 0):")
@@ -34,4 +33,6 @@ for minimal in minimals:
 reference_instances = {0:[(0,0,0,0),(0,0,1,0),(0,1,1,0)],
                        1:[(0,0,1,1),(1,0,1,0),(1,1,0,0),(1,1,0,1)]}
 
-explainer.anchored_reason(n_anchors=2, reference_instances=reference_instances)
+anchored_reason = explainer.anchored_reason(n_anchors=2, reference_instances=reference_instances)
+print("2-anchored_reason:", anchored_reason)
+print("to_features:", explainer.to_features(anchored_reason))
