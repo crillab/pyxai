@@ -5,9 +5,9 @@ from collections import OrderedDict
 
 from pyxai.sources.core.tools.utils import count_dimensions, check_PyQt6
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
-from pyxai import Tools
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
-
+from pyxai.sources.solvers.ENCORE.ENCORESolver import EncoreSolver
+from pyxai import Tools
 
 class Explainer:
     TIMEOUT = -1
@@ -638,3 +638,50 @@ class Explainer:
         if isinstance(reasons[0], Iterable):
             return Explainer.format(reasons[0])
         return tuple(sorted(reasons, key=lambda l: abs(l)))
+
+    """_summary_
+
+        Args:
+            n_anchors (integer): Number of anchors to have in the explanation (example: a 2-anchored explanation)
+            reference_instances (dictionary): Python dictionary where the keys are the labels and the values are lists contening instances.
+            The instances of reference_instances are those for which the expert is sure of the classification (they are anchored).
+    
+        Returns:
+            A n_anchors-anchored andutive explanation
+        """
+    def _anchored_reason(self, *, cnf, n_anchors=2, reference_instances, time_limit=None, check=False):
+        if not isinstance(reference_instances, dict):
+            raise ValueError("The `reference_instances` parameter have to be a dict.")
+        
+        for label in reference_instances.keys():
+            binarized_instances = []
+            for instance in reference_instances[label]:
+                binarized_instances.append(self._to_binary_representation(instance))
+            reference_instances[label] = tuple(binarized_instances)
+
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        
+        
+        status, reason, time = solver.solve(n_anchors=n_anchors, time_limit=time_limit, with_check=check)
+        if status == "SATISFIABLE":
+            self._elapsed_time = time
+        elif status == "UNSATISFIABLE":
+            self._elapsed_time = Explainer.TIMEOUT
+        elif status == "TIMEOUT":
+            self._elapsed_time = Explainer.TIMEOUT
+        else:
+            raise ValueError("Bad status of solve of EncoreSolver.")
+        return None if reason is None else Explainer.format(reason)
+    
+    def _is_anchored_reason(self, reason, *, cnf, n_anchors=2, reference_instances):
+        if not isinstance(reference_instances, dict):
+            raise ValueError("The `reference_instances` parameter have to be a dict.")
+         
+        for label in reference_instances.keys():
+            binarized_instances = []
+            for instance in reference_instances[label]:
+                binarized_instances.append(self._to_binary_representation(instance))
+            reference_instances[label] = tuple(binarized_instances)
+
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        return solver.check(reason, n_anchors)

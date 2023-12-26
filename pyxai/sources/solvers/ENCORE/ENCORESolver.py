@@ -105,8 +105,10 @@ class EncoreSolver():
         
         time_used += time.time()
         output_str = [line.split(" ") for line in p.stdout.split(os.linesep)]
-        #print("output_str:", output_str)
-
+        stderr_str = [line.split(" ") for line in p.stderr.split(os.linesep)]
+            
+        print("output_str:", output_str)
+        print("stderr_str:", stderr_str)
         status = [line.split(" ")[1] for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "s"][0]
         
         reason = [int(lit) if (lit != "v" and lit != "0") else "" for line in output_str for lit in line if line[0] == "v"]
@@ -125,6 +127,7 @@ class EncoreSolver():
             command += ["-c"]+[self.check_filename]
             p = subprocess.run(command, timeout=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             stderr_str = [line.split(" ") for line in p.stderr.split(os.linesep)]
+            
             if not any(line[0] == "OK" for line in stderr_str):
                 print("Check error !")
                 print(p.stderr)

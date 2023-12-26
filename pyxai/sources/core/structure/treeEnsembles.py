@@ -3,7 +3,6 @@ from typing import Iterable
 from pyxai.sources.core.structure.binaryMapping import BinaryMapping
 from pyxai.sources.core.structure.decisionTree import DecisionTree
 
-
 class TreeEnsembles(BinaryMapping):
     """
     Represent a set of trees. This class is used for the class RandomForest (RF) and BoostedTrees (BTs)

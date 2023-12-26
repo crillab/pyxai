@@ -7,7 +7,6 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
-from pyxai.sources.solvers.ENCORE.ENCORESolver import EncoreSolver
 
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 
@@ -240,58 +239,6 @@ class ExplainerDT(Explainer):
             self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
         return reasons
 
-    """_summary_
-
-        Args:
-            n_anchors (integer): Number of anchors to have in the explanation (example: a 2-anchored explanation)
-            reference_instances (dictionary): Python dictionary where the keys are the labels and the values are lists contening instances.
-            The instances of reference_instances are those for which the expert is sure of the classification (they are anchored).
-    
-        Returns:
-            A n_anchors-anchored andutive explanation
-        """
-    def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):
-        if not isinstance(reference_instances, dict):
-            raise ValueError("The `reference_instances` parameter have to be a dict.")
-         
-        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
-        
-        for label in reference_instances.keys():
-            binarized_instances = []
-            for instance in reference_instances[label]:
-                binarized_instances.append(self._to_binary_representation(instance))
-            reference_instances[label] = tuple(binarized_instances)
-
-        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
-        
-        
-        status, reason, time = solver.solve(n_anchors=n_anchors, time_limit=time_limit, with_check=check)
-        if status == "SATISFIABLE":
-            self._elapsed_time = time
-        elif status == "UNSATISFIABLE":
-            self._elapsed_time = Explainer.TIMEOUT
-        elif status == "TIMEOUT":
-            self._elapsed_time = Explainer.TIMEOUT
-        else:
-            raise ValueError("Bad status of solve of EncoreSolver.")
-        return None if reason is None else Explainer.format(reason)
-        
-    def is_anchored_reason(self, reason, *, n_anchors=2, reference_instances):
-        if not isinstance(reference_instances, dict):
-            raise ValueError("The `reference_instances` parameter have to be a dict.")
-         
-        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
-        
-        for label in reference_instances.keys():
-            binarized_instances = []
-            for instance in reference_instances[label]:
-                binarized_instances.append(self._to_binary_representation(instance))
-            reference_instances[label] = tuple(binarized_instances)
-
-        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
-        return solver.check(reason, n_anchors)
-        
-
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):
         return self.preferred_sufficient_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
@@ -363,3 +310,11 @@ class ExplainerDT(Explainer):
         _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint_tree(_tree_1)
         _tree_and_not__tree_2_or__tree_1.simplify()
         return _tree_and_not__tree_2_or__tree_1
+
+    def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
+        return self._anchored_reason(cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances, time_limit=time_limit, check=check)
+
+    def _is_anchored_reason(self, reason, *, cnf, n_anchors=2, reference_instances):
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
+        return self._is_anchored_reason(reason, cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances)
