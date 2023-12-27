@@ -313,8 +313,10 @@ class ExplainerDT(Explainer):
 
     def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
-        return self._anchored_reason(cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances, time_limit=time_limit, check=check)
+        n_variables = CNFencoding.compute_n_variables(cnf)
+        return self._anchored_reason(n_variables=n_variables, cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances, time_limit=time_limit, check=check)
 
-    def _is_anchored_reason(self, reason, *, cnf, n_anchors=2, reference_instances):
+    def is_anchored_reason(self, reason, *, cnf, n_anchors=2, reference_instances):
         cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
-        return self._is_anchored_reason(reason, cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances)
+        n_variables = CNFencoding.compute_n_variables(cnf)
+        return self._is_anchored_reason(reason, n_variables=n_variables, cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances)

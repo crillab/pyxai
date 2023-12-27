@@ -649,7 +649,7 @@ class Explainer:
         Returns:
             A n_anchors-anchored andutive explanation
         """
-    def _anchored_reason(self, *, cnf, n_anchors=2, reference_instances, time_limit=None, check=False):
+    def _anchored_reason(self, *, n_variables, cnf, n_anchors=2, reference_instances, time_limit=None, check=False):
         if not isinstance(reference_instances, dict):
             raise ValueError("The `reference_instances` parameter have to be a dict.")
         
@@ -659,7 +659,7 @@ class Explainer:
                 binarized_instances.append(self._to_binary_representation(instance))
             reference_instances[label] = tuple(binarized_instances)
 
-        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, n_variables)
         
         
         status, reason, time = solver.solve(n_anchors=n_anchors, time_limit=time_limit, with_check=check)
@@ -673,7 +673,7 @@ class Explainer:
             raise ValueError("Bad status of solve of EncoreSolver.")
         return None if reason is None else Explainer.format(reason)
     
-    def _is_anchored_reason(self, reason, *, cnf, n_anchors=2, reference_instances):
+    def _is_anchored_reason(self, reason, *, n_variables, cnf, n_anchors=2, reference_instances):
         if not isinstance(reference_instances, dict):
             raise ValueError("The `reference_instances` parameter have to be a dict.")
          
@@ -683,5 +683,5 @@ class Explainer:
                 binarized_instances.append(self._to_binary_representation(instance))
             reference_instances[label] = tuple(binarized_instances)
 
-        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, self.get_model().n_binary_variables())
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, reference_instances, n_variables)
         return solver.check(reason, n_anchors)

@@ -106,9 +106,11 @@ class EncoreSolver():
         time_used += time.time()
         output_str = [line.split(" ") for line in p.stdout.split(os.linesep)]
         stderr_str = [line.split(" ") for line in p.stderr.split(os.linesep)]
-            
-        print("output_str:", output_str)
-        print("stderr_str:", stderr_str)
+        
+
+        #print("command: ", " ".join(command))
+        #print("output_str:", p.stdout)
+        #print("stderr_str:", p.stderr)
         status = [line.split(" ")[1] for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "s"][0]
         
         reason = [int(lit) if (lit != "v" and lit != "0") else "" for line in output_str for lit in line if line[0] == "v"]
@@ -133,7 +135,7 @@ class EncoreSolver():
                 print(p.stderr)
                 raise ValueError("The reason is not good !")
             else:
-                print("Check reason OK")
+                print("Check reason: OK")
         return status, reason, time_used
     
         
