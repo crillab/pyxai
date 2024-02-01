@@ -4,7 +4,7 @@ from pyxai import Learning, Explainer, Tools
 
 import datetime
 import pandas
-data = pandas.read_csv(Tools.Options.dataset, names=['age', 'wife-education', 'husband-education', 'children', 'religion','job', 'occupation', 'index','media', 'contraceptive_method'])
+data = pandas.read_csv(Tools.Options.dataset, names=['age', 'wife-education', 'husband-education', 'children', 'religion','job', 'occupation', 'index','media', 'contraceptive_method'], skiprows=1)
 
 preprocessor = Learning.Preprocessor(data, target_feature="contraceptive_method", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
@@ -17,4 +17,4 @@ preprocessor.set_numerical_features({ "age": None, "children": None })
 
 preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0]
-preprocessor.export(dataset_name, output_directory="examples/datasets_converted")
+preprocessor.export(dataset_name, output_directory=Tools.Options.output)
