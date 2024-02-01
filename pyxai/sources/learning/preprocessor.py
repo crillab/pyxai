@@ -217,7 +217,7 @@ class Preprocessor:
             #print("index:", index)  
             #print("encoder:", self.encoder[index])
             if self.encoder[index] == TypeEncoder.OrdinalEncoder:
-                encoder = OrdinalEncoder(dtype=numpy.int)
+                encoder = OrdinalEncoder(dtype=int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
                 data_categorical = data_categorical.fillna("NaN")
@@ -225,7 +225,7 @@ class Preprocessor:
                 self.categories[index] = encoder.categories_
                 
             elif self.encoder[index] == TypeEncoder.OneHotEncoder:
-                encoder = OneHotEncoder(dtype=numpy.int)
+                encoder = OneHotEncoder(dtype=int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
                 #data_categorical = data_categorical.fillna("NaN")
@@ -240,7 +240,7 @@ class Preprocessor:
                     print("-> The feature " + feature + " is boolean! No One Hot Encoding for this features.") 
                     if isinstance(original_values[0], str):
                         print("-> However, the boolean feature " + feature + " contains strings. A ordinal encoding must be performed.") 
-                        encoder = OrdinalEncoder(dtype=numpy.int)
+                        encoder = OrdinalEncoder(dtype=int)
                         data_categorical = data_categorical.fillna("NaN")
                         self.data[[feature]] = encoder.fit_transform(data_categorical)
                         self.categories[index] = encoder.categories_
