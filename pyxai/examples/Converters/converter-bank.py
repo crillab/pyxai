@@ -2,9 +2,10 @@
 
 from pyxai import Learning, Explainer, Tools
 
-import datetime
+import pandas
+data = pandas.read_csv(Tools.Options.dataset, names=["age","job","marital","education","default","balance","housing","loan","contact","day","month","duration","campaign","pdays","previous","poutcome","y"], skiprows=1, sep=";") 
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="y", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.Preprocessor(data, target_feature="y", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 
@@ -24,4 +25,4 @@ preprocessor.set_numerical_features({
 
 preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0] 
-preprocessor.export(dataset_name, output_directory="examples/datasets_converted")
+preprocessor.export(dataset_name, output_directory=Tools.Options.output)

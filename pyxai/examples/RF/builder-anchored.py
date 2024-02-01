@@ -52,12 +52,18 @@ for a in [0, 1]:
             for d in [0, 1]:
                 instance = (a, b, c, d)
                 explainer.set_instance(instance=instance)
+                print("-------------------------")
                 print("intance:", instance)
                 print("binary representation: ", explainer.binary_representation)
                 print("target_prediction:", explainer.target_prediction)
                 print("to_features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
+                if explainer.target_prediction == 0:
+                    reference_instances = {0:[instance], 1:[[0 if l==1 else 1 for l in instance]]}
+                else:
+                    reference_instances = {0:[[0 if l==1 else 1 for l in instance]], 1:[instance]}
+                print("reference_instances:", reference_instances)
 
-                n_anchors = 0
+                n_anchors = 1
                 go_next = True
                 while(go_next is True):
                     anchored_reason = explainer.anchored_reason(n_anchors=n_anchors, reference_instances=reference_instances, check=True)

@@ -551,6 +551,7 @@ class Learner:
                       n=None, 
                       correct=None, 
                       predictions=None, 
+                      labels=None,
                       save_directory=None,
                       instances_id=None, 
                       seed=0, 
@@ -569,7 +570,7 @@ class Learner:
         possible_indexes = self._get_possible_indexes(indexes, n, instances_id, learner_information, training_indexes, test_indexes)
         
         # 3: Get the correct data (select only data that we need):
-        possible_indexes, data, labels = self._get_data(dataset, possible_indexes, n)
+        possible_indexes, data, _labels = self._get_data(dataset, possible_indexes, n)
         
         # 4: Select instances according to data and possible_indexes.
         instances = []
@@ -591,7 +592,7 @@ class Learner:
                 
                 # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
                 # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
-                label = labels[j]
+                label = _labels[j]
                 if (correct and prediction_solver == label) \
                         or (not correct and prediction_solver != label) \
                         or (correct is None):
@@ -599,6 +600,11 @@ class Learner:
                         instances.append((data[j], prediction_solver))
                         instances_indexes.append(current_index)
                         instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label, "index":current_index})
+                    if labels is None or label in labels:
+                        instances.append((data[j], prediction_solver))
+                        instances_indexes.append(current_index)
+                        instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label, "index":current_index})
+                    
                 if isinstance(n, int) and len(instances) >= n:
                     break
         
