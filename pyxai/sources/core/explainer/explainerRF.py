@@ -516,3 +516,24 @@ class ExplainerRF(Explainer):
             if nb > n_samples:
                 break
         return True
+    
+        
+
+    def most_anchored_reason(self, *, time_limit=None, check=False, type_references="normal"):
+        if self._random_forest.n_classes == 2:
+            cnf = self._random_forest.to_CNF(self._instance, self._binary_representation, self.target_prediction, tree_encoding=Encoding.MUS)
+            if self._theory:
+                size = len(cnf)
+                clauses_theory = self._random_forest.get_theory(self._binary_representation)
+                cnf = cnf + tuple(clauses_theory)
+                print("Theory enabled: clauses: "+ str(size) + " to " + str(len(cnf)))
+                
+                #for c in clauses_theory:
+                #    cnf.append(c)
+                    
+            n_variables = CNFencoding.compute_max_id_variable(cnf)
+            return self._most_anchored_reason(n_variables=n_variables, cnf=cnf, time_limit=time_limit, check=check, type_references=type_references)
+        
+        raise NotImplementedError("The anchored_reason() method for RF works only with binary-class datasets.")
+        
+

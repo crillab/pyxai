@@ -11,7 +11,7 @@ import os
 import numpy
 import json
 class Preprocessor:
-    def __init__(self, dataset, target_feature, learner_type, classification_type=None, to_binary_classification=MethodToBinaryClassification.OneVsRest):
+    def __init__(self, dataset, target_feature, learner_type, classification_type=None, to_binary_classification=MethodToBinaryClassification.OneVsOne):
         learner = Learner(learner_type=learner_type)
         self.file = dataset
         self.learner_type = learner_type
@@ -34,6 +34,7 @@ class Preprocessor:
         self.n_bool = 0
         self.target_feature = self.set_target_feature(target_feature)
         self.convert_labels = None
+        self.extra_names = []
         
     def insert_index(self, index, feature_name, feature_type, numerical_converter, encoder, category, original_value, original_type, already_enc):
         self.features_name.insert(index, feature_name)
@@ -216,7 +217,7 @@ class Preprocessor:
             #print("index:", index)  
             #print("encoder:", self.encoder[index])
             if self.encoder[index] == TypeEncoder.OrdinalEncoder:
-                encoder = OrdinalEncoder(dtype=numpy.int)
+                encoder = OrdinalEncoder(dtype=int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
                 data_categorical = data_categorical.fillna("NaN")
@@ -224,7 +225,7 @@ class Preprocessor:
                 self.categories[index] = encoder.categories_
                 
             elif self.encoder[index] == TypeEncoder.OneHotEncoder:
-                encoder = OneHotEncoder(dtype=numpy.int)
+                encoder = OneHotEncoder(dtype=int)
                 data_categorical = self.data[[feature]]      
                 #Create a category NaN for missing value in categorical features
                 #data_categorical = data_categorical.fillna("NaN")
@@ -239,7 +240,7 @@ class Preprocessor:
                     print("-> The feature " + feature + " is boolean! No One Hot Encoding for this features.") 
                     if isinstance(original_values[0], str):
                         print("-> However, the boolean feature " + feature + " contains strings. A ordinal encoding must be performed.") 
-                        encoder = OrdinalEncoder(dtype=numpy.int)
+                        encoder = OrdinalEncoder(dtype=int)
                         data_categorical = data_categorical.fillna("NaN")
                         self.data[[feature]] = encoder.fit_transform(data_categorical)
                         self.categories[index] = encoder.categories_
@@ -277,12 +278,15 @@ class Preprocessor:
     def process_numerical_features(self):
         features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL and self.numerical_converters[i] is not None]
         converters_to_encode = [self.numerical_converters[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL and self.numerical_converters[i] is not None]
-
         for i, feature in enumerate(features_to_encode):
-            self.data[feature] = self.data[feature].apply(converters_to_encode[i])      
+            self.data[feature] = self.data[feature].apply(converters_to_encode[i])   
+            
         
         #Remove the NaN value in numerical features:
         features_to_encode = [self.features_name[i] for i, t in enumerate(self.features_type) if t == TypeFeature.NUMERICAL]
+        #for i, feature in enumerate(features_to_encode):
+        #    self.data[feature] = pandas.to_numeric(self.data[feature])
+        
         self.data[features_to_encode] = self.data[features_to_encode].interpolate(method='linear').fillna(method="bfill")  
 
     def process(self):
@@ -325,6 +329,8 @@ class Preprocessor:
                   new_value_true = max(unique_values)+1
                   new_value_false = max(unique_values)+2
                   for v1 in unique_values:
+                      print("MethodToBinaryClassification.OneVsRest: ", str(v1) + "_vs_others")
+                              
                       data = self.data.copy(deep=True)
                       others = [int(v2) for v2 in unique_values if v2 != v1]
 
@@ -340,28 +346,46 @@ class Preprocessor:
                       data[self.target_features_name] = data[self.target_features_name].replace(new_value_true, 1)
                       data[self.target_features_name] = data[self.target_features_name].replace(new_value_false, 0)
                       self.results.append(data)
+                      self.extra_names.append(str(v1) + "_vs_others")
                   return self.results
               elif self.to_binary_classification == MethodToBinaryClassification.OneVsOne:  
-                  unique_values = self.data[self.target_features_name].unique()
+                  unique_values = list(self.data[self.target_features_name].unique())
+                  unique_values.sort()
+                  already_done = []
+                  print("MethodToBinaryClassification.OneVsOne: unique values:", str(unique_values))
+                  nValues = [len(self.data[self.data[self.target_features_name]==v]) for v in unique_values]
+                  print("MethodToBinaryClassification.OneVsOne: nValues:", str(nValues))
+                  
                   for v1 in unique_values: 
                       for v2 in unique_values:
                           if v1 != v2:
-                              print("for: ", v1, v2)
                               data = self.data.copy(deep=True)
+                              if set([v1, v2]) in already_done:
+                                  continue
+                              print("MethodToBinaryClassification.OneVsOne: ", str(v1) + "_vs_" + str(v2))
+                              already_done.append(set([v1, v2]))
+
                               others = [int(v3) for v3 in unique_values if v3 != v1 and v3 != v2]
-                              print("others:", others)
                               #Save the encoding
                               self.convert_labels.append({"Method":str(self.to_binary_classification), 0: [int(v2)], 1:[int(v1)]})
                               #delete others
                               for other in others:
                                   data.drop(data[data[self.target_features_name] == other].index, inplace = True)
+                              
                               #replace
-                              data[self.target_features_name] = data[self.target_features_name].replace(v1, 1)
-                              data[self.target_features_name] = data[self.target_features_name].replace(v2, 0)
+                              
+                              data[self.target_features_name] = data[self.target_features_name].replace(v1, "v1")
+                              data[self.target_features_name] = data[self.target_features_name].replace(v2, "v0")
+                              data[self.target_features_name] = data[self.target_features_name].replace("v1", 1)
+                              data[self.target_features_name] = data[self.target_features_name].replace("v0", 0)
+                              
+                              nV1 = len(data[data[self.target_features_name]==1])
+                              nV2 = len(data[data[self.target_features_name]==0])
+                              print("MethodToBinaryClassification.OneVsOne: ", str(nV1) + " - " + str(nV2))  
                               self.results.append(data)
-                              last_column = data.iloc[: , -1:]
-
-                              print("last_column:", last_column.nunique())
+                              self.extra_names.append(str(v1) + "_vs_" + str(v2))
+                              #last_column = data.iloc[: , -1:]
+                              #print("last_column:", last_column.nunique())
                   return self.results
               else:
                   raise NotImplementedError()
@@ -378,7 +402,8 @@ class Preprocessor:
 
     def export(self, filename, type="csv", output_directory=None):
       for i, dataset in enumerate(self.results):
-          self._export(dataset, filename+"_"+str(i), i, type, output_directory)
+          p_filename = filename+"_"+self.extra_names[i] if len(self.extra_names) != 0 else filename
+          self._export(dataset, p_filename, i, type, output_directory)
       Tools.verbose("-----------------------------------------------")
       
     def _export(self, dataset, filename, index, type, output=None):

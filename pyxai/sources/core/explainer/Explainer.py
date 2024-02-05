@@ -5,9 +5,9 @@ from collections import OrderedDict
 
 from pyxai.sources.core.tools.utils import count_dimensions, check_PyQt6
 from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
-from pyxai import Tools
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
-
+from pyxai.sources.solvers.ENCORE.ENCORESolver import EncoreSolver
+from pyxai import Tools
 
 class Explainer:
     TIMEOUT = -1
@@ -25,6 +25,7 @@ class Explainer:
         self._history = OrderedDict()
         self._do_history = True
         self._glucose = None
+        self._reference_instances = None
 
     def get_PILImage(self, instance, reason, image=None, time_series=None, contrastive=False):
         feature_names = self.get_feature_names()
@@ -638,3 +639,80 @@ class Explainer:
         if isinstance(reasons[0], Iterable):
             return Explainer.format(reasons[0])
         return tuple(sorted(reasons, key=lambda l: abs(l)))
+
+    
+    def set_reference_instances(self, reference_instances):
+        if not isinstance(reference_instances, dict):
+            raise ValueError("The `reference_instances` parameter have to be a dict.")
+        
+        self._reference_instances = dict()
+        for label in reference_instances.keys():
+            binarized_instances = []
+            for instance in reference_instances[label]:
+                binarized_instances.append(self._to_binary_representation(instance))
+            self._reference_instances[label] = tuple(binarized_instances)
+        
+    """_summary_
+
+        Args:
+            n_anchors (integer): Number of anchors to have in the explanation (example: a 2-anchored explanation)
+            reference_instances (dictionary): Python dictionary where the keys are the labels and the values are lists contening instances.
+            The instances of reference_instances are those for which the expert is sure of the classification (they are anchored).
+    
+        Returns:
+            A n_anchors-anchored andutive explanation
+        """
+    def _most_anchored_reason(self, *, n_variables, cnf, time_limit=None, check=False, type_references="normal"):
+        
+        if self._reference_instances is None or not isinstance(self._reference_instances, dict):
+            raise ValueError("Please use the set_reference_instances() before to use this method.")
+        references = dict()
+
+        if type_references=="normal":
+            references = self._reference_instances
+        elif type_references=="one_side":
+            if self.target_prediction == 1:
+                references[0] = []
+                references[1] = self._reference_instances[1]
+                
+            else:
+                references[0] = self._reference_instances[0]
+                references[1] = []
+        else:
+            raise ValueError("Bad paramerter for 'type_references': " + str(type_references))
+
+        print("size reference_instances 0: ", len(references[0]))
+        print("size reference_instances 1: ", len(references[1]))
+        
+        solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, references, n_variables)
+        
+        n_anchors = 1
+        go_next = True
+        previous_reason = None
+        time_used = 0
+        while(go_next is True and (time_limit is None or time_used < time_limit)):
+            #print("search k:", n_anchors)
+            local_time_limit = None if time_limit is None else time_limit - time_used 
+            return_code, status, reason, time, last_k = solver.solve(n_anchors=n_anchors, time_limit=local_time_limit, with_check=check)
+            time_used += time
+            #define EXIT_NOT_FOUND 1    // rien trouvé!
+            #define EXIT_UNSAT 10       // pas possible de trouver une explication ancrée ... try again :P
+            #define EXIT_CANDIDATE 20   // j'ai trouvé une candidat, mais j'ai pas eu le temps de le réduire.
+            #define EXIT_FOUND 30       // c'est bon, j'ai une explication ancré minimal.
+
+            if reason is not None:
+                previous_reason = reason
+                go_next = True
+                if last_k is not None:
+                    n_anchors = int(last_k)
+                self.last_n_anchors = n_anchors
+                n_anchors += 1
+            else:
+                break
+        
+        self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
+
+        if n_anchors == 1 and previous_reason is None:
+            self.last_n_anchors = 0
+
+        return None if previous_reason is None else Explainer.format(previous_reason)
