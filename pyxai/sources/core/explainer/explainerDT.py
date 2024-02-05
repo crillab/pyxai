@@ -115,7 +115,7 @@ class ExplainerDT(Explainer):
 
         literals = [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
         #self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
-        return literals
+        return list(dict.fromkeys(literals))
 
 
     def _excluded_features_are_necesssary(self, prime_cnf):
