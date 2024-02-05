@@ -78,4 +78,4 @@ minimals = explainer.minimal_sufficient_reason(n=1)
 print("Minimal sufficient reasons:", minimals)
 assert minimals == (-4,), "The minimal sufficient reasons are not good !"
 
-explainer.show()
+explainer.open_GUI()

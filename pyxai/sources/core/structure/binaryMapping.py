@@ -1,5 +1,6 @@
 from pyxai.sources.core.structure.type import OperatorCondition, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
+from pyxai.sources.learning.learner_information import LearnerInformation
 
 from numpy import argmax, argmin
 import collections
@@ -22,6 +23,18 @@ class BinaryMapping():
         self.n_redundant_features = 0  # Variable to store the number of redondances in eliminate_redundant_features()
         self.feature_names = None
 
+    def n_binary_variables(self):
+        return len(self.map_id_binaries_to_features)-1
+
+    @staticmethod
+    def ajust_feature_names(n_features, feature_names, learner_information):
+        if feature_names is not None:
+            if n_features != len(feature_names):
+                raise ValueError("When the `feature_names` parameter is used, it must be a list with `n_features` names.")
+            if learner_information is None:
+                learner_information = LearnerInformation(None)
+            learner_information.feature_names = feature_names
+        return learner_information
 
     @property
     def raw_model(self):

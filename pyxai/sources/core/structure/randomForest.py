@@ -2,17 +2,23 @@ import numpy
 import os
 from math import floor
 from pysat.card import CardEnc, EncType
+from pyxai.sources.core.structure.binaryMapping import BinaryMapping
 from pyxai.sources.core.structure.treeEnsembles import TreeEnsembles
 from pyxai.sources.core.structure.type import Encoding
 from pyxai.sources.core.tools.encoding import CNFencoding
-
+from pyxai.sources.learning.learner_information import LearnerInformation
 
 class RandomForest(TreeEnsembles):
 
-    def __init__(self, forest, n_classes=2, learner_information=None):
+    def __init__(self, forest, n_classes=2, learner_information=None, feature_names=None):
+        learner_information = BinaryMapping.ajust_feature_names(forest[0].n_features, feature_names, learner_information)
+
         super().__init__(forest, learner_information)
         self.n_classes = n_classes
         self.learner_information = learner_information
+        
+        
+
         # assert all(tree.type_tree is TypeTree.PREDICTION for tree in self.forest), "All trees in a random forest have to be of the type PREDICTION."
 
 

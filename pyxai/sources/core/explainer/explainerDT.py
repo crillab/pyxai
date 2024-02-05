@@ -7,6 +7,7 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
+
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 
 
@@ -238,7 +239,6 @@ class ExplainerDT(Explainer):
             self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
         return reasons
 
-
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):
         return self.preferred_sufficient_reason(method=PreferredReasonMethod.Minimal, n=n, time_limit=time_limit)
 
@@ -310,3 +310,9 @@ class ExplainerDT(Explainer):
         _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint_tree(_tree_1)
         _tree_and_not__tree_2_or__tree_1.simplify()
         return _tree_and_not__tree_2_or__tree_1
+
+    def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):
+        cnf = self._tree.to_CNF(self._instance, target_prediction=self.target_prediction, inverse_coding=True)
+        n_variables = CNFencoding.compute_n_variables(cnf)
+        return self._anchored_reason(n_variables=n_variables, cnf=cnf, n_anchors=n_anchors, reference_instances=reference_instances, time_limit=time_limit, check=check)
+

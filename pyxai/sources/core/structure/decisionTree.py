@@ -7,10 +7,9 @@ from pyxai.sources.core.structure.decisionNode import DecisionNode, LeafNode
 from pyxai.sources.core.structure.type import TypeLeaf, Encoding, OperatorCondition
 from pyxai.sources.core.tools.encoding import CNFencoding
 
-
 class DecisionTree(BinaryMapping):
 
-    def __init__(self, n_features, root, target_class=0, id_solver_results=0, learner_information=None, force_features_equal_to_binaries=False):
+    def __init__(self, n_features, root, target_class=0, id_solver_results=0, learner_information=None, force_features_equal_to_binaries=False, feature_names=None):
         """
 
         Args:
@@ -24,7 +23,7 @@ class DecisionTree(BinaryMapping):
             that variables directly represent the features. Defaults to False.
         """
         self.id_solver_results = id_solver_results
-        self.learner_information = learner_information
+        self.learner_information = BinaryMapping.ajust_feature_names(n_features, feature_names, learner_information)
         self.n_features = n_features
         self.nodes = []
         self.root = root
@@ -33,8 +32,9 @@ class DecisionTree(BinaryMapping):
         if not self.root.is_leaf():
             self.define_parents(self.root)
         self.force_features_equal_to_binaries = force_features_equal_to_binaries
+        
         self.map_id_binaries_to_features, self.map_features_to_id_binaries = self.compute_id_binaries(force_features_equal_to_binaries)
-        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, learner_information)
+        super().__init__(self.map_id_binaries_to_features, self.map_features_to_id_binaries, self.learner_information)
 
         # assert isinstance(self.type_tree, TypeTree), "Please put the good type of the tree !"
 
