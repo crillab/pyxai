@@ -107,7 +107,25 @@ class DecisionTree(BinaryMapping):
             res_2 = self._simplify(node.right, copy.deepcopy(path), come_from=1, previous_node=node, previous_previous_node=pp)
         return res_1 or res_2 or change
 
+    """
+        Transform a decision rule into a Decision Tree (DT).
+        Args:
+            decision_rule (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
+        Returns:
+            DecisionTree: A decision tree representing the decision rule.  
+    """
+    def decision_rule_to_tree(self, decision_rule):
+        literal = decision_rule[-1]
+        parent = DecisionNode(abs(literal), left=1, right=0) if literal > 0 else DecisionNode(abs(literal), left=0, right=1)
+        
+        for literal in reversed(decision_rule[:-1]):
+            parent = DecisionNode(abs(literal), left=1, right=parent) if literal > 0 else DecisionNode(abs(literal), left=parent, right=1)
+            
+        return DecisionTree(self.n_features, parent, force_features_equal_to_binaries=True)
 
+            
+
+    
     def negating_tree(self):
         new_tree = copy.deepcopy(self)
         new_tree.root.negating_tree()

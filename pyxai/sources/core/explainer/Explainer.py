@@ -153,7 +153,6 @@ class Explainer:
         elif hasattr(self, 'boosted_trees'):
             return self.boosted_trees
 
-
     @property
     def instance(self):
         """

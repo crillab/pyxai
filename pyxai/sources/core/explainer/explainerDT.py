@@ -293,9 +293,34 @@ class ExplainerDT(Explainer):
     def is_reason(self, reason, *, n_samples=-1):
         return self._tree.is_implicant(reason, self.target_prediction)
 
+    def rectify(self, *, decision_rule, label):
+        """
+        Rectify the Decision Tree (self._tree) of the explainer according to a `decision_rule` and a `label`.
+        Simplify the final tree (the theory can help to eliminate some nodes).
+
+        Args:
+            decision_rule (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
+            label (int): The label of the decision rule.   
+        Returns:
+            DecisionTree: The rectified tree.  
+        """
+        tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
+        if label == 1:
+            #  
+            tree_decision_rule = tree_decision_rule.negating_tree()
+            tree_rectified = self._tree.disjoint_tree(tree_decision_rule)
+            tree_rectified.simplify()
+        else:
+            # 
+            tree_rectified = self._tree.concatenate_tree(tree_decision_rule)
+            tree_rectified.simplify()
+        self._tree = tree_rectified
+        return self._tree
+        
+
 
     @staticmethod
-    def rectify(_tree, positive_rectifying__tree, negative_rectifying__tree):
+    def _rectify_tree(_tree, positive_rectifying__tree, negative_rectifying__tree):
         not_positive_rectifying__tree = positive_rectifying__tree.negating_tree()
         not_negative_rectifying__tree = negative_rectifying__tree.negating_tree()
 
@@ -308,7 +333,9 @@ class ExplainerDT(Explainer):
         _tree_and_not__tree_2.simplify()
 
         _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint_tree(_tree_1)
+
         _tree_and_not__tree_2_or__tree_1.simplify()
+        
         return _tree_and_not__tree_2_or__tree_1
 
     def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):
