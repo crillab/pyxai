@@ -63,4 +63,4 @@ else:
     if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
     print("is  contrastive: ", explainer.is_contrastive_reason(minimal_constrative_reason))
 
-explainer.open_GUI()
+explainer.visualisation.gui()

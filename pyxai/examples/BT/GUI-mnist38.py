@@ -39,7 +39,7 @@ def get_pixel_value(instance, x, y, shape):
 def instance_index_to_pixel_position(i, shape):
     return i // shape[0], i % shape[0]
 
-explainer.show_on_screen(instance, minimal_tree_specific_reason,
+explainer.visualisation.screen(instance, minimal_tree_specific_reason,
                       image={"shape": (28,28),
                       "dtype": numpy.uint8,
                       "get_pixel_value": get_pixel_value,

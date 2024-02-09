@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QMessage
 from PyQt6.QtGui import QAction, QPixmap, QColor
 from PyQt6.QtPrintSupport import QPrinter
 
-from pyxai.sources.core.explainer.GUI import GUI
+from pyxai.sources.core.explainer.Visualisation import Visualisation
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
 class EmptyGUI():pass
