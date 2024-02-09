@@ -28,6 +28,7 @@ class ExplainerDT(Explainer):
 
     @property
     def tree(self):
+        """Return the model, the associated tree"""
         return self._tree
 
 
@@ -87,7 +88,16 @@ class ExplainerDT(Explainer):
         cnf = self._tree.to_CNF(self._instance)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         core = [c for c in core if all(self._is_specific(lit) for lit in c)]  # remove excluded
-        contrastives = sorted(core, key=lambda clause: len(clause))
+        tmp = sorted(core, key=lambda clause: len(clause))
+        if self._theory:  # Remove bad contrastive wrt theory
+            contrastives = []
+            for c in tmp:
+                extended = self.extend_reason_with_theory([-lit for lit in c])
+                if(len(extended) > 0):  # otherwise unsat => not valid with theory
+                    contrastives.append(c)
+        else:
+            contrastives = tmp
+
         contrastives = Explainer.format(contrastives, n) if type(n) != int else Explainer.format(contrastives[:n], n)
         self._visualisation.add_history(self._instance, self.__class__.__name__, self.contrastive_reason.__name__, contrastives)
         return contrastives
