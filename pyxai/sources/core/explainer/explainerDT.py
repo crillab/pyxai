@@ -304,16 +304,19 @@ class ExplainerDT(Explainer):
         Returns:
             DecisionTree: The rectified tree.  
         """
+        solver = GlucoseSolver()
         tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
         if label == 1:
             #  
             tree_decision_rule = tree_decision_rule.negating_tree()
             tree_rectified = self._tree.disjoint_tree(tree_decision_rule)
-            tree_rectified.simplify()
+            solver.symplify_theory(tree_rectified, ())
+            #tree_rectified.simplify()
         else:
             # 
             tree_rectified = self._tree.concatenate_tree(tree_decision_rule)
-            tree_rectified.simplify()
+            solver.symplify_theory(tree_rectified, ())
+            #tree_rectified.simplify()
         self._tree = tree_rectified
         return self._tree
         
