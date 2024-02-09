@@ -27,6 +27,9 @@ class Explainer:
         self._reference_instances = None
 
     def get_model(self):
+        """
+        The model associated to the explainer (DT, RF, BT)
+        """
         if hasattr(self, 'tree'):
             return self.tree
         elif hasattr(self, 'random_forest'):
@@ -40,7 +43,6 @@ class Explainer:
     def instance(self):
         """
         The instance to be explained.
-        :return: the instance.
         """
         return self._instance
 
@@ -54,7 +56,7 @@ class Explainer:
     @property
     def elapsed_time(self):
         """
-        The time in second of the last call to an explanation. Equal to Exmaplier.TIMEOUT if time_limit was reached.
+        The time in second of the last call to an explanation. Equal to Explainer.TIMEOUT if time_limit was reached.
         """
         return self._elapsed_time
 
@@ -80,6 +82,7 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
+
     def count_features_before_converting(self, features):
         c = set()
         for feature in features:
@@ -88,19 +91,21 @@ class Explainer:
         return len(c)
 
     def get_feature_names(self):
+        """
+        The name of features in the model
+        """
         model = self.get_model()
         if model.learner_information is None or model.learner_information.feature_names is None:
             return ["f" + str(i + 1) for i in range(model.get_used_features())] + ["p"]
         return model.learner_information.feature_names
 
-    """
-        Add a theory in the resolution methods.
-        This theory is built according to the features types.  
 
-        @param features_types (str | list): the theory selected.
-    """
 
     def set_features_type(self, features_types):
+        """
+                Add a theory (related to the type of features) in the explainer.
+                @param features_types (str | list): the theory selected.
+        """
         model = self.get_model()
         # To avoid a bug when several init done :)
         model.clear_theory_features()
@@ -283,7 +288,7 @@ class Explainer:
     def activate_theory(self):
         """
         Add a theory in the resolution method.
-        This is allows to represent the fact that conditions depend on other conditions of a numerical attribute in the resolution. 
+        This allows to represent the fact that conditions depend on other conditions of a numerical attribute in explainer.
         """
         self._theory = True
 
@@ -294,6 +299,13 @@ class Explainer:
         self._theory = False
 
     def get_feature_names_from_literal(self, literal):
+        """
+        Given a literal in the binary representation, returns its feature name.
+        Args:
+            literal (int): the literal
+
+        Returns: (str) the fname
+        """
         dict_to_features = self.to_features([literal], eliminate_redundant_features=False, details=True)
         return dict_to_features[tuple(dict_to_features.keys())[0]][0]["name"]
 
@@ -301,7 +313,7 @@ class Explainer:
         """
         Sets the features that the user do not want to see in explanations. You must give the name of the features.
 
-        @param excluded_features (list[str] | tuple[str]): the features names to be excluded
+        @param excluded_features (list[str] | tuple[str]): the features name to be excluded
         """
         if len(excluded_features) == 0:
             self.unset_excluded_features()
@@ -386,9 +398,14 @@ class Explainer:
         raise NotImplementedError
 
     def is_implicant(self, binary_representation):
+        """Check if the binary representation is an implicant of the instance"""
         raise NotImplementedError
 
     def extend_reason_with_theory(self, reason):
+        """
+        Given a partial binary representation, extend it in order to validate the theory.
+
+        """
         if self._theory is False:
             return reason
         if self._glucose is None:
@@ -586,12 +603,15 @@ class Explainer:
         return None if previous_reason is None else Explainer.format(previous_reason)
 
     def open_GUI(self):
+        """Open the GUI"""
         self._gui.open_GUI()
 
     def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        """"Show image on the screen"""
         self._gui.show_on_screen(instance, reason, image=image, time_series=time_series, contrastive=contrastive,
                                  width=width)
 
     def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        """Show image in a jupyter notebook"""
         return self._gui.show_in_notebook(instance, reason, image=image, time_series=time_series,
                                           contrastive=contrastive, width=width)
