@@ -123,9 +123,6 @@ class DecisionTree(BinaryMapping):
             
         return DecisionTree(self.n_features, parent, force_features_equal_to_binaries=True)
 
-            
-
-    
     def negating_tree(self):
         new_tree = copy.deepcopy(self)
         new_tree.root.negating_tree()
