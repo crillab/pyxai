@@ -24,4 +24,4 @@ print("contrastives:", contrastives)
 print("contrastives (to_features):", explainer.to_features(contrastives[0], contrastive=True))
 print("contrastives (to_features):", explainer.to_features(contrastives[1], contrastive=True))
 
-explainer.open_GUI()
+explainer.visualisation.gui()

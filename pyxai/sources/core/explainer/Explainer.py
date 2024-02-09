@@ -2,7 +2,7 @@ import random
 import json
 from typing import Iterable
 
-from pyxai.sources.core.explainer.GUI import GUI
+from pyxai.sources.core.explainer.Visualisation import Visualisation
 from pyxai.sources.core.tools.utils import count_dimensions
 from pyxai.sources.core.structure.type import TypeFeature, OperatorCondition
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
@@ -22,7 +22,7 @@ class Explainer:
         self._instance = None
         self._theory = False
         self._categorical_features = []
-        self._gui = GUI(self, do_history)
+        self._visualisation = Visualisation(self, do_history)
         self._glucose = None
         self._reference_instances = None
 
@@ -82,7 +82,6 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
-
     def count_features_before_converting(self, features):
         c = set()
         for feature in features:
@@ -98,8 +97,6 @@ class Explainer:
         if model.learner_information is None or model.learner_information.feature_names is None:
             return ["f" + str(i + 1) for i in range(model.get_used_features())] + ["p"]
         return model.learner_information.feature_names
-
-
 
     def set_features_type(self, features_types):
         """
@@ -602,16 +599,9 @@ class Explainer:
 
         return None if previous_reason is None else Explainer.format(previous_reason)
 
-    def open_GUI(self):
-        """Open the GUI"""
-        self._gui.open_GUI()
-
-    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
-        """"Show image on the screen"""
-        self._gui.show_on_screen(instance, reason, image=image, time_series=time_series, contrastive=contrastive,
-                                 width=width)
-
-    def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
-        """Show image in a jupyter notebook"""
-        return self._gui.show_in_notebook(instance, reason, image=image, time_series=time_series,
-                                          contrastive=contrastive, width=width)
+    @property
+    def visualisation(self):
+        """This object allows to open gui, save images, and so on
+        see : https://www.cril.univ-artois.fr/pyxai/documentation/visualization/
+        """
+        return self._visualisation

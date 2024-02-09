@@ -2,7 +2,7 @@ from collections import OrderedDict
 from pyxai.sources.core.tools.utils import check_PyQt6
 
 
-class GUI:
+class Visualisation:
     def __init__(self, explainer, do_history=True):
         self._history = OrderedDict()
         self._do_history = do_history
@@ -62,7 +62,7 @@ class GUI:
         image = image.resize((width, hsize), Image.Resampling.LANCZOS)
         return image
 
-    def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+    def notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
         PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
         from IPython.display import display
         for i, image in enumerate(PILImage_list):
@@ -73,14 +73,14 @@ class GUI:
         else:
             display(*PILImage_list)
 
-    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+    def screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
         PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
         for i, image in enumerate(PILImage_list):
             PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
         for image in PILImage_list:
             image.show()
 
-    def open_GUI(self, image=None, time_series=None):
+    def gui(self, image=None, time_series=None):
         feature_names = self._explainer.get_feature_names()
         if time_series is not None:
             for key in time_series.keys():

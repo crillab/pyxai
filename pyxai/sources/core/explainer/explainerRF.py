@@ -104,7 +104,7 @@ class ExplainerRF(Explainer):
             reason = None
         else:
             reason = Explainer.format(list(direct_reason))
-        self._gui.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
         return reason
 
 
@@ -209,7 +209,7 @@ class ExplainerRF(Explainer):
         self._elapsed_time = time_used if time_limit == 0 or time_used < time_limit else Explainer.TIMEOUT
 
         reasons = Explainer.format(results, n)
-        self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, reasons)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, reasons)
         return reasons
 
 
@@ -258,7 +258,7 @@ class ExplainerRF(Explainer):
         reason = [mapping[i] for i in model if i > 1]
 
         reason = Explainer.format(reason, 1)
-        self._gui.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
         return reason
 
 
@@ -303,7 +303,7 @@ class ExplainerRF(Explainer):
         reason = optux_solver.solve(self._binary_representation)
 
         reason = Explainer.format(reason)
-        self._gui.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
         return reason
 
 
@@ -349,7 +349,7 @@ class ExplainerRF(Explainer):
                 reason = self.to_features_indexes(reason)  # TODO
 
             reason = Explainer.format(reason)
-            self._gui.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reason)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reason)
             return reason
 
         if self._theory:
@@ -379,7 +379,7 @@ class ExplainerRF(Explainer):
             solver.add_clauses([[-lit for lit in result if abs(lit) <= max_id_variable]])  # block this implicant
         self._elapsed_time = time_used if (time_limit is None or time_used < time_limit) else Explainer.TIMEOUT
         reasons = Explainer.format(CNFencoding.remove_subsumed(majoritaries), n)
-        self._gui.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reasons)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.majoritary_reason.__name__, reasons)
         return reasons
 
 
@@ -463,9 +463,9 @@ class ExplainerRF(Explainer):
                     return ()
                 reasons = Explainer.format(reasons, n)
                 if method == PreferredReasonMethod.Minimal:
-                    self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                    self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
                 else:
-                    self._gui.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                    self._visualisation.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
                 return reasons
 
             prefered_reason = [lit for lit in model if lit in self._binary_representation]
@@ -478,9 +478,9 @@ class ExplainerRF(Explainer):
             elif score != best_score:
                 reasons = Explainer.format(reasons, n)
                 if method == PreferredReasonMethod.Minimal:
-                    self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+                    self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
                 else:
-                    self._gui.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+                    self._visualisation.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
                 return reasons
             first_call = False
 
@@ -490,9 +490,9 @@ class ExplainerRF(Explainer):
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
-            self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_majoritary_reason.__name__, reasons)
         else:
-            self._gui.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.preferred_majoritary_reason.__name__, reasons)
         return reasons
 
 

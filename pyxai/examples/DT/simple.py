@@ -47,4 +47,4 @@ for contrastive in constractive_reasons:
 if all_are_contrastive:
     print("All contrastive are ok")
 
-explainer.open_GUI()
+explainer.visualisation.gui()

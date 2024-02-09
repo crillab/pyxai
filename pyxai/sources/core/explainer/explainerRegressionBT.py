@@ -86,7 +86,7 @@ class ExplainerRegressionBT(ExplainerBT):
         result = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, 0, n_iterations,
                                           time_limit,
                                           int(reason_expressivity), seed)
-        self._gui.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, result)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, result)
         return result
 
     def sufficient_reason(self, *, seed=0, time_limit=None):
@@ -96,7 +96,7 @@ class ExplainerRegressionBT(ExplainerBT):
         cplex = SufficientRegression()
         reason, time_used = cplex.create_model_and_solve(self, self._lower_bound, self._upper_bound)
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        self._gui.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reason)
         return reason
 
 
