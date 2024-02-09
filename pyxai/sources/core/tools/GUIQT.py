@@ -23,7 +23,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
         if gui is not None:
             pass
         self.gui = gui
-        self.explainer = gui.explainer
+        self.explainer = None if gui is None else gui.explainer
         self.image = image
         self.time_series = time_series
         self.pressed = False
