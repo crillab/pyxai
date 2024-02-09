@@ -1,19 +1,19 @@
 import random
 import json
 from typing import Iterable
-from collections import OrderedDict
 
-from pyxai.sources.core.tools.utils import count_dimensions, check_PyQt6
-from pyxai.sources.core.structure.type import TypeTheory, TypeFeature, OperatorCondition
+from pyxai.sources.core.explainer.GUI import GUI
+from pyxai.sources.core.tools.utils import count_dimensions
+from pyxai.sources.core.structure.type import TypeFeature, OperatorCondition
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
 from pyxai.sources.solvers.ENCORE.ENCORESolver import EncoreSolver
 from pyxai import Tools
 
+
 class Explainer:
     TIMEOUT = -1
 
-
-    def __init__(self):
+    def __init__(self, do_history=True):
         self.target_prediction = None
         self._binary_representation = None
         self._elapsed_time = 0
@@ -22,126 +22,9 @@ class Explainer:
         self._instance = None
         self._theory = False
         self._categorical_features = []
-        self._history = OrderedDict()
-        self._do_history = True
+        self._gui = GUI(self, do_history)
         self._glucose = None
         self._reference_instances = None
-
-    def get_PILImage(self, instance, reason, image=None, time_series=None, contrastive=False):
-        feature_names = self.get_feature_names()
-        if time_series is not None:
-            for key in time_series.keys():
-                for feature in time_series[key]:
-                    if feature not in feature_names:
-                        raise ValueError("The feature " +str(feature)+ " in the `time_series` parameter is not an available feature name.")
-
-        if image is not None:
-            from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator
-            pyplot_image_generator = PyPlotImageGenerator(image)
-            instance_image = pyplot_image_generator.generate_instance(instance, pil_image=True)
-            image = pyplot_image_generator.generate_explanation(instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
-            return [instance_image, image]
-        else:
-            from pyxai.sources.core.tools.vizualisation import PyPlotDiagramGenerator
-            pyplot_image_generator = PyPlotDiagramGenerator(time_series=time_series)
-            
-            feature_values = dict()
-            for i, value in enumerate(instance):
-                feature_values[feature_names[i]] = value
-
-            image = pyplot_image_generator.generate_explanation(feature_values, instance, self.to_features(reason, details=True, contrastive=contrastive), pil_image=True)
-            return [image]
-
-    def save_png(self, file, instance, reason, image=None, time_series=None, contrastive=False, width=250):
-        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
-        for i, image in enumerate(PILImage_list):
-            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
-        
-        if len(PILImage_list) == 1:
-            PILImage_list[0].save(file)
-        else:
-            for i, image in enumerate(PILImage_list):
-                image.save(str(i) + "_" + file)
-
-    def resize_PILimage(self, image, width=250):
-        from PIL import Image
-        wpercent = (width / float(image.size[0]))
-        hsize = int((float(image.size[1]) * float(wpercent)))
-        image = image.resize((width, hsize), Image.Resampling.LANCZOS)
-        return image
-
-    def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
-        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
-        from IPython.display import display
-        for i, image in enumerate(PILImage_list):
-            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
-
-        if len(PILImage_list) == 1:
-            display(PILImage_list[0])
-        else:
-            display(*PILImage_list)
-        
-    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
-        PILImage_list = self.get_PILImage(instance, reason, image, time_series, contrastive)
-        for i, image in enumerate(PILImage_list):
-            PILImage_list[i] = self.resize_PILimage(PILImage_list[i], width)
-        for image in PILImage_list:
-            image.show()
-
-    def open_GUI(self, image=None, time_series=None):
-        feature_names = self.get_feature_names()
-        if time_series is not None:
-            for key in time_series.keys():
-                for feature in time_series[key]:
-                    if feature not in feature_names:
-                        raise ValueError("The feature " +str(feature)+ " in the `time_series` parameter is not an available feature name.")
-        check_PyQt6()          
-        from pyxai.sources.core.tools.GUIQT import GraphicalInterface
-        graphical_interface = GraphicalInterface(self, image=image, time_series=time_series)
-        graphical_interface.mainloop()
-
-    def heat_map(self, name, reasons, contrastive=False):
-        dict_heat_map = {}
-        if isinstance(reasons, dict):
-            #Case2: Dict with weights
-            dict_heat_map = reasons
-        elif isinstance(reasons, (tuple, list)):
-            #Case1: List or Tuple of reasons 
-            for c in reasons:
-                for lit in c:
-                    if lit not in dict_heat_map:
-                        dict_heat_map[lit] = 1
-                    else:
-                        dict_heat_map[lit] += 1
-        else:
-            raise ValueError("The 'reasons' parameter must be either a list of reasons or a dict such as reasons[literal]->weight.")
-        
-        instance = self._instance
-        if instance is not None and not isinstance(instance, tuple):
-            instance = tuple(instance)
-        
-        reasons = [self.to_features(dict_heat_map, details=True, contrastive=contrastive)]
-        if self._do_history is True:
-            if reasons is None or len(reasons) == 0:
-                return
-            if (instance , self.target_prediction) in self._history.keys():
-                self._history[(instance, self.target_prediction)].append(("HeatMap", name, reasons))
-            else:
-                self._history[(instance, self.target_prediction)] = [("HeatMap", name, reasons)]
-
-    def add_history(self, instance, class_name, method_name, reasons):
-        if instance is not None and not isinstance(instance, tuple):
-            instance = tuple(instance)
-        if self._do_history is True:
-            if reasons is None or len(reasons) == 0:
-                return
-            if not isinstance(reasons[0], tuple): reasons = [reasons]
-            reasons = [self.to_features(reason, details=True, contrastive=True if "contrastive" in method_name else False) for reason in reasons]
-            if (instance, self.target_prediction) in self._history.keys():
-                self._history[(instance, self.target_prediction)].append((class_name, method_name, reasons))
-            else:
-                self._history[(instance, self.target_prediction)] = [(class_name, method_name, reasons)]
-
 
     def get_model(self):
         if hasattr(self, 'tree'):
@@ -153,7 +36,6 @@ class Explainer:
         elif hasattr(self, 'boosted_trees'):
             return self.boosted_trees
 
-
     @property
     def instance(self):
         """
@@ -162,7 +44,6 @@ class Explainer:
         """
         return self._instance
 
-
     @property
     def binary_representation(self):
         """
@@ -170,14 +51,12 @@ class Explainer:
         """
         return self._binary_representation
 
-
     @property
     def elapsed_time(self):
         """
         The time in second of the last call to an explanation. Equal to Exmaplier.TIMEOUT if time_limit was reached.
         """
         return self._elapsed_time
-
 
     def set_instance(self, instance):
         """
@@ -189,7 +68,8 @@ class Explainer:
             raise ValueError("The instance parameter is None.")
 
         if count_dimensions(instance) != 1:
-            raise ValueError("The instance parameter should be an iterable of only one dimension (not " + str(count_dimensions(instance)) + ").")
+            raise ValueError("The instance parameter should be an iterable of only one dimension (not " + str(
+                count_dimensions(instance)) + ").")
 
         # The target observation.
         self._instance = instance
@@ -200,7 +80,6 @@ class Explainer:
         self.target_prediction = self.predict(self._instance)
         self.set_excluded_features(self._excluded_features)
 
-
     def count_features_before_converting(self, features):
         c = set()
         for feature in features:
@@ -208,13 +87,11 @@ class Explainer:
             c.add(self.map_indexes[id])
         return len(c)
 
-
     def get_feature_names(self):
         model = self.get_model()
         if model.learner_information is None or model.learner_information.feature_names is None:
-            return ["f" + str(i + 1) for i in range(model.get_used_features())]+["p"]
+            return ["f" + str(i + 1) for i in range(model.get_used_features())] + ["p"]
         return model.learner_information.feature_names
-
 
     """
         Add a theory in the resolution methods.
@@ -222,7 +99,6 @@ class Explainer:
 
         @param features_types (str | list): the theory selected.
     """
-
 
     def set_features_type(self, features_types):
         model = self.get_model()
@@ -238,7 +114,7 @@ class Explainer:
         self._numerical_features = []  # List of feature names of numerical_features
         self._categorical_features = []  # List of feature names of categorical features
         self._binary_features = []  # List of feature names of binary features
-        self._values_categorical_features = dict() # dict[feature name]->categorical value 
+        self._values_categorical_features = dict()  # dict[feature name]->categorical value
 
         # Build the lists
         if isinstance(features_types, str):
@@ -292,16 +168,19 @@ class Explainer:
                             raise ValueError("The feature " + str(feature) + " does not exist.")
                 elif key == "categorical":
                     if not isinstance(features_types[key], dict):
-                        raise ValueError("The value of the key 'categorical' must be a Python dictionnary. Example: {'color': ('blue', 'red', 'yellow')}")
+                        raise ValueError(
+                            "The value of the key 'categorical' must be a Python dictionnary. Example: {'color': ('blue', 'red', 'yellow')}")
                     for feature in features_types[key].keys():
-                        values = features_types[key][feature]        
+                        values = features_types[key][feature]
                         if "*" in feature:
                             feature = feature.split("*")[0]
                             associated_features = [f for f in feature_names if f.startswith(feature)]
                             if associated_features == []:
                                 raise ValueError("No feature with the pattern " + str(feature) + ".")
                             if len(associated_features) != len(values):
-                                raise ValueError("The number of values in " + str(values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(associated_features))
+                                raise ValueError("The number of values in " + str(
+                                    values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(
+                                    associated_features))
                             for i in range(len(associated_features)):
                                 self._values_categorical_features[associated_features[i]] = [feature, values[i], values]
                             self._reg_exp_categorical_features[feature] = associated_features
@@ -309,11 +188,13 @@ class Explainer:
                         elif "{" in feature and "}" in feature:
                             feature_1 = feature.split("{")[0]
                             feature_2 = feature.split("{")[1].split("}")[0].split(",")
-                            associated_features = [feature_1+feature_3 for feature_3 in feature_2]
+                            associated_features = [feature_1 + feature_3 for feature_3 in feature_2]
                             if associated_features == []:
                                 raise ValueError("No feature with the pattern " + str(feature) + ".")
                             if len(associated_features) != len(values):
-                                raise ValueError("The number of values in " + str(values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(associated_features))
+                                raise ValueError("The number of values in " + str(
+                                    values) + " must be equal to the number of feature with the pattern " + feature + " : " + str(
+                                    associated_features))
                             for i in range(len(associated_features)):
                                 self._values_categorical_features[associated_features[i]] = [feature, values[i], values]
                             self._reg_exp_categorical_features[feature] = associated_features
@@ -324,7 +205,8 @@ class Explainer:
                                 self._reg_exp_categorical_features[feature] = [feature]
                                 self._categorical_features.extend([feature])
                                 for i in range(len(values)):
-                                    self._values_categorical_features[feature + "_" + str(i)] = [feature, values[i], values]
+                                    self._values_categorical_features[feature + "_" + str(i)] = [feature, values[i],
+                                                                                                 values]
                             else:
                                 raise ValueError("The feature " + str(feature) + " does not exist.")
             if default is not None:
@@ -363,7 +245,8 @@ class Explainer:
 
         # Finaly, for the categorical one
         for reg_exp_feature_name in self._reg_exp_categorical_features.keys():
-            indexes = [feature_names.index(feature) + 1 for feature in self._reg_exp_categorical_features[reg_exp_feature_name]]
+            indexes = [feature_names.index(feature) + 1 for feature in
+                       self._reg_exp_categorical_features[reg_exp_feature_name]]
             model.add_categorical_feature_one_hot(reg_exp_feature_name, indexes)
             for index in indexes:
                 self.map_indexes[index] = reg_exp_feature_name
@@ -389,14 +272,13 @@ class Explainer:
             used_features.add(key[0])
             used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
         Tools.verbose("")
-        Tools.verbose("Number of used features in the model (before the encoding):", len(used_features_without_one_hot_encoded))
+        Tools.verbose("Number of used features in the model (before the encoding):",
+                      len(used_features_without_one_hot_encoded))
         Tools.verbose("Number of used features in the model (after the encoding):", len(used_features))
         Tools.verbose("----------------------------------------------")
 
-
     def _theory_clauses(self):
         raise NotImplementedError
-
 
     def activate_theory(self):
         """
@@ -405,18 +287,15 @@ class Explainer:
         """
         self._theory = True
 
-
     def deactivate_theory(self):
         """
         Unset the theory set with the activate_theory method.
         """
         self._theory = False
 
-
     def get_feature_names_from_literal(self, literal):
         dict_to_features = self.to_features([literal], eliminate_redundant_features=False, details=True)
         return dict_to_features[tuple(dict_to_features.keys())[0]][0]["name"]
-        
 
     def set_excluded_features(self, excluded_features):
         """
@@ -430,8 +309,10 @@ class Explainer:
         self._excluded_features = excluded_features
         if self.instance is None:
             return
-        bin_rep = self.extend_reason_to_complete_representation([]) if self._binary_representation is None else self._binary_representation
-        self._excluded_literals = [lit for lit in bin_rep if self.get_feature_names_from_literal(lit) in excluded_features]
+        bin_rep = self.extend_reason_to_complete_representation(
+            []) if self._binary_representation is None else self._binary_representation
+        self._excluded_literals = [lit for lit in bin_rep if
+                                   self.get_feature_names_from_literal(lit) in excluded_features]
 
     def _set_specific_features(self, specific_features):  # TODO a changer en je veux ces features
         excluded = []
@@ -447,7 +328,6 @@ class Explainer:
             raise NotImplementedError
         self.set_excluded_features(excluded)
 
-
     def unset_excluded_features(self):
         """
         Unset the features set with the set_excluded_features method.
@@ -455,10 +335,8 @@ class Explainer:
         self._excluded_literals = []
         self._excluded_features = []
 
-
     def _is_specific(self, lit):
         return lit not in self._excluded_literals
-
 
     def reason_contains_features(self, reason, features_name):
         """
@@ -470,12 +348,11 @@ class Explainer:
         """
         return any(self.get_feature_names_from_literal(lit) in features_name for lit in reason)
 
-
     def _to_binary_representation(self, instance):
         raise NotImplementedError
 
-
-    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
+    def to_features(self, binary_representation, eliminate_redundant_features=True, details=False, contrastive=False,
+                    without_intervals=False):
         """
         Converts a binary representation of a reason into the features space.
         
@@ -493,14 +370,11 @@ class Explainer:
         """
         raise NotImplementedError
 
-
     def sufficient_reason(self, *, n=1, seed=0):
         raise NotImplementedError
 
-
     def direct_reason(self):
         raise NotImplementedError
-
 
     def predict(self, instance):
         """
@@ -511,10 +385,8 @@ class Explainer:
         """
         raise NotImplementedError
 
-
     def is_implicant(self, binary_representation):
         raise NotImplementedError
-
 
     def extend_reason_with_theory(self, reason):
         if self._theory is False:
@@ -523,7 +395,6 @@ class Explainer:
             self._glucose = GlucoseSolver()
             self._glucose.add_clauses(self.get_model().get_theory(self._binary_representation))
         return self._glucose.propagate(reason)[1]
-
 
     def is_reason(self, reason, *, n_samples=1000):
         """
@@ -540,7 +411,6 @@ class Explainer:
             if not self.is_implicant(binary_representation):
                 return False
         return True
-
 
     def is_sufficient_reason(self, reason, *, n_samples=50):
         """
@@ -572,7 +442,6 @@ class Explainer:
                 break
         return True
 
-
     def is_contrastive_reason(self, reason):
         """
         Checks if a reason is a contrastive one.
@@ -587,7 +456,6 @@ class Explainer:
         for lit in reason:
             copy_binary_representation[copy_binary_representation.index(lit)] = -lit
         return not self.is_implicant(copy_binary_representation)
-
 
     def is_contrastive_reason_instance(self, reason):
         """
@@ -611,20 +479,19 @@ class Explainer:
         new_binary_representation = self._to_binary_representation(copy_instance)
         return not self.is_implicant(new_binary_representation)
 
-
     def extend_reason_to_complete_representation(self, reason):
         complete = list(reason).copy()
-        to_add = [literal for literal in self._binary_representation if literal not in complete and -literal not in complete]
+        to_add = [literal for literal in self._binary_representation if
+                  literal not in complete and -literal not in complete]
         complete = self.extend_reason_with_theory(complete)
         for literal in to_add:
-            if literal in complete or -literal in complete: #This line is too costly: TODO: Create a map 
+            if literal in complete or -literal in complete:  # This line is too costly: TODO: Create a map
                 continue
             sign = random.choice([1, -1])
             complete.append(sign * abs(literal))
             complete = self.extend_reason_with_theory(complete)
         assert len(complete) == len(self._binary_representation)
         return complete
-
 
     @staticmethod
     def format(reasons, n=1):
@@ -640,18 +507,17 @@ class Explainer:
             return Explainer.format(reasons[0])
         return tuple(sorted(reasons, key=lambda l: abs(l)))
 
-    
     def set_reference_instances(self, reference_instances):
         if not isinstance(reference_instances, dict):
             raise ValueError("The `reference_instances` parameter have to be a dict.")
-        
+
         self._reference_instances = dict()
         for label in reference_instances.keys():
             binarized_instances = []
             for instance in reference_instances[label]:
                 binarized_instances.append(self._to_binary_representation(instance))
             self._reference_instances[label] = tuple(binarized_instances)
-        
+
     """_summary_
 
         Args:
@@ -662,19 +528,20 @@ class Explainer:
         Returns:
             A n_anchors-anchored andutive explanation
         """
+
     def _most_anchored_reason(self, *, n_variables, cnf, time_limit=None, check=False, type_references="normal"):
-        
+
         if self._reference_instances is None or not isinstance(self._reference_instances, dict):
             raise ValueError("Please use the set_reference_instances() before to use this method.")
         references = dict()
 
-        if type_references=="normal":
+        if type_references == "normal":
             references = self._reference_instances
-        elif type_references=="one_side":
+        elif type_references == "one_side":
             if self.target_prediction == 1:
                 references[0] = []
                 references[1] = self._reference_instances[1]
-                
+
             else:
                 references[0] = self._reference_instances[0]
                 references[1] = []
@@ -683,22 +550,23 @@ class Explainer:
 
         print("size reference_instances 0: ", len(references[0]))
         print("size reference_instances 1: ", len(references[1]))
-        
+
         solver = EncoreSolver(cnf, self.target_prediction, self._binary_representation, references, n_variables)
-        
+
         n_anchors = 1
         go_next = True
         previous_reason = None
         time_used = 0
-        while(go_next is True and (time_limit is None or time_used < time_limit)):
-            #print("search k:", n_anchors)
-            local_time_limit = None if time_limit is None else time_limit - time_used 
-            return_code, status, reason, time, last_k = solver.solve(n_anchors=n_anchors, time_limit=local_time_limit, with_check=check)
+        while (go_next is True and (time_limit is None or time_used < time_limit)):
+            # print("search k:", n_anchors)
+            local_time_limit = None if time_limit is None else time_limit - time_used
+            return_code, status, reason, time, last_k = solver.solve(n_anchors=n_anchors, time_limit=local_time_limit,
+                                                                     with_check=check)
             time_used += time
-            #define EXIT_NOT_FOUND 1    // rien trouvé!
-            #define EXIT_UNSAT 10       // pas possible de trouver une explication ancrée ... try again :P
-            #define EXIT_CANDIDATE 20   // j'ai trouvé une candidat, mais j'ai pas eu le temps de le réduire.
-            #define EXIT_FOUND 30       // c'est bon, j'ai une explication ancré minimal.
+            # define EXIT_NOT_FOUND 1    // rien trouvé!
+            # define EXIT_UNSAT 10       // pas possible de trouver une explication ancrée ... try again :P
+            # define EXIT_CANDIDATE 20   // j'ai trouvé une candidat, mais j'ai pas eu le temps de le réduire.
+            # define EXIT_FOUND 30       // c'est bon, j'ai une explication ancré minimal.
 
             if reason is not None:
                 previous_reason = reason
@@ -709,10 +577,21 @@ class Explainer:
                 n_anchors += 1
             else:
                 break
-        
+
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
 
         if n_anchors == 1 and previous_reason is None:
             self.last_n_anchors = 0
 
         return None if previous_reason is None else Explainer.format(previous_reason)
+
+    def open_GUI(self):
+        self._gui.open_GUI()
+
+    def show_on_screen(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        self._gui.show_on_screen(instance, reason, image=image, time_series=time_series, contrastive=contrastive,
+                                 width=width)
+
+    def show_in_notebook(self, instance, reason, image=None, time_series=None, contrastive=False, width=250):
+        return self._gui.show_in_notebook(instance, reason, image=image, time_series=time_series,
+                                          contrastive=contrastive, width=width)

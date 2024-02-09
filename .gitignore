@@ -16,6 +16,7 @@
 *.snm
 *.toc
 *.vrb
+*.so
 build
 dist
 requirements-download/
