@@ -168,7 +168,7 @@ class ExplainerBT(Explainer):
             return None
 
         reason = Explainer.format(list(direct_reason))
-        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
+        self._gui.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
         return reason
 
 
@@ -206,7 +206,7 @@ class ExplainerBT(Explainer):
 
         abductive = [l for i, l in enumerate(abductive) if not is_removed[i]]
         reasons = Explainer.format(abductive, n)
-        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        self._gui.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
         return reasons
 
 
@@ -228,7 +228,7 @@ class ExplainerBT(Explainer):
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
         result = () if (result == UNSAT or result == UNKNOWN) else Explainer.format(
             [l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
-        self.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
+        self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
 
         return result
 
@@ -277,7 +277,7 @@ class ExplainerBT(Explainer):
             reason = self.to_features_indexes(reason)
         reason = Explainer.format(reason)
         if history:
-            self.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
+            self._gui.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
         return reason
 
 
@@ -363,7 +363,7 @@ class ExplainerBT(Explainer):
         c = contrastive_bt.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), self._excluded_literals, n, time_limit)
         time_used = starting_time + time.process_time()
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        self.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, c)
+        self._gui.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, c)
         return c
 
 # def check_sufficient(self, reason, n_samples=1000):
