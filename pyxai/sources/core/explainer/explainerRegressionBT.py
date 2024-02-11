@@ -22,10 +22,20 @@ class ExplainerRegressionBT(ExplainerBT):
 
     @property
     def regression_boosted_trees(self):
+        """
+        The tree of the model
+        """
         return self._boosted_trees
 
 
     def set_interval(self, lower_bound, upper_bound):
+        """
+        Set the interval for the reason. The prediction must be in the interval. The largest the interval is,
+        the smallest the reason is.
+        Args:
+            lower_bound: lower bound of the interval
+            upper_bound: upper bound of the interval
+        """
         self._lower_bound = lower_bound
         self._upper_bound = upper_bound
 
@@ -61,17 +71,24 @@ class ExplainerRegressionBT(ExplainerBT):
 
 
     def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0):
+        """
+        Compute a tree specific reason related to the given interval
+        Args:
+            n_iterations: the number of iterations done
+            time_limit:
+            seed: The ssed
+
+        Returns: a tree specific reason
+        """
         if self._instance is None:
             raise ValueError("Instance is not set")
-
-        reason_expressivity = ReasonExpressivity.Conditions
         if self._upper_bound is None or self.lower_bound is None:
             raise RuntimeError("lower bound and upper bound must be set when computing a reason")
         if seed is None:
             seed = -1
         if time_limit is None:
             time_limit = 0
-
+        reason_expressivity = ReasonExpressivity.Conditions
         if self.c_BT is None:
             # Preprocessing to give all trees in the c++ library
             self.c_BT = c_explainer.new_regression_BT()
@@ -90,6 +107,7 @@ class ExplainerRegressionBT(ExplainerBT):
         return result
 
     def sufficient_reason(self, *, seed=0, time_limit=None):
+        raise NotImplemented("sufficient reason is not yet implemented for regression boosted trees")
         if self._instance is None:
             raise ValueError("Instance is not set")
 
@@ -101,6 +119,12 @@ class ExplainerRegressionBT(ExplainerBT):
 
 
     def extremum_range(self):
+        """
+        The extremum range for predictions. Computed in polynomial time, but the real extremum range can be smaller.
+        Use range_for_partial_instance(self, [None for _ in range(explainer.instance]) to extract the real one (can be time consuming)
+        Returns: a tuple (min_value, max_value)
+
+        """
         min_weights = []
         max_weights = []
         for tree in self._boosted_trees.forest:
@@ -110,12 +134,13 @@ class ExplainerRegressionBT(ExplainerBT):
         return (sum(min_weights), sum(max_weights))
 
 
-    """
-    Given a partial instance, extract the range for all possible extension of this range
-    the partial instance is defined with None value on undefined values
-    Return a tuple (min_value, max_value)
-    """
+
     def range_for_partial_instance(self, partial_instance, *, time_limit=None):
+        """
+            Given a partial instance, extract the range for all possible extension of this range
+            the partial instance is defined with None value on undefined values
+            Return a tuple (min_value, max_value)
+            """
         starting_time = -time.process_time()
         range = Range()
         partial = self._boosted_trees.instance_to_binaries(partial_instance)
