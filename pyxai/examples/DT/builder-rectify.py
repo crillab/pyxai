@@ -11,6 +11,10 @@
 #   copyright = {Creative Commons Attribution Non Commercial No Derivatives 4.0 International}
 # }
 
+#Let us suppose that the predictor f furnished by the bank labels an instance positive when it corresponds to a customer who
+# has high incomes (f1) but has not reimbursed a previous loan (f2),
+# or (which looks more risky) a customer who has low incomes (f1) and has some debts (f3).
+
 from pyxai import Builder, Explainer
 
 nodeT1_3 = Builder.DecisionNode(3, left=0, right=1)
@@ -18,7 +22,11 @@ nodeT1_2 = Builder.DecisionNode(2, left=1, right=0)
 nodeT1_1 = Builder.DecisionNode(1, left=nodeT1_2, right=nodeT1_3)
 model = Builder.DecisionTree(3, nodeT1_1, force_features_equal_to_binaries=True)
 
-explainer = Explainer.initialize(model)
+loan_types = {
+    "binary": ["f1", "f2", "f3"],
+}
+
+explainer = Explainer.initialize(model, features_type=loan_types)
 
 print("Original tree:", explainer.get_model().raw_data_for_CPP())
 
