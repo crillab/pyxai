@@ -34,12 +34,10 @@ class GlucoseSolver:
         return self.glucose.propagate(reason)
     
     def symplify_theory(self, decision_tree, theory_cnf):
-        
-
+        print("theory_cnf:", theory_cnf)
         self.add_clauses(theory_cnf)
         
        
-    
         def is_node_consistent(node, stack):
             if node.is_leaf():
                 return True, True
@@ -57,34 +55,44 @@ class GlucoseSolver:
 
             return left_consistent, right_consistent
         
-        def _symplify_theory(node, *, stack):
+        def _symplify_theory(node, *, stack, parent, come_from, root):
             if node.is_leaf():
-                return node
+                return root
             id_feature = node.id_feature 
             left_consistent, right_consistent = is_node_consistent(node, stack)
-
             if left_consistent:
                 # The left part is consistent, simplify recursively
-                left_simplified = _symplify_theory(node.left, stack=stack + [-id_feature])
+                root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=node, come_from=0, root=root)
             else:
-                # The left part is inconsistent, replace with the right
-                left_simplified = _symplify_theory(node.right, stack=stack + [id_feature])
+                # The left part is inconsistent, replace this node with the right
+                if come_from == None:
+                    #The root change
+                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=None, come_from=None, root=node.right)
+                elif come_from == 0:
+                    #Replace the node
+                    parent.left = node.right
+                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=parent, come_from=0, root=root)
+                elif come_from == 1:
+                    parent.right = node.right
+                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=parent, come_from=1, root=root)
 
             if right_consistent:
                 # The right part is consistent, simplify recursively
-                right_simplified = _symplify_theory(node.right, stack=stack + [id_feature])
+                root = _symplify_theory(node.right, stack=stack + [id_feature], parent=node, come_from=1, root=root)
             else:
                 # The right part is inconsistent, replace with the left
-                right_simplified = _symplify_theory(node.left, stack=stack + [-id_feature])    
-            
-            # If both sides are identical, simplify by replacing with either side
-            raw = decision_tree.to_tuples(node)
-            if raw[1] == raw[2]:
-                print("equal:", raw[1], raw[2])
-                return left_simplified
-                
-            node.left = left_simplified
-            node.right = right_simplified
-            return node
-
-        return _symplify_theory(decision_tree.root, stack=[])
+                if come_from == None:
+                    #The root change
+                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=None, come_from=None, root=node.left)
+                elif come_from == 0:
+                    #Replace the node
+                    parent.left = node.left
+                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=parent, come_from=0, root=root)
+                elif come_from == 1:
+                    parent.right = node.left
+                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=parent, come_from=1, root=root)
+        
+            return root
+        
+        decision_tree.root = _symplify_theory(decision_tree.root, stack=[], parent=None, come_from=None, root=decision_tree.root)
+        return decision_tree

@@ -83,6 +83,8 @@ class DecisionTree(BinaryMapping):
         res_1 = False
         res_2 = False
         change = False
+
+        
         if previous_node is not None:
             new_tuple = (self.get_id_variable(previous_node), come_from)
             if new_tuple in path:
@@ -115,13 +117,23 @@ class DecisionTree(BinaryMapping):
             DecisionTree: A decision tree representing the decision rule.  
     """
     def decision_rule_to_tree(self, decision_rule):
+        
         literal = decision_rule[-1]
-        parent = DecisionNode(abs(literal), left=1, right=0) if literal > 0 else DecisionNode(abs(literal), left=0, right=1)
+        
+        id_feature, operator, threshold  = self.map_id_binaries_to_features[abs(literal)]
+        parent = DecisionNode(id_feature, operator=operator, threshold=threshold, left=1, right=0) if literal > 0 else DecisionNode(id_feature, operator=operator, threshold=threshold, left=0, right=1)
         
         for literal in reversed(decision_rule[:-1]):
-            parent = DecisionNode(abs(literal), left=1, right=parent) if literal > 0 else DecisionNode(abs(literal), left=parent, right=1)
-            
-        return DecisionTree(self.n_features, parent, force_features_equal_to_binaries=True)
+            id_feature, operator, threshold = self.map_id_binaries_to_features[abs(literal)]
+            parent = DecisionNode(id_feature, operator=operator, threshold=threshold, left=1, right=parent) if literal > 0 else DecisionNode(id_feature,operator=operator, threshold=threshold, left=parent, right=1)
+        
+        tree = DecisionTree(self.n_features, parent)
+
+        #This tree have to have the same data of the initial tree !
+        tree.map_id_binaries_to_features = self.map_id_binaries_to_features
+        tree.map_features_to_id_binaries = self.map_features_to_id_binaries
+        
+        return tree
 
     def negating_tree(self):
         new_tree = copy.deepcopy(self)
