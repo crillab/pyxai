@@ -1,0 +1,27 @@
+name: Linux tests
+
+#on: [workflow_dispatch] #Manually
+on: [push]
+#on:
+#  workflow_run:
+#    workflows: ["Build"]
+#    types:
+#      - completed
+
+jobs:
+  tests:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+    - name: Build a wheel via an sdist
+      run: |
+        pip install build
+        python -m build
+        pip install dist/pyxai*.whl
+#        sudo apt install ffmpeg libsm6 libxext6 qt6-base-dev libxcb-cursor0 -y
+    - name: Run test suite
+      run: |
+        python3 -m pyxai -tests

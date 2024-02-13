@@ -38,6 +38,7 @@ setup(name='pyxai',
            "pyxai/sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Problem.cc",
            "pyxai/sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Propagator.cc",
            ],
-          language="c++")],
+          language="c++",
+          extra_compile_args=["-std=c++11"])],
       headers=['pyxai/sources/solvers/GREEDY/src/Tree.h'],
       platforms='LINUX')
