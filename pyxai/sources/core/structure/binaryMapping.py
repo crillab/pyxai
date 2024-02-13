@@ -149,7 +149,7 @@ class BinaryMapping():
     def get_theory(self, binary_representation, *, theory_type=TypeTheory.SIMPLE, id_new_var=0):
         
         if theory_type == TypeTheory.NEW_VARIABLES:
-            if isinstance(binary_representation, None):
+            if binary_representation is None:
                 raise ValueError("The `binary_representation` parameter cannot be None wiht theory_type=TypeTheory.NEW_VARIABLES")
             # structure to help to do this method faster
             map_id_binary_sign = dict()
