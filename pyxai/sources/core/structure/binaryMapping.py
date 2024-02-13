@@ -209,7 +209,6 @@ class BinaryMapping():
         map_features_to_id_binaries: dict[(id_feature, operator, threshold)] -> [id_binary, n_appears, n_appears_per_tree]
         Transform a instance into a cube (conjunction of literals) according to the tree
         """
-        print("lala:", instance)
         output = []
         if preference_order is None:
             for key in self.map_features_to_id_binaries.keys():  # the keys are of the type: (id_feature, operator, threshold)
