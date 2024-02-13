@@ -1,4 +1,4 @@
-name: Linux tests
+name: OSX tests
 
 #on: [workflow_dispatch] #Manually
 on: [push]
