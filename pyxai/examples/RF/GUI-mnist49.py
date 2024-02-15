@@ -10,7 +10,7 @@ from pyxai import Learning, Explainer, Tools
 # Check V1.0: Ok 
 
 # the location of the dataset
-dataset = "examples/datasets_not_converted/mnist49.csv"
+dataset = "../datasets_ijcai/mnist49.csv"
 
 # Machine learning part
 learner = Learning.Scikitlearn(dataset, learner_type=Learning.CLASSIFICATION)

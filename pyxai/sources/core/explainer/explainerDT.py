@@ -2,7 +2,7 @@ import time
 
 from pyxai.sources.core.explainer.Explainer import Explainer
 from pyxai.sources.core.structure.decisionTree import DecisionTree
-from pyxai.sources.core.structure.type import PreferredReasonMethod
+from pyxai.sources.core.structure.type import PreferredReasonMethod, TypeTheory
 from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
@@ -304,8 +304,56 @@ class ExplainerDT(Explainer):
         return self._tree.is_implicant(reason, self.target_prediction)
 
 
+    def simplify_theory(self, tree_rectified):
+        if self._theory is True:
+            print("Rectify simplify_theory ...")
+            solver = GlucoseSolver()
+            #max_id_binary_cnf = CNFencoding.compute_max_id_variable(tree_rectified)
+            #theory_cnf, _ = self._tree.get_theory(
+            #        self._binary_representation,
+            #        theory_type=TypeTheory.NEW_VARIABLES,
+            #        id_new_var=max_id_binary_cnf)
+            theory_cnf = self._tree.get_theory(None)
+            tree_rectified = solver.symplify_theory(tree_rectified, theory_cnf)
+            print("Rectify simplify_theory: ", tree_rectified.raw_data_for_CPP())
+            return tree_rectified
+        return tree_rectified
+
+    def rectify(self, *, decision_rule, label):
+        """
+        Rectify the Decision Tree (self._tree) of the explainer according to a `decision_rule` and a `label`.
+        Simplify the final tree (the theory can help to eliminate some nodes).
+
+        Args:
+            decision_rule (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
+            label (int): The label of the decision rule.   
+        Returns:
+            DecisionTree: The rectified tree.  
+        """
+            
+        tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
+        print("tree_decision_rule:", tree_decision_rule.raw_data_for_CPP())
+
+        if label == 1:
+            #  
+            tree_decision_rule = tree_decision_rule.negating_tree()
+            tree_rectified = self._tree.disjoint_tree(tree_decision_rule)
+            tree_rectified = self.simplify_theory(tree_rectified)
+            tree_rectified.simplify()
+        else:
+            # 
+            tree_rectified = self._tree.concatenate_tree(tree_decision_rule)
+            self.simplify_theory(tree_rectified)
+            tree_rectified.simplify()
+        self._tree = tree_rectified
+        if self._instance is not None:
+            self.set_instance(self._instance)
+        return self._tree
+        
+
+
     @staticmethod
-    def rectify(_tree, positive_rectifying__tree, negative_rectifying__tree):
+    def _rectify_tree(_tree, positive_rectifying__tree, negative_rectifying__tree):
         not_positive_rectifying__tree = positive_rectifying__tree.negating_tree()
         not_negative_rectifying__tree = negative_rectifying__tree.negating_tree()
 
@@ -318,7 +366,9 @@ class ExplainerDT(Explainer):
         _tree_and_not__tree_2.simplify()
 
         _tree_and_not__tree_2_or__tree_1 = _tree_and_not__tree_2.disjoint_tree(_tree_1)
+
         _tree_and_not__tree_2_or__tree_1.simplify()
+        
         return _tree_and_not__tree_2_or__tree_1
 
     def anchored_reason(self, *, n_anchors=2, reference_instances, time_limit=None, check=False):

@@ -596,11 +596,8 @@ class Learner:
                 if (correct and prediction_solver == label) \
                         or (not correct and prediction_solver != label) \
                         or (correct is None):
-                    if predictions is None or prediction_solver in predictions:
-                        instances.append((data[j], prediction_solver))
-                        instances_indexes.append(current_index)
-                        instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label, "index":current_index})
-                    if labels is None or label in labels:
+                    
+                    if (predictions is None or prediction_solver in predictions) and (labels is None or label in labels):
                         instances.append((data[j], prediction_solver))
                         instances_indexes.append(current_index)
                         instances_details.append({"instance": data[j], "prediction": prediction_solver, "label": label, "index":current_index})

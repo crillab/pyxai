@@ -127,7 +127,7 @@ class CNFencoding():
             else:
                 return max(abs(lit) for lit in formula)
         else:
-            assert False, "The formula have to be an Iterable but it is: " + type(formula) + " !"
+            assert False, "The formula have to be an Iterable but it is: " + str(type(formula)) + " !"
 
 
     @staticmethod
