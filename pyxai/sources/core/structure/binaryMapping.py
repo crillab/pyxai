@@ -147,12 +147,16 @@ class BinaryMapping():
 
 
     def get_theory(self, binary_representation, *, theory_type=TypeTheory.SIMPLE, id_new_var=0):
-        # structure to help to do this method faster
-        map_id_binary_sign = dict()
-        map_is_represented_by_new_variables = dict()
-        for id in binary_representation:
-            map_id_binary_sign[abs(id)] = 1 if id > 0 else -1
-            map_is_represented_by_new_variables[abs(id)] = False
+        
+        if theory_type == TypeTheory.NEW_VARIABLES:
+            if binary_representation is None:
+                raise ValueError("The `binary_representation` parameter cannot be None wiht theory_type=TypeTheory.NEW_VARIABLES")
+            # structure to help to do this method faster
+            map_id_binary_sign = dict()
+            map_is_represented_by_new_variables = dict()
+            for id in binary_representation:
+                map_id_binary_sign[abs(id)] = 1 if id > 0 else -1
+                map_is_represented_by_new_variables[abs(id)] = False
 
         clauses = []
         new_variables = []
