@@ -59,4 +59,4 @@ print("contrastive:", contrastive)
 print("contrastive (to_features):", explainer.to_features(contrastive, contrastive=True))
 print("is contrastive:", explainer.is_contrastive_reason(contrastive))
 
-explainer.open_GUI()
+explainer.visualisation.gui()

@@ -76,7 +76,7 @@ def instance_index_to_pixel_position(i, shape):
         value = i - (n_pixels*2)  
     return value // shape[0], value % shape[0]
         
-explainer.open_GUI(image={"shape": (32,32,3),
+explainer.visualisation.gui(image={"shape": (32,32,3),
                       "dtype": numpy.uint8,
                       "get_pixel_value": get_pixel_value,
                       "instance_index_to_pixel_position": instance_index_to_pixel_position})

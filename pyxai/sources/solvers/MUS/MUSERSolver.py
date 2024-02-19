@@ -2,12 +2,12 @@ import os
 import subprocess
 import time
 import uuid
+from pyxai.sources.core.tools.utils import get_os
 
 from pyxai import Explainer
 
 MUSER_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep
-MUSER_EXEC = MUSER_DIRECTORY + "muser_static"
-
+MUSER_EXEC = MUSER_DIRECTORY + "muser-" + get_os()
 
 class MUSERSolver:
     def __init__(self, *, filenames="/tmp/muser-", _hash=str(uuid.uuid4().fields[-1])[:8]):
