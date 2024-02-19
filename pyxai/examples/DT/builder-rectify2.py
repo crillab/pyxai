@@ -46,9 +46,6 @@ minimal = explainer.minimal_sufficient_reason()
 
 print("Minimal sufficient reason:", minimal)
 
-print("")
-print("[rectify]")
-
 explainer.rectify(decision_rule=minimal, label=1) 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)

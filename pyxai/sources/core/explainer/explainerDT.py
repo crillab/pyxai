@@ -296,7 +296,6 @@ class ExplainerDT(Explainer):
 
     def simplify_theory(self, tree_rectified):
         if self._theory is True:
-            print("Rectify simplify_theory ...")
             solver = GlucoseSolver()
             #max_id_binary_cnf = CNFencoding.compute_max_id_variable(tree_rectified)
             #theory_cnf, _ = self._tree.get_theory(
@@ -305,7 +304,6 @@ class ExplainerDT(Explainer):
             #        id_new_var=max_id_binary_cnf)
             theory_cnf = self._tree.get_theory(None)
             tree_rectified = solver.symplify_theory(tree_rectified, theory_cnf)
-            print("Rectify simplify_theory: ", tree_rectified.raw_data_for_CPP())
             return tree_rectified
         return tree_rectified
 
@@ -320,24 +318,32 @@ class ExplainerDT(Explainer):
         Returns:
             DecisionTree: The rectified tree.  
         """
-            
+        print("")
+        print("-------------- Rectify information:")
         tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
-        print("tree_decision_rule:", tree_decision_rule.raw_data_for_CPP())
-
+        print("Desision Rule Number of nodes:", tree_decision_rule.n_nodes())
+        print("Model Number of nodes:", self._tree.n_nodes())
         if label == 1:
             #  
             tree_decision_rule = tree_decision_rule.negating_tree()
             tree_rectified = self._tree.disjoint_tree(tree_decision_rule)
+            print("Model Number of nodes (after rectify):", tree_rectified.n_nodes())
             tree_rectified = self.simplify_theory(tree_rectified)
+            print("Model Number of nodes (symplify theory):", tree_rectified.n_nodes())
             tree_rectified.simplify()
+            print("Model Number of nodes (symplify redundancy):", tree_rectified.n_nodes())
         else:
             # 
             tree_rectified = self._tree.concatenate_tree(tree_decision_rule)
+            print("Model Number of nodes (after rectify):", tree_rectified.n_nodes())
             self.simplify_theory(tree_rectified)
+            print("Model Number of nodes (symplify theory):", tree_rectified.n_nodes())
             tree_rectified.simplify()
+            print("Model Number of nodes (symplify redundancy):", tree_rectified.n_nodes())
         self._tree = tree_rectified
         if self._instance is not None:
             self.set_instance(self._instance)
+        print("--------------")
         return self._tree
         
 
