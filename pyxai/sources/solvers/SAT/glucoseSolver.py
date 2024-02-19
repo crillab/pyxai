@@ -34,63 +34,61 @@ class GlucoseSolver:
         return self.glucose.propagate(reason)
     
     def symplify_theory(self, decision_tree, theory_cnf):
-        print("theory_cnf:", theory_cnf)
         self.add_clauses(theory_cnf)
         
-       
         def is_node_consistent(node, stack):
             if node.is_leaf():
-                return True, True
+                return False, False
 
-            id_feature = node.id_feature    
+            id_literal = decision_tree.map_features_to_id_binaries[(node.id_feature, node.operator, node.threshold)][0]
             # Check consistency on the left
-            stack.append(-id_feature)
+            stack.append(-id_literal)
             left_consistent = self.glucose.propagate(stack)[0]
+
             stack.pop()
 
             # Check consistency on the right
-            stack.append(id_feature)
+            stack.append(id_literal)
             right_consistent = self.glucose.propagate(stack)[0]
             stack.pop()
-
             return left_consistent, right_consistent
         
         def _symplify_theory(node, *, stack, parent, come_from, root):
             if node.is_leaf():
                 return root
-            id_feature = node.id_feature 
+            id_literal = decision_tree.map_features_to_id_binaries[(node.id_feature, node.operator, node.threshold)][0]
             left_consistent, right_consistent = is_node_consistent(node, stack)
             if left_consistent:
                 # The left part is consistent, simplify recursively
-                root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=node, come_from=0, root=root)
+                root = _symplify_theory(node.left, stack=stack + [-id_literal], parent=node, come_from=0, root=root)
             else:
                 # The left part is inconsistent, replace this node with the right
                 if come_from == None:
                     #The root change
-                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=None, come_from=None, root=node.right)
+                    root = _symplify_theory(node.right, stack=stack + [id_literal], parent=None, come_from=None, root=node.right)
                 elif come_from == 0:
                     #Replace the node
                     parent.left = node.right
-                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=parent, come_from=0, root=root)
+                    root = _symplify_theory(node.right, stack=stack + [id_literal], parent=parent, come_from=0, root=root)
                 elif come_from == 1:
                     parent.right = node.right
-                    root = _symplify_theory(node.right, stack=stack + [id_feature], parent=parent, come_from=1, root=root)
+                    root = _symplify_theory(node.right, stack=stack + [id_literal], parent=parent, come_from=1, root=root)
 
             if right_consistent:
                 # The right part is consistent, simplify recursively
-                root = _symplify_theory(node.right, stack=stack + [id_feature], parent=node, come_from=1, root=root)
+                root = _symplify_theory(node.right, stack=stack + [id_literal], parent=node, come_from=1, root=root)
             else:
                 # The right part is inconsistent, replace with the left
                 if come_from == None:
                     #The root change
-                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=None, come_from=None, root=node.left)
+                    root = _symplify_theory(node.left, stack=stack + [-id_literal], parent=None, come_from=None, root=node.left)
                 elif come_from == 0:
                     #Replace the node
                     parent.left = node.left
-                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=parent, come_from=0, root=root)
+                    root = _symplify_theory(node.left, stack=stack + [-id_literal], parent=parent, come_from=0, root=root)
                 elif come_from == 1:
                     parent.right = node.left
-                    root = _symplify_theory(node.left, stack=stack + [-id_feature], parent=parent, come_from=1, root=root)
+                    root = _symplify_theory(node.left, stack=stack + [-id_literal], parent=parent, come_from=1, root=root)
         
             return root
         

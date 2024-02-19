@@ -12,7 +12,7 @@ import operator
 
 Tools.set_verbose(0)
 
-class TestLearningScikitlearn(unittest.TestCase):
+class TestMetrics(unittest.TestCase):
     PRECISION = 1
 
     def test_binary_classification(self):
@@ -188,5 +188,5 @@ class TestLearningScikitlearn(unittest.TestCase):
             forests.append((rf, index_training, index_test))
         return forests
 if __name__ == '__main__':
-    print("Tests: " + TestLearningScikitlearn.__name__ + ":")
+    print("Tests: " + TestMetrics.__name__ + ":")
     unittest.main()

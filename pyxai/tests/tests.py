@@ -6,6 +6,8 @@ import platform
 
 from pyxai.tests.functionality.GetInstances import *
 from pyxai.tests.functionality.ToFeatures import *
+from pyxai.tests.functionality.Metrics import *
+from pyxai.tests.functionality.Rectify import *
 from pyxai.tests.learning.ScikitLearn import *
 from pyxai.tests.learning.LightGBM import *
 from pyxai.tests.learning.XGBoost import *
@@ -26,6 +28,8 @@ def linux_tests():
     suite = unittest.TestSuite()
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestToFeatures))
     suite.addTest(unittest.makeSuite(TestGetInstances))
+    suite.addTest(unittest.makeSuite(TestMetrics))
+    suite.addTest(unittest.makeSuite(TestRectify))
     
     suite.addTest(unittest.makeSuite(TestLearningScikitlearn))
     suite.addTest(unittest.makeSuite(TestLearningXGBoost))
