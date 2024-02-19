@@ -27,6 +27,7 @@ class ExplainerDT(Explainer):
 
     @property
     def tree(self):
+        """Return the model, the associated tree"""
         return self._tree
 
 
@@ -75,7 +76,7 @@ class ExplainerDT(Explainer):
         else:
             direct_reason = Explainer.format(direct_reason)
 
-        self.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, direct_reason)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, direct_reason)
         return direct_reason
 
 
@@ -86,9 +87,18 @@ class ExplainerDT(Explainer):
         cnf = self._tree.to_CNF(self._instance)
         core = CNFencoding.extract_core(cnf, self._binary_representation)
         core = [c for c in core if all(self._is_specific(lit) for lit in c)]  # remove excluded
-        contrastives = sorted(core, key=lambda clause: len(clause))
+        tmp = sorted(core, key=lambda clause: len(clause))
+        if self._theory:  # Remove bad contrastive wrt theory
+            contrastives = []
+            for c in tmp:
+                extended = self.extend_reason_with_theory([-lit for lit in c])
+                if(len(extended) > 0):  # otherwise unsat => not valid with theory
+                    contrastives.append(c)
+        else:
+            contrastives = tmp
+
         contrastives = Explainer.format(contrastives, n) if type(n) != int else Explainer.format(contrastives[:n], n)
-        self.add_history(self._instance, self.__class__.__name__, self.contrastive_reason.__name__, contrastives)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.contrastive_reason.__name__, contrastives)
         return contrastives
 
 
@@ -114,7 +124,7 @@ class ExplainerDT(Explainer):
 
         literals = [lit for _, clause in enumerate(core) if len(clause) > 1 for lit in clause if self._is_specific(lit)]  # remove excluded features
         #self.add_history(self._instance, self.__class__.__name__, self.relevant_literals.__name__, literals)
-        return literals
+        return list(dict.fromkeys(literals))
 
 
     def _excluded_features_are_necesssary(self, prime_cnf):
@@ -152,7 +162,7 @@ class ExplainerDT(Explainer):
         self._elapsed_time = time_used if (time_limit is None or time_used < time_limit) else Explainer.TIMEOUT
 
         reasons = Explainer.format(sufficient_reasons, n)
-        self.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
         return reasons
 
 
@@ -173,9 +183,9 @@ class ExplainerDT(Explainer):
         if len(cnf) == 0:
             reasons = Explainer.format([[lit for lit in prime_implicant_cnf.necessary]], n=n)
             if method == PreferredReasonMethod.Minimal:
-                self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
+                self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
             else:
-                self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)   
+                self._visualisation.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
             return reasons
 
         weights = compute_weight(method, self._instance, weights, self._tree.learner_information, features_partition=features_partition)
@@ -233,9 +243,9 @@ class ExplainerDT(Explainer):
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
         reasons = Explainer.format(reasons, n)
         if method == PreferredReasonMethod.Minimal:
-            self.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_sufficient_reason.__name__, reasons)
         else:
-            self.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.preferred_sufficient_reason.__name__, reasons)
         return reasons
 
     def minimal_sufficient_reason(self, *, n=1, time_limit=None):

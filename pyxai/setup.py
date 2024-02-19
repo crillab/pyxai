@@ -12,7 +12,9 @@ def main():
               ["sources/solvers/GREEDY/src/bt_wrapper.cc", "sources/solvers/GREEDY/src/Explainer.cc", "sources/solvers/GREEDY/src/Tree.cc",
                "sources/solvers/GREEDY/src/Node.cc", "sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "sources/solvers/GREEDY/src/bcp/Problem.cc",
                "sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "sources/solvers/GREEDY/src/bcp/Propagator.cc"],
-              language="c++")])
+              language="c++",
+              extra_compile_args=["-std=c++11"]
+          )])
 
 
 if __name__ == "__main__":

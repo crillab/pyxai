@@ -70,10 +70,10 @@ class TestRF(unittest.TestCase):
             self.assertFalse(explainer.reason_contains_features(sufficient_reason, 'Hispanic'))
             self.assertFalse(explainer.reason_contains_features(sufficient_reason, 'African_American'))
 
-            contrastives_reasons = explainer.minimal_contrastive_reason(time_limit=2)
-            for sr in contrastives_reasons:
-                self.assertFalse(explainer.reason_contains_features(sr, 'Hispanic'))
-                self.assertFalse(explainer.reason_contains_features(sr, 'African_American'))
+            contrastive_reason = explainer.minimal_contrastive_reason(time_limit=2)
+            self.assertTrue(len(contrastive_reason) == 0 or explainer.is_contrastive_reason(contrastive_reason))
+            self.assertFalse(explainer.reason_contains_features(contrastive_reason, 'Hispanic'))
+            self.assertFalse(explainer.reason_contains_features(contrastive_reason, 'African_American'))
 
         explainer.set_excluded_features(['Female'])
         for instance, prediction in instances:
@@ -85,4 +85,4 @@ class TestRF(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=3)
+    unittest.main(verbosity=4)

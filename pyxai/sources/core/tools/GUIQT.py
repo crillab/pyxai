@@ -9,26 +9,28 @@ from PyQt6.QtWidgets import QSplitter, QApplication, QAbstractItemView, QMessage
 from PyQt6.QtGui import QAction, QPixmap, QColor
 from PyQt6.QtPrintSupport import QPrinter
 
+from pyxai.sources.core.explainer.Visualisation import Visualisation
 from pyxai.sources.core.tools.vizualisation import PyPlotImageGenerator, PyPlotDiagramGenerator
 
-class EmptyExplainer():pass
+class EmptyGUI():pass
 
 class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
     """Main Window."""
-    def __init__(self, explainer, image=None, feature_names=None, time_series=None):
+    def __init__(self, gui, image=None, feature_names=None, time_series=None):
         """Initializer."""
         app = QApplication(sys.argv)
         app.setPalette(app.style().standardPalette())
-        if explainer is not None:
+        if gui is not None:
             pass
-        self.explainer = explainer
+        self.gui = gui
+        self.explainer = None if gui is None else gui.explainer
         self.image = image
         self.time_series = time_series
         self.pressed = False
         if feature_names is not None:
             self.feature_names = feature_names
-        elif explainer is not None:
-            self.feature_names = explainer.get_feature_names()
+        elif self.explainer is not None:
+            self.feature_names = self.explainer.get_feature_names()
         else:
             self.feature_names = []
 
@@ -85,7 +87,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
         self.instance_group.repaint()
         self.list_instance = QListWidget()
         if self.explainer is not None:
-            instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
+            instances = tuple("Instance "+str(i) for i in range(1, len(self.gui._history.keys())+1))
         else:
             instances = tuple()
         #List of instances
@@ -262,7 +264,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
     
     def clicked_instance(self, qmodelindex):
         index = self.list_instance.currentIndex().row()
-        self.current_instance = tuple(self.explainer._history.keys())[index]
+        self.current_instance = tuple(self.gui._history.keys())[index]
         self.feature_values.clear()
         for i, value in enumerate(self.current_instance[0]):
             self.table_instance.setItem(i, 1, QTableWidgetItem(str(value)))
@@ -275,7 +277,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
             self.table_explanation.removeRow(0)
         self.imageLabelRight.clear()
 
-        for id_method, (_, method, reasons) in enumerate(self.explainer._history[self.current_instance]):
+        for id_method, (_, method, reasons) in enumerate(self.gui._history[self.current_instance]):
             for id_reason, reason in enumerate(reasons):
                 method = method.replace("reason", "").replace("reasons", "").replace("_", " ").capitalize()
                 method = " ".join(word.capitalize() for word in method.split(" "))
@@ -299,7 +301,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
         self.id_method = int(self.table_explanation.item(self.index, 0).text())
         self.id_reason = int(self.table_explanation.item(self.index, 2).text())
         
-        reasons = self.explainer._history[self.current_instance][self.id_method][2]
+        reasons = self.gui._history[self.current_instance][self.id_method][2]
         reason = reasons[self.id_reason]
         self.display_right(self.current_instance[0], reason)
         
@@ -369,7 +371,7 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
         if not name.endswith(".explainer"): name = name + ".explainer"
 
         with open(name,'wb') as io:
-            dill.dump([self.image, self.feature_names, self.explainer._history, self.time_series],io)
+            dill.dump([self.image, self.feature_names, self.gui._history, self.time_series],io)
 
 
     def load(self):
@@ -384,12 +386,12 @@ class GraphicalInterface(PyQt6.QtWidgets.QMainWindow):
 
         self.image = data[0]
         self.feature_names = data[1] 
-        self.explainer = EmptyExplainer()
-        self.explainer._history = data[2] 
+        self.gui = EmptyGUI()
+        self.gui._history = data[2]
         self.time_series = data[3] if 3 < len(data) else None
         
         self.list_instance.clear()    
-        instances = tuple("Instance "+str(i) for i in range(1, len(self.explainer._history.keys())+1))
+        instances = tuple("Instance "+str(i) for i in range(1, len(self.gui._history.keys())+1))
         self.list_instance.addItems(instances)
         self.table_instance.setRowCount(len(self.feature_names)-1)
 
