@@ -7,9 +7,8 @@ from pyxai.sources.core.tools.encoding import CNFencoding
 from pyxai.sources.core.tools.utils import compute_weight
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
 from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
-
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
-
+from pyxai import Tools
 
 class ExplainerDT(Explainer):
 
@@ -306,7 +305,6 @@ class ExplainerDT(Explainer):
 
     def simplify_theory(self, tree_rectified):
         if self._theory is True:
-            print("Rectify simplify_theory ...")
             solver = GlucoseSolver()
             #max_id_binary_cnf = CNFencoding.compute_max_id_variable(tree_rectified)
             #theory_cnf, _ = self._tree.get_theory(
@@ -315,7 +313,6 @@ class ExplainerDT(Explainer):
             #        id_new_var=max_id_binary_cnf)
             theory_cnf = self._tree.get_theory(None)
             tree_rectified = solver.symplify_theory(tree_rectified, theory_cnf)
-            print("Rectify simplify_theory: ", tree_rectified.raw_data_for_CPP())
             return tree_rectified
         return tree_rectified
 
@@ -330,24 +327,34 @@ class ExplainerDT(Explainer):
         Returns:
             DecisionTree: The rectified tree.  
         """
-            
+        Tools.verbose("")
+        Tools.verbose("-------------- Rectify information:")
         tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
-        print("tree_decision_rule:", tree_decision_rule.raw_data_for_CPP())
-
+        Tools.verbose("Desision Rule Number of nodes:", tree_decision_rule.n_nodes())
+        Tools.verbose("Model Number of nodes:", self._tree.n_nodes())
         if label == 1:
-            #  
+            # When label is 1, we have to inverse the decision rule and disjoint the two trees.  
             tree_decision_rule = tree_decision_rule.negating_tree()
             tree_rectified = self._tree.disjoint_tree(tree_decision_rule)
+            Tools.verbose("Model Number of nodes (after rectify):", tree_rectified.n_nodes())
             tree_rectified = self.simplify_theory(tree_rectified)
+            Tools.verbose("Model Number of nodes (symplify theory):", tree_rectified.n_nodes())
             tree_rectified.simplify()
-        else:
-            # 
+            Tools.verbose("Model Number of nodes (symplify redundancy):", tree_rectified.n_nodes())
+        elif label == 0:
+            # When label is 0, we have to concatenate the two trees.  
             tree_rectified = self._tree.concatenate_tree(tree_decision_rule)
+            Tools.verbose("Model Number of nodes (after rectify):", tree_rectified.n_nodes())
             self.simplify_theory(tree_rectified)
+            Tools.verbose("Model Number of nodes (symplify theory):", tree_rectified.n_nodes())
             tree_rectified.simplify()
+            Tools.verbose("Model Number of nodes (symplify redundancy):", tree_rectified.n_nodes())
+        else:
+            raise NotImplementedError("Multiclasses is in progress.")
         self._tree = tree_rectified
         if self._instance is not None:
             self.set_instance(self._instance)
+        Tools.verbose("--------------")
         return self._tree
         
 

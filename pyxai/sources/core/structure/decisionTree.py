@@ -311,7 +311,12 @@ class DecisionTree(BinaryMapping):
             output += self.compute_nodes_with_leaves(node.right)
         return output
 
+    def n_nodes(self):
+        return self._n_nodes(self.root)
 
+    def _n_nodes(self, node):
+        return 1 if node.is_leaf() else 1 + self._n_nodes(node.left) + self._n_nodes(node.right)
+        
     def display(self, node):
         if node.is_leaf():
             print(node)

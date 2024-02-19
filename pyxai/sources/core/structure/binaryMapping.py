@@ -150,7 +150,7 @@ class BinaryMapping():
         
         if theory_type == TypeTheory.NEW_VARIABLES:
             if binary_representation is None:
-                raise ValueError("The `binary_representation` parameter cannot be None wiht theory_type=TypeTheory.NEW_VARIABLES")
+                raise ValueError("The `binary_representation` parameter cannot be None with theory_type=TypeTheory.NEW_VARIABLES")
             # structure to help to do this method faster
             map_id_binary_sign = dict()
             map_is_represented_by_new_variables = dict()
