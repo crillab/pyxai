@@ -2,7 +2,7 @@ from pyxai import Builder, Learning, Explainer, Tools
 import math
 
 
-Tools.set_verbose(0)
+#Tools.set_verbose(0)
 
 import unittest
 class TestRectify(unittest.TestCase):
@@ -20,8 +20,8 @@ class TestRectify(unittest.TestCase):
         explainer = Explainer.initialize(model, features_type=loan_types)
 
         #Alice’s expertise can be represented by the formula T = ((x1 ∧ not x3) ⇒ y) ∧ (not x2 ⇒ not y) encoding her two decision rules
-        explainer.rectify(decision_rule=(1, -3), label=1)  #(x1 ∧ not x3) ⇒ y
-        explainer.rectify(decision_rule=(-2, ), label=0)  #not x2 ⇒ not y
+        explainer.rectify(conditions=(1, -3), label=1)  #(x1 ∧ not x3) ⇒ y
+        explainer.rectify(conditions=(-2, ), label=0)  #not x2 ⇒ not y
 
         rectified_model = explainer.get_model().raw_data_for_CPP()
         
@@ -57,7 +57,7 @@ class TestRectify(unittest.TestCase):
         minimal = explainer.minimal_sufficient_reason()
 
         
-        explainer.rectify(decision_rule=minimal, label=1) 
+        explainer.rectify(conditions=minimal, label=1) 
         rectified_model = explainer.get_model().raw_data_for_CPP()
         self.assertEqual(rectified_model, (0, (1, (2, (5, (6, 1, 0), 1), 1), 1)))
 
@@ -84,7 +84,7 @@ class TestRectify(unittest.TestCase):
         #For him/her, the following classification rule must be obeyed:
         #whenever the annual income of the client is lower than 30,
         #the demand should be rejected
-        rectified_model = explainer.rectify(decision_rule=(-1, ), label=0) 
+        rectified_model = explainer.rectify(conditions=(-1, ), label=0) 
 
         self.assertEqual(rectified_model.raw_data_for_CPP(), (0, (1, 0, (4, (3, 0, 1), 1))))
     
@@ -104,16 +104,17 @@ class TestRectify(unittest.TestCase):
       
         compas_types = {
             "numerical": ["Number_of_Priors"],
-            "binary": ["Misdemeanor", "score_factor", "Age_Above_FourtyFive", "Age_Below_TwentyFive", "Female"],
-            "categorical": {"Origin*": ["African_American", "Asian", "Hispanic", "Native_American", "Other"]}
+            "binary": ["Misdemeanor", "score_factor", "Female"],
+            "categorical": {"Origin*": ["African_American", "Asian", "Hispanic", "Native_American", "Other"],
+                            "Age*": ["Above_FourtyFive", "Below_TwentyFive"]}
         }
 
 
         explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
-        minimal_reason = explainer.sufficient_reason(n=1)
-        #print("explanation:", minimal_reason)
-        #print("explanation:", explainer.to_features(minimal_reason))
-        model = explainer.rectify(decision_rule=minimal_reason, label=1)
+        minimal_reason = explainer.minimal_sufficient_reason(n=1)
+        print("explanation:", minimal_reason)
+        print("explanation:", explainer.to_features(minimal_reason))
+        model = explainer.rectify(conditions=minimal_reason, label=1)
         
         self.assertEqual(model.predict_instance(instance), 1)
         
