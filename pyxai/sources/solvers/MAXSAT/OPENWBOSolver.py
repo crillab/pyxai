@@ -33,7 +33,7 @@ class OPENWBOSolver(MAXSATSolver):
         output_str = [line.split(" ") for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "v"]
         if len(output_str) == 0:
             return p.stderr, None, time_used
-
+        
         status = [line.split(" ")[1] for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "s"][0]
         model = [int(lit) for lit in output_str[0] if lit != 'v' and lit != '']
         return status, model, Explainer.TIMEOUT if status == "SATISFIABLE" else time_used
