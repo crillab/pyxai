@@ -316,10 +316,10 @@ class ExplainerDT(Explainer):
             return tree_rectified
         return tree_rectified
 
-    def rectify(self, *, decision_rule, label):
+    def rectify(self, *, conditions, label):
         """
-        Rectify the Decision Tree (self._tree) of the explainer according to a `decision_rule` and a `label`.
-        Simplify the final tree (the theory can help to eliminate some nodes).
+        Rectify the Decision Tree (self._tree) of the explainer according to a `conditions` and a `label`.
+        Simplify the model (the theory can help to eliminate some nodes).
 
         Args:
             decision_rule (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
@@ -329,7 +329,7 @@ class ExplainerDT(Explainer):
         """
         Tools.verbose("")
         Tools.verbose("-------------- Rectify information:")
-        tree_decision_rule = self._tree.decision_rule_to_tree(decision_rule)
+        tree_decision_rule = self._tree.decision_rule_to_tree(conditions)
         Tools.verbose("Desision Rule Number of nodes:", tree_decision_rule.n_nodes())
         Tools.verbose("Model Number of nodes:", self._tree.n_nodes())
         if label == 1:
