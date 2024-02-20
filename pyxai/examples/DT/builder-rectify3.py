@@ -18,9 +18,7 @@ loan_types = {
     "binary": ["PP", "R"],
 }
 
-print("bob = (25, 1, 1):")
-bob = (25, 1, 1)
-explainer = Explainer.initialize(tree, instance=bob, features_type=loan_types)
+explainer = Explainer.initialize(tree, instance=(25, 1, 1), features_type=loan_types)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -29,6 +27,6 @@ print("to_features:", explainer.to_features(explainer.binary_representation, eli
 #For him/her, the following classification rule must be obeyed:
 #whenever the annual income of the client is lower than 30,
 #the demand should be rejected
-rectified_model = explainer.rectify(decision_rule=(-1, ), label=0) 
+rectified_model = explainer.rectify(conditions=(-1, ), label=0) 
 
 assert (0, (1, 0, (4, (3, 0, 1), 1))) == rectified_model.raw_data_for_CPP(), "The rectified model is not good."
