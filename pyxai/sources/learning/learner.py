@@ -598,7 +598,8 @@ class Learner:
         else:
             for j in original_indexes:
                 current_index = possible_indexes[j]
-                prediction_solver = learner.predict(numpy.ascontiguousarray(data[j].reshape(1, -1)))[0]
+                #prediction_solver = learner.predict(numpy.ascontiguousarray(data[j].reshape(1, -1)))[0]
+                prediction_solver = model.predict_instance(data[j])
                 
                 # J'ai, a priori de la chance, que la fonction predict de xgboost et scikit learnt ont la meme def !
                 # A voir comment faire, peux être au niveau de extras si on a un probleme avec cela. 
