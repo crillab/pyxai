@@ -166,11 +166,21 @@ class Learner:
         index = 0
         self.dict_labels = OrderedDict()
         self.inverse_dict_labels = OrderedDict()
-        for p in labels:
-            if str(p) not in self.dict_labels:
-                self.dict_labels[str(p)] = index
-                self.inverse_dict_labels[index] = str(p)
-                index += 1
+        set_labels = set(labels)
+        check_type_int = all(numpy.issubdtype(x, numpy.integer) or isinstance(x, int) or (isinstance(x, str) and x.isnumeric()) for x in set_labels)
+        if check_type_int is True:
+            for p in labels:
+                if str(p) not in self.dict_labels:
+                    self.dict_labels[str(p)] = int(p)
+                    self.inverse_dict_labels[int(p)] = str(p)
+        else:
+            for p in labels:
+                if str(p) not in self.dict_labels:
+                    self.dict_labels[str(p)] = index
+                    self.inverse_dict_labels[index] = str(p)
+                    index += 1
+
+        
 
 
     """
