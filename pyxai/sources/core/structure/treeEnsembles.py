@@ -38,6 +38,8 @@ class TreeEnsembles(BinaryMapping):
             tree.map_id_binaries_to_features = self.map_id_binaries_to_features
             tree.map_features_to_id_binaries = self.map_features_to_id_binaries
 
+    def n_nodes(self):
+        return sum(tree.n_nodes() for tree in self.forest)
 
     def redundancy_analysis(self):
         n_variables = len(self.map_features_to_id_binaries)

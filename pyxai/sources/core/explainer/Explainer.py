@@ -260,12 +260,12 @@ class Explainer:
         nCategorical = len(self._reg_exp_categorical_features.keys())
 
         Tools.verbose("---------   Theory Feature Types   -----------")
-        Tools.verbose("Before the encoding (without one hot encoded features), we have:")
+        Tools.verbose("Before the one-hot encoding of categorical features:")
         Tools.verbose("Numerical features:", nNumerical)
         Tools.verbose("Categorical features:", nCategorical)
         Tools.verbose("Binary features:", nBinaries)
         Tools.verbose("Number of features:", nNumerical + nCategorical + nBinaries)
-        Tools.verbose("Values of categorical features:", self._values_categorical_features)
+        Tools.verbose("Characteristics of categorical features:", self._values_categorical_features)
         used_features = set()
         used_features_without_one_hot_encoded = set()
         for key in model.map_features_to_id_binaries.keys():
@@ -274,9 +274,9 @@ class Explainer:
             used_features.add(key[0])
             used_features_without_one_hot_encoded.add(self.map_indexes[key[0]])
         Tools.verbose("")
-        Tools.verbose("Number of used features in the model (before the encoding):",
+        Tools.verbose("Number of used features in the model (before the encoding of categorical features):",
                       len(used_features_without_one_hot_encoded))
-        Tools.verbose("Number of used features in the model (after the encoding):", len(used_features))
+        Tools.verbose("Number of used features in the model (after the encoding of categorical features):", len(used_features))
         Tools.verbose("----------------------------------------------")
 
     def _theory_clauses(self):
@@ -598,7 +598,14 @@ class Explainer:
             self.last_n_anchors = 0
 
         return None if previous_reason is None else Explainer.format(previous_reason)
-
+    
+    def simplify_theory(self, tree):
+        if self._theory is True:
+            solver = GlucoseSolver()
+            theory_cnf = self.get_model().get_theory(None)
+            return solver.symplify_theory(tree, theory_cnf)
+        return tree
+    
     @property
     def visualisation(self):
         """This object allows to open gui, save images, and so on

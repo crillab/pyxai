@@ -34,6 +34,7 @@ class RandomForest(TreeEnsembles):
         n_votes = numpy.zeros(self.n_classes)
         for tree in self.forest:
             n_votes[tree.predict_instance(instance)] += 1
+        print("predict: ",n_votes)
         return numpy.argmax(n_votes)
 
 

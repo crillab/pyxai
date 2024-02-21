@@ -75,11 +75,11 @@ class DecisionTree(BinaryMapping):
 
 
     def simplify(self):
-        while self._simplify(self.root):
+        while self._simplify(self.root, self.root):
             pass
 
 
-    def _simplify(self, node, path=[], come_from=None, previous_node=None, previous_previous_node=None):
+    def _simplify(self, root, node, path=[], come_from=None, previous_node=None, previous_previous_node=None):
         res_1 = False
         res_2 = False
         change = False
@@ -89,10 +89,13 @@ class DecisionTree(BinaryMapping):
             new_tuple = (self.get_id_variable(previous_node), come_from)
             if new_tuple in path:
                 if path[-1][1] == 0:
-                    previous_previous_node.left = node
+                    if previous_previous_node is not None:
+                        previous_previous_node.left = node
+                        change = True
                 elif path[-1][1] == 1:
-                    previous_previous_node.right = node
-                change = True
+                    if previous_previous_node is not None:
+                        previous_previous_node.right = node
+                        change = True
             path.append(new_tuple)
 
         # print("path:", path)
@@ -100,13 +103,16 @@ class DecisionTree(BinaryMapping):
             raw = self.to_tuples(node)
             if raw[1] == raw[2]:
                 if come_from == 0:
-                    previous_node.left = node.left
+                    if previous_node is not None:
+                        previous_node.left = node.left
+                        change = True
                 if come_from == 1:
-                    previous_node.right = node.right
-                change = True
+                    if previous_node is not None:
+                        previous_node.right = node.right
+                        change = True
             pp = previous_node
-            res_1 = self._simplify(node.left, copy.deepcopy(path), come_from=0, previous_node=node, previous_previous_node=pp)
-            res_2 = self._simplify(node.right, copy.deepcopy(path), come_from=1, previous_node=node, previous_previous_node=pp)
+            res_1 = self._simplify(root, node.left, copy.deepcopy(path), come_from=0, previous_node=node, previous_previous_node=pp)
+            res_2 = self._simplify(root, node.right, copy.deepcopy(path), come_from=1, previous_node=node, previous_previous_node=pp)
         return res_1 or res_2 or change
 
     """
