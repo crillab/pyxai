@@ -2,7 +2,7 @@ from pyxai import Builder, Learning, Explainer, Tools
 import math
 
 
-#Tools.set_verbose(0)
+Tools.set_verbose(0)
 
 import unittest
 class TestRectify(unittest.TestCase):
@@ -12,14 +12,12 @@ class TestRectify(unittest.TestCase):
 
         dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, correct=False, details=True)
         
-        #all_dict_information = learner.get_instances(model, indexes=Learning.ALL, details=True)
+        all_dict_information = learner.get_instances(model, indexes=Learning.ALL, details=True)
 
         instance = dict_information["instance"]
         label = dict_information["label"]
         prediction = dict_information["prediction"]
-        print("prediction:", prediction)
-        print("before:", model.predict_instance(instance))
-
+        
         compas_types = {
             "numerical": ["Number_of_Priors"],
             "binary": ["Misdemeanor", "score_factor", "Female"],
@@ -31,10 +29,7 @@ class TestRectify(unittest.TestCase):
         explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
         reason = explainer.majoritary_reason(n=1)
         
-        print("explanation:", reason)
-        print("explanation:", explainer.to_features(reason))
         model = explainer.rectify(conditions=reason, label=1)
-        print("after:", model.predict_instance(instance))
         
         self.assertEqual(model.predict_instance(instance), 1)
         
@@ -155,8 +150,6 @@ class TestRectify(unittest.TestCase):
 
         explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
         minimal_reason = explainer.minimal_sufficient_reason(n=1)
-        print("explanation:", minimal_reason)
-        print("explanation:", explainer.to_features(minimal_reason))
         model = explainer.rectify(conditions=minimal_reason, label=1)
         
         self.assertEqual(model.predict_instance(instance), 1)
