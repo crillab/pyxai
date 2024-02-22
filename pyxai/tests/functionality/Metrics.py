@@ -128,7 +128,7 @@ class TestMetrics(unittest.TestCase):
         learner, models = Learning.import_models(sk_models)
         for i, model in enumerate(models):
             instances_details = learner.get_instances(model, dataset=dataset, indexes=Learning.TEST, test_indexes=test_indexes[i], details=True)
-            predictions = [learner.get_value_from_label(element["prediction"]) for element in instances_details]
+            predictions = [element["prediction"] for element in instances_details]
             true_values = [element["label"] for element in instances_details]
             metrics = learner.compute_metrics(true_values, predictions)
             self.assertTrue("micro_averaging_accuracy" in metrics.keys())

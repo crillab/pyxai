@@ -12,10 +12,14 @@ from termcolor import colored
 from time import time
 from typing import Iterable
 
+import sklearn
 from sklearn.metrics import confusion_matrix, mean_squared_error, mean_absolute_error
 
 from pyxai.sources.core.structure.type import PreferredReasonMethod
+from packaging import version
 
+def check_sklearn_14():
+    return version.parse(sklearn.__version__) > version.parse("1.4.0")
 
 def check_PyQt6():
     ok, error = _check_PyQt6()
@@ -52,7 +56,7 @@ class Metric:
     def compute_metrics_regression(labels, predictions):
         return {
                 "mean_squared_error": mean_squared_error(labels, predictions),
-                "root_mean_squared_error": mean_squared_error(labels, predictions, squared=False),
+                "root_mean_squared_error": mean_squared_error(labels, predictions, squared=False) if check_sklearn_14() is False else sklearn.metrics.root_mean_squared_error(labels, predictions),
                 "mean_absolute_error": mean_absolute_error(labels, predictions)
             }
 

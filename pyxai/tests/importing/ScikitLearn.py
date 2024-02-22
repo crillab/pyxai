@@ -59,9 +59,9 @@ class TestImportScikitlearn(unittest.TestCase):
             instances = learner.get_instances(dataset=dataset, model=model, n=10)
 
             for (instance, prediction_classifier) in instances:
-                prediction_model_1 = learner.get_label_from_value(model.predict_instance(instance))
+                prediction_model_1 = model.predict_instance(instance)
                 implicant = model.instance_to_binaries(instance)
-                prediction_model_2 = learner.get_label_from_value(model.predict_implicant(implicant))
+                prediction_model_2 = model.predict_implicant(implicant)
                 
                 self.assertEqual(str(prediction_model_1), str(prediction_model_2))
 
