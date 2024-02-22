@@ -6,7 +6,50 @@ import math
 
 import unittest
 class TestRectify(unittest.TestCase):
+    def test_rectify_5(self):
+        learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
+        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
 
+        dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, correct=False, details=True)
+        
+        #all_dict_information = learner.get_instances(model, indexes=Learning.ALL, details=True)
+
+        instance = dict_information["instance"]
+        label = dict_information["label"]
+        prediction = dict_information["prediction"]
+        print("prediction:", prediction)
+        print("before:", model.predict_instance(instance))
+
+        compas_types = {
+            "numerical": ["Number_of_Priors"],
+            "binary": ["Misdemeanor", "score_factor", "Female"],
+            "categorical": {"Origin*": ["African_American", "Asian", "Hispanic", "Native_American", "Other"],
+                            "Age*": ["Above_FourtyFive", "Below_TwentyFive"]}
+        }
+
+
+        explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
+        reason = explainer.majoritary_reason(n=1)
+        
+        print("explanation:", reason)
+        print("explanation:", explainer.to_features(reason))
+        model = explainer.rectify(conditions=reason, label=1)
+        print("after:", model.predict_instance(instance))
+        
+        self.assertEqual(model.predict_instance(instance), 1)
+        
+        reason = set(reason)
+        
+        for instance_dict in all_dict_information:
+            instance = instance_dict["instance"]
+            old_prediction = instance_dict["prediction"]
+            binary_representation = set(explainer._to_binary_representation(instance))
+            result = binary_representation.intersection(reason)
+            if len(result) == len(reason):
+                self.assertEqual(model.predict_instance(instance), 1)
+            else:
+                self.assertEqual(model.predict_instance(instance), old_prediction)
+    
     def test_rectify_1(self):
         nodeT1_3 = Builder.DecisionNode(3, left=0, right=1)
         nodeT1_2 = Builder.DecisionNode(2, left=1, right=0)
@@ -129,8 +172,8 @@ class TestRectify(unittest.TestCase):
                 self.assertEqual(model.predict_instance(instance), 1)
             else:
                 self.assertEqual(model.predict_instance(instance), old_prediction)
-        
-
+    
+    
         
 if __name__ == '__main__':
     print("Tests: " + TestRectify.__name__ + ":")

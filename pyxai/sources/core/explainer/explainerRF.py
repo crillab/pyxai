@@ -12,7 +12,7 @@ from pyxai.sources.solvers.MAXSAT.OPENWBOSolver import OPENWBOSolver
 from pyxai.sources.solvers.MUS.MUSERSolver import MUSERSolver
 from pyxai.sources.solvers.MUS.OPTUXSolver import OPTUXSolver
 from pyxai.sources.solvers.SAT.glucoseSolver import GlucoseSolver
-
+from pyxai import Tools
 
 class ExplainerRF(Explainer):
 
@@ -537,3 +537,49 @@ class ExplainerRF(Explainer):
         raise NotImplementedError("The anchored_reason() method for RF works only with binary-class datasets.")
         
 
+    def rectify(self, *, conditions, label):
+        """
+        Rectify the Decision Tree (self._tree) of the explainer according to a `conditions` and a `label`.
+        Simplify the model (the theory can help to eliminate some nodes).
+
+        Args:
+            decision_rule (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
+            label (int): The label of the decision rule.   
+        Returns:
+            DecisionTree: The rectified tree.  
+        """
+        Tools.verbose("")
+        Tools.verbose("-------------- Rectification information:")
+        tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions)
+
+        Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
+        Tools.verbose("Model - Number of nodes:", self._random_forest.n_nodes())
+
+        for i, tree in enumerate(self._random_forest.forest):
+            Tools.verbose("Model - Number of nodes "+str(i)+":"+ str(tree.n_nodes()))
+        for i, tree in enumerate(self._random_forest.forest):
+            if label == 1:
+                # When label is 1, we have to inverse the decision rule and disjoint the two trees.  
+                # Bug ici 
+                tree_decision_rule = tree_decision_rule.negating_tree()
+                self._random_forest.forest[i] = tree.disjoint_tree(tree_decision_rule)
+            elif label == 0:
+                # When label is 0, we have to concatenate the two trees.  
+                self._random_forest.forest[i] = tree.concatenate_tree(tree_decision_rule)
+            else:
+                raise NotImplementedError("Multiclasses is in progress.")
+            
+        Tools.verbose("Model - Number of nodes (after rectification):", self._random_forest.n_nodes())    
+        
+        #for i, tree in enumerate(self._random_forest.forest):    
+        #    self._random_forest.forest[i] = self.simplify_theory(tree)
+        #Tools.verbose("Model - Number of nodes (after simplification using the theory):", self._random_forest.n_nodes())
+
+        #for i, tree in enumerate(self._random_forest.forest):    
+        #    tree.simplify()
+        #Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", self._random_forest.n_nodes())
+        
+        if self._instance is not None:
+            self.set_instance(self._instance)
+        Tools.verbose("--------------")
+        return self._random_forest
