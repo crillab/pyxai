@@ -96,6 +96,8 @@ class PrimeImplicantCNF:
 
 
     def from_original_to_new(self, lit):
+        if abs(lit) >= len(self.mapping_original_to_new) or self.mapping_original_to_new[abs(lit)] == 0:
+            return None
         return self.mapping_original_to_new[abs(lit)]
 
 
