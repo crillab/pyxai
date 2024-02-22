@@ -1,7 +1,7 @@
 
 <p align="center">
   <div style="text-align:center">
-    <img src="https://drive.google.com/uc?export=download&id=1R8PuTqnwQwZracP39JYmz91KnINiwt6e" />
+    <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" alt="pyxai" />
   </div>
 </p>
 
@@ -9,18 +9,31 @@
 
 - Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
 - Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
+- Pypi: [hhttps://pypi.org/project/pyxai/](https://pypi.org/project/pyxai/)
 - Installation: [http://www.cril.univ-artois.fr/pyxai/documentation/installation/](http://www.cril.univ-artois.fr/pyxai/documentation/installation/)
 
 <h3>What is PyXAI ?</h3>
 <p align="justify">
-<b>PyXAI (Python eXplainable AI)</b> is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring explanations of various forms suited to <b>(regression or classification) tree-based ML models</b> (Decision Trees, Random Forests, Boosted Trees, ...). In contrast to many approaches to XAI (SHAP, Lime, ...), PyXAI algorithms are <b>model-specific</b>. Furthermore, PyXAI algorithms <b>guarantee certain properties</b> about the explanations generated, that can be of several types:
+<b>PyXAI (Python eXplainable AI)</b> is a <a href="https://www.python.org/">Python</a> library (version 3.6 or later) allowing to bring formal explanations suited to <b>(regression or classification) tree-based ML models</b> (Decision Trees, Random Forests, Boosted Trees, ...). PyXAI generates explanations that are <b>post-hoc and local</b>. In contrast to many popular approaches to XAI (SHAP, LIME, ...), PyXAI generates explanations that are also <b>correct</b>. Being correct (aka sound or faithful) indicates that the explanations that are provided actually <b>reflect the exact behaviour of the model by guaranteeing certain properties</b> about the explanations generated. They can be of several types:  
 </p>
+
 <ul>
-  <li><b>Abductive explanations</b> for an instance $X$ are intended to explain why $X$ has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question). For the regression tasks, abductive explanations for $X$ are intended to explain why the regression value on $X$ is in a given interval.</li>
-  <li><b>Contrastive explanations</b> for $X$ is to explain why $X$ has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
+  <li><b>Abductive explanations</b> for an instance $X$ are intended to explain why $X$ has been classified in the way it has been classified by the ML model (thus, addressing the “Why?” question). In the regression case, abductive explanations for $X$ are intended to explain why the regression value of $X$ belongs to a given interval.</li>
+  <li><b>Contrastive explanations</b> for $X$ are intended to explain why $X$ has not been classified by the ML model as the user expected it (thus, addressing the “Why not?” question).</li>
 </ul>
 
-> <b> New features in version 1.0.0:</b>
+<p align="justify">
+PyXAI also includes algorithms for <b>correcting tree-based models</b> when their predictions conflict with pieces of user knowledge. This more tricky facet of XAI is seldom offered by existing XAI systems. When some domain knowledge is available and a prediction (or an explanation) contradicts it, the model must be corrected. <b>Rectification</b> is a principled approach for such a correction operation.
+</p>
+
+> <b> New features in version 1.1:</b>
+> <ul>
+>   <li>Rectification for DT (Decision Tree) and RF (Random Forest) models dedicated to binary classification.</li>
+>   <li>Visualization displayed in a notebook or on screen, and now also for time series problems.</li> 
+>   <li>Enhanced compatibility with Mac OS and Windows</li>
+> </ul> 
+
+> <b> New features in version 1.0:</b>
 > <ul>
 >   <li>Regression for Boosted Trees with XGBoost or LightGBM</li>
 >   <li>Adding Theories (knowledge about the dataset)</li>
@@ -32,22 +45,26 @@
 > </ul> 
 
 <figure>
-  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/pyxai2.png" alt="pyxai" />
-  <figcaption>PyXAI's main steps for producing explanations.</figcaption>
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/base.png" alt="pyxai" width="600"/>
+  <figcaption>User interaction with PyXAI.</figcaption>
 </figure>
 
 <figure>
-  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/GUI.png" alt="pyxai" />
-  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/GUI2.png" alt="pyxai" />
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/GUI.png" alt="pyxai" width="580"/>
   <figcaption>PyXAI's Graphical User Interface (GUI) for visualizing explanations.</figcaption>
+</figure>
+
+<figure>
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/timeserie.png" alt="pyxai" />
+  <figcaption>Visualization in a notebook of an explanation for an instance from a time series problem.</figcaption>
 </figure>
 
 <h3>What is the difference between PyXAI and other methods ?</h3>
 <p align="justify">
 
-The most popular approaches (SHAP, Lime, ...) to XAI <b>are model-agnostic, but do not offer any guarantees</b> of rigor. A number of <a href="https://arxiv.org/pdf/2307.07514.pdf">works</a> have highlighted several misconceptions about informal approaches to XAI (see the <a href="https://www.cril.univ-artois.fr/pyxai/papers/">related papers</a>). Contrastingly, <b>PyXAI algorithms rely on logic-based, model-precise</b> approaches for computing explanations. Although formal explainability has a number of drawbacks, particularly in terms of the computational complexity of logical reasoning needed to derive explanations, <b>steady progress has been made since its inception</b>. 
+The most popular approaches (SHAP, LIME, ...) to XAI <b>are model-agnostic, but they do not offer any guarantees</b> of rigor. 
+A number of works by <a href="https://arxiv.org/pdf/2307.07514.pdf">Marques-Silva and Huang</a>, <a href="https://www.ijcai.org/proceedings/2020/726">Ignatiev</a> have highlighted several misconceptions about such approaches to XAI. Correctness is paramount when dealing with high-risk or sensitive applications, which is the type of applications that are targeted by PyXAI. When the correctness property is not satisfied, one can find ”counterexamples” for the explanations that are generated, i.e., pairs of instances sharing an explanation but leading to distinct predictions. Contrastingly, <b>PyXAI algorithms rely on logic-based, model-precise</b> approaches for computing explanations. Although formal explainability has a number of drawbacks, particularly in terms of the computational complexity of logical reasoning needed to derive explanations, <b>steady progress has been made since its inception</b>. 
 </p>
-
 
 <h3>Which models can be explained with PyXAI ?</h3>
 <p align="justify">
@@ -77,7 +94,7 @@ In this website, you can find all what you need to know about PyXAI, with more t
 <ul>
  <li>The <a href="https://www.cril.univ-artois.fr/pyxai/documentation/installation/">installation guide</a> and the <a href="https://www.cril.univ-artois.fr/pyxai/documentation/quickstart/">quick start</a></li>
  
-  <li>About obtaining models:</li>
+  <li>About models:</li>
   <ul>
   <li>How to <b>prepare and clean a dataset</b> using the PyXAI <a href="https://www.cril.univ-artois.fr/pyxai/documentation/preprocessor/">preprocessor</a> object?</li>
   <li>How to <b>import a model</b>, whatever its format? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/importing/"> Importing Models</a> </li>
@@ -87,7 +104,7 @@ In this website, you can find all what you need to know about PyXAI, with more t
   <li>How to <b>save and load models</b> with the PyXAI learning module? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/saving/">Saving/Loading Models</a></li>
   </ul>
 
-<li>About obtaining explanations:</li>
+<li>About explanations:</li>
   <ul>
   <li>The <b>concepts of the PyXAI explainer module</b>: <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/concepts/">Concepts</a> </li>
   <li>How to use a <b>time limit</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/explainer/time_limit/">Time Limit</a> </li>
@@ -101,8 +118,16 @@ In this website, you can find all what you need to know about PyXAI, with more t
   <li>How to <b>compute explanations for regression tasks</b>? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/regression/">Explaining Regression</a> </li>
   
   </ul>
-
- <li>How to use the <b>PyXAI's Graphical User Interface (GUI)</b> for <a href="https://www.cril.univ-artois.fr/pyxai/documentation/visualization/">visualizing explanations</a>?</li>
+  <li>About rectification:</li>
+  <ul>
+    <li>How to <b>rectify a DT model</b>? <a href="https://www.cril.univ-artois.fr/pyxai//documentation/rectification/decision_tree/">Rectification for Decision Tree</a> </li>
+    <li>How to <b>rectify a RF model</b>? <a href="https://www.cril.univ-artois.fr/pyxai//documentation/rectification/random_forest/">Rectification for Random Forest</a> </li>
+  </ul>
+ <li>About visualization:</li>
+  <ul>
+    <li>How to generate images to represent explanations (<b>in a notebook or save them in png format</b>)? <a href="https://www.cril.univ-artois.fr/pyxai/documentation/visualization/visualization/">Visualization of Explanations (Without GUI)</a>?</li>
+    <li>How to use the <b>PyXAI's Graphical User Interface (GUI)</b> for <a href="https://www.cril.univ-artois.fr/pyxai/documentation/visualization/visualizationGUI/">visualizing explanations</a>?</li>
+  </ul>
  
  
 </ul>
@@ -134,7 +159,7 @@ contrastive_reason = explainer.contrastive_reason()
 print("contrastive reason", contrastive_reason)
 print("to_features:", explainer.to_features(contrastive_reason, contrastive=True))
 
-explainer.open_GUI()
+explainer.visualisation.screen(instance, contrastive_reason, contrastive=True)
 ```
 
 <img src="https://www.cril.univ-artois.fr/pyxai/assets/figures/pyxaiGUI.png" alt="pyxai" />
