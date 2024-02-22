@@ -22,7 +22,7 @@ setup(name='pyxai',
       classifiers=['Topic :: Scientific/Engineering :: Artificial Intelligence', 'Topic :: Education'],
       packages=find_packages(),  # exclude=["problems/g7_todo/"]),
       package_dir={'pyxai': 'pyxai'},
-      install_requires=['lxml', 'numpy', 'wheel', 'pandas', 'termcolor', 'shap', 'wordfreq', 'python-sat[pblib,aiger]', 'xgboost==1.7.3', 'pycsp3', 'matplotlib', 'dill', 'lightgbm', 'docplex', 'ortools'],
+      install_requires=['lxml', 'numpy', 'wheel', 'pandas', 'termcolor', 'shap', 'wordfreq', 'python-sat[pblib,aiger]', 'xgboost==1.7.3', 'pycsp3', 'matplotlib', 'dill', 'lightgbm', 'docplex', 'ortools', 'packaging'],
       extras_require={
         "gui": ['pyqt6'],
       },
