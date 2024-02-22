@@ -147,7 +147,9 @@ class ExplainerDT(Explainer):
         SATsolver.add_clauses(prime_implicant_cnf.cnf)
 
         # Remove excluded features
-        SATsolver.add_clauses([[-prime_implicant_cnf.from_original_to_new(lit)] for lit in self._excluded_literals])
+        SATsolver.add_clauses([[-prime_implicant_cnf.from_original_to_new(lit)]
+                               for lit in self._excluded_literals
+                               if prime_implicant_cnf.from_original_to_new(lit) is not None])
 
         sufficient_reasons = []
         while True:
@@ -211,7 +213,8 @@ class ExplainerDT(Explainer):
 
         # Remove excluded features
         for lit in self._excluded_literals:
-            solver.add_hard_clause([-prime_implicant_cnf.from_original_to_new(lit)])
+            if prime_implicant_cnf.from_original_to_new(lit) is not None:
+                solver.add_hard_clause([-prime_implicant_cnf.from_original_to_new(lit)])
 
         # Solving
         time_used = 0
@@ -275,7 +278,8 @@ class ExplainerDT(Explainer):
         # Remove excluded features
         cnf = list(prime_implicant_cnf.cnf)
         for lit in self._excluded_literals:
-            cnf.append([-prime_implicant_cnf.from_original_to_new(lit)])
+            if prime_implicant_cnf.from_original_to_new(lit) is not None:
+                cnf.append([-prime_implicant_cnf.from_original_to_new(lit)])
 
         compiler.add_cnf(cnf, prime_implicant_cnf.n_literals - 1)
         compiler.add_count_model_query(cnf, prime_implicant_cnf.n_literals - 1, prime_implicant_cnf.n_literals_mapping)
