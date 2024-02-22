@@ -551,17 +551,14 @@ class ExplainerRF(Explainer):
         Tools.verbose("")
         Tools.verbose("-------------- Rectification information:")
         tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions)
-
+        if label == 1:
+            tree_decision_rule = tree_decision_rule.negating_tree()
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
         Tools.verbose("Model - Number of nodes:", self._random_forest.n_nodes())
 
         for i, tree in enumerate(self._random_forest.forest):
-            Tools.verbose("Model - Number of nodes "+str(i)+":"+ str(tree.n_nodes()))
-        for i, tree in enumerate(self._random_forest.forest):
             if label == 1:
                 # When label is 1, we have to inverse the decision rule and disjoint the two trees.  
-                # Bug ici 
-                tree_decision_rule = tree_decision_rule.negating_tree()
                 self._random_forest.forest[i] = tree.disjoint_tree(tree_decision_rule)
             elif label == 0:
                 # When label is 0, we have to concatenate the two trees.  
@@ -571,13 +568,13 @@ class ExplainerRF(Explainer):
             
         Tools.verbose("Model - Number of nodes (after rectification):", self._random_forest.n_nodes())    
         
-        #for i, tree in enumerate(self._random_forest.forest):    
-        #    self._random_forest.forest[i] = self.simplify_theory(tree)
-        #Tools.verbose("Model - Number of nodes (after simplification using the theory):", self._random_forest.n_nodes())
+        for i, tree in enumerate(self._random_forest.forest):    
+            self._random_forest.forest[i] = self.simplify_theory(tree)
+        Tools.verbose("Model - Number of nodes (after simplification using the theory):", self._random_forest.n_nodes())
 
-        #for i, tree in enumerate(self._random_forest.forest):    
-        #    tree.simplify()
-        #Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", self._random_forest.n_nodes())
+        for i, tree in enumerate(self._random_forest.forest):    
+            tree.simplify()
+        Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", self._random_forest.n_nodes())
         
         if self._instance is not None:
             self.set_instance(self._instance)
