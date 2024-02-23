@@ -6,7 +6,7 @@ from pyxai.sources.core.tools.utils import get_os
 
 from pyxai import Explainer
 
-MUSER_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep
+MUSER_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep + "exec" + os.sep
 MUSER_EXEC = MUSER_DIRECTORY + "muser-" + get_os()
 
 class MUSERSolver:
