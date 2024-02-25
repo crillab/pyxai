@@ -181,7 +181,9 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     long time_limit;
     long features_expressivity;
     long seed;
-    if (!PyArg_ParseTuple(args, "OOOLLLLL", &class_obj, &vector_instance_obj, &vector_features_obj, &prediction, &n_iterations, &time_limit, &features_expressivity, &seed))
+    double theta;
+
+    if (!PyArg_ParseTuple(args, "OOOLLLLLd", &class_obj, &vector_instance_obj, &vector_features_obj, &prediction, &n_iterations, &time_limit, &features_expressivity, &seed, &theta))
         return NULL;
 
     if (!PyTuple_Check(vector_instance_obj)) {
@@ -220,9 +222,9 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     explainer->set_time_limit(time_limit);
     bool ret;
     if (features_expressivity == 1)
-      ret = explainer->compute_reason_features(instance, features, prediction, reason);
+      ret = explainer->compute_reason_features(instance, features, prediction, reason, theta);
     else
-      ret = explainer->compute_reason_conditions(instance, prediction, reason, seed);
+      ret = explainer->compute_reason_conditions(instance, prediction, reason, seed, theta);
 
     if(ret == false)
         return Py_None;

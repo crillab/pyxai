@@ -23,24 +23,19 @@ class ExplainerBT(Explainer):
         if instance is not None:
             self.set_instance(instance)
 
-
     @property
     def boosted_trees(self):
         return self._boosted_trees
-
 
     def set_instance(self, instance):
         super().set_instance(instance)
         self._implicant_id_features = self._boosted_trees.get_id_features(self._binary_representation)
 
-
     def _to_binary_representation(self, instance):
         return self._boosted_trees.instance_to_binaries(instance)
 
-
     def _theory_clauses(self):
         return self._boosted_trees.get_theory(self._binary_representation)
-
 
     def is_implicant(self, abductive):
 
@@ -64,16 +59,15 @@ class ExplainerBT(Explainer):
                          in self._boosted_trees.classes if cl != self.target_prediction]
             return all(worst_one > best_one for best_one in best_ones)
 
-
     def predict(self, instance):
         return self._boosted_trees.predict_instance(instance)
-
 
     def trees_statistics(self):
         # print("---------   Trees Information   ---------")
         n_nodes = sum([len(tree.get_variables()) for tree in self._boosted_trees.forest])
         n_nodes_biggest_tree = max([len(tree.get_variables()) for tree in self._boosted_trees.forest])
-        n_nodes_biggest_tree_without_redundancy = max([len(set(tree.get_variables())) for tree in self._boosted_trees.forest])
+        n_nodes_biggest_tree_without_redundancy = max(
+            [len(set(tree.get_variables())) for tree in self._boosted_trees.forest])
 
         n_features = len(set(flatten([tree.get_features() for tree in self._boosted_trees.forest])))
 
@@ -87,7 +81,6 @@ class ExplainerBT(Explainer):
                 "n_nodes_biggest_tree": n_nodes_biggest_tree,
                 "n_nodes_biggest_tree_without_redundancy": n_nodes_biggest_tree_without_redundancy,
                 "n_features": n_features}
-
 
     def reason_statistics(self, reason, *, reason_expressivity):
         if reason_expressivity == ReasonExpressivity.Conditions:
@@ -123,7 +116,6 @@ class ExplainerBT(Explainer):
         else:
             assert True, "TODO"
 
-
     def to_features_indexes(self, reason):
         """Return the indexes of the instance that are involved in the reason.
 
@@ -136,19 +128,19 @@ class ExplainerBT(Explainer):
         features = [feature["id"] for feature in self.to_features(reason, details=True)]
         return [i for i, _ in enumerate(self._instance) if i + 1 in features]
 
-
-    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False, without_intervals=False):
-        return self._boosted_trees.to_features(binary_representation, eliminate_redundant_features=eliminate_redundant_features, details=details,
-                                               contrastive=contrastive, without_intervals=without_intervals, feature_names=self.get_feature_names())
-
+    def to_features(self, binary_representation, *, eliminate_redundant_features=True, details=False, contrastive=False,
+                    without_intervals=False):
+        return self._boosted_trees.to_features(binary_representation,
+                                               eliminate_redundant_features=eliminate_redundant_features,
+                                               details=details,
+                                               contrastive=contrastive, without_intervals=without_intervals,
+                                               feature_names=self.get_feature_names())
 
     def redundancy_analysis(self):
         return self._boosted_trees.redundancy_analysis()
 
-
     def compute_propabilities(self):
         return self._boosted_trees.compute_probabilities(self._instance)
-
 
     def direct_reason(self):
         """The direct reason is the set of conditions used to classified the instance.
@@ -170,7 +162,6 @@ class ExplainerBT(Explainer):
         reason = Explainer.format(list(direct_reason))
         self._visualisation.add_history(self._instance, self.__class__.__name__, self.direct_reason.__name__, reason)
         return reason
-
 
     def sufficient_reason(self, *, n=1, seed=0, time_limit=None):
         """ Compute a sufficient reason using several CSP thanks to pycsp3 models.
@@ -206,9 +197,9 @@ class ExplainerBT(Explainer):
 
         abductive = [l for i, l in enumerate(abductive) if not is_removed[i]]
         reasons = Explainer.format(abductive, n)
-        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__, reasons)
+        self._visualisation.add_history(self._instance, self.__class__.__name__, self.sufficient_reason.__name__,
+                                        reasons)
         return reasons
-
 
     def minimal_tree_specific_reason(self, *, time_limit=None, from_reason=None):
         if self._instance is None:
@@ -216,7 +207,8 @@ class ExplainerBT(Explainer):
 
         cp_solver = TSMinimal()
         implicant_id_features = []  # TODO V2 self.implicant_id_features if reason_expressivity == ReasonExpressivity.Features else []
-        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees, self.target_prediction,
+        cp_solver.create_model_minimal_abductive_BT(self._binary_representation, self._boosted_trees,
+                                                    self.target_prediction,
                                                     self._boosted_trees.n_classes,
                                                     implicant_id_features, from_reason)
         time_used = -time.time()
@@ -228,12 +220,12 @@ class ExplainerBT(Explainer):
         self._elapsed_time = time_used if result == "OPTIMUM" else Explainer.TIMEOUT
         result = () if (result == UNSAT or result == UNKNOWN) else Explainer.format(
             [l for i, l in enumerate(self._binary_representation) if solution[i] == 1])
-        self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_tree_specific_reason.__name__, result)
+        self._visualisation.add_history(self._instance, self.__class__.__name__,
+                                        self.minimal_tree_specific_reason.__name__, result)
 
         return result
 
-
-    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True):
+    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True, theta=0):
         """
         Tree-specific (TS) explanations are abductive explanations that can be computed in polynomial time. While tree-specific explanations are not
         subset-minimal in the general case, they turn out to be close to sufficient reasons in practice. Furthermore, because sufficient reasons can
@@ -270,28 +262,28 @@ class ExplainerBT(Explainer):
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
 
-        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, self.target_prediction, n_iterations,
+        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features,
+                                            self.target_prediction, n_iterations,
                                             time_limit,
-                                            int(reason_expressivity), seed)
+                                            int(reason_expressivity), seed, theta)
         if reason_expressivity == ReasonExpressivity.Features:
             reason = self.to_features_indexes(reason)
         reason = Explainer.format(reason)
         if history:
-            self._visualisation.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, reason)
+            self._visualisation.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__,
+                                            reason)
         return reason
 
-
     def compute_weights_class(self, implicant, cls, king="worst"):
-        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if tree.target_class[0] == cls]
+        weights = [self.compute_weights(tree, tree.root, implicant) for tree in self._boosted_trees.forest if
+                   tree.target_class[0] == cls]
         weights = [min(weights_per_tree) if king == "worst" else max(weights_per_tree) for weights_per_tree in weights]
         return sum(weights)
-
 
     @staticmethod
     def weight_float_to_int(weight):
         return weight
         # return int(weight*pow(10,9))
-
 
     def compute_weights(self, tree, node, implicant):
 
@@ -323,14 +315,12 @@ class ExplainerBT(Explainer):
                 weights.extend(self.compute_weights(tree, node.right, implicant))
         return weights
 
-
     def compute_tree_decomposition(self):
         """
         Compute the treewidth and the optimal tree decomposition.
         """
         tree_decomposition_solver = TreeDecomposition()
         tree_decomposition_solver.create_instance(self._boosted_trees)
-
 
     def is_tree_specific_reason(self, reason, check_minimal_inclusion=False):
 
@@ -351,7 +341,6 @@ class ExplainerBT(Explainer):
                 return False
         return True
 
-
     def minimal_contrastive_reason(self, *, n=1, time_limit=None):
         if self._instance is None:
             raise ValueError("Instance is not set")
@@ -360,10 +349,12 @@ class ExplainerBT(Explainer):
 
         starting_time = -time.process_time()
         contrastive_bt = ContrastiveBT()
-        c = contrastive_bt.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(), self._excluded_literals, n, time_limit)
+        c = contrastive_bt.create_model_and_solve(self, None if self._theory is False else self._theory_clauses(),
+                                                  self._excluded_literals, n, time_limit)
         time_used = starting_time + time.process_time()
         self._elapsed_time = time_used if time_limit is None or time_used < time_limit else Explainer.TIMEOUT
-        self._visualisation.add_history(self._instance, self.__class__.__name__, self.minimal_contrastive_reason.__name__, c)
+        self._visualisation.add_history(self._instance, self.__class__.__name__,
+                                        self.minimal_contrastive_reason.__name__, c)
         return c
 
 # def check_sufficient(self, reason, n_samples=1000):
