@@ -58,15 +58,15 @@ for detailed_instance in classified_instances:
 
     prediction_AI = model_AI.predict_instance(instance)
     prediction_user = user.predict_instance(explainer_AI.binary_representation) # no they have the same representation
-    reason_AI = explainer_AI.majoritary_reason()
+    reason_AI = explainer_AI.majoritary_reason()  # TODO utile ??
     # All cases
     if prediction_user is None:  # cases (3) (4) (5)
         cases.cases_3_4_5()
     else:
         if prediction_AI != prediction_user:  # case (1)
-            cases.case1()
+            cases.case_1(explainer_AI, user)
         if prediction_AI == prediction_user:  # case (2)
-            cases.case2()
+            cases.case_2()
 
 # je demande à l'ia
 # une des 5 cas arrive et je modifie l'ia en conséquence (et aussi le U)
