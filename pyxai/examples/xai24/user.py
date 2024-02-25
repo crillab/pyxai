@@ -1,9 +1,9 @@
 import math
-
+import constants
 class User:
     def __init__(self, explainer, positive_instances, negative_instances):
-        self.positive_rules = self._create_rules(explainer, positive_instances)
-        self.negative_rules = self._create_rules(explainer, negative_instances)
+        self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
+        self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
 
     def predict_instance(self, binary_representation):
         """
@@ -23,11 +23,11 @@ class User:
 
     # -------------------------------------------------------------------------------------
     #  Create the rules for a given set of instances
-    def _create_rules(self, explainer, instances):
+    def _create_rules(self, explainer, instances, theta):
         result = []
         for instance in instances:
             explainer.set_instance(instance)
-            reason = explainer.tree_specific_reason(n_iterations=1)
+            reason = explainer.tree_specific_reason(n_iterations=1, theta=theta)
             new_rule = True
             for rule in result:  # reason does not specialize existing rule
                 if generalize(rule, reason, len(explainer.binary_representation)):

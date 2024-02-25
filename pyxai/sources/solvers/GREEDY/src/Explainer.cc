@@ -36,7 +36,7 @@ void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instan
     }
 }
 
-bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed) {
+bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed, double theta) {
     if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
         theory_propagator = new Propagator();
         for(pyxai::Tree *t : trees)
@@ -81,7 +81,7 @@ bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int
         active_lits[abs(l)] = false;
         propagateActiveLits(excluded_features, polarity_instance, active_lits);
         try_to_remove = l;
-        if (is_implicant(polarity_instance, active_lits, prediction) == false)
+        if (is_implicant(polarity_instance, active_lits, prediction, theta) == false)
             return false; // It is not possible to remove excluded features
         theory_propagator->restart();
     }
@@ -105,7 +105,7 @@ bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int
             // std::cout << "try " << l << " ";
             propagateActiveLits(order, polarity_instance, active_lits);
 
-            if (is_implicant(polarity_instance, active_lits, prediction)) {
+            if (is_implicant(polarity_instance, active_lits, prediction, theta)) {
                 current_size--;
                 //std::cout << "ok\n";
             }
@@ -152,7 +152,7 @@ void pyxai::Explainer::propagateActiveLits(std::vector<int> &order, std::vector<
 }
 
 bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits,
-                                   unsigned int prediction) {
+                                   unsigned int prediction, double theta) {
     std::vector<unsigned int> new_wrong_trees;
     for (auto tree: trees) {
         // Init for Classifier_RF
@@ -172,7 +172,7 @@ bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<boo
     if (_type == Classifier_RF)
         return is_implicant_RF(instance, active_lits, prediction);
     if (_type == Classifier_BT)
-        return is_implicant_BT(instance, active_lits, prediction);
+        return is_implicant_BT(instance, active_lits, prediction, theta);
     if (_type == Regression_BT)
         return is_implicant_regression_BT(instance, active_lits, prediction);
 
@@ -181,13 +181,20 @@ bool pyxai::Explainer::is_implicant(std::vector<bool> &instance, std::vector<boo
 
 
 bool pyxai::Explainer::is_implicant_BT(std::vector<bool> &instance, std::vector<bool> &active_lits,
-                                      unsigned int prediction) {
+                                      unsigned int prediction, double theta) {
     if (n_classes == 2) {
         double weight = 0;
         for (Tree *tree: trees)
             weight += tree->current_weight;
-        return prediction == (weight > 0);
+
+        if (theta > 0.1)
+            return weight > theta;
+        if (theta < -0.1)
+            return weight < theta;
+
+        return prediction == (weight > theta);  // Classical case
     }
+
     // Multi classes case
     std::vector<double> weights(n_classes, 0.0);
     for (Tree *tree: trees)
@@ -272,7 +279,7 @@ bool pyxai::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<
 
 
 bool pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::vector<int> &features, int prediction,
-                                              std::vector<int> &reason) {
+                                              std::vector<int> &reason, double theta) {
     assert(false);
     // TODO CHECK FOR FEATURES : V2......
     if (_type != pyxai::Classifier_BT)
@@ -319,7 +326,7 @@ bool pyxai::Explainer::compute_reason_features(std::vector<int> &instance, std::
             for (auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++) {
                 active_lits[abs(*it_lits)] = false;
             }
-            if (is_implicant(polarity_instance, active_lits, prediction) == false) {
+            if (is_implicant(polarity_instance, active_lits, prediction, theta) == false) {
                 // not a implicant
                 for (auto it_lits = lits.begin(); it_lits != lits.end(); it_lits++) {
                     active_lits[abs(*it_lits)] = true;
