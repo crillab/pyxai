@@ -41,3 +41,14 @@ class D4Solver:
 
         n_models = [int(line.split(" ")[1]) for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "s"]
         return n_models
+
+    def count(self, time_limit=None):
+        try:
+            p = subprocess.run([D4_EXEC, "-m", "ddnnf-compiler", "-i",
+                                self.filename_cnf], timeout=time_limit,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.TimeoutExpired:
+            return None
+
+        n_models = [int(line.split(" ")[1]) for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "s"]
+        return n_models
