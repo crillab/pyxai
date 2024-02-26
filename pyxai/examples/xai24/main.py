@@ -18,6 +18,7 @@ misc.change_weights(model_user)
 if constants.debug:
     print("Accuracy after ", misc.get_accuracy(model_user, instances[0:100]))
 
+
 # Extract test instances and classified instances
 threshold = int(len(instances) * constants.classified_size)
 classified_instances = instances[0:threshold]
@@ -30,8 +31,6 @@ if constants.trace:
     print("nb unclassified:", len(unclassified_instances))
 
 # Create user
-print("WARNING: miss tree specific if sum() > theta or sum() < -theta: to add in Explainer.cc, line 189")
-print("WARNING: miss theory")
 explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
 
 user = user.User(explainer_user, positive_instances, negative_instances)

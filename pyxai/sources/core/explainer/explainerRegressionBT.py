@@ -102,7 +102,7 @@ class ExplainerRegressionBT(ExplainerBT):
         # 0 for prediction. We don't care of it. The interval is the important thing here
         result = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, 0, n_iterations,
                                           time_limit,
-                                          int(reason_expressivity), seed)
+                                          int(reason_expressivity), seed, 0)
         self._visualisation.add_history(self._instance, self.__class__.__name__, self.tree_specific_reason.__name__, result)
         return result
 
