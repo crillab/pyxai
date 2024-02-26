@@ -88,6 +88,8 @@ class TreeEnsembles(BinaryMapping):
 
         # Fusion of map_id_binaries_to_features
         for tree in self.forest:
+            
+            #print("vv:", tree.map_features_to_id_binaries)
             map_features_to_id_binaries.update(tree.map_features_to_id_binaries)
 
         # Now we define the good value [id_binary, n_appears, n_appears_per_tree] for each key
@@ -100,12 +102,12 @@ class TreeEnsembles(BinaryMapping):
             n_appears_per_tree = [value[1] if value is not None else 0 for value in values]
             map_features_to_id_binaries[key][1] = n_appears
             map_features_to_id_binaries[key][2] = n_appears_per_tree
-
+            
             if force_features_equal_to_binaries is False:
+                #print("key:", key)
                 map_id_binaries_to_features.append(key)
             else:
                 map_id_binaries_to_features[key[0]] = key
 
             id_binary += 1
-
         return (map_id_binaries_to_features, map_features_to_id_binaries)

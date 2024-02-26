@@ -317,7 +317,6 @@ class ExplainerRF(Explainer):
             n (int|ALL, optional): The desired number of reasons. Defaults to 1, currently needs to be 1 or Exmplainer.ALL.
             time_limit (int, optional): The maximum time to compute the reasons. None to have a infinite time. Defaults to None.
         """
-
         if self._instance is None:
             raise ValueError("Instance is not set")
 

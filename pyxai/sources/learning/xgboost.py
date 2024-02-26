@@ -146,7 +146,7 @@ class Xgboost(Learner):
             assert tree_JSON["split"] in self.id_features, "A feature is not correct during the parsing from xgb_JSON to DT !"
             id_feature = self.id_features[tree_JSON["split"]]
             threshold = tree_JSON["split_condition"]
-            decision_node = DecisionNode(int(id_feature + 1), operator=OperatorCondition.GE, threshold=threshold, left=None, right=None)
+            decision_node = DecisionNode(int(id_feature + 1), operator=OperatorCondition.GT, threshold=threshold, left=None, right=None)
             id_right = tree_JSON["no"]  # It is the inverse here, right for no, left for yes
             for child in tree_JSON["children"]:
                 if child["nodeid"] == id_right:
