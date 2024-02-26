@@ -29,10 +29,7 @@ def get_accuracy(model, test_set):
 
 
 def maximum_weight(model):
-    max_weight = -math.inf
-    for tree in model.forest:
-        leaves = tree.get_leaves()
-        max_weight = max(max_weight, max([abs(leave.value) for leave in leaves]))
+    max_weight = max((abs(leave.value) for tree in model.forest for leave in tree.get_leaves()))
     return max_weight
 
 
@@ -52,9 +49,7 @@ def partition_instances(model, classified_instances):
     unclassified = []
     for detailed_instance in classified_instances:
         instance = detailed_instance["instance"]
-        score = 0
-        for tree in model.forest:
-            score += tree.predict_instance(instance)
+        score = sum((tree.predict_instance(instance) for tree in model.forest))
         if score > constants.theta:
             positive.append(instance)
         elif score < -constants.theta:

@@ -342,7 +342,7 @@ class ExplainerRF(Explainer):
                 c_explainer.set_theory(self.c_RF, tuple(self._random_forest.get_theory(self._binary_representation)))
             current_time = time.process_time()
             reason = c_explainer.compute_reason(self.c_RF, self._binary_representation, implicant_id_features, self.target_prediction, n_iterations,
-                                                time_limit, int(reason_expressivity), seed)
+                                                time_limit, int(reason_expressivity), seed, 0)
             total_time = time.process_time() - current_time
             self._elapsed_time = total_time if time_limit == 0 or total_time < time_limit else Explainer.TIMEOUT
             if reason_expressivity == ReasonExpressivity.Features:
