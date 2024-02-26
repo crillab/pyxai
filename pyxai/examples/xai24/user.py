@@ -3,8 +3,9 @@ import constants
 
 
 class User:
-    def __init__(self, explainer, positive_instances, negative_instances, nb_variables):
-        self.nb_variables = nb_variables
+    def __init__(self, explainer, positive_instances, negative_instances):
+        explainer.set_instance(positive_instances[0])
+        self.nb_variables = len(explainer.binary_representation)
         self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
         self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
 
@@ -39,7 +40,11 @@ class User:
         result = []
         for instance in instances:
             explainer.set_instance(instance)
+
+            print("go:", explainer.binary_representation)
             reason = explainer.tree_specific_reason(n_iterations=1, theta=theta)
+            print("go end")
+            
             new_rule = True
             for rule in result:  # reason does not specialize existing rule
                 if generalize(rule, reason, self.nb_variables):
@@ -71,10 +76,14 @@ def generalize(rule1, rule2, len_binary):
     if len(rule1) > len(rule2):
         return False
 
-    occurences = [0 for _ in range(len_binary + 1)]
     for lit in rule1:
-        occurences[abs(lit)] = lit
-    for lit in rule2:
-        if occurences[abs(lit)] != lit:
+        if lit not in rule2:
             return False
+
+    #occurences = [0 for _ in range(len_binary + 1)]
+    #for lit in rule1:
+    #    occurences[abs(lit)] = lit
+    #for lit in rule2:
+    #    if occurences[abs(lit)] != lit:
+    #        return False
     return True

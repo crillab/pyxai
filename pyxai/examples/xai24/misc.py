@@ -1,21 +1,23 @@
 import math
-
 import constants
+from pyxai import Learning, Explainer, Tools, Builder
 
-def create_binary_representation(explainer_user, explainer_AI):
-    for key in explainer_user.get_model().map_numerical_features.keys():
-        id_binaries = explainer_user.get_model().map_numerical_features[key]
-        conditions = [tuple(list(explainer_user.get_model().map_id_binaries_to_features[id]) + [id]) for id in id_binaries]
-        conditions = sorted(conditions, key=lambda t: t[2], reverse=True)
-        id_binaries_sorted = tuple(condition[3] for condition in conditions)
-        print(conditions)
-        #id_binaries_sorted = tuple(condition[3] for condition in conditions)
+#model_user => BT
+#model_AI => RF
+def create_binary_representation(model_user, model_AI):
+    print("...:", model_user.learner_information.feature_names)
+    fake_trees = model_AI.forest+model_user.forest
+    n_features_max = max(tree.n_features for tree in fake_trees)
+    for tree in fake_trees:
+        tree.n_features = n_features_max
+    fake_RF = Builder.RandomForest(fake_trees, n_classes=2, feature_names=model_user.learner_information.feature_names)
 
-    #print("numerical user:   ", explainer_user.get_model().map_numerical_features)
-    #print("categorical user: ", explainer_user.get_model().map_categorical_features_one_hot)
-    #print("binary user:      ", explainer_user.get_model().map_binary_features)
+    fake_RF.forest = fake_RF.forest[0:len(model_AI.forest)]    
 
-    return 0, 0  # TODO the theory the number of variables
+    fake_BT = Builder.BoostedTrees(fake_trees, n_classes=2, feature_names=model_user.learner_information.feature_names)
+    fake_BT.forest = fake_BT.forest[len(model_AI.forest):]    
+
+    return fake_RF, fake_BT
 
 #------------------------------------------------------------------------------------
 # Change weights of BT and compute accuracy of a test set
