@@ -15,7 +15,7 @@ def create_binary_representation(explainer_user, explainer_AI):
     #print("categorical user: ", explainer_user.get_model().map_categorical_features_one_hot)
     #print("binary user:      ", explainer_user.get_model().map_binary_features)
 
-    return None  # TODO the theory
+    return 0, 0  # TODO the theory the number of variables
 
 #------------------------------------------------------------------------------------
 # Change weights of BT and compute accuracy of a test set
