@@ -43,6 +43,8 @@ explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
 # Keep the same representation in AI but, increase the binary representation
 sigma, nb_variables = misc.create_binary_representation(explainer_user, explainer_AI)
 
+# TODO : change the representation of instances (positive, negative, unclassified, test....)
+
 user = user.User(explainer_user, positive_instances, negative_instances, nb_variables)
 
 if constants.trace:
