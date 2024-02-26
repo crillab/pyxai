@@ -1,9 +1,12 @@
 import math
 import constants
+
+
 class User:
-    def __init__(self, explainer, positive_instances, negative_instances):
+    def __init__(self, explainer, positive_instances, negative_instances, nb_variables):
         self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
         self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
+        self.nb_variables = nb_variables
 
     def predict_instance(self, binary_representation):
         """
@@ -13,13 +16,22 @@ class User:
         return None otherwise
         """
         for rule in self.positive_rules:
-            if generalize(rule, binary_representation, len(binary_representation)):
+            if generalize(rule, binary_representation, self.nb_variables):
                 return 1
         for rule in self.negative_rules:
-            if generalize(rule, binary_representation, len(binary_representation)):
+            if generalize(rule, binary_representation, self.nb_variables):
                 return 0
         return None
 
+    def remove_specialized(self, reason, positive):
+        rules = self.positive_rules if positive else self.negative_rules
+        tmp = [r for r in rules if not generalize(reason, r)]
+        if len(tmp) != len(rules):
+            tmp.append(reason)
+            if positive:
+                self.positive_rules = tmp
+            else:
+                self.negative_rules = tmp
 
     # -------------------------------------------------------------------------------------
     #  Create the rules for a given set of instances
@@ -30,14 +42,14 @@ class User:
             reason = explainer.tree_specific_reason(n_iterations=1, theta=theta)
             new_rule = True
             for rule in result:  # reason does not specialize existing rule
-                if generalize(rule, reason, len(explainer.binary_representation)):
+                if generalize(rule, reason, self.nb_variables):
                     # print("\n---\nreason:", reason, "\nspecial:", rule)
                     new_rule = False
                     break
             if new_rule:  # if not
                 tmp = []  # can be done more efficiently
-                for rule in result:  # remove specialied rules
-                    if not generalize(reason, rule, len(explainer.binary_representation)):
+                for rule in result:  # remove specialized rules
+                    if not generalize(reason, rule, self.nb_variables):
                         tmp.append(rule)
                     else:
                         pass
@@ -46,6 +58,7 @@ class User:
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
         return result
+
 
 # -------------------------------------------------------------------------------------
 
@@ -65,6 +78,3 @@ def generalize(rule1, rule2, len_binary):
         if occurences[abs(lit)] != lit:
             return False
     return True
-
-
-
