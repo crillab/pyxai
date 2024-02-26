@@ -33,21 +33,22 @@ if constants.trace:
 # Create user
 explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
 
-user = user.User(explainer_user, positive_instances, negative_instances)
+
+# create AI
+learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
+model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123) # The same seed
+explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
+
+# Create the global theory, enlarge AI in consequence change the representation for user
+# Keep the same representation in AI but, increase the binary representation
+sigma, nb_variables = misc.create_binary_representation(explainer_user, explainer_AI)
+
+user = user.User(explainer_user, positive_instances, negative_instances, nb_variables)
 
 if constants.trace:
     print("nb positive rules", len(user.positive_rules))
     print("nb negative rules", len(user.negative_rules))
 print("WARNING: what about N")
-
-# create AI
-learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123) # The same seed
-explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types) # miss theory TODO
-
-# Create the global theory, enlarge AI in consequence change the representation for user
-# Keep the same representation in AI but, increase the binary representation
-sigma = misc.create_binary_representation(explainer_user, explainer_AI)
 
 
 # Iterate on all classified instances
@@ -57,15 +58,15 @@ for detailed_instance in classified_instances:
 
     prediction_AI = model_AI.predict_instance(instance)
     prediction_user = user.predict_instance(explainer_AI.binary_representation) # no they have the same representation
-    reason_AI = explainer_AI.majoritary_reason()  # TODO utile ??
+    rule_AI = explainer_AI.majoritary_reason()
     # All cases
     if prediction_user is None:  # cases (3) (4) (5)
-        cases.cases_3_4_5()
+        cases.cases_3_4_5(explainer_AI, rule_AI, user)
     else:
         if prediction_AI != prediction_user:  # case (1)
-            cases.case_1(explainer_AI, user)
+            cases.case_1(explainer_AI, rule_AI, user)
         if prediction_AI == prediction_user:  # case (2)
-            cases.case_2()
+            cases.case_2(explainer_AI, rule_AI, user)
 
 # je demande à l'ia
 # une des 5 cas arrive et je modifie l'ia en conséquence (et aussi le U)

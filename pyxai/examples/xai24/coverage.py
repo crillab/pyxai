@@ -35,6 +35,6 @@ class Coverage:
             first_call = False
         assert (self.nb_models_in_theory is not None)
 
-        nb_pos = self.number_of_models_for_rules(sigma, positive_rules, self.nb_variables)
-        nb_neg = self.number_of_models_for_rules(sigma, negative_rules, self.nb_variables)
+        nb_pos = self.number_of_models_for_rules(sigma, positive_rules)
+        nb_neg = self.number_of_models_for_rules(sigma, negative_rules)
         return (nb_pos + nb_neg) / self.nb_models_in_theory
