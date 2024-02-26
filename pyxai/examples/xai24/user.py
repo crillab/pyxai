@@ -41,9 +41,7 @@ class User:
         for instance in instances:
             explainer.set_instance(instance)
 
-            print("go:", explainer.binary_representation)
             reason = explainer.tree_specific_reason(n_iterations=1, theta=theta)
-            print("go end")
             
             new_rule = True
             for rule in result:  # reason does not specialize existing rule

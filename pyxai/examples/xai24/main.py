@@ -43,23 +43,24 @@ model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, tes
 # Keep the same representation in AI but, increase the binary representation
 #model_user => BT
 #model_AI => RF
-model_AI, model_user = misc.create_binary_representation(model_user, model_AI)
-#explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
-#explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
-explainer_user = Explainer.initialize(model_user)
-explainer_AI = Explainer.initialize(model_AI)
+
+model_user, model_AI = misc.create_binary_representation(model_user, model_AI)
+
+explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
+explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
+#explainer_user = Explainer.initialize(model_user)
+#explainer_AI = Explainer.initialize(model_AI)
+
 
 #nb_variables = 2000# len(explainer_AI.binary_representation)
-explainer_user.set_instance(positive_instances[0])
-explainer_AI.set_instance(positive_instances[0])
+#explainer_user.set_instance(positive_instances[0])
+#explainer_AI.set_instance(positive_instances[0])
 
 #print(explainer_user.to_features(explainer_user._binary_representation, eliminate_redundant_features=False, details=True))
 #print(explainer_AI.to_features(explainer_AI._binary_representation, eliminate_redundant_features=False, details=True))
 
 
-assert explainer_user._binary_representation == explainer_AI._binary_representation, "Gros probleme"
-print("ca passe")
-
+#assert explainer_user._binary_representation == explainer_AI._binary_representation, "Gros probleme"
 # TODO : change the representation of instances (positive, negative, unclassified, test....)
 
 user = user.User(explainer_user, positive_instances, negative_instances)

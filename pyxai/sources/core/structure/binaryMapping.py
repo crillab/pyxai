@@ -182,14 +182,21 @@ class BinaryMapping():
 
         # For categorical features that was one hot encoded
         for key in self.map_categorical_features_one_hot.keys():
+            #print("key:", key)
             id_binaries = self.map_categorical_features_one_hot[key]
+            #print("key:", id_binaries)
+            
+            
             for i, id_1 in enumerate(id_binaries):
                 for j, id_2 in enumerate(id_binaries):
                     if i != j:
-                        # we code a => not b that is equivalent to not a or not b (material implication)
+                        #if self.map_id_binaries_to_features[abs(id_1)][0] == self.map_id_binaries_to_features[abs(id_2)][0]:
+                        #    clauses.append((-id_1, id_2))
+                        #    clauses.append((id_1, -id_2))
+                        #else:
+                            # we code a => not b that is equivalent to not a or not b (material implication)
                         clauses.append((-id_1, -id_2))
-
-                        # For binary feature, nothing to do.
+                            # For binary feature, nothing to do.
 
         if theory_type == TypeTheory.SIMPLE:
             return clauses
