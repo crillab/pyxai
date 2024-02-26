@@ -42,7 +42,7 @@ explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
 # Create the global theory, enlarge AI in consequence change the representation for user
 # Keep the same representation in AI but, increase the binary representation
 sigma, nb_variables = misc.create_binary_representation(explainer_user, explainer_AI)
-
+nb_variables = 2000# len(explainer_AI.binary_representation)
 # TODO : change the representation of instances (positive, negative, unclassified, test....)
 
 user = user.User(explainer_user, positive_instances, negative_instances, nb_variables)
@@ -54,21 +54,29 @@ print("WARNING: what about N")
 
 
 # Iterate on all classified instances
+nb_cases_1 = 0
+nb_cases_2 = 0
+nb_cases_3 = 0
+print("positive", user.positive_rules)
 for detailed_instance in classified_instances:
     instance = detailed_instance['instance']
     explainer_AI.set_instance(instance)
-
     prediction_AI = model_AI.predict_instance(instance)
-    prediction_user = user.predict_instance(explainer_AI.binary_representation) # no they have the same representation
-    rule_AI = explainer_AI.majoritary_reason()
+    prediction_user = user.predict_instance(explainer_AI.binary_representation)  # no they have the same representation
+    rule_AI = explainer_AI.majoritary_reason(n_iterations=1)
     # All cases
+    print(prediction_user)
     if prediction_user is None:  # cases (3) (4) (5)
         cases.cases_3_4_5(explainer_AI, rule_AI, user)
+        nb_cases_3 += 1
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
+            nb_cases_1 += 1
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
+            nb_cases_2 += 1
+    print(nb_cases_1, nb_cases_2, nb_cases_3)
 
 # je demande à l'ia
 # une des 5 cas arrive et je modifie l'ia en conséquence (et aussi le U)

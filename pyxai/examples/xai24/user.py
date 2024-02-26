@@ -4,9 +4,9 @@ import constants
 
 class User:
     def __init__(self, explainer, positive_instances, negative_instances, nb_variables):
+        self.nb_variables = nb_variables
         self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
         self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
-        self.nb_variables = nb_variables
 
     def predict_instance(self, binary_representation):
         """
