@@ -230,7 +230,6 @@ class Explainer:
         self.activate_theory()
 
         self.map_indexes = dict()  # Used to count used_features_without_one_hot_encoded
-
         # Firstly, for the numerical one
         for feature in self._numerical_features:
             # Warning ids of features start from 1 to n (not 0), this is why there is +1 here.

@@ -25,8 +25,11 @@ class TreeEnsembles(BinaryMapping):
             else:
                 self.classes.add(tree.target_class)
 
+        #for tree in forest:
+        #    print("here:", tree.n_features)
+
         assert all(isinstance(tree, DecisionTree) for tree in forest), "All trees in the forest have to be of the type DecisionTree."
-        assert all(tree.n_features == self.n_features for tree in forest), "All trees in the forest have to have the same number of input (features)."
+        #assert all(tree.n_features == self.n_features for tree in forest), "All trees in the forest have to have the same number of input (features)."
         assert all(tree.force_features_equal_to_binaries == self.force_features_equal_to_binaries for tree in
                    forest), "All trees in the forest have to have the same force_features_equal_to_binaries value."
 
