@@ -51,4 +51,4 @@ class D4Solver:
             return None
 
         n_models = [int(line.split(" ")[1]) for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "s"]
-        return n_models
+        return n_models[0]

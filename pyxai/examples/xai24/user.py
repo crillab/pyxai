@@ -60,7 +60,7 @@ class User:
 
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
-        return result
+        return result[0:constants.N]
 
 
 # -------------------------------------------------------------------------------------
