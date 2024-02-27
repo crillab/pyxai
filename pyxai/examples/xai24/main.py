@@ -3,7 +3,7 @@ import cases
 import user
 import constants
 import misc
-
+import coverage
 
 
 # Create the user agent
@@ -13,10 +13,10 @@ instances = learner_user.get_instances(model_user, indexes=Learning.TEST, detail
 
 # Change weights of BT
 if constants.debug:
-    print("Accuracy before", misc.get_accuracy(model_user, instances[0:100]))
+    print("Accuracy before", misc.get_accuracy(model_user, test_set=instances[0:200]))
 misc.change_weights(model_user)
 if constants.debug:
-    print("Accuracy after ", misc.get_accuracy(model_user, instances[0:100]))
+    print("Accuracy after ", misc.get_accuracy(model_user, instances[0:200]))
 
 
 # Extract test instances and classified instances
@@ -36,7 +36,7 @@ if constants.trace:
 
 # create AI
 learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123) # The same seed
+model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123, n_estimators=5) # The same seed
 
 
 # Create the global theory, enlarge AI in consequence change the representation for user
@@ -49,7 +49,7 @@ model_user, model_AI = misc.create_binary_representation(model_user, model_AI)
 # Create the explainers
 explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
 explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
-
+explainer_AI.set_instance(positive_instances[0])
 if constants.debug:
     explainer_user.set_instance(positive_instances[0])
     explainer_AI.set_instance(positive_instances[0])
@@ -71,6 +71,7 @@ nb_cases_3 = 0
 nb_cases_4 = 0
 nb_cases_5 = 0
 
+cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5)
 
 for detailed_instance in classified_instances:
     instance = detailed_instance['instance']
@@ -79,7 +80,7 @@ for detailed_instance in classified_instances:
     prediction_user = user.predict_instance(explainer_AI.binary_representation)  # no they have the same representation
     rule_AI = explainer_AI.majoritary_reason(n_iterations=1)
     # All cases
-    print(prediction_user)
+    print("user: ", prediction_user, "AI: ", prediction_AI)
     if prediction_user is None:  # cases (3) (4) (5)
         match cases.cases_3_4_5(explainer_AI, rule_AI, user):
             case 3:
@@ -96,13 +97,13 @@ for detailed_instance in classified_instances:
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
             nb_cases_2 += 1
-    print(nb_cases_1, nb_cases_2, nb_cases_3)
+    if constants.trace:
+        print(nb_cases_1, nb_cases_2, nb_cases_3, nb_cases_4, nb_cases_5)
+        print("nb positive rules", len(user.positive_rules))
+        print("nb negative rules", len(user.negative_rules))
+        # print("accuracy", misc.get_accuracy(explainer_AI.get_model(), test_set=instances[0:200]))
+        # print(cvg.coverage(user))
 
-# je demande à l'ia
-# une des 5 cas arrive et je modifie l'ia en conséquence (et aussi le U)
-
-# on evalue par paquet de 10
-# on evalue sur le test set
 
 # - accuracy de IA
 # - couverture : combien d'instances U est il capable de classer

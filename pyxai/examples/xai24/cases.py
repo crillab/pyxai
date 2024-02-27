@@ -12,7 +12,7 @@ def case_1(explainer_AI, rule_AI, user):
     nb = 0
     for rule in rules:
         if u.conflict(rule, rule_AI):
-            explainer_AI.rectify(rule, 1 if explainer_AI.target_prediction == 0 else 0)
+            explainer_AI.rectify(conditions=rule, label=1 if explainer_AI.target_prediction == 0 else 0)
             nb += 1
     if constants.debug:
         assert (nb > 0)  # check that there is no mistake
@@ -28,7 +28,7 @@ def case_2(explainer_AI, rule_AI, user):
     c = 1 if explainer_AI.target_prediction == 0 else 0
     for rule in rules:
         if u.conflict(rule, rule_AI):
-            explainer_AI.rectify(rule, c)
+            explainer_AI.rectify(conditions=rule, label=c)
 
     # remove specialized rules by rule_AI
     user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
@@ -43,7 +43,7 @@ def case_3(explainer_AI, rule_AI, user):
     correction = False
     for rule in rules:
         if u.conflict(rule, rule_AI):
-            explainer_AI.rectify(rule, c)
+            explainer_AI.rectify(conditions=rule, label=c)
             correction = True
     return correction
 
@@ -53,7 +53,7 @@ def case_4(explainer_AI, rule_AI, user):
 
     for rule in rules:
         if u.specialize(rule_AI, rule):
-            explainer_AI.rectify(rule, explainer_AI.prediction)  # TODO : classes 0 et 1 ??
+            explainer_AI.rectify(conditions=rule, label=explainer_AI.prediction)
             correction = True
 
     return correction
