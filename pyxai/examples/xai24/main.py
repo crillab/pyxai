@@ -43,25 +43,18 @@ model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, tes
 # Keep the same representation in AI but, increase the binary representation
 #model_user => BT
 #model_AI => RF
-
 model_user, model_AI = misc.create_binary_representation(model_user, model_AI)
 
+
+# Create the explainers
 explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
 explainer_AI = Explainer.initialize(model_AI, features_type=Tools.Options.types)
-#explainer_user = Explainer.initialize(model_user)
-#explainer_AI = Explainer.initialize(model_AI)
 
+if constants.debug:
+    explainer_user.set_instance(positive_instances[0])
+    explainer_AI.set_instance(positive_instances[0])
+    assert explainer_user._binary_representation == explainer_AI._binary_representation, "Big problem :)"
 
-#nb_variables = 2000# len(explainer_AI.binary_representation)
-#explainer_user.set_instance(positive_instances[0])
-#explainer_AI.set_instance(positive_instances[0])
-
-#print(explainer_user.to_features(explainer_user._binary_representation, eliminate_redundant_features=False, details=True))
-#print(explainer_AI.to_features(explainer_AI._binary_representation, eliminate_redundant_features=False, details=True))
-
-
-#assert explainer_user._binary_representation == explainer_AI._binary_representation, "Gros probleme"
-# TODO : change the representation of instances (positive, negative, unclassified, test....)
 
 user = user.User(explainer_user, positive_instances, negative_instances)
 
@@ -75,7 +68,10 @@ print("WARNING: what about N")
 nb_cases_1 = 0
 nb_cases_2 = 0
 nb_cases_3 = 0
-print("positive", user.positive_rules)
+nb_cases_4 = 0
+nb_cases_5 = 0
+
+
 for detailed_instance in classified_instances:
     instance = detailed_instance['instance']
     explainer_AI.set_instance(instance)
@@ -85,8 +81,14 @@ for detailed_instance in classified_instances:
     # All cases
     print(prediction_user)
     if prediction_user is None:  # cases (3) (4) (5)
-        cases.cases_3_4_5(explainer_AI, rule_AI, user)
-        nb_cases_3 += 1
+        match cases.cases_3_4_5(explainer_AI, rule_AI, user):
+            case 3:
+                nb_cases_3 += 1
+            case 4:
+                nb_cases_4 += 1
+            case 5:
+                nb_cases_5 += 1
+
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
