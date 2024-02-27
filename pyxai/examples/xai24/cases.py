@@ -37,6 +37,10 @@ def case_2(explainer_AI, rule_AI, user):
 
 
 def case_3(explainer_AI, rule_AI, user):
+    """
+    Policy based
+    rectify rules in conflict with prediction
+    """
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
 
     c = 1 if explainer_AI.target_prediction == 0 else 0
@@ -48,6 +52,10 @@ def case_3(explainer_AI, rule_AI, user):
     return correction
 
 def case_4(explainer_AI, rule_AI, user):
+    """
+    There is no rule in conflict (case 3 does not occur)
+    remove specialized instances
+    """
     rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
     correction = False
 
@@ -55,12 +63,14 @@ def case_4(explainer_AI, rule_AI, user):
         if u.specialize(rule_AI, rule):
             explainer_AI.rectify(conditions=rule, label=explainer_AI.prediction)
             correction = True
-
     return correction
 
 
 def case_5(explainer_AI, rule_AI, user):
-
+    """
+    Everything is ok
+    One can add this rule and believe in it
+    """
     rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
     rules.append(rule_AI)
     return True

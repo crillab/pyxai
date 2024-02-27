@@ -1,5 +1,5 @@
 from pyxai.sources.solvers.COMPILER.D4Solver import D4Solver
-
+import random
 
 # -------------------------------------------------------------------------------------
 # Compute coverage
@@ -15,7 +15,7 @@ class Coverage:
         self.sigma = sigma
 
     def number_of_models_for_rules(self, rules):
-        compiler = D4Solver()
+        compiler = D4Solver(filenames="/tmp/rules"+str(random.randint(1,100000)))
         cnf = self.sigma.copy()
         aux = self.nb_variables
         for rule in rules:
@@ -30,7 +30,7 @@ class Coverage:
     def coverage(self, user):
         if self.first_call:  # Compute once the number of model of the theory
             first_call = False
-            models_in_sigma = D4Solver()
+            models_in_sigma = D4Solver(filenames="/tmp/sigma-")
             models_in_sigma.add_cnf(self.sigma, self.nb_variables)
             self.nb_models_in_theory = models_in_sigma.count(time_limit=self.time_limit)
             first_call = False

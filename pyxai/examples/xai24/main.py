@@ -30,9 +30,6 @@ if constants.trace:
     print("nb negatives:", len(negative_instances))
     print("nb unclassified:", len(unclassified_instances))
 
-# Create user
-#explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
-
 
 # create AI
 learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
@@ -56,7 +53,17 @@ if constants.debug:
     assert explainer_user._binary_representation == explainer_AI._binary_representation, "Big problem :)"
 
 
+# Create the user
 user = user.User(explainer_user, positive_instances, negative_instances)
+
+if constants.debug: # Check if all positive and negatives instances are predicted
+    for instance in positive_instances:
+        explainer_user.set_instance(instance)
+        assert(user.predict_instance(explainer_user.binary_representation) != 0)  # we do not take all rules
+    for instance in negative_instances:
+        explainer_user.set_instance(instance)
+        assert(user.predict_instance(explainer_user.binary_representation) != 1)  # we do not take all rules
+
 
 if constants.trace:
     print("nb positive rules", len(user.positive_rules))
@@ -101,10 +108,9 @@ for detailed_instance in classified_instances:
         print(nb_cases_1, nb_cases_2, nb_cases_3, nb_cases_4, nb_cases_5)
         print("nb positive rules", len(user.positive_rules))
         print("nb negative rules", len(user.negative_rules))
-        # print("accuracy", misc.get_accuracy(explainer_AI.get_model(), test_set=instances[0:200]))
-        # print(cvg.coverage(user))
-
-
+        print("accuracy", misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances[0:200]))
+    #print(cvg.coverage(user))
+    #sys.exit(1)
 # - accuracy de IA
 # - couverture : combien d'instances U est il capable de classer
 
