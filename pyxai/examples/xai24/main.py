@@ -108,7 +108,8 @@ for detailed_instance in classified_instances:
         print(nb_cases_1, nb_cases_2, nb_cases_3, nb_cases_4, nb_cases_5)
         print("nb positive rules", len(user.positive_rules))
         print("nb negative rules", len(user.negative_rules))
-        print("accuracy", misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances[0:200]))
+        print("accuracy IA", misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances[0:200]))
+        print("accuracy user: ", user.accurary(test_instances))
     #print(cvg.coverage(user))
     #sys.exit(1)
 # - accuracy de IA
