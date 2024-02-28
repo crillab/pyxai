@@ -77,7 +77,6 @@ cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_
 accuracy_user = [user.accurary(classified_instances)]
 accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), classified_instances)]
 coverages = [cvg.coverage()]
-exit(1)
 tmp = 0
 nb_instances = 50
 for detailed_instance in classified_instances[0:nb_instances]:
