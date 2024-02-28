@@ -14,8 +14,6 @@ def case_1(explainer_AI, rule_AI, user):
 
     for rule in rules:
         if u.conflict(rule, rule_AI):
-            print("rule", rule)
-            print("ia", rule_AI)
             explainer_AI.rectify(conditions=rule, label=1 if explainer_AI.target_prediction == 0 else 0)
             nb += 1
     if constants.debug:
