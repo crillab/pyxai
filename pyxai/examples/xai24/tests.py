@@ -23,10 +23,8 @@ assert(u.conflict([-2], [2]) is False)
 
 
 
-# Use cases
-rules = [[2, 3], [4, 2]]
-rule = [4, 2]
-rule_AI = [1, 9, 0]
 
-new_rule_AI = u.replace(rules, rule, rule_AI)
-print("Règle AI après remplacement :", new_rule_AI)
+rule = (-12, 16, -22, 30, 41, -99, -127, 199, 218, 226, -273, -296, -345)
+ia = (2, 16, 21, 31, -37, 112, 406)
+print("ici ", u.conflict(rule, ia))
+

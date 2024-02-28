@@ -24,11 +24,24 @@ class User:
                 return 0
         return None
 
+    def get_rules_predict_instance(self, binary_representation, prediction):
+        tmp = []
+        if prediction:
+            for rule in self.positive_rules:
+                if generalize(rule, binary_representation):
+                    tmp.append(rule)
+        else:
+            for rule in self.negative_rules:
+                if generalize(rule, binary_representation):
+                    tmp.append(rule)
+        return tmp
+
     def remove_specialized(self, reason, positive):
         rules = self.positive_rules if positive else self.negative_rules
         tmp = [r for r in rules if not generalize(reason, r)]
         if len(tmp) != len(rules):
             tmp.append(reason)
+            constants.statistics["generalisations"] += 1
             if positive:
                 self.positive_rules = tmp
             else:
@@ -41,7 +54,7 @@ class User:
         for instance in instances:
             explainer.set_instance(instance)
 
-            reason = explainer.tree_specific_reason(n_iterations=1, theta=theta)
+            reason = explainer.tree_specific_reason(n_iterations=constants.n_iterations, theta=theta)
 
             new_rule = True
             for rule in result:  # reason does not specialize existing rule
@@ -60,7 +73,7 @@ class User:
 
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
-        return result[0:constants.N]
+        return sorted(result)[0:constants.N]
 
 
     def accurary(self, test_set):
