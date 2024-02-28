@@ -5,7 +5,7 @@ import constants
 import misc
 import coverage
 
-
+#Tools.set_verbose(0)
 # Create the user agent
 learner_user = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model_user = learner_user.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, test_size=1 - constants.training_size, seed=123)
@@ -72,50 +72,65 @@ print("WARNING: what about N")
 
 
 # Iterate on all classified instances
-nb_cases_1 = 0
-nb_cases_2 = 0
-nb_cases_3 = 0
-nb_cases_4 = 0
-nb_cases_5 = 0
 
 cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5)
-
-for detailed_instance in classified_instances:
+accuracy_user = [user.accurary(classified_instances)]
+accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), classified_instances)]
+coverages = [cvg.coverage(user)]
+tmp = 0
+nb_instances = 50
+for detailed_instance in classified_instances[0:nb_instances]:
     instance = detailed_instance['instance']
     explainer_AI.set_instance(instance)
     prediction_AI = model_AI.predict_instance(instance)
     prediction_user = user.predict_instance(explainer_AI.binary_representation)  # no they have the same representation
-    rule_AI = explainer_AI.majoritary_reason(n_iterations=1)
+    rule_AI = explainer_AI.majoritary_reason(n_iterations=constants.n_iterations)
     # All cases
     print("user: ", prediction_user, "AI: ", prediction_AI)
     if prediction_user is None:  # cases (3) (4) (5)
         match cases.cases_3_4_5(explainer_AI, rule_AI, user):
             case 3:
-                nb_cases_3 += 1
+                constants.statistics["cases_3"] += 1
             case 4:
-                nb_cases_4 += 1
+                constants.statistics["cases_4"] += 1
             case 5:
-                nb_cases_5 += 1
+                constants.statistics["cases_5"] += 1
 
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
-            nb_cases_1 += 1
+            explainer_AI.set_instance(instance)
+            if explainer_AI.target_prediction == prediction_AI:
+                print("Aie aie aie")
+                print(explainer_AI.binary_representation)
+            assert(explainer_AI.target_prediction != prediction_AI)
+            constants.statistics["cases_1"] += 1
+
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
-            nb_cases_2 += 1
+            constants.statistics["cases_2"] += 1
+    coverages.append(cvg.coverage(user))
     if constants.trace:
-        print(nb_cases_1, nb_cases_2, nb_cases_3, nb_cases_4, nb_cases_5)
-        print("nb positive rules", len(user.positive_rules))
+        print(constants.statistics)
+        print("------\nnb positive rules", len(user.positive_rules))
         print("nb negative rules", len(user.negative_rules))
-        print("accuracy IA", misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances[0:200]))
-        print("accuracy user: ", user.accurary(test_instances))
-    #print(cvg.coverage(user))
+        accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_set=classified_instances))
+        accuracy_user.append(user.accurary(classified_instances))
+        if len(accuracy_AI) > 1 and accuracy_AI[-1] != accuracy_AI[-2]:
+            print("ICCCCCCCC", accuracy_AI[-1], accuracy_AI[-2])
+            tmp += 1
+        print("accuracy IA", accuracy_AI)
+        print("accuracy user: ", accuracy_user)
+        print("coverages", coverages)
+
     #sys.exit(1)
 # - accuracy de IA
 # - couverture : combien d'instances U est il capable de classer
 
+print("accuracy AI  ", set(accuracy_AI))
+print("accuracy user", set(accuracy_user))
 
+print("coverages    ", coverages)
 
 
 
