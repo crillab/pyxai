@@ -8,7 +8,7 @@ class User:
         self.nb_variables = len(explainer.binary_representation)
         self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
         self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
-
+        self.explainer = explainer
     def predict_instance(self, binary_representation):
         """
         Take in parameter the binary representation of an instance
@@ -61,6 +61,18 @@ class User:
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
         return result[0:constants.N]
+
+
+    def accurary(self, test_set):
+        nb = 0
+        total = 0
+        for instance in test_set:
+            self.explainer.set_instance(instance["instance"])
+            prediction = self.predict_instance(self.explainer.binary_representation)
+            if prediction is not None:
+                nb += 1 if prediction == instance['label'] else 0
+                total += 1
+        return nb / total
 
 
 # -------------------------------------------------------------------------------------
