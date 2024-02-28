@@ -73,10 +73,11 @@ print("WARNING: what about N")
 
 # Iterate on all classified instances
 
-cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5)
+cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5, user)
 accuracy_user = [user.accurary(classified_instances)]
 accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), classified_instances)]
-coverages = [cvg.coverage(user)]
+coverages = [cvg.coverage()]
+exit(1)
 tmp = 0
 nb_instances = 50
 for detailed_instance in classified_instances[0:nb_instances]:
@@ -109,7 +110,7 @@ for detailed_instance in classified_instances[0:nb_instances]:
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
             constants.statistics["cases_2"] += 1
-    coverages.append(cvg.coverage(user))
+    coverages.append(cvg.coverage())
     if constants.trace:
         print(constants.statistics)
         print("------\nnb positive rules", len(user.positive_rules))
