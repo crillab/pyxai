@@ -39,5 +39,5 @@ class Coverage:
 
         nb_pos = self.number_of_models_for_rules(self.user.positive_rules)
         nb_neg = self.number_of_models_for_rules(self.user.negative_rules)
-        print(nb_neg, nb_pos, self.nb_models_in_theory)
+        #print(nb_neg, nb_pos, self.nb_models_in_theory)
         return (nb_pos + nb_neg) / self.nb_models_in_theory

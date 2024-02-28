@@ -121,12 +121,10 @@ def conflict(rule1, rule2):
     Check if two rules are in conflict
     """
     # Vérifie si les conditions des règles sont les mêmes
-    if not (specialize(rule1, rule2) and generalize(rule1, rule2)):
-        for lit in rule1:
-            if -lit in rule2:
-                return False
-        return True
-    return False
+    for lit in rule1:
+        if -lit in rule2:
+            return False
+    return True
 
 
 
