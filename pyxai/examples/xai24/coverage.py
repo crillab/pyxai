@@ -45,8 +45,6 @@ class Coverage:
         nb_neg = self.number_of_models_for_rules(self.user.negative_rules)
         if nb_neg is None:
             return None
-        print(self.nb_models_in_theory, nb_pos, nb_neg)
-        exit(1)
         return (nb_pos + nb_neg) / self.nb_models_in_theory
 
 
