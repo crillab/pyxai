@@ -25,12 +25,7 @@ class Coverage:
                 cnf.append([-aux, lit])
             cnf.append([aux] + [-lit for lit in rule])
 
-        if len(rules) > 1:
-            aux += 1
-            for lit in range(self.nb_variables + 1, aux):
-                cnf.append([aux, -lit])
-            cnf.append([-aux] + [lit for lit in range(self.nb_variables + 1, aux)])
-        print(cnf)
+        cnf.append([lit for lit in range(self.nb_variables + 1, aux + 1)])
         compiler.add_cnf(cnf, aux)
 
         return compiler.count(time_limit=self.time_limit)
