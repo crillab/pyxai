@@ -117,18 +117,12 @@ for detailed_instance in classified_instances[0:nb_instances]:
         print(constants.statistics)
         print("------\nnb positive rules", len(user.positive_rules))
         print("nb negative rules", len(user.negative_rules))
-        accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_set=classified_instances))
-        accuracy_user.append(user.accurary(classified_instances))
-        if len(accuracy_AI) > 1 and accuracy_AI[-1] != accuracy_AI[-2]:
-            print("ICCCCCCCC", accuracy_AI[-1], accuracy_AI[-2])
-            tmp += 1
+        accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances))
+        accuracy_user.append(user.accurary(test_instances))
         print("accuracy IA", accuracy_AI)
         print("accuracy user: ", accuracy_user)
         print("coverages", coverages)
 
-    #sys.exit(1)
-# - accuracy de IA
-# - couverture : combien d'instances U est il capable de classer
 
 print("accuracy AI  ", set(accuracy_AI))
 print("accuracy user", set(accuracy_user))
