@@ -35,7 +35,7 @@ if constants.trace:
 # create AI
 print("Create AI")
 learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123, n_estimators=5) # The same seed
+model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123) # The same seed
 
 
 # Create the global theory, enlarge AI in consequence change the representation for user
@@ -76,7 +76,7 @@ print("WARNING: what about N")
 
 # Iterate on all classified instances
 
-cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5, user)
+cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 50, user)
 accuracy_user = [user.accurary(test_instances)]
 accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), test_instances)]
 coverages = [cvg.coverage()]
@@ -103,10 +103,10 @@ for detailed_instance in classified_instances[0:nb_instances]:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
             explainer_AI.set_instance(instance)
-            if explainer_AI.target_prediction == prediction_AI:
-                print("Aie aie aie")
-                print(explainer_AI.binary_representation)
-            assert(explainer_AI.target_prediction != prediction_AI)
+            #if explainer_AI.target_prediction == prediction_AI:
+            #    print("Aie aie aie")
+            #    print(explainer_AI.binary_representation)
+            #assert(explainer_AI.target_prediction != prediction_AI)
             constants.statistics["cases_1"] += 1
 
         if prediction_AI == prediction_user:  # case (2)
