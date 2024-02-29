@@ -134,34 +134,3 @@ print("accuracy AI  ", set(accuracy_AI))
 print("accuracy user", set(accuracy_user))
 
 print("coverages    ", coverages)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
