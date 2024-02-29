@@ -30,7 +30,7 @@ print("ici ", u.conflict(rule, ia))
 print("coverage")
 sigma = [[1, -2], [-3, -4]]
 nb_v = 5
-positives = [[2, 4]]
+positives = [[2, 4], [1, 5]]
 negatives = [[-1, -4]]
 
 cvg = coverage.Coverage(sigma, nb_v , None, None)
