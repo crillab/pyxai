@@ -25,11 +25,14 @@ class Coverage:
                 cnf.append([-aux, lit])
             cnf.append([aux] + [-lit for lit in rule])
 
-        aux += 1
-        for lit in range(self.nb_variables + 1, aux):
+        if len(rules) > 1:
+            aux += 1
+            for lit in range(self.nb_variables + 1, aux):
                 cnf.append([aux, -lit])
-        cnf.append([-aux] + [lit for lit in range(self.nb_variables, aux)])
+            cnf.append([-aux] + [lit for lit in range(self.nb_variables + 1, aux)])
+        print(cnf)
         compiler.add_cnf(cnf, aux)
+
         return compiler.count(time_limit=self.time_limit)
 
     def coverage(self):
@@ -48,4 +51,20 @@ class Coverage:
         if nb_neg is None:
             return None
         print(self.nb_models_in_theory, nb_pos, nb_neg)
+        exit(1)
         return (nb_pos + nb_neg) / self.nb_models_in_theory
+
+
+    def test(self, sigma, positives, negatives, nb_variables):
+        models_in_sigma = D4Solver(filenames="/tmp/sigma-")
+        models_in_sigma.add_cnf(self.sigma, self.nb_variables)
+        nb_sigma = models_in_sigma.count()
+        nb_pos = self.number_of_models_for_rules(positives)
+        nb_neg = self.number_of_models_for_rules(negatives)
+        print(nb_sigma, nb_pos, nb_neg)
+
+
+
+
+
+
