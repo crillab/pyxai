@@ -5,18 +5,19 @@ import constants
 import misc
 import coverage
 
-#Tools.set_verbose(0)
+Tools.set_verbose(0)
 # Create the user agent
+print("create BT")
 learner_user = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model_user = learner_user.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, test_size=1 - constants.training_size, seed=123)
 instances = learner_user.get_instances(model_user, indexes=Learning.TEST, details=True)
 
 # Change weights of BT
-if constants.debug:
-    print("Accuracy before", misc.get_accuracy(model_user, test_set=instances[0:200]))
+#if constants.debug:
+#    print("Accuracy before", misc.get_accuracy(model_user, test_set=instances[0:200]))
 misc.change_weights(model_user)
-if constants.debug:
-    print("Accuracy after ", misc.get_accuracy(model_user, instances[0:200]))
+#if constants.debug:
+#    print("Accuracy after ", misc.get_accuracy(model_user, instances[0:200]))
 
 
 # Extract test instances and classified instances
@@ -32,6 +33,7 @@ if constants.trace:
 
 
 # create AI
+print("Create AI")
 learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123, n_estimators=5) # The same seed
 
@@ -54,6 +56,7 @@ if constants.debug:
 
 
 # Create the user
+print("Create user")
 user = user.User(explainer_user, positive_instances, negative_instances)
 
 if constants.debug: # Check if all positive and negatives instances are predicted
