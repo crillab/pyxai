@@ -77,11 +77,11 @@ print("WARNING: what about N")
 # Iterate on all classified instances
 
 cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 5, user)
-accuracy_user = [user.accurary(classified_instances)]
-accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), classified_instances)]
+accuracy_user = [user.accurary(test_instances)]
+accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), test_instances)]
 coverages = [cvg.coverage()]
 tmp = 0
-nb_instances = 50
+nb_instances = 100
 for detailed_instance in classified_instances[0:nb_instances]:
     instance = detailed_instance['instance']
     explainer_AI.set_instance(instance)
