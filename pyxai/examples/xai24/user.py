@@ -85,6 +85,7 @@ class User:
             if prediction is not None:
                 nb += 1 if prediction == instance['label'] else 0
                 total += 1
+        print(total)
         return nb / total
 
 
