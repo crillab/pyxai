@@ -3,6 +3,8 @@ import user as u
 import user as u
 import constants
 
+
+
 def case_1(explainer_AI, rule_AI, user):
     """
     prediction AI and prediction user differ
@@ -13,7 +15,7 @@ def case_1(explainer_AI, rule_AI, user):
     rules = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
     # assert(len(rules) > 1)
     for rule in rules:
-        if u.conflict(rule, rule_AI):
+        if u.conflict(explainer_AI, rule, rule_AI):
             explainer_AI.rectify(conditions=rule, label=1 if explainer_AI.target_prediction == 0 else 0)
             nb += 1
     if constants.debug:
@@ -26,14 +28,14 @@ def case_2(explainer_AI, rule_AI, user):
     User and AI agree
     """
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
-    rules2 = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
+    #rules2 = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
     #assert(len(rules2) == 0)
     # rectify AI with some opposite rules
-    #c = 1 if explainer_AI.target_prediction == 0 else 0
-    #for rule in rules:
-    #    if u.conflict(rule, rule_AI):
-    #        explainer_AI.rectify(conditions=rule, label=c)
-    #        constants.statistics["rectifications"] += 1
+    c = 1 if explainer_AI.target_prediction == 0 else 0
+    for rule in rules:
+        if u.conflict(explainer_AI, rule, rule_AI):
+            explainer_AI.rectify(conditions=rule, label=c)
+            constants.statistics["rectifications"] += 1
 
     # remove specialized rules by rule_AI
     user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
@@ -45,13 +47,12 @@ def case_3(explainer_AI, rule_AI, user):
     Policy based
     rectify rules in conflict with prediction
     """
-    #return False
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
 
     c = 1 if explainer_AI.target_prediction == 0 else 0
     correction = False
     for rule in rules:
-        if u.conflict(rule, rule_AI):
+        if u.conflict(explainer_AI, rule, rule_AI):
             explainer_AI.rectify(conditions=rule, label=c)
             constants.statistics["rectifications"] += 1
             correction = True
@@ -95,36 +96,3 @@ def cases_3_4_5(explainer_AI, rule_AI, user):
     case_5(explainer_AI, rule_AI, user)
     return 5
 
-
-"""
-# -------------------------------------------------------------------------------------
-def case_1(explainer_AI, rule_AI, user):
-    #  Explainer AI and user disagree on the instance (the one hat is in explainer)
-    #  Explainer must be rectified
-    rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
-    nb = 0
-    c = 1 if explainer_AI.target_prediction == 0 else 0
-    for rule in rules:
-        if u.generalize(rule, rule_AI)):
-            explainer_AI.rectify(rule, c)  # TODO : classes 0 et 1 ??
-            nb += 1
-    assert (nb > 0)  # check that there is no mistake
-
-
-def case_2(explainer_AI, rule_AI, user):
-    # Explainer AI and user agree on the instance
-
-    #  Step 1 rectify the other rules
-    rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
-    c = 1 if explainer_AI.target_prediction == 0 else 0
-    for rule in rules:
-        if u.generalize(rule, rule_AI, len(explainer_AI.binary_representation)): # TODO FAUX
-            explainer_AI.rectify(rule, c)  # TODO : classes 0 et 1 ??
-
-    #  Step 2 : remove rules that are generalized by AI rule
-    user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
-
-
-def cases_3_4_5(explainer_AI, rule_AI, user):
-    pass
-"""
