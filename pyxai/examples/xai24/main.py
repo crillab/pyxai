@@ -124,14 +124,13 @@ for detailed_instance in classified_instances[0:nb_instances]:
     # All cases
     # print("user: ", prediction_user, "AI: ", prediction_AI)
     if prediction_user is None:  # cases (3) (4) (5)
-        match cases.cases_3_4_5(explainer_AI, rule_AI, user):
-            case 3:
+         cas = cases.cases_3_4_5(explainer_AI, rule_AI, user)
+         if cas == 3:
                 constants.statistics["cases_3"] += 1
-            case 4:
+         if cas == 4:
                 constants.statistics["cases_4"] += 1
-            case 5:
+         if cas == 5:
                 constants.statistics["cases_5"] += 1
-
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
