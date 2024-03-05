@@ -51,7 +51,19 @@ def change_weights(model):
         for leave in leaves:
             leave.value = leave.value / max_weight
 
+def acuracy_wrt_user(user, explainer_AI, model_AI, test_set) : 
+    nb = 0
+    for instance in test_set:
+        explainer_AI.set_instance(instance["instance"])
 
+        prediction_user = user.predict_instance(explainer_AI.binary_representation)
+        if prediction_user is not None:
+            if model_AI.predict_instance(instance["instance"]) == prediction_user:
+                nb += 1
+        else : 
+            if model_AI.predict_instance(instance["instance"]) == instance["label"]:
+                nb += 1
+    return nb / len(test_set)
 # -------------------------------------------------------------------------------------
 # Partition instances between positive, negative and unclassified ones (wrt BT model (user)
 def partition_instances(model, classified_instances):

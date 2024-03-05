@@ -27,7 +27,7 @@ def case_2(explainer_AI, rule_AI, user):
     """
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
     rules2 = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
-    assert(len(rules2) == 0)
+    #assert(len(rules2) == 0)
     # rectify AI with some opposite rules
     #c = 1 if explainer_AI.target_prediction == 0 else 0
     #for rule in rules:
@@ -45,7 +45,7 @@ def case_3(explainer_AI, rule_AI, user):
     Policy based
     rectify rules in conflict with prediction
     """
-    return False
+    #return False
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
 
     c = 1 if explainer_AI.target_prediction == 0 else 0

@@ -4,6 +4,7 @@ import user
 import constants
 import misc
 import coverage
+import matplotlib.pyplot as plt
 
 Tools.set_verbose(0)
 # Create the user agent
@@ -11,7 +12,6 @@ print("create BT")
 learner_user = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model_user = learner_user.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, test_size=1 - constants.training_size, seed=123)
 instances = learner_user.get_instances(model_user, indexes=Learning.TEST, details=True)
-
 # Change weights of BT
 #if constants.debug:
 #    print("Accuracy before", misc.get_accuracy(model_user, test_set=instances[0:200]))
@@ -36,6 +36,7 @@ if constants.trace:
 print("Create AI")
 learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
 model_AI = learner_AI.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, test_size=1 - constants.training_size, seed=123) # The same seed
+#n_estimators=100
 
 
 # Create the global theory, enlarge AI in consequence change the representation for user
@@ -78,7 +79,7 @@ print("WARNING: what about N")
 
 cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 50, user)
 accuracy_user = [user.accurary(test_instances)]
-accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), test_instances)]
+accuracy_AI = [misc.acuracy_wrt_user(user,explainer_AI,explainer_AI.get_model(), test_instances)]
 coverages = [cvg.coverage()]
 tmp = 0
 nb_instances = 100
@@ -117,14 +118,101 @@ for detailed_instance in classified_instances[0:nb_instances]:
         print(constants.statistics)
         print("------\nnb positive rules", len(user.positive_rules))
         print("nb negative rules", len(user.negative_rules))
-        accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_set=test_instances))
+        accuracy_AI.append(misc.acuracy_wrt_user(user,explainer_AI,explainer_AI.get_model(), test_instances))
         accuracy_user.append(user.accurary(test_instances))
         print("accuracy IA", accuracy_AI)
         print("accuracy user: ", accuracy_user)
         print("coverages", coverages)
 
+jeu_de_donnée='compas'
+epochs = list(range(1, len(accuracy_AI) + 1))
 
-print("accuracy AI  ", set(accuracy_AI))
-print("accuracy user", set(accuracy_user))
+# Créer le graphique
+plt.figure(figsize=(8, 6))
+plt.plot(epochs, accuracy_AI, marker='o', color='skyblue',linestyle='-')
 
-print("coverages    ", coverages)
+# Ajouter des titres et des labels
+plt.title('accuracy_AI ')
+plt.xlabel('nb rules')
+plt.ylabel('accuracy_AI')
+
+# Définir les intervalles pour les axes
+plt.xticks(range(1, len(accuracy_AI) + 1, 6))
+# Afficher le graphique
+plt.grid(True)
+plt.savefig(jeu_de_donnée+'_accuracy_AI.png')
+
+plt.show()
+
+
+epochs = list(range(1, len(accuracy_user) + 1))
+
+# Créer le graphique
+plt.figure(figsize=(8, 6))
+plt.plot(epochs, accuracy_user, marker='o', color='skyblue')
+
+# Ajouter des titres et des labels
+plt.title('accuracy_user ')
+plt.xlabel('nb rules')
+plt.ylabel('accuracy_user')
+
+# Définir les intervalles pour les axes
+plt.xticks(range(1, len(accuracy_user) + 1, 6))
+# Afficher le graphique
+plt.grid(True)
+plt.savefig(jeu_de_donnée+'_accuracy_user.png')
+
+plt.show()
+
+
+
+# Créer le graphique
+plt.figure(figsize=(8, 6))
+plt.plot(epochs, coverages, marker='o', color='skyblue')
+
+# Ajouter des titres et des labels
+plt.title('coverages ')
+plt.xlabel('nb rules')
+plt.ylabel('coverages')
+
+# Définir les intervalles pour les axes
+plt.xticks(range(1, len(coverages) + 1, 6))
+# Afficher le graphique
+plt.grid(True)
+plt.savefig(jeu_de_donnée+'_coverages.png')
+
+plt.show()
+
+
+
+
+# Données pour accuracy_AI
+epochs_AI = list(range(1, len(accuracy_AI) + 1))
+
+# Créer le graphique pour accuracy_AI
+plt.figure(figsize=(10, 6))
+plt.plot(epochs_AI, accuracy_AI, marker='o', color='skyblue', label='accuracy_AI')
+
+# Données pour accuracy_user
+epochs_user = list(range(1, len(accuracy_user) + 1))
+
+# Ajouter le graphique pour accuracy_user dans le même graphique
+plt.plot(epochs_user, accuracy_user, marker='o', color='orange', label='accuracy_user')
+
+# Ajouter des titres et des labels
+plt.title('Accuracy Comparison')
+plt.xlabel('nb rules')
+plt.ylabel('Accuracy')
+plt.legend()  # Ajouter la légende
+
+# Définir les intervalles pour les axes
+plt.xticks(range(1, max(len(accuracy_AI), len(accuracy_user)) + 1, 6))
+
+# Afficher la grille
+plt.grid(True)
+
+# Sauvegarder le graphique au format PNG
+plt.savefig(jeu_de_donnée+'_accuracy_user_and_accIA.png')
+
+# Afficher le graphique
+plt.show()
