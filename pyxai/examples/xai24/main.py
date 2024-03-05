@@ -120,7 +120,7 @@ for detailed_instance in classified_instances[0:nb_instances]:
     explainer_AI.set_instance(instance)
     prediction_AI = model_AI.predict_instance(instance)
     prediction_user = user.predict_instance(explainer_AI.binary_representation)  # no they have the same representation
-    rule_AI = explainer_AI.majoritary_reason(n_iterations=constants.n_iterations)
+    rule_AI = explainer_AI.majoritary_reason(n_iterations=constants.n_iterations, seed=123)
     # All cases
     # print("user: ", prediction_user, "AI: ", prediction_AI)
     if prediction_user is None:  # cases (3) (4) (5)
@@ -137,7 +137,6 @@ for detailed_instance in classified_instances[0:nb_instances]:
             explainer_AI.set_instance(instance)
             #if explainer_AI.target_prediction == prediction_AI:
             #    print("Aie aie aie")
-            #    print(explainer_AI.binary_representation)
             #assert(explainer_AI.target_prediction != prediction_AI)
             constants.statistics["cases_1"] += 1
 
@@ -158,14 +157,14 @@ for detailed_instance in classified_instances[0:nb_instances]:
     accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_instances))
 
 
-if constants.trace:
-    print("c statistics", constants.statistics)
-    print("c accuracy AI wrt user:", accuracy_AI_user)
-    print("c accuracy user: ", accuracy_user)
-    print("c accuracy AI:", accuracy_AI)
-    print("c coverages:", coverages)
-    print("c time:", times)
-    print("c nodes:", nodes_AI)
+    if constants.trace:
+        print("c statistics", constants.statistics)
+        print("c accuracy AI wrt user:", accuracy_AI_user)
+        print("c accuracy user: ", accuracy_user)
+        print("c accuracy AI:", accuracy_AI)
+        print("c coverages:", coverages)
+        print("c time:", times)
+        print("c nodes:", nodes_AI)
 
 
 nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]

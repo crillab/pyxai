@@ -119,13 +119,16 @@ def specialize(rule1, rule2):
     return generalize(rule2, rule1)
 
 
-def conflict(rule1, rule2):
+def conflict(explainer_AI, rule1, rule2):
     """
     Check if two rules are in conflict
     """
-    # Vérifie si les conditions des règles sont les mêmes
-    for lit in rule1:
-        if -lit in rule2:
+    # Enlarge rule with theory
+
+    tmp1 = explainer_AI.extend_reason_with_theory(rule1)
+    tmp2 = explainer_AI.extend_reason_with_theory(rule2)
+    for lit in tmp1:
+        if -lit in tmp2:
             return False
     return True
 
