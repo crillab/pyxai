@@ -6,8 +6,11 @@ class User:
     def __init__(self, explainer, positive_instances, negative_instances):
         explainer.set_instance(positive_instances[0])
         self.nb_variables = len(explainer.binary_representation)
-        self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)
-        self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)
+        n_total = len(positive_instances) + len(negative_instances)
+        n_positives = round((len(positive_instances) / n_total)*constants.N)
+        n_negatives = round((len(negative_instances) / n_total)*constants.N)
+        self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)[0:n_positives]
+        self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)[0:n_negatives]
         self.explainer = explainer
     def predict_instance(self, binary_representation):
         """
@@ -73,7 +76,7 @@ class User:
 
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
-        return sorted(result)[0:constants.N]
+        return sorted(result)
 
 
     def accurary(self, test_set):
@@ -85,7 +88,6 @@ class User:
             if prediction is not None:
                 nb += 1 if prediction == instance['label'] else 0
                 total += 1
-        print(total)
         return nb / total
 
 

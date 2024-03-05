@@ -4,6 +4,7 @@ import user
 import constants
 import misc
 import coverage
+import time
 import matplotlib.pyplot as plt
 
 Tools.set_verbose(0)
@@ -72,18 +73,49 @@ if constants.debug: # Check if all positive and negatives instances are predicte
 if constants.trace:
     print("nb positive rules", len(user.positive_rules))
     print("nb negative rules", len(user.negative_rules))
-print("WARNING: what about N")
 
+constants.statistics["n_positives"] = len(user.positive_rules)
+constants.statistics["n_negatives"] = len(user.negative_rules)
+
+
+# Statistics
+cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 50, user)
+accuracy_user = [user.accurary(test_instances)]
+accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), test_instances)]
+accuracy_AI_user = [misc.acuracy_wrt_user(user, explainer_AI, explainer_AI.get_model(), test_instances)]
+coverages = [cvg.coverage()]
+times = []
+nodes_AI = [model_AI.n_nodes()]
+
+nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
+print("c nb binaries at start:", nb_binaries)
+
+nb_features = []
+for rule in user.positive_rules:
+    dict_features = {}
+    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    for key in tmp.keys():
+        if key not in dict_features:
+            dict_features[key] = 1
+    nb_features.append(len(dict_features.keys()))
+for rule in user.negative_rules:
+    dict_features = {}
+    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    for key in tmp.keys():
+        if key not in dict_features:
+            dict_features[key] = 1
+    nb_features.append(len(dict_features.keys()))
+
+print("c nb features at start:", nb_features)
+
+
+print("\n\n")
 
 # Iterate on all classified instances
 
-cvg = coverage.Coverage(explainer_AI.get_model().get_theory(explainer_AI.binary_representation), len(explainer_AI.binary_representation), 50, user)
-accuracy_user = [user.accurary(test_instances)]
-accuracy_AI = [misc.acuracy_wrt_user(user,explainer_AI,explainer_AI.get_model(), test_instances)]
-coverages = [cvg.coverage()]
-tmp = 0
 nb_instances = 100
 for detailed_instance in classified_instances[0:nb_instances]:
+    start_time = time.time()
     instance = detailed_instance['instance']
     explainer_AI.set_instance(instance)
     prediction_AI = model_AI.predict_instance(instance)
@@ -113,23 +145,56 @@ for detailed_instance in classified_instances[0:nb_instances]:
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
             constants.statistics["cases_2"] += 1
-    coverages.append(cvg.coverage())
-    if constants.trace:
-        print(constants.statistics)
-        print("------\nnb positive rules", len(user.positive_rules))
-        print("nb negative rules", len(user.negative_rules))
-        accuracy_AI.append(misc.acuracy_wrt_user(user,explainer_AI,explainer_AI.get_model(), test_instances))
-        accuracy_user.append(user.accurary(test_instances))
-        print("accuracy IA", accuracy_AI)
-        print("accuracy user: ", accuracy_user)
-        print("coverages", coverages)
+    end_time = time.time()
+    times.append(end_time - start_time)
+    nodes_AI.append(model_AI.n_nodes())
 
+    coverages.append(cvg.coverage())
+    constants.statistics["n_positives"] = len(user.positive_rules)
+    constants.statistics["n_negatives"] = len(user.negative_rules)
+    if constants.trace:
+        print("c statistics", constants.statistics)
+        accuracy_AI_user.append(misc.acuracy_wrt_user(user, explainer_AI, explainer_AI.get_model(), test_instances))
+        accuracy_user.append(user.accurary(test_instances))
+        accuracy_AI.append(misc.get_accuracy(explainer_AI.get_model(), test_instances))
+        print("c accuracy AI wrt user:", accuracy_AI_user)
+        print("c accuracy user: ", accuracy_user)
+        print("c accuracy AI:", accuracy_AI)
+        print("c coverages:", coverages)
+        print("c time:", times)
+        print("c nodes:", nodes_AI)
+
+
+nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
+print("c nb binaries at end:", nb_binaries)
+
+nb_features = []
+for rule in user.positive_rules:
+    dict_features = {}
+    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    for key in tmp.keys():
+        if key not in dict_features:
+            dict_features[key] = 1
+    nb_features.append(len(dict_features.keys()))
+for rule in user.negative_rules:
+    dict_features = {}
+    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    for key in tmp.keys():
+        if key not in dict_features:
+            dict_features[key] = 1
+    nb_features.append(len(dict_features.keys()))
+
+print("c nb features at end:", nb_features)
+
+
+
+"""
 jeu_de_donnée='compas'
-epochs = list(range(1, len(accuracy_AI) + 1))
+epochs = list(range(1, len(accuracy_AI_user) + 1))
 
 # Créer le graphique
 plt.figure(figsize=(8, 6))
-plt.plot(epochs, accuracy_AI, marker='o', color='skyblue',linestyle='-')
+plt.plot(epochs, accuracy_AI_user, marker='o', color='skyblue', linestyle='-')
 
 # Ajouter des titres et des labels
 plt.title('accuracy_AI ')
@@ -137,7 +202,7 @@ plt.xlabel('nb rules')
 plt.ylabel('accuracy_AI')
 
 # Définir les intervalles pour les axes
-plt.xticks(range(1, len(accuracy_AI) + 1, 6))
+plt.xticks(range(1, len(accuracy_AI_user) + 1, 6))
 # Afficher le graphique
 plt.grid(True)
 plt.savefig(jeu_de_donnée+'_accuracy_AI.png')
@@ -187,11 +252,11 @@ plt.show()
 
 
 # Données pour accuracy_AI
-epochs_AI = list(range(1, len(accuracy_AI) + 1))
+epochs_AI = list(range(1, len(accuracy_AI_user) + 1))
 
 # Créer le graphique pour accuracy_AI
 plt.figure(figsize=(10, 6))
-plt.plot(epochs_AI, accuracy_AI, marker='o', color='skyblue', label='accuracy_AI')
+plt.plot(epochs_AI, accuracy_AI_user, marker='o', color='skyblue', label='accuracy_AI')
 
 # Données pour accuracy_user
 epochs_user = list(range(1, len(accuracy_user) + 1))
@@ -206,7 +271,7 @@ plt.ylabel('Accuracy')
 plt.legend()  # Ajouter la légende
 
 # Définir les intervalles pour les axes
-plt.xticks(range(1, max(len(accuracy_AI), len(accuracy_user)) + 1, 6))
+plt.xticks(range(1, max(len(accuracy_AI_user), len(accuracy_user)) + 1, 6))
 
 # Afficher la grille
 plt.grid(True)
@@ -216,3 +281,4 @@ plt.savefig(jeu_de_donnée+'_accuracy_user_and_accIA.png')
 
 # Afficher le graphique
 plt.show()
+"""
