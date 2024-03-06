@@ -1,6 +1,6 @@
 import math
 import constants
-
+from pysat.solvers import Glucose4
 
 class User:
     def __init__(self, explainer, positive_instances, negative_instances):
@@ -126,18 +126,28 @@ def specialize(explainer_AI, rule1, rule2):
     return generalize(explainer_AI, rule2, rule1)
 
 
+from pysat.solvers import Glucose4
+
+gluglu = None
 def conflict(explainer_AI, rule1, rule2):
     """
     Check if two rules are in conflict
     """
-    # Enlarge rule with theory
+    global gluglu
+    if gluglu is None:
+        gluglu = Glucose4()
+        gluglu.append_formula(explainer_AI.get_model().get_theory([]))  # no need of binary representation
 
+    return gluglu.solve(assumptions=rule1 + rule2)  # conflict if SAT
+
+    """
+    Old version
     tmp1 = explainer_AI.extend_reason_with_theory(rule1)
     tmp2 = explainer_AI.extend_reason_with_theory(rule2)
     for lit in tmp1:
         if -lit in tmp2:
             return False
     return True
-
+"""
 
 
