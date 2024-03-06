@@ -67,7 +67,7 @@ def case_4(explainer_AI, rule_AI, user):
     correction = False
 
     for rule in rules:
-        if u.specialize(rule_AI, rule):
+        if u.specialize(explainer_AI, rule_AI, rule):
             explainer_AI.rectify(conditions=rule, label=explainer_AI.prediction)
             constants.statistics["rectifications"] += 1
             correction = True

@@ -16,7 +16,7 @@ __python_version__ = str(sys.version).split(os.linesep)[0].split(' ')[0]
 __pyxai_version__ = open(os.path.join(os.path.dirname(__file__), 'version.txt'), encoding='utf-8').read()
 __pyxai_location__ = os.sep.join(pyxai.__file__.split(os.sep)[:-1])
 
-Options.set_values("dataset", "model_directory", "n_iterations", "time_limit", "verbose", "types", "output", "type_references")
+Options.set_values("dataset", "model_directory", "n_iterations", "time_limit", "verbose", "types", "output", "type_references", "N")
 Options.set_flags("f", "gui", "examples", "explanations", "tests")
 Options.parse(sys.argv[1:])
 if Options.verbose is not None: set_verbose(Options.verbose)
