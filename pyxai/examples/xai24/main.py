@@ -7,6 +7,11 @@ import coverage
 import time
 import matplotlib.pyplot as plt
 
+if Tools.Options.n is not None:
+    constants.N = Tools.Options.n
+print("N = ", constants.N)
+
+
 Tools.set_verbose(0)
 # Create the user agent
 print("create BT")
