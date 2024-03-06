@@ -8,7 +8,7 @@ import time
 import matplotlib.pyplot as plt
 
 if Tools.Options.n is not None:
-    constants.N = Tools.Options.n
+    constants.N = int(Tools.Options.n)
 print("N = ", constants.N)
 
 
@@ -89,9 +89,9 @@ accuracy_user = [user.accurary(test_instances)]
 accuracy_AI = [misc.get_accuracy(explainer_AI.get_model(), test_instances)]
 accuracy_AI_user = [misc.acuracy_wrt_user(user, explainer_AI, explainer_AI.get_model(), test_instances)]
 coverages = [cvg.coverage()]
-times = []
+times = [0]
 nodes_AI = [model_AI.n_nodes()]
-
+all_cases = [None]
 nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
 print("c nb binaries at start:", nb_binaries)
 
@@ -118,6 +118,7 @@ print("\n\n")
 
 # Iterate on all classified instances
 
+
 nb_instances = 100
 for detailed_instance in classified_instances[0:nb_instances]:
     start_time = time.time()
@@ -132,10 +133,13 @@ for detailed_instance in classified_instances[0:nb_instances]:
          cas = cases.cases_3_4_5(explainer_AI, rule_AI, user)
          if cas == 3:
                 constants.statistics["cases_3"] += 1
+                all_cases.append(3)
          if cas == 4:
                 constants.statistics["cases_4"] += 1
+                all_cases.append(4)
          if cas == 5:
                 constants.statistics["cases_5"] += 1
+                all_cases.append(5)
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(explainer_AI, rule_AI, user)
@@ -144,10 +148,12 @@ for detailed_instance in classified_instances[0:nb_instances]:
             #    print("Aie aie aie")
             #assert(explainer_AI.target_prediction != prediction_AI)
             constants.statistics["cases_1"] += 1
+            all_cases.append(1)
 
         if prediction_AI == prediction_user:  # case (2)
             cases.case_2(explainer_AI, rule_AI, user)
             constants.statistics["cases_2"] += 1
+            all_cases.append(2)
     end_time = time.time()
 
 
@@ -170,7 +176,8 @@ for detailed_instance in classified_instances[0:nb_instances]:
         print("c coverages:", coverages)
         print("c time:", times)
         print("c nodes:", nodes_AI)
-
+        print("c cases:", all_cases)
+        
 
 nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
 print("c nb binaries at end:", nb_binaries)
