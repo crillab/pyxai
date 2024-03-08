@@ -234,16 +234,16 @@ def create_user_lambda(AI, classified_instances):
         if len(positive_rules) + len(negative_rules) >= constants.N:
             break
         AI.set_instance(detailed_instance["instance"])
-        if random.randint(0, 2) == 0:  # 1/3 not classified
+        rule = AI.reason(n_iterations=1)
+        if len(rule) == len(AI.explainer.binary_representation) or  random.randint(0, 2) == 0:  # 1/3 not classified
             continue
-        rule = AI.reason()
 
         # remove a literal from the rule?
         if random.randint(0, 1) == 0:
             list(rule).pop()
 
         # good or wrong classification
-        classification =random.randint(1, 4)
+        classification =random.randint(0, 4)
         if classification == 0: # wrong
             rules = positive_rules if AI.explainer.target_prediction == 0 else negative_rules
         if classification == 1:  # good wrt AI
