@@ -1,6 +1,6 @@
 import math
 import constants
-from pysat.solvers import Glucose4
+import random
 
 class User:
     def __init__(self, explainer, positive_instances, negative_instances):
@@ -10,8 +10,11 @@ class User:
         n_total = len(positive_instances) + len(negative_instances)
         n_positives = round((len(positive_instances) / n_total)*constants.N)
         n_negatives = round((len(negative_instances) / n_total)*constants.N)
-        self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta)[0:n_positives]
-        self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta)[0:n_negatives]
+        random.shuffle(positive_instances)
+        random.shuffle(negative_instances)
+
+        self.positive_rules = self._create_rules(explainer, positive_instances, constants.theta, n_positives)
+        self.negative_rules = self._create_rules(explainer, negative_instances, -constants.theta, n_negatives)
 
     def predict_instance(self, binary_representation):
         """
@@ -53,7 +56,7 @@ class User:
 
     # -------------------------------------------------------------------------------------
     #  Create the rules for a given set of instances
-    def _create_rules(self, explainer, instances, theta):
+    def _create_rules(self, explainer, instances, theta, nb):
         result = []
         for instance in instances:
             explainer.set_instance(instance)
@@ -77,7 +80,9 @@ class User:
 
                 tmp.append(reason)  # do not forget to add this one
                 result = tmp
-        return sorted(result)
+                if len(result) == nb:
+                    break
+        return result
 
 
     def accurary(self, test_set):
@@ -129,14 +134,21 @@ def specialize(explainer_AI, rule1, rule2):
 from pysat.solvers import Glucose4
 
 gluglu = None
-def conflict(explainer_AI, rule1, rule2):
+def conflict(explainer, rule1, rule2):
     """
     Check if two rules are in conflict
     """
+    tmp1 = explainer.extend_reason_with_theory(rule1)
+    tmp2 = explainer.extend_reason_with_theory(rule2)
+    for lit in tmp1:
+        if -lit in tmp2:
+            return False
+    return True
+
     global gluglu
     if gluglu is None:
         gluglu = Glucose4()
-        gluglu.append_formula(explainer_AI.get_model().get_theory([]))  # no need of binary representation
+        gluglu.append_formula(explainer.get_model().get_theory([]))  # no need of binary representation
 
     return gluglu.solve(assumptions=rule1 + rule2)  # conflict if SAT
 

@@ -13,9 +13,9 @@ def case_1(explainer_AI, rule_AI, user):
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
     nb = 0
     rules = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
-    # assert(len(rules) > 1)
+    assert(len(rules) >= 1)
     for rule in rules:
-        if u.conflict(explainer_AI, rule, rule_AI):
+        if True or u.conflict(explainer_AI, rule, rule_AI):
             start_time = time.time()
             explainer_AI.rectify(conditions=rule, label=1 if explainer_AI.target_prediction == 0 else 0)
             nb += 1
