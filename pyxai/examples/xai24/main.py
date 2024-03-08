@@ -9,9 +9,14 @@ import coverage
 import time
 import model
 import matplotlib.pyplot as plt
+import sys
 random.seed(123)
 Tools.set_verbose(0)
+import time
 
+
+
+global_time = time.time()
 
 if Tools.Options.n is not None:
     constants.N = int(Tools.Options.n)
@@ -83,6 +88,9 @@ print("\n\n")
 random.shuffle(classified_instances)
 nb_instances = 100
 for detailed_instance in classified_instances[0:nb_instances]:
+    if time.time() - global_time > constants.max_time:
+        print("No more time")
+        sys.exit(1)
     start_time = time.time()
     instance = detailed_instance['instance']
     AI.set_instance(instance)
