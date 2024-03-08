@@ -4,12 +4,12 @@ import user as u
 import constants
 import time 
 
-
 def case_1(explainer_AI, rule_AI, user):
     """
     prediction AI and prediction user differ
     rectify AI with all conflicting rule
     """
+
     rules = user.positive_rules if explainer_AI.target_prediction == 0 else user.negative_rules
     nb = 0
     rules = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
