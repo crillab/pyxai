@@ -156,7 +156,8 @@ class CNFencoding():
 
     @staticmethod
     def literals_in_implicant(cnf, implicant):
-        return CNF([[lit for lit in clause if lit in implicant] for clause in cnf])
+        tmp = [[lit for lit in clause if lit in implicant] for clause in cnf]
+        return CNF([clause for clause in tmp if len(clause) > 0])
 
 
     @staticmethod

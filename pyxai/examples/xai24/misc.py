@@ -4,7 +4,31 @@ from pyxai import Learning, Explainer, Tools, Builder
 
 #model_user => BT
 #model_AI => RF
-def create_binary_representation(model_user, model_AI):
+
+
+def create_binary_representation_DT(model_user, AI):
+    model_AI = AI.model
+    fake_trees = [model_AI] + model_user.forest
+    n_features_max = max(tree.n_features for tree in fake_trees)
+    for tree in fake_trees:
+        tree.n_features = n_features_max
+
+    new_model_AI = Builder.RandomForest(fake_trees, n_classes=2,
+                                        feature_names=model_user.learner_information.feature_names)
+    model_AI = new_model_AI.forest[0]
+    model_AI.map_id_binaries_to_features = new_model_AI.map_id_binaries_to_features
+    model_AI.map_features_to_id_binaries = new_model_AI.map_features_to_id_binaries
+
+
+    new_model_user = Builder.BoostedTrees(fake_trees, n_classes=2,
+                                          feature_names=model_user.learner_information.feature_names)
+    new_model_user.forest = new_model_user.forest[1:]
+
+    return new_model_user, model_AI
+
+
+def create_binary_representation_RF(model_user, AI):
+    model_AI = AI.model
     fake_trees = model_AI.forest+model_user.forest
     n_features_max = max(tree.n_features for tree in fake_trees)
     for tree in fake_trees:
@@ -19,6 +43,13 @@ def create_binary_representation(model_user, model_AI):
     new_model_user.forest = new_model_user.forest[len(model_AI.forest):]    
     
     return new_model_user, new_model_AI
+
+def create_binary_representation(model_user, AI):
+    if constants.model == Learning.DT:
+        return create_binary_representation_DT(model_user, AI)
+    else:
+        return create_binary_representation_RF(model_user, AI)
+
 
 #------------------------------------------------------------------------------------
 # Change weights of BT and compute accuracy of a test set
