@@ -10,68 +10,30 @@ import time
 import model
 import matplotlib.pyplot as plt
 random.seed(123)
+Tools.set_verbose(0)
+
+
 if Tools.Options.n is not None:
     constants.N = int(Tools.Options.n)
 print("N = ", constants.N)
 assert(constants.model == Learning.RF or constants.model == Learning.DT)
 
-
-Tools.set_verbose(0)
-# Create the user agent
-print("create BT")
-learner_user = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model_user = learner_user.evaluate(method=Learning.HOLD_OUT, output=Learning.BT, test_size=1 - constants.training_size, seed=123)
-instances = learner_user.get_instances(model_user, indexes=Learning.TEST, details=True)
-# Change weights of BT
-misc.change_weights(model_user)
-
+# create AI
+print("Create AI: ", "DT" if constants.model == Learning.DT else "RF")
+learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
+AI = model.Model(learner_AI)
+AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
+instances = learner_AI.get_instances(AI.model, indexes=Learning.TEST, details=True)
 
 # Extract test instances and classified instances
 threshold = int(len(instances) * constants.classified_size)
 classified_instances = instances[0:threshold]
 test_instances = instances[threshold:-1]
-positive_instances, negative_instances, unclassified_instances = misc.partition_instances(model_user, classified_instances)
 
-if constants.trace:
-    print("nb positives:", len(positive_instances))
-    print("nb negatives:", len(negative_instances))
-    print("nb unclassified:", len(unclassified_instances))
-
-
-# create AI
-print("Create AI: ", "DT" if constants.model == Learning.DT else "RF")
-learner_AI = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-AI = model.Model(learner_AI)
-
-# Create the global theory, enlarge AI in consequence change the representation for user
-# Keep the same representation in AI but, increase the binary representation
-#model_user => BT
-#model_AI => RF / DT
-model_user, AI.model = misc.create_binary_representation(model_user, AI)
-
-
-
-# Create the explainers
-explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
-AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
-AI.set_instance(positive_instances[0])
-explainer_user.set_instance(positive_instances[0])
-if constants.debug:
-    AI.set_instance(positive_instances[0])
-    assert explainer_user._binary_representation == AI.explainer._binary_representation, "Big problem :)"
-
-
-# Create the user
-print("Create user")
-user = user.User(explainer_user, positive_instances, negative_instances)
-
-if constants.debug:  # Check if all positive and negatives instances are predicted
-    for instance in positive_instances:
-        explainer_user.set_instance(instance)
-        assert(user.predict_instance(explainer_user.binary_representation) != 0)  # we do not take all rules
-    for instance in negative_instances:
-        explainer_user.set_instance(instance)
-        assert(user.predict_instance(explainer_user.binary_representation) != 1)  # we do not take all rules
+if constants.user == constants.USER_BT:
+    user = user.create_user_BT(AI)
+if constants.user == constants.USER_LAMBDA:
+    user = user.create_user_lambda(AI, classified_instances)
 
 
 if constants.trace:
@@ -97,14 +59,14 @@ print("c nb binaries at start:", nb_binaries)
 nb_features = []
 for rule in user.positive_rules:
     dict_features = {}
-    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    tmp = user.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
     for key in tmp.keys():
         if key not in dict_features:
             dict_features[key] = 1
     nb_features.append(len(dict_features.keys()))
 for rule in user.negative_rules:
     dict_features = {}
-    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    tmp = user.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
     for key in tmp.keys():
         if key not in dict_features:
             dict_features[key] = 1
@@ -185,14 +147,14 @@ print("c nb binaries at end:", nb_binaries)
 nb_features = []
 for rule in user.positive_rules:
     dict_features = {}
-    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    tmp = AI.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
     for key in tmp.keys():
         if key not in dict_features:
             dict_features[key] = 1
     nb_features.append(len(dict_features.keys()))
 for rule in user.negative_rules:
     dict_features = {}
-    tmp = explainer_user.to_features(rule,details=True, eliminate_redundant_features=False)
+    tmp = AI.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
     for key in tmp.keys():
         if key not in dict_features:
             dict_features[key] = 1
@@ -202,97 +164,3 @@ print("c nb features at end:", nb_features)
 
 
 
-"""
-jeu_de_donnée='compas'
-epochs = list(range(1, len(accuracy_AI_user) + 1))
-
-# Créer le graphique
-plt.figure(figsize=(8, 6))
-plt.plot(epochs, accuracy_AI_user, marker='o', color='skyblue', linestyle='-')
-
-# Ajouter des titres et des labels
-plt.title('accuracy_AI ')
-plt.xlabel('nb rules')
-plt.ylabel('accuracy_AI')
-
-# Définir les intervalles pour les axes
-plt.xticks(range(1, len(accuracy_AI_user) + 1, 6))
-# Afficher le graphique
-plt.grid(True)
-plt.savefig(jeu_de_donnée+'_accuracy_AI.png')
-
-plt.show()
-
-
-epochs = list(range(1, len(accuracy_user) + 1))
-
-# Créer le graphique
-plt.figure(figsize=(8, 6))
-plt.plot(epochs, accuracy_user, marker='o', color='skyblue')
-
-# Ajouter des titres et des labels
-plt.title('accuracy_user ')
-plt.xlabel('nb rules')
-plt.ylabel('accuracy_user')
-
-# Définir les intervalles pour les axes
-plt.xticks(range(1, len(accuracy_user) + 1, 6))
-# Afficher le graphique
-plt.grid(True)
-plt.savefig(jeu_de_donnée+'_accuracy_user.png')
-
-plt.show()
-
-
-
-# Créer le graphique
-plt.figure(figsize=(8, 6))
-plt.plot(epochs, coverages, marker='o', color='skyblue')
-
-# Ajouter des titres et des labels
-plt.title('coverages ')
-plt.xlabel('nb rules')
-plt.ylabel('coverages')
-
-# Définir les intervalles pour les axes
-plt.xticks(range(1, len(coverages) + 1, 6))
-# Afficher le graphique
-plt.grid(True)
-plt.savefig(jeu_de_donnée+'_coverages.png')
-
-plt.show()
-
-
-
-
-# Données pour accuracy_AI
-epochs_AI = list(range(1, len(accuracy_AI_user) + 1))
-
-# Créer le graphique pour accuracy_AI
-plt.figure(figsize=(10, 6))
-plt.plot(epochs_AI, accuracy_AI_user, marker='o', color='skyblue', label='accuracy_AI')
-
-# Données pour accuracy_user
-epochs_user = list(range(1, len(accuracy_user) + 1))
-
-# Ajouter le graphique pour accuracy_user dans le même graphique
-plt.plot(epochs_user, accuracy_user, marker='o', color='orange', label='accuracy_user')
-
-# Ajouter des titres et des labels
-plt.title('Accuracy Comparison')
-plt.xlabel('nb rules')
-plt.ylabel('Accuracy')
-plt.legend()  # Ajouter la légende
-
-# Définir les intervalles pour les axes
-plt.xticks(range(1, max(len(accuracy_AI_user), len(accuracy_user)) + 1, 6))
-
-# Afficher la grille
-plt.grid(True)
-
-# Sauvegarder le graphique au format PNG
-plt.savefig(jeu_de_donnée+'_accuracy_user_and_accIA.png')
-
-# Afficher le graphique
-plt.show()
-"""

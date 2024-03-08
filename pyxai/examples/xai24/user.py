@@ -1,6 +1,8 @@
-import math
+from pyxai import Explainer, Learning, Tools
 import constants
 import random
+import misc
+
 
 class User:
     def __init__(self, explainer, positive_instances, negative_instances):
@@ -8,8 +10,8 @@ class User:
         explainer.set_instance(positive_instances[0])
         self.nb_variables = len(explainer.binary_representation)
         n_total = len(positive_instances) + len(negative_instances)
-        n_positives = round((len(positive_instances) / n_total)*constants.N)
-        n_negatives = round((len(negative_instances) / n_total)*constants.N)
+        n_positives = round((len(positive_instances) / n_total) * constants.N)
+        n_negatives = round((len(negative_instances) / n_total) * constants.N)
         random.shuffle(positive_instances)
         random.shuffle(negative_instances)
 
@@ -84,7 +86,6 @@ class User:
                     break
         return result
 
-
     def accurary(self, test_set):
         nb = 0
         total = 0
@@ -97,6 +98,15 @@ class User:
         if total == 0:
             return None
         return nb / total
+
+
+
+class UserLambda(User):
+    def __init__(self, explainer, nb_v, positive_rules, negative_rules):
+        self.explainer = explainer
+        self.nb_variables = nb_v
+        self.positive_rules = positive_rules
+        self.negative_rules = negative_rules
 
 
 # -------------------------------------------------------------------------------------
@@ -134,6 +144,8 @@ def specialize(explainer_AI, rule1, rule2):
 from pysat.solvers import Glucose4
 
 gluglu = None
+
+
 def conflict(explainer, rule1, rule2):
     """
     Check if two rules are in conflict
@@ -161,5 +173,89 @@ def conflict(explainer, rule1, rule2):
             return False
     return True
 """
+
+
+def create_user_BT(AI):
+    # Create the user agent
+    print("create BT")
+    learner_user = Learning.Xgboost(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
+    model_user = learner_user.evaluate(method=Learning.HOLD_OUT, output=Learning.BT,
+                                       test_size=1 - constants.training_size, seed=123)
+    instances = learner_user.get_instances(model_user, indexes=Learning.TEST, details=True)
+    # Change weights of BT
+    misc.change_weights(model_user)
+
+    # Extract test instances and classified instances
+    threshold = int(len(instances) * constants.classified_size)
+    classified_instances = instances[0:threshold]
+    positive_instances, negative_instances, unclassified_instances = misc.partition_instances(model_user,
+                                                                                              classified_instances)
+
+    if constants.trace:
+        print("nb positives:", len(positive_instances))
+        print("nb negatives:", len(negative_instances))
+        print("nb unclassified:", len(unclassified_instances))
+
+    # Create the global theory, enlarge AI in consequence change the representation for user
+    # Keep the same representation in AI but, increase the binary representation
+    # model_user => BT
+    # model_AI => RF / DT
+    model_user, AI.model = misc.create_binary_representation(model_user, AI)
+
+    # Create the explainers
+    explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
+    AI.set_instance(positive_instances[0])
+    explainer_user.set_instance(positive_instances[0])
+    if constants.debug:
+        AI.set_instance(positive_instances[0])
+        assert explainer_user._binary_representation == AI.explainer._binary_representation, "Big problem :)"
+
+    # Create the user
+    print("Create user")
+    user = User(explainer_user, positive_instances, negative_instances)
+
+    if constants.debug:  # Check if all positive and negatives instances are predicted
+        for instance in positive_instances:
+            explainer_user.set_instance(instance)
+            assert (user.predict_instance(explainer_user.binary_representation) != 0)  # we do not take all rules
+        for instance in negative_instances:
+            explainer_user.set_instance(instance)
+            assert (user.predict_instance(explainer_user.binary_representation) != 1)  # we do not take all rules
+    return user
+
+
+
+def create_user_lambda(AI, classified_instances):
+    positive_rules = []
+    negative_rules = []
+    random.seed(123)
+
+    for detailed_instance in classified_instances:
+        if len(positive_rules) + len(negative_rules) >= constants.N:
+            break
+        AI.set_instance(detailed_instance["instance"])
+        if random.randint(0, 2) == 0:  # 1/3 not classified
+            continue
+        rule = AI.reason()
+
+        # remove a literal from the rule?
+        if random.randint(0, 1) == 0:
+            list(rule).pop()
+
+        # good or wrong classification
+        classification =random.randint(1, 4)
+        if classification == 0: # wrong
+            rules = positive_rules if AI.explainer.target_prediction == 0 else negative_rules
+        if classification == 1:  # good wrt AI
+            rules = positive_rules if AI.explainer.target_prediction == 1 else negative_rules
+        if classification > 1:  # good wrt dataset
+            rules = positive_rules if detailed_instance["label"] == 1 else negative_rules
+
+        rules.append(rule)
+    AI.set_instance(classified_instances[0]["instance"])
+    user = UserLambda(AI.explainer, len(AI.explainer.binary_representation), positive_rules, negative_rules)
+
+    return user
+
 
 

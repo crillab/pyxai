@@ -6,6 +6,10 @@ N = 50
 debug = True
 trace = True
 
+USER_BT = 0
+USER_LAMBDA = 1
+user = USER_LAMBDA
+
 model = Learning.RF
 n_iterations = 1
 statistics = {"rectifications": 0, "generalisations": 0, "cases_1": 0, "cases_2": 0, "cases_3": 0, "cases_4": 0,

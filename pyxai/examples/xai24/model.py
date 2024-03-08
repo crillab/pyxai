@@ -10,9 +10,11 @@ class Model:
         self.explainer.set_instance(instance)
 
 
-    def reason(self ):
+    def reason(self, *, n_iterations=None):
         if constants.model == Learning.RF:
-            return self.explainer.majoritary_reason(n_iterations=constants.n_iterations, seed=123)
+            if n_iterations is None:
+                n_iterations = constants.n_iterations
+            return self.explainer.majoritary_reason(n_iterations=n_iterations, seed=123)
         if constants.model == Learning.DT:
             reason = self.explainer.sufficient_reason()
             return reason
