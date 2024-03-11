@@ -68,6 +68,8 @@ class ExplainerRF(Explainer):
     def is_implicant(self, binary_representation):
         return self._random_forest.is_implicant(binary_representation, self.target_prediction)
 
+    def predict_votes(self, instance):
+        return self._random_forest.predict_votes(instance)
 
     def predict(self, instance):
         return self._random_forest.predict_instance(instance)

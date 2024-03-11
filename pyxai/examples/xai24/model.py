@@ -4,7 +4,7 @@ from pyxai import Learning, Explainer
 class Model:
     def __init__(self, learner_AI):
         self.learner = learner_AI
-        self.model = learner_AI.evaluate(method=Learning.HOLD_OUT, output=constants.model, test_size=1 - constants.training_size, seed=123, n_estimators=10)
+        self.model = learner_AI.evaluate(method=Learning.HOLD_OUT, output=constants.model, test_size=1 - constants.training_size, seed=123)
         self.explainer = None
     def set_instance(self, instance):
         self.explainer.set_instance(instance)

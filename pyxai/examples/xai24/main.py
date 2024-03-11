@@ -38,7 +38,7 @@ test_instances = instances[threshold:-1]
 if constants.user == constants.USER_BT:
     user = user.create_user_BT(AI)
 if constants.user == constants.USER_LAMBDA:
-    user = user.create_user_lambda(AI, classified_instances)
+    user = user.create_user_lambda_forest(AI, classified_instances)
 
 
 if constants.trace:
@@ -48,6 +48,12 @@ if constants.trace:
 constants.statistics["n_positives"] = len(user.positive_rules)
 constants.statistics["n_negatives"] = len(user.negative_rules)
 
+#Rend debile l'IA:
+print("nTrees IA: ", len(AI.model.forest))
+AI.model.forest = AI.model.forest[0:int(len(AI.model.forest)/6)]
+AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
+AI.set_instance(test_instances[0]["instance"])
+print("new nTrees IA: ", len(AI.model.forest))
 
 # Statistics
 cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 50, user)
@@ -133,9 +139,9 @@ for detailed_instance in classified_instances[0:nb_instances]:
     coverages.append(cvg.coverage())
     constants.statistics["n_positives"] = len(user.positive_rules)
     constants.statistics["n_negatives"] = len(user.negative_rules)
-    accuracy_AI_user.append(misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), classified_instances))
-    accuracy_user.append(user.accurary(classified_instances))
-    accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), classified_instances))
+    accuracy_AI_user.append(misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances))
+    accuracy_user.append(user.accurary(test_instances))
+    accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), test_instances))
 
 
     if constants.trace:
@@ -147,7 +153,7 @@ for detailed_instance in classified_instances[0:nb_instances]:
         print("\nc time:", times)
         print("\nc nodes:", nodes_AI)
         print("\nc cases:", all_cases)
-
+        
 
 nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
 print("c nb binaries at end:", nb_binaries)
