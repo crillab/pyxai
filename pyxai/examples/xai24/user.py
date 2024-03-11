@@ -223,13 +223,44 @@ def create_user_BT(AI):
             assert (user.predict_instance(explainer_user.binary_representation) != 1)  # we do not take all rules
     return user
 
+def create_user_lambda_forest(AI, classified_instances):
+    positive_rules = []
+    negative_rules = []
+    random.seed(123)
+    print("type:", type(AI))
 
+    for detailed_instance in classified_instances:
+        if len(positive_rules) + len(negative_rules) >= constants.N:
+            break
+        #AI.set_instance(detailed_instance["instance"])
+        votes, prediction = AI.model.predict_votes(detailed_instance["instance"])
+        tmp0 = votes[0]/(votes[0]+votes[1])
+        tmp1 = votes[1]/(votes[0]+votes[1])
+        votes = tmp0, tmp1
+        if (prediction == 0 and tmp0 >= constants.delta) or (prediction == 1 and tmp1 >= constants.delta):
+        
+            AI.set_instance(detailed_instance["instance"])
+            rule = AI.reason(n_iterations=5)
+            if len(rule) == len(AI.explainer.binary_representation):
+                continue
+            if prediction == 1:
+                positive_rules.append(rule)
+            elif prediction == 0:
+                negative_rules.append(rule)
+
+            #print("votes:", votes)
+            #print("prediction:", prediction)
+
+    
+    #AI.set_instance(classified_instances[0]["instance"])
+    user = UserLambda(AI.explainer, len(AI.explainer.binary_representation), positive_rules, negative_rules)
+    return user
 
 def create_user_lambda(AI, classified_instances):
     positive_rules = []
     negative_rules = []
     random.seed(123)
-
+    
     for detailed_instance in classified_instances:
         if len(positive_rules) + len(negative_rules) >= constants.N:
             break
