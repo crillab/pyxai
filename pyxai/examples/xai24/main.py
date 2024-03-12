@@ -14,7 +14,7 @@ random.seed(123)
 Tools.set_verbose(1)
 import time
 
-
+sys.setrecursionlimit(100000)
 
 global_time = time.time()
 
@@ -74,32 +74,15 @@ cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_represe
 accuracy_user = [user.accurary(test_instances)]
 accuracy_AI = [misc.get_accuracy(AI.explainer.get_model(), test_instances)]
 accuracy_AI_user = [misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances)]
+accuracy_AI_interaction = [misc.get_accuracy(AI.explainer.get_model(), interaction_instances)]
+accuracy_user_interaction = [user.accurary(interaction_instances)]
+
 coverages = [cvg.coverage()]
 times = [0]
 nodes_AI = [AI.model.n_nodes()]
 all_cases = [None]
-nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
-print("c nb binaries at start:", nb_binaries)
 
-nb_features = []
-for rule in user.positive_rules:
-    dict_features = {}
-    tmp = user.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
-    for key in tmp.keys():
-        if key not in dict_features:
-            dict_features[key] = 1
-    nb_features.append(len(dict_features.keys()))
-for rule in user.negative_rules:
-    dict_features = {}
-    tmp = user.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
-    for key in tmp.keys():
-        if key not in dict_features:
-            dict_features[key] = 1
-    nb_features.append(len(dict_features.keys()))
-
-print("c nb features at start:", nb_features)
-
-
+misc.print_features(user)
 print("\n\n")
 
 # Iterate on all classified instances
@@ -156,39 +139,22 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     accuracy_AI_user.append(misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances))
     accuracy_user.append(user.accurary(test_instances))
     accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), test_instances))
-
+    accuracy_AI_interaction.append(misc.get_accuracy(AI.explainer.get_model(), interaction_instances))
+    accuracy_user_interaction.append(user.accurary(interaction_instances))
 
     if constants.trace:
         print("\n--\nc statistics", constants.statistics)
         print("\nc accuracy AI wrt user:", accuracy_AI_user)
         print("\nc accuracy user: ", accuracy_user)
         print("\nc accuracy AI:", accuracy_AI)
+        print("\nc accuracy_AI_interaction:", accuracy_AI_interaction)
+        print("\nc accuracy_user_interaction:", accuracy_user_interaction)
         print("\nc coverages:", coverages)
         print("\nc time:", times)
         print("\nc nodes:", nodes_AI)
         print("\nc cases:", all_cases)
         
 
-nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
-print("c nb binaries at end:", nb_binaries)
-
-nb_features = []
-for rule in user.positive_rules:
-    dict_features = {}
-    tmp = AI.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
-    for key in tmp.keys():
-        if key not in dict_features:
-            dict_features[key] = 1
-    nb_features.append(len(dict_features.keys()))
-for rule in user.negative_rules:
-    dict_features = {}
-    tmp = AI.explainer.to_features(rule,details=True, eliminate_redundant_features=False)
-    for key in tmp.keys():
-        if key not in dict_features:
-            dict_features[key] = 1
-    nb_features.append(len(dict_features.keys()))
-
-print("c nb features at end:", nb_features)
-
+misc.print_features(user)
 
 
