@@ -235,6 +235,8 @@ def create_user_lambda_forest(AI, classified_instances):
     random.seed(123)
     print("type:", type(AI))
 
+    #lenght_reasons = []
+    #ff= []
     for i, detailed_instance in enumerate(classified_instances):
         if len(positive_rules) + len(negative_rules) >= constants.N:
             break
@@ -246,18 +248,27 @@ def create_user_lambda_forest(AI, classified_instances):
         if (prediction == 0 and tmp0 >= constants.delta) or (prediction == 1 and tmp1 >= constants.delta):
         
             AI.set_instance(detailed_instance["instance"])
-            rule = AI.reason(n_iterations=3)
+            rule = AI.reason(n_iterations=50)
+            
             if len(rule) == len(AI.explainer.binary_representation):
                 continue
             result = positive_rules if prediction == 1 else negative_rules
             if is_really_new_rule(AI.explainer, result, rule):  # if not
                 tmp = remove_all_specialized(AI.explainer, result, rule)
+
+                #lenght_reasons.append(len(rule))
+                #ff.append(len(AI.explainer.to_features(rule)))
                 if prediction == 1:
                     positive_rules = tmp
                 else:
                     negative_rules = tmp
-
+    #lenght_reasons = sum(lenght_reasons)/len(lenght_reasons)
+    #print("avg:", lenght_reasons)
+    #print("len(AI.explainer.binary_representation):", len(AI.explainer.binary_representation))
     
+    #lenght_reasons = lenght_reasons/len(AI.explainer.binary_representation)
+    #print("lenght_reasons:", lenght_reasons)
+    #exit(0)
     #AI.set_instance(classified_instances[0]["instance"])
     user = UserLambda(AI.explainer, len(AI.explainer.binary_representation), positive_rules, negative_rules)
     return user

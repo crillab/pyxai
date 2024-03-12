@@ -35,12 +35,14 @@ threshold_1 = int(len(instances) * constants.user_size)
 threshold_2 = int(len(instances) * constants.interaction_size)
 threshold_3 = int(len(instances) * constants.test_size)
 
-print("Total test instances:", len(instances))
+#print("Total test instances:", len(instances))
 
 user_instances = instances[0:threshold_1]
 interaction_instances = instances[threshold_1:threshold_1+threshold_2]
 test_instances = instances[threshold_1+threshold_2:-1]
-
+#test_instances = user_instances
+print("Total instances:", learner_AI.n_instances)
+print("Total training instances:", learner_AI.n_instances -  len(instances))
 print("Total user_instances:", len(user_instances))
 print("Total interaction_instances:", len(interaction_instances))
 print("Total test_instances:", len(test_instances))
