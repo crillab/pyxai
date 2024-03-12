@@ -1,9 +1,13 @@
 from pyxai import  Learning
-training_size = 0.7
-classified_size = 0.5  # ratio with remaining instances
+training_size = 0.3
+
+user_size = 0.5  # ratio with remaining instances
+interaction_size = 0.25
+test_size = 0.25
+
 delta = 0.7 #ratio to do a rule according to the number of votes of the forest 
 theta = 0.5
-N = 50
+N = 1000000
 debug = True
 trace = True
 
