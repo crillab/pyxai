@@ -11,7 +11,7 @@ import model
 import matplotlib.pyplot as plt
 import sys
 random.seed(123)
-Tools.set_verbose(0)
+Tools.set_verbose(1)
 import time
 
 
@@ -31,14 +31,25 @@ AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
 instances = learner_AI.get_instances(AI.model, indexes=Learning.TEST, details=True)
 
 # Extract test instances and classified instances
-threshold = int(len(instances) * constants.classified_size)
-classified_instances = instances[0:threshold]
-test_instances = instances[threshold:-1]
+threshold_1 = int(len(instances) * constants.user_size)
+threshold_2 = int(len(instances) * constants.interaction_size)
+threshold_3 = int(len(instances) * constants.test_size)
+
+print("Total test instances:", len(instances))
+
+user_instances = instances[0:threshold_1]
+interaction_instances = instances[threshold_1:threshold_1+threshold_2]
+test_instances = instances[threshold_1+threshold_2:-1]
+
+print("Total user_instances:", len(user_instances))
+print("Total interaction_instances:", len(interaction_instances))
+print("Total test_instances:", len(test_instances))
+
 
 if constants.user == constants.USER_BT:
     user = user.create_user_BT(AI)
 if constants.user == constants.USER_LAMBDA:
-    user = user.create_user_lambda_forest(AI, classified_instances)
+    user = user.create_user_lambda_forest(AI, user_instances)
 
 
 if constants.trace:
@@ -50,11 +61,14 @@ constants.statistics["n_negatives"] = len(user.negative_rules)
 
 #Rend debile l'IA:
 print("nTrees IA: ", len(AI.model.forest))
-AI.model.forest = AI.model.forest[0:int(len(AI.model.forest)/6)]
+print("accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
+
+AI.model.forest = AI.model.forest[0:1]
 AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
 AI.set_instance(test_instances[0]["instance"])
 print("new nTrees IA: ", len(AI.model.forest))
-
+print("new accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
+#exit(0)
 # Statistics
 cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 50, user)
 accuracy_user = [user.accurary(test_instances)]
@@ -91,9 +105,9 @@ print("\n\n")
 # Iterate on all classified instances
 
 
-random.shuffle(classified_instances)
+random.shuffle(interaction_instances)
 nb_instances = 100
-for detailed_instance in classified_instances[0:nb_instances]:
+for detailed_instance in interaction_instances[0:nb_instances]:
     if time.time() - global_time > constants.max_time:
         print("No more time")
         sys.exit(1)

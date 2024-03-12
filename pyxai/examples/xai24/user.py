@@ -92,6 +92,7 @@ class User:
         for instance in test_set:
             self.explainer.set_instance(instance["instance"])
             prediction = self.predict_instance(self.explainer.binary_representation)
+            #print("prediction:", prediction)
             if prediction is not None:
                 nb += 1 if prediction == instance['label'] else 0
                 total += 1
@@ -204,6 +205,7 @@ def create_user_BT(AI):
 
     # Create the explainers
     explainer_user = Explainer.initialize(model_user, features_type=Tools.Options.types)
+    AI.explainer = Explainer.initialize(AI.model, features_type=Tools.Options.types)
     AI.set_instance(positive_instances[0])
     explainer_user.set_instance(positive_instances[0])
     if constants.debug:
@@ -240,7 +242,7 @@ def create_user_lambda_forest(AI, classified_instances):
         if (prediction == 0 and tmp0 >= constants.delta) or (prediction == 1 and tmp1 >= constants.delta):
         
             AI.set_instance(detailed_instance["instance"])
-            rule = AI.reason(n_iterations=5)
+            rule = AI.reason(n_iterations=50)
             if len(rule) == len(AI.explainer.binary_representation):
                 continue
             if prediction == 1:
