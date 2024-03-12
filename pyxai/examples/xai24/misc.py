@@ -114,3 +114,25 @@ def partition_instances(model, classified_instances):
     return positive, negative, unclassified
 
 
+def print_features(user):
+    nb_binaries = [len(rule) for rule in user.positive_rules] + [len(rule) for rule in user.negative_rules]
+    print("c nb binaries at start:", nb_binaries)
+
+    nb_features = []
+    for rule in user.positive_rules:
+        dict_features = {}
+        tmp = user.explainer.to_features(rule, details=True, eliminate_redundant_features=False)
+        for key in tmp.keys():
+            if key not in dict_features:
+                dict_features[key] = 1
+        nb_features.append(len(dict_features.keys()))
+    for rule in user.negative_rules:
+        dict_features = {}
+        tmp = user.explainer.to_features(rule, details=True, eliminate_redundant_features=False)
+        for key in tmp.keys():
+            if key not in dict_features:
+                dict_features[key] = 1
+        nb_features.append(len(dict_features.keys()))
+
+    print("c nb features at start:", nb_features)
+

@@ -65,23 +65,10 @@ class User:
 
             reason = explainer.tree_specific_reason(n_iterations=constants.n_iterations, theta=theta)
 
-            new_rule = True
-            for rule in result:  # reason does not specialize existing rule
-                if generalize(self.explainer, rule, reason):
-                    # print("\n---\nreason:", reason, "\nspecial:", rule)
-                    new_rule = False
-                    break
-            if new_rule:  # if not
-                tmp = []  # can be done more efficiently
-                for rule in result:  # remove specialized rules
-                    if not generalize(self.explainer, reason, rule):
-                        tmp.append(rule)
-                    else:
-                        pass
-                        # print("\n---\nrule:", rule, "\nspecial:", reason)
+            if is_really_new_rule(self.explainer, result, reason):  # if not
+                result = remove_all_specialized(self.explainer, result, reason)
 
-                tmp.append(reason)  # do not forget to add this one
-                result = tmp
+
                 if len(result) == nb:
                     break
         return result
@@ -121,12 +108,15 @@ def generalize(explainer_AI, rule1, rule2):
     """
     tmp1 = explainer_AI.extend_reason_with_theory(rule1)
     tmp2 = explainer_AI.extend_reason_with_theory(rule2)
-
     if len(tmp1) > len(tmp2):
         return False
 
+    occurrences = {}
+    for lit in tmp2:
+        occurrences[lit] = 1
+
     for lit in tmp1:
-        if lit not in tmp2:
+        if occurrences.get(lit) is None:
             return False
 
     # occurences = [0 for _ in range(len_binary + 1)]
@@ -136,6 +126,27 @@ def generalize(explainer_AI, rule1, rule2):
     #    if occurences[abs(lit)] != lit:
     #        return False
     return True
+
+
+def is_really_new_rule(explainer, rules, new_rule):
+    for rule in rules:  # reason does not specialize existing rule
+        if generalize(explainer, rule, new_rule):
+            return False
+    return True
+
+
+def remove_all_specialized(explainer, rules, reason):
+    tmp = []  # can be done more efficiently
+    for rule in rules:  # remove specialized rules
+        if not generalize(explainer, reason, rule):
+            tmp.append(rule)
+        else:
+            pass
+        # print("\n---\nrule:", rule, "\nspecial:", reason)
+
+    tmp.append(reason)  # do not forget to add this one
+    return tmp
+
 
 
 def specialize(explainer_AI, rule1, rule2):
@@ -151,13 +162,6 @@ def conflict(explainer, rule1, rule2):
     """
     Check if two rules are in conflict
     """
-    tmp1 = explainer.extend_reason_with_theory(rule1)
-    tmp2 = explainer.extend_reason_with_theory(rule2)
-    for lit in tmp1:
-        if -lit in tmp2:
-            return False
-    return True
-
     global gluglu
     if gluglu is None:
         gluglu = Glucose4()
@@ -231,7 +235,7 @@ def create_user_lambda_forest(AI, classified_instances):
     random.seed(123)
     print("type:", type(AI))
 
-    for detailed_instance in classified_instances:
+    for i, detailed_instance in enumerate(classified_instances):
         if len(positive_rules) + len(negative_rules) >= constants.N:
             break
         #AI.set_instance(detailed_instance["instance"])
@@ -242,16 +246,16 @@ def create_user_lambda_forest(AI, classified_instances):
         if (prediction == 0 and tmp0 >= constants.delta) or (prediction == 1 and tmp1 >= constants.delta):
         
             AI.set_instance(detailed_instance["instance"])
-            rule = AI.reason(n_iterations=50)
+            rule = AI.reason(n_iterations=3)
             if len(rule) == len(AI.explainer.binary_representation):
                 continue
-            if prediction == 1:
-                positive_rules.append(rule)
-            elif prediction == 0:
-                negative_rules.append(rule)
-
-            #print("votes:", votes)
-            #print("prediction:", prediction)
+            result = positive_rules if prediction == 1 else negative_rules
+            if is_really_new_rule(AI.explainer, result, rule):  # if not
+                tmp = remove_all_specialized(AI.explainer, result, rule)
+                if prediction == 1:
+                    positive_rules = tmp
+                else:
+                    negative_rules = tmp
 
     
     #AI.set_instance(classified_instances[0]["instance"])
