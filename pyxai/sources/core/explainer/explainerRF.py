@@ -551,7 +551,7 @@ class ExplainerRF(Explainer):
         """
         Tools.verbose("")
         Tools.verbose("-------------- Rectification information:")
-        tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions)
+        tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions, label)
         if label == 1:
             tree_decision_rule = tree_decision_rule.negating_tree()
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
