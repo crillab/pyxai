@@ -61,6 +61,9 @@ if constants.trace:
 constants.statistics["n_positives"] = len(user.positive_rules)
 constants.statistics["n_negatives"] = len(user.negative_rules)
 
+constants.statistics["n_initial_positives"] = len(user.positive_rules)
+constants.statistics["n_initial_negatives"] = len(user.negative_rules)
+
 #Rend debile l'IA:
 print("nTrees IA: ", len(AI.model.forest))
 print("accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
