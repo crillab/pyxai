@@ -16,6 +16,13 @@ class Coverage:
         self.user = user
 
     def number_of_models_for_rules(self, rules):
+        # Special cases
+        if len(rules) == 0:
+            return 0
+        if len(rules) == 1 and len(rules[0]) == 0:
+            return self.nb_models_in_theory
+
+
         compiler = D4Solver(filenames="/tmp/rules"+str(random.randint(1,100000)))
         cnf = self.sigma.copy()
         aux = self.nb_variables
