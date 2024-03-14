@@ -35,9 +35,11 @@ def case_2(explainer_AI, rule_AI, user):
     #rules2 = user.get_rules_predict_instance(explainer_AI.binary_representation, explainer_AI.target_prediction != 1)
     #assert(len(rules2) == 0)
     # rectify AI with some opposite rules
+    in_conflict = False
     c = 1 if explainer_AI.target_prediction == 0 else 0
     for rule in rules:
         if u.conflict(explainer_AI, rule, rule_AI):
+            in_conflict = True
             start_time = time.time()
             explainer_AI.rectify(conditions=rule, label=c)
             constants.statistics["rectifications"] += 1
@@ -46,7 +48,9 @@ def case_2(explainer_AI, rule_AI, user):
             constants.statistics["rectifications_cases"].append(2)
 
     # remove specialized rules by rule_AI
-    user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
+
+    if in_conflict is False:
+        user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
 
 
 

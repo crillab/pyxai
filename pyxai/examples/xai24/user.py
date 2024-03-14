@@ -270,6 +270,16 @@ def create_user_lambda_forest(AI, classified_instances):
     #print("lenght_reasons:", lenght_reasons)
     #exit(0)
     #AI.set_instance(classified_instances[0]["instance"])
+    #print(positive_rules)
+    #print(negative_rules)
+    """
+    for rule1 in positive_rules:
+        for rule2 in negative_rules:
+            assert(conflict(AI.explainer, rule1, rule2) is False)
+    for rule1 in negative_rules:
+        for rule2 in positive_rules:
+            assert (conflict(AI.explainer, rule1, rule2) is False)
+    """
     user = UserLambda(AI.explainer, len(AI.explainer.binary_representation), positive_rules, negative_rules)
     return user
 
