@@ -26,13 +26,18 @@ class Coverage:
         compiler = D4Solver(filenames="/tmp/rules"+str(random.randint(1,100000)))
         cnf = self.sigma.copy()
         aux = self.nb_variables
+        new_clause = []
         for rule in rules:
+            if len(rule) == 1:
+                new_clause.append(rule[0])
+                continue
             aux += 1
             for lit in rule:
                 cnf.append([-aux, lit])
             cnf.append([aux] + [-lit for lit in rule])
+            new_clause.append(aux)
 
-        cnf.append([lit for lit in range(self.nb_variables + 1, aux + 1)])
+        cnf.append(new_clause)
         compiler.add_cnf(cnf, aux)
 
         return compiler.count(time_limit=self.time_limit)
@@ -52,7 +57,12 @@ class Coverage:
         nb_neg = self.number_of_models_for_rules(self.user.negative_rules)
         if nb_neg is None:
             return None
-        return (nb_pos + nb_neg) / self.nb_models_in_theory
+        tmp = (nb_pos + nb_neg) / self.nb_models_in_theory
+        if tmp > 1.0:
+            print(nb_pos, nb_neg, self.nb_models_in_theory)
+            sys.exit(1)
+        assert(tmp <= 1.0)
+        return tmp
 
 
     def test(self, sigma, positives, negatives, nb_variables):

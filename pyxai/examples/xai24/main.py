@@ -2,7 +2,7 @@ import random
 
 from pyxai import Learning, Explainer, Tools
 import cases
-import user
+import user as us
 import constants
 import misc
 import coverage
@@ -49,9 +49,9 @@ print("Total test_instances:", len(test_instances))
 
 
 if constants.user == constants.USER_BT:
-    user = user.create_user_BT(AI)
+    user = us.create_user_BT(AI)
 if constants.user == constants.USER_LAMBDA:
-    user = user.create_user_lambda_forest(AI, user_instances)
+    user = us.create_user_lambda_forest(AI, user_instances)
 
 
 if constants.trace:
@@ -105,6 +105,9 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     prediction_AI = AI.predict_instance(instance)
     prediction_user = user.predict_instance(AI.explainer.binary_representation)  # no they have the same representation
     rule_AI = AI.reason()
+    #print("rule AI", rule_AI)
+    #print("positive", user.positive_rules)
+    #print("negative", user.negative_rules)
     # All cases
     print("user: ", prediction_user, "AI: ", prediction_AI)
     if prediction_user is None:  # cases (3) (4) (5)
@@ -132,6 +135,14 @@ for detailed_instance in interaction_instances[0:nb_instances]:
             cases.case_2(AI.explainer, rule_AI, user)
             constants.statistics["cases_2"] += 1
             all_cases.append(2)
+    """
+    for rule1 in user.positive_rules:
+        for rule2 in user.negative_rules:
+            assert(us.conflict(AI.explainer, rule1, rule2) is False)
+    for rule1 in user.negative_rules:
+        for rule2 in user.positive_rules:
+            assert (us.conflict(AI.explainer, rule1, rule2) is False)
+    """
     end_time = time.time()
 
 
