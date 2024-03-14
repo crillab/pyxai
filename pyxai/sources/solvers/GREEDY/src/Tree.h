@@ -72,6 +72,8 @@ namespace pyxai {
 
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
+        void negating_tree();
+
         void update_used_lits() {
             for(int i : used_lits)
                 used_to_explain[i] = true;

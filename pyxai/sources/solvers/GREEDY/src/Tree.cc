@@ -5,6 +5,10 @@
 #include "Tree.h"
 #include<vector>
 
+void pyxai::Tree::negating_tree() {
+    root->negating_tree();
+}
+
 pyxai::Node *pyxai::Tree::parse(PyObject *tree_obj, Type _type) {
     //std::cout << "parse" << std::endl;
 
@@ -83,6 +87,7 @@ pyxai::Node *pyxai::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     all_nodes.push_back(tmp);
     return tmp;
 }
+
 
 
 void pyxai::Tree::initialize_BT(std::vector<bool> &instance, bool get_min) {
