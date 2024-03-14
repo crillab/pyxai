@@ -551,15 +551,15 @@ class ExplainerRF(Explainer):
             DecisionTree: The rectified tree.  
         """
         
-        if self.c_rectifier is None:
-            self.c_rectifier = c_explainer.new_rectifier()
+        #if self.c_rectifier is None:
+        #    self.c_rectifier = c_explainer.new_rectifier()
             
         Tools.verbose("")
         Tools.verbose("-------------- Rectification information:")
         tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions, label)
-        c_explainer.rectifier_set_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
+        #c_explainer.rectifier_set_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
         if label == 1:
-            c_explainer.rectifier_neg_decision_rule(self.c_rectifier)
+            #c_explainer.rectifier_neg_decision_rule(self.c_rectifier)
             tree_decision_rule = tree_decision_rule.negating_tree()
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
         Tools.verbose("Model - Number of nodes:", self._random_forest.n_nodes())
