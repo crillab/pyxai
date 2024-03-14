@@ -8,6 +8,7 @@
 #include<Python.h>
 #include "Node.h"
 #include "Explainer.h"
+#include "Rectifier.h"
 
 using namespace pyxai;
 static PyObject* vectorToTuple_Int(const std::vector<int> &data) {
@@ -60,6 +61,50 @@ PyObject *new_regression_BT(PyObject *self, PyObject *args) {
     return void_to_pyobject(explainer);
 }
 
+PyObject *new_rectifier(PyObject *self, PyObject *args) {
+    pyxai::Rectifier *rectifier = new pyxai::Rectifier();
+    return void_to_pyobject(rectifier);
+}
+
+static PyObject *rectifier_set_tree(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    PyObject *tree_obj;
+    if (!PyArg_ParseTuple(args, "OO", &class_obj, &tree_obj))
+        return NULL;
+    if (!PyTuple_Check(tree_obj)) {
+        PyErr_Format(PyExc_TypeError,
+                     "The second argument must be a tuple representing a raw tree and given by the python raw_tree() method !");
+        return NULL;
+    }
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->setTree(tree_obj);
+    return Py_None;
+}
+
+static PyObject *rectifier_set_decision_rule(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    PyObject *tree_obj;
+    if (!PyArg_ParseTuple(args, "OO", &class_obj, &tree_obj))
+        return NULL;
+    if (!PyTuple_Check(tree_obj)) {
+        PyErr_Format(PyExc_TypeError,
+                     "The second argument must be a tuple representing a raw tree and given by the python raw_tree() method !");
+        return NULL;
+    }
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->setDecisionRule(tree_obj);
+    return Py_None;
+}
+
+static PyObject *rectifier_neg_decision_rule(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    if (!PyArg_ParseTuple(args, "O", &class_obj))
+        return NULL;
+
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->negatingDecisionRule();
+    return Py_None;
+}
 
 static PyObject *add_tree(PyObject *self, PyObject *args) {
     PyObject *class_obj;
@@ -247,6 +292,10 @@ static PyMethodDef module_methods[] = {
         {"new_classifier_BT", new_classifier_BT, METH_VARARGS, "Create a Classifier_BT explainer."},
         {"new_classifier_RF", new_classifier_RF, METH_VARARGS, "Create a Classifier_RF explainer."},
         {"new_regression_BT", new_regression_BT, METH_VARARGS, "Create a regression BT explainer."},
+        {"new_rectifier", new_rectifier, METH_VARARGS, "Create a rectifier."},
+        {"rectifier_set_tree", rectifier_set_tree, METH_VARARGS, "Set tree."},
+        {"rectifier_set_decision_rule", rectifier_set_decision_rule, METH_VARARGS, "Set tree."},
+        {"rectifier_neg_decision_rule", rectifier_neg_decision_rule, METH_VARARGS, "Negating tree."},
         {"add_tree",          add_tree,          METH_VARARGS, "Add a tree."},
         {"set_excluded",      set_excluded,      METH_VARARGS, "Set excluded features"},
         {"set_theory",        set_theory,        METH_VARARGS, "Set the theory"},

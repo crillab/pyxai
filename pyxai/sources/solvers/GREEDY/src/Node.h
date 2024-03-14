@@ -41,6 +41,18 @@ namespace pyxai {
 
         Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), true_min(0), true_max(0), artificial_leaf(false), tree(f->tree) {}
 
+        inline void negating_tree(){
+            if (is_leaf()) {
+                if (leaf_value.prediction == 1){
+                    leaf_value.prediction = 0;
+                }else if (leaf_value.prediction == 0){
+                    leaf_value.prediction = 1;
+                }
+            }else{
+                false_branch->negating_tree();
+                true_branch->negating_tree();
+            }
+        }
 
         bool is_leaf() {
             return artificial_leaf || (false_branch == nullptr && true_branch == nullptr);
@@ -52,9 +64,9 @@ namespace pyxai {
             } else {
                 std::cout << "[" << lit << ",";
                 false_branch->display(_type);
-                std::cout << "\n";
+                //std::cout << "\n";
                 true_branch->display(_type);
-                std::cout << "\n";
+                //std::cout << "\n";
                 std::cout << "]";
             }
         }
