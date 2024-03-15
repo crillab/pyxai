@@ -551,20 +551,21 @@ class ExplainerRF(Explainer):
             DecisionTree: The rectified tree.  
         """
         
-        #if self.c_rectifier is None:
-        #    self.c_rectifier = c_explainer.new_rectifier()
+        if self.c_rectifier is None:
+            self.c_rectifier = c_explainer.new_rectifier()
             
         Tools.verbose("")
         Tools.verbose("-------------- Rectification information:")
         tree_decision_rule = self._random_forest.forest[0].decision_rule_to_tree(conditions, label)
-        #c_explainer.rectifier_set_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
+        c_explainer.rectifier_set_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
         if label == 1:
-            #c_explainer.rectifier_neg_decision_rule(self.c_rectifier)
+            c_explainer.rectifier_neg_decision_rule(self.c_rectifier)
             tree_decision_rule = tree_decision_rule.negating_tree()
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
         Tools.verbose("Model - Number of nodes:", self._random_forest.n_nodes())
-        
         for i, tree in enumerate(self._random_forest.forest):
+            print("i:", i)
+            c_explainer.rectifier_add_tree(self.c_rectifier, tree.raw_data_for_CPP())
             if label == 1:
                 # When label is 1, we have to inverse the decision rule and disjoint the two trees.  
                 self._random_forest.forest[i] = tree.disjoint_tree(tree_decision_rule)
@@ -573,13 +574,31 @@ class ExplainerRF(Explainer):
                 self._random_forest.forest[i] = tree.concatenate_tree(tree_decision_rule)
             else:
                 raise NotImplementedError("Multiclasses is in progress.")
-            
+
+        if label == 1:
+            c_explainer.rectifier_disjoint_trees_decision_rule(self.c_rectifier)
+        elif label == 0:
+            c_explainer.rectifier_concatenate_trees_decision_rule(self.c_rectifier)
+        else:
+            raise NotImplementedError("Multiclasses is in progress.")
+        
+        self._random_forest.forest[0].display(self._random_forest.forest[0].root)
         Tools.verbose("Model - Number of nodes (after rectification):", self._random_forest.n_nodes())    
+        Tools.verbose("Model - Number of nodes (after rectification) c++:", c_explainer.rectifier_n_nodes(self.c_rectifier))    
+        
+        theory_cnf = self.get_model().get_theory(None)
+        c_explainer.rectifier_set_theory(self.c_rectifier, tuple(theory_cnf))
+        c_explainer.rectifier_simplify_theory(self.c_rectifier)
+        for i in range(len(self._random_forest.forest)):
+            tree = c_explainer.rectifier_get_tree(self.c_rectifier, i)
+            print("ici", tree)
+            
         
         for i, tree in enumerate(self._random_forest.forest):    
             self._random_forest.forest[i] = self.simplify_theory(tree)
         Tools.verbose("Model - Number of nodes (after simplification using the theory):", self._random_forest.n_nodes())
-
+        Tools.verbose("Model - Number of nodes (after simplification using the theory): c++:", c_explainer.rectifier_n_nodes(self.c_rectifier))   
+        
         for i, tree in enumerate(self._random_forest.forest):    
             tree.simplify()
         Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", self._random_forest.n_nodes())

@@ -60,19 +60,26 @@ namespace pyxai {
         Node* parse_recurrence(PyObject *tree_obj, Type _type);
         int nb_nodes();
 
-
+        PyObject* toTuple();
 
         void initialize_BT(std::vector<bool> &instance, bool get_min);
 
 
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
-
+        int nNodes();
 
 
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
         void negating_tree();
+        void concatenateTreeDecisionRule(Tree* decision_rule);
+        void disjointTreeDecisionRule(Tree* decision_rule);
+
+        void simplifyTheory();
+
+        Node* _simplifyTheory(Node* node, std::vector<Lit>* stack, Node* parent, int come_from, Node* root);
+        std::vector<bool>* isNodeConsistent(Node* node, std::vector<Lit>* stack);
 
         void update_used_lits() {
             for(int i : used_lits)

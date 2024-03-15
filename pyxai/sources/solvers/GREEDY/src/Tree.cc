@@ -9,6 +9,131 @@ void pyxai::Tree::negating_tree() {
     root->negating_tree();
 }
 
+void pyxai::Tree::concatenateTreeDecisionRule(Tree* decision_rule){
+    root->concatenateTreeDecisionRule(decision_rule->root);
+}
+        
+void pyxai::Tree::disjointTreeDecisionRule(Tree* decision_rule){
+    root->disjointTreeDecisionRule(decision_rule->root);
+}
+
+int pyxai::Tree::nNodes(){
+    return root->nNodes(root);
+}
+
+void pyxai::Tree::simplifyTheory(){
+    std::cout << "simplifyTheory" << std::endl;
+    std::vector<Lit>* vec = new std::vector<Lit>();
+    root = _simplifyTheory(root, vec, nullptr, -1, root);
+
+}
+
+std::vector<bool>* pyxai::Tree::isNodeConsistent(Node* node, std::vector<Lit>* stack){
+    if (node->is_leaf()){
+        std::vector<bool>* results = new std::vector<bool>();
+        results->push_back(false);
+        results->push_back(false);
+        return results;
+    }
+    std::vector<bool>* results = new std::vector<bool>();
+    Lit lit = node->lit > 0 ? Lit::makeLitTrue(node->lit) : Lit::makeLitFalse(-node->lit);
+    std::cout << "left:" << std::endl;
+    // Check consistency on the left
+    stack->push_back(~lit);
+    propagator->restart();
+    for (std::vector<Lit>::iterator lit = stack->begin(); lit != stack->end(); ++lit){
+        std::cout << "uncheckedEnqueue:" << *lit << std::endl;
+        propagator->uncheckedEnqueue(*lit);
+    }
+    bool ret_left = propagator->propagate();
+    stack->pop_back();
+    results->push_back(ret_left);
+
+    // Check consistency on the right
+    std::cout << "right:" << std::endl;
+    stack->push_back(lit);
+    propagator->restart();
+    for (std::vector<Lit>::iterator lit = stack->begin(); lit != stack->end(); ++lit){
+        std::cout << "uncheckedEnqueue:" << *lit << std::endl;
+        propagator->uncheckedEnqueue(*lit);
+    }
+    bool ret_right = propagator->propagate();
+    stack->pop_back();
+    results->push_back(ret_right);
+    return results;
+}          
+
+/* come_from: -1 => None or 0 or 1 
+*
+*/
+pyxai::Node* pyxai::Tree::_simplifyTheory(Node* node, std::vector<Lit>* stack, Node* parent, int come_from, Node* root){
+    std::cout << "simplifyTheory2" << std::endl;
+    if (node->is_leaf())return root;
+    Lit lit = node->lit > 0 ? Lit::makeLitTrue(node->lit) : Lit::makeLitFalse(-node->lit);
+    std::vector<bool>* results = isNodeConsistent(node, stack);
+    bool left_consistent = (*results)[0];
+    bool right_consistent = (*results)[1];
+
+    if (left_consistent == true){
+        // The left part is consistent, simplify recursively
+        stack->push_back(~lit);
+        root = _simplifyTheory(node->false_branch, stack, node, 0, root);
+        stack->pop_back();
+    }else{
+        // The left part is inconsistent, replace this node with the right
+        if (come_from == -1){
+            // The root change
+            stack->push_back(lit);
+            root = _simplifyTheory(node->true_branch, stack, nullptr, -1, node->true_branch);
+            stack->pop_back();
+        }else if(come_from == 0){
+            // Replace the node
+            parent->false_branch = node->true_branch;
+            stack->push_back(lit);
+            root = _simplifyTheory(node->true_branch, stack, parent, 0, root);
+            stack->pop_back();
+        }else if(come_from == 1){
+            // Replace the node
+            parent->true_branch = node->true_branch;
+            stack->push_back(lit);
+            root = _simplifyTheory(node->true_branch, stack, parent, 1, root);
+            stack->pop_back();
+        }
+    }
+
+    if (right_consistent == true){
+        // The left part is consistent, simplify recursively
+        stack->push_back(lit);
+        root = _simplifyTheory(node->true_branch, stack, node, 1, root);
+        stack->pop_back();
+    }else{
+        // The left part is inconsistent, replace this node with the right
+        if (come_from == -1){
+            // The root change
+            stack->push_back(~lit);
+            root = _simplifyTheory(node->false_branch, stack, nullptr, -1, node->false_branch);
+            stack->pop_back();
+        }else if(come_from == 0){
+            // Replace the node
+            parent->false_branch = node->false_branch;
+            stack->push_back(~lit);
+            root = _simplifyTheory(node->false_branch, stack, parent, 0, root);
+            stack->pop_back();
+        }else if(come_from == 1){
+            // Replace the node
+            parent->true_branch = node->false_branch;
+            stack->push_back(~lit);
+            root = _simplifyTheory(node->false_branch, stack, parent, 1, root);
+            stack->pop_back();
+        }
+    }
+    return root;
+}
+
+PyObject* pyxai::Tree::toTuple(){
+    return root->toTuple();
+}
+
 pyxai::Node *pyxai::Tree::parse(PyObject *tree_obj, Type _type) {
     //std::cout << "parse" << std::endl;
 
