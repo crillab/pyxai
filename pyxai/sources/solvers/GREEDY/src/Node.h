@@ -12,7 +12,7 @@
 #include "bcp/Propagator.h"
 #include "Tree.h"
 #include "constants.h"
-
+#include <Python.h>
 
 
 namespace pyxai {
@@ -41,6 +41,52 @@ namespace pyxai {
 
         Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), true_min(0), true_max(0), artificial_leaf(false), tree(f->tree) {}
 
+        Node(const Node* other){
+                if (other != nullptr){
+                    lit = other->lit; 
+                    leaf_value = other->leaf_value;
+                    if (other->false_branch != nullptr)
+                        false_branch = new Node(other->false_branch); 
+                    else
+                        false_branch = nullptr;
+                    if (other->true_branch != nullptr)    
+                        true_branch = new Node(other->true_branch);
+                    else
+                        true_branch = nullptr;
+                    true_min = other->true_min;
+                    true_max = other->true_max; 
+                    artificial_leaf = other->artificial_leaf; 
+                    tree = nullptr;
+                }
+        }
+
+        inline int nNodes(Node* node){
+            if (node->is_leaf()){
+                return 1;
+            }else{
+                return 1 + nNodes(node->true_branch) + nNodes(node->false_branch);
+            }
+        }
+
+        inline PyObject* toTuple(){
+            
+            if (is_leaf()){
+                return PyLong_FromLong(leaf_value.prediction);
+            }else{
+                PyObject* tuple = PyTuple_New(2);
+                PyObject *id = PyLong_FromLong(lit);
+                PyObject* tuple_child = PyTuple_New(2);
+                PyTuple_SET_ITEM(tuple_child, 0, false_branch->toTuple());
+                PyTuple_SET_ITEM(tuple_child, 1, true_branch->toTuple());
+
+                PyTuple_SET_ITEM(tuple, 0, id);
+                PyTuple_SET_ITEM(tuple, 1, tuple_child);
+                return tuple;
+            }
+            
+        }
+
+
         inline void negating_tree(){
             if (is_leaf()) {
                 if (leaf_value.prediction == 1){
@@ -53,6 +99,44 @@ namespace pyxai {
                 true_branch->negating_tree();
             }
         }
+
+        inline void concatenateTreeDecisionRule(Node* decision_rule_root){
+            if (true_branch->is_leaf()){
+                if (true_branch->leaf_value.prediction == 1){
+                    true_branch = new Node(decision_rule_root);
+                }
+            }else{
+                true_branch->concatenateTreeDecisionRule(decision_rule_root);
+            }
+
+            if (false_branch->is_leaf()){
+                if (false_branch->leaf_value.prediction == 1){
+                    false_branch = new Node(decision_rule_root);
+                }
+            }else{
+                false_branch->concatenateTreeDecisionRule(decision_rule_root);
+            }
+            
+        }
+
+        inline void disjointTreeDecisionRule(Node* decision_rule_root){
+            if (true_branch->is_leaf()){
+                if (true_branch->leaf_value.prediction == 0){
+                    true_branch = new Node(decision_rule_root);
+                }
+            }else{
+                true_branch->disjointTreeDecisionRule(decision_rule_root);
+            }
+
+            if (false_branch->is_leaf()){
+                if (false_branch->leaf_value.prediction == 0){
+                    false_branch = new Node(decision_rule_root);
+                }
+            }else{
+                false_branch->disjointTreeDecisionRule(decision_rule_root);
+            }
+        }
+
 
         bool is_leaf() {
             return artificial_leaf || (false_branch == nullptr && true_branch == nullptr);

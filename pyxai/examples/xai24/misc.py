@@ -59,7 +59,6 @@ def get_accuracy(model, test_set):
     for instance in test_set:
         prediction = model.predict_instance(instance["instance"])
         nb += 1 if prediction == instance['label'] else 0
-    print("nb:", nb)
     return nb / len(test_set)
 
 def get_accuracy_bin(explainer, test_set):
