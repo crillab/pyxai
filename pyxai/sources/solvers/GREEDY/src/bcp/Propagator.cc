@@ -382,4 +382,20 @@ namespace pyxai {
         if (m_trailPos > m_trailSize) m_trailPos = m_trailSize;
     }  // cancelUntilPos
 
+
+    bool Propagator::propagate_assumptions(std::vector<Lit> &lits) {
+        restart();
+        for(Lit lit : lits) {
+               if(value(lit) == l_False) // the lit has the wrong value
+                    return false;
+               if(value(lit) == l_True)  // the lit is ttrue
+                    continue;
+               uncheckedEnqueue(lit);
+               if(propagate() == false)  // propagation si unsat
+                    return false;
+        }
+        return true;
+
+    }
+
 }  // namespace pyxai
