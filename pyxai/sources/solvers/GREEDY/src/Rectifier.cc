@@ -21,7 +21,7 @@ void pyxai::Rectifier::addTree(PyObject *tree_obj) {
 }
 
 void pyxai::Rectifier::setDecisionRule(PyObject *tree_obj) {
-    free(decision_rule);
+    delete decision_rule;
     decision_rule = new Tree(tree_obj, pyxai::Classifier_RF);
 }
 
@@ -32,32 +32,28 @@ int pyxai::Rectifier::nNodes() {
 }
 
 void pyxai::Rectifier::negatingDecisionRule() {
-    decision_rule->display(pyxai::Classifier_RF);
     decision_rule->negating_tree();
-    decision_rule->display(pyxai::Classifier_RF);
-    
+}
+
+void pyxai::Rectifier::free(){
+    for (Tree *tree: trees) {
+        tree->free();
+        delete tree;
+    }
+    trees.clear();
+}
+
+void pyxai::Rectifier::simplifyRedundant(){
+    for (Tree *tree: trees) {tree->simplifyRedundant();}
 }
 
 void pyxai::Rectifier::disjointTreesDecisionRule() {
-    decision_rule->display(pyxai::Classifier_RF);
-    
-    for (Tree *tree: trees) {
-        tree->display(pyxai::Classifier_RF);
-        tree->disjointTreeDecisionRule(decision_rule);
-        tree->display(pyxai::Classifier_RF);
-    }
-    
+    for (Tree *tree: trees) {tree->disjointTreeDecisionRule(decision_rule);}
 }
 
 
 void pyxai::Rectifier::concatenateTreesDecisionRule() {
-    decision_rule->display(pyxai::Classifier_RF);
-    
-    for (Tree *tree: trees) {
-        tree->display(pyxai::Classifier_RF);
-        tree->concatenateTreeDecisionRule(decision_rule);
-        tree->display(pyxai::Classifier_RF);
-    }
+    for (Tree *tree: trees) {tree->concatenateTreeDecisionRule(decision_rule);}
 }
 
 void pyxai::Rectifier::simplifyTheory() {

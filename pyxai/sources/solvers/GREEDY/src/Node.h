@@ -60,6 +60,16 @@ namespace pyxai {
                 }
         }
 
+        inline void _delete(){
+            if (is_leaf()){
+                delete this;
+            }else{
+                true_branch->_delete();
+                false_branch->_delete();
+                delete this;
+            }
+        }
+
         inline int nNodes(Node* node){
             if (node->is_leaf()){
                 return 1;

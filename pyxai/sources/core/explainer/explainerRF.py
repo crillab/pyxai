@@ -560,21 +560,20 @@ class ExplainerRF(Explainer):
         c_explainer.rectifier_set_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
         if label == 1:
             c_explainer.rectifier_neg_decision_rule(self.c_rectifier)
-            tree_decision_rule = tree_decision_rule.negating_tree()
+            #tree_decision_rule = tree_decision_rule.negating_tree()
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
-        Tools.verbose("Model - Number of nodes:", self._random_forest.n_nodes())
+        
         for i, tree in enumerate(self._random_forest.forest):
-            print("i:", i)
             c_explainer.rectifier_add_tree(self.c_rectifier, tree.raw_data_for_CPP())
-            if label == 1:
+            #if label == 1:
                 # When label is 1, we have to inverse the decision rule and disjoint the two trees.  
-                self._random_forest.forest[i] = tree.disjoint_tree(tree_decision_rule)
-            elif label == 0:
+            #    self._random_forest.forest[i] = tree.disjoint_tree(tree_decision_rule)
+            #elif label == 0:
                 # When label is 0, we have to concatenate the two trees.  
-                self._random_forest.forest[i] = tree.concatenate_tree(tree_decision_rule)
-            else:
-                raise NotImplementedError("Multiclasses is in progress.")
-
+            #    self._random_forest.forest[i] = tree.concatenate_tree(tree_decision_rule)
+            #else:
+            #    raise NotImplementedError("Multiclasses is in progress.")
+        Tools.verbose("Model - Number of nodes:", c_explainer.rectifier_n_nodes(self.c_rectifier))
         if label == 1:
             c_explainer.rectifier_disjoint_trees_decision_rule(self.c_rectifier)
         elif label == 0:
@@ -582,26 +581,45 @@ class ExplainerRF(Explainer):
         else:
             raise NotImplementedError("Multiclasses is in progress.")
         
-        self._random_forest.forest[0].display(self._random_forest.forest[0].root)
-        Tools.verbose("Model - Number of nodes (after rectification):", self._random_forest.n_nodes())    
+        #self._random_forest.forest[0].display(self._random_forest.forest[0].root)
+        #Tools.verbose("Model - Number of nodes (after rectification):", self._random_forest.n_nodes())    
         Tools.verbose("Model - Number of nodes (after rectification) c++:", c_explainer.rectifier_n_nodes(self.c_rectifier))    
         
         theory_cnf = self.get_model().get_theory(None)
         c_explainer.rectifier_set_theory(self.c_rectifier, tuple(theory_cnf))
         c_explainer.rectifier_simplify_theory(self.c_rectifier)
-        for i in range(len(self._random_forest.forest)):
-            tree = c_explainer.rectifier_get_tree(self.c_rectifier, i)
-            print("ici", tree)
+        
             
         
-        for i, tree in enumerate(self._random_forest.forest):    
-            self._random_forest.forest[i] = self.simplify_theory(tree)
-        Tools.verbose("Model - Number of nodes (after simplification using the theory):", self._random_forest.n_nodes())
-        Tools.verbose("Model - Number of nodes (after simplification using the theory): c++:", c_explainer.rectifier_n_nodes(self.c_rectifier))   
+        #for i, tree in enumerate(self._random_forest.forest):    
+        #    self._random_forest.forest[i] = self.simplify_theory(tree)
+        #n_nodes_python = self._random_forest.n_nodes()
+        n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
+
+        #Tools.verbose("Model - Number of nodes (after simplification using the theory):", n_nodes_python)
+        Tools.verbose("Model - Number of nodes (after simplification using the theory): c++:", n_nodes_cxx)   
+
         
-        for i, tree in enumerate(self._random_forest.forest):    
-            tree.simplify()
-        Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", self._random_forest.n_nodes())
+        c_explainer.rectifier_simplify_redundant(self.c_rectifier)
+
+        
+        #for i, tree in enumerate(self._random_forest.forest):    
+        #    tree.simplify()
+        
+        #n_nodes_python = self._random_forest.n_nodes()
+        n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
+        
+        #Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", n_nodes_python)
+        Tools.verbose("Model - Number of nodes (after elimination of redundant nodes)c++:", n_nodes_cxx)
+        #assert n_nodes_python == n_nodes_cxx, "probleme simplification theory"
+
+        # Get the C++ trees and convert it :) 
+        for i in range(len(self._random_forest.forest)):
+            tree_tuples = c_explainer.rectifier_get_tree(self.c_rectifier, i)
+            self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
+            
+        c_explainer.rectifier_free(self.c_rectifier)
+        Tools.verbose("Model - Number of nodes final:", self._random_forest.n_nodes())
         
         if self._instance is not None:
             self.set_instance(self._instance)

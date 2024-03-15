@@ -136,6 +136,16 @@ static PyObject *rectifier_simplify_theory(PyObject *self, PyObject *args) {
     return Py_None;
 }
 
+static PyObject *rectifier_simplify_redundant(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    if (!PyArg_ParseTuple(args, "O", &class_obj))
+        return NULL;
+
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->simplifyRedundant();
+    return Py_None;
+}
+
 static PyObject *rectifier_n_nodes(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     if (!PyArg_ParseTuple(args, "O", &class_obj))
@@ -144,6 +154,16 @@ static PyObject *rectifier_n_nodes(PyObject *self, PyObject *args) {
     pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
     
     return Py_BuildValue("i", rectifier->nNodes());
+}
+
+static PyObject *rectifier_free(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    if (!PyArg_ParseTuple(args, "O", &class_obj))
+        return NULL;
+
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->free();
+    return Py_None;
 }
 
 static PyObject *rectifier_get_tree(PyObject *self, PyObject *args) {
@@ -395,6 +415,8 @@ static PyMethodDef module_methods[] = {
         {"rectifier_set_theory", rectifier_set_theory, METH_VARARGS, "rectifier_set_theory tree."},
         {"rectifier_simplify_theory", rectifier_simplify_theory, METH_VARARGS, "rectifier_simplify_theory tree."},
         {"rectifier_n_nodes", rectifier_n_nodes, METH_VARARGS, "rectifier_n_nodes tree."},
+        {"rectifier_simplify_redundant", rectifier_simplify_redundant, METH_VARARGS, "rectifier_simplify_redundant tree."},
+        {"rectifier_free", rectifier_free, METH_VARARGS, "rectif tree."},
         {"add_tree",          add_tree,          METH_VARARGS, "Add a tree."},
         {"set_excluded",      set_excluded,      METH_VARARGS, "Set excluded features"},
         {"set_theory",        set_theory,        METH_VARARGS, "Set the theory"},
