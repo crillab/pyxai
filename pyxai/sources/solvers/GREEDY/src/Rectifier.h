@@ -31,8 +31,11 @@ namespace pyxai {
         void concatenateTreesDecisionRule();
 
         void simplifyTheory();
+        void simplifyRedundant();
 
         int nNodes();
+
+        void free();
     };
 }
 
