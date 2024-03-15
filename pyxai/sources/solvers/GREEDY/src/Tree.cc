@@ -40,24 +40,14 @@ std::vector<bool>* pyxai::Tree::isNodeConsistent(Node* node, std::vector<Lit>* s
     std::cout << "left:" << std::endl;
     // Check consistency on the left
     stack->push_back(~lit);
-    propagator->restart();
-    for (std::vector<Lit>::iterator lit = stack->begin(); lit != stack->end(); ++lit){
-        std::cout << "uncheckedEnqueue:" << *lit << std::endl;
-        propagator->uncheckedEnqueue(*lit);
-    }
-    bool ret_left = propagator->propagate();
+    bool ret_left = propagator->propagate_assumptions(*stack);
     stack->pop_back();
     results->push_back(ret_left);
 
     // Check consistency on the right
     std::cout << "right:" << std::endl;
     stack->push_back(lit);
-    propagator->restart();
-    for (std::vector<Lit>::iterator lit = stack->begin(); lit != stack->end(); ++lit){
-        std::cout << "uncheckedEnqueue:" << *lit << std::endl;
-        propagator->uncheckedEnqueue(*lit);
-    }
-    bool ret_right = propagator->propagate();
+    bool ret_right = propagator->propagate_assumptions(*stack);
     stack->pop_back();
     results->push_back(ret_right);
     return results;
