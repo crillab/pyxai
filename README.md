@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" alt="pyxai" width="200"/>
+  <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" alt="pyxai" width="300"/>
 </div>
 
 # PyXAI - Python eXplainable AI
