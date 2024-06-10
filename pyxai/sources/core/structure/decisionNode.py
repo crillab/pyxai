@@ -70,7 +70,7 @@ class DecisionNode:
         self.right = right if isinstance(right, DecisionNode) else LeafNode(right)
         self.artificial_leaf = False
 
-
+    
     def negating_tree(self):
         self.right.negating_tree()
         self.left.negating_tree()

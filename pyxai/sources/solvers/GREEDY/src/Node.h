@@ -33,16 +33,21 @@ namespace pyxai {
 
         Node(double w, Tree *t): lit(0), false_branch(nullptr), true_branch(nullptr), true_min(0), true_max(0), artificial_leaf(false), tree(t) {
             leaf_value.weight = w;
+            add_to_delete();
         }
 
         Node(int p, Tree *t) : lit(0), false_branch(nullptr), true_branch(nullptr), true_min(0), true_max(0), artificial_leaf(false), tree(t) {
             leaf_value.prediction = p;
+            add_to_delete();
         }
 
-        Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), true_min(0), true_max(0), artificial_leaf(false), tree(f->tree) {}
+        Node(int l, Node *f, Node *t) : lit(l), false_branch(f), true_branch(t), true_min(0), true_max(0), artificial_leaf(false), tree(f->tree) {
+            add_to_delete();
+        }
 
         Node(const Node* other){
                 if (other != nullptr){
+                    
                     lit = other->lit; 
                     leaf_value = other->leaf_value;
                     if (other->false_branch != nullptr)
@@ -56,9 +61,12 @@ namespace pyxai {
                     true_min = other->true_min;
                     true_max = other->true_max; 
                     artificial_leaf = other->artificial_leaf; 
-                    tree = nullptr;
+                    tree = other->tree;
+                    add_to_delete();
                 }
         }
+
+        void add_to_delete();
 
         inline void _delete(){
             if (is_leaf()){
@@ -113,7 +121,8 @@ namespace pyxai {
         inline void concatenateTreeDecisionRule(Node* decision_rule_root){
             if (true_branch->is_leaf()){
                 if (true_branch->leaf_value.prediction == 1){
-                    true_branch = new Node(decision_rule_root);
+                    //true_branch = new Node(decision_rule_root);
+                    true_branch = decision_rule_root;
                 }
             }else{
                 true_branch->concatenateTreeDecisionRule(decision_rule_root);
@@ -121,7 +130,8 @@ namespace pyxai {
 
             if (false_branch->is_leaf()){
                 if (false_branch->leaf_value.prediction == 1){
-                    false_branch = new Node(decision_rule_root);
+                    //false_branch = new Node(decision_rule_root);
+                    false_branch = decision_rule_root;
                 }
             }else{
                 false_branch->concatenateTreeDecisionRule(decision_rule_root);
@@ -132,7 +142,8 @@ namespace pyxai {
         inline void disjointTreeDecisionRule(Node* decision_rule_root){
             if (true_branch->is_leaf()){
                 if (true_branch->leaf_value.prediction == 0){
-                    true_branch = new Node(decision_rule_root);
+                    //true_branch = new Node(decision_rule_root);
+                    true_branch = decision_rule_root;
                 }
             }else{
                 true_branch->disjointTreeDecisionRule(decision_rule_root);
@@ -140,13 +151,13 @@ namespace pyxai {
 
             if (false_branch->is_leaf()){
                 if (false_branch->leaf_value.prediction == 0){
-                    false_branch = new Node(decision_rule_root);
+                    //false_branch = new Node(decision_rule_root);
+                    false_branch = decision_rule_root;
                 }
             }else{
                 false_branch->disjointTreeDecisionRule(decision_rule_root);
             }
         }
-
 
         bool is_leaf() {
             return artificial_leaf || (false_branch == nullptr && true_branch == nullptr);

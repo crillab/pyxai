@@ -38,8 +38,8 @@ namespace pyxai {
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
         Propagator *propagator = nullptr;
-
-
+        std::set<Node*> to_delete;
+        
         // Variables used to stored the comutation value during common is_impicant function
         // FOR Classifier_BT
         bool get_min;
