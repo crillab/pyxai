@@ -59,7 +59,13 @@ class DecisionTree(BinaryMapping):
         return node
 
     
-
+    def delete(self, node):
+        if node.is_leaf(): 
+            del node
+        else:
+            self.delete(node.left)
+            self.delete(node.right)
+            del node
 
     def raw_data_for_CPP(self):
         raw_t = tuple([self.root.value]) if self.root.is_leaf() else self.to_tuples(self.root, for_cpp=True)

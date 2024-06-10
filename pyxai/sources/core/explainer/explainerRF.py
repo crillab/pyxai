@@ -616,6 +616,7 @@ class ExplainerRF(Explainer):
         # Get the C++ trees and convert it :) 
         for i in range(len(self._random_forest.forest)):
             tree_tuples = c_explainer.rectifier_get_tree(self.c_rectifier, i)
+            self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
             self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
             
         c_explainer.rectifier_free(self.c_rectifier)

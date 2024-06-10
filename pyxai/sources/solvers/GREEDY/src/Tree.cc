@@ -23,7 +23,9 @@ int pyxai::Tree::nNodes(){
 }
 
 void pyxai::Tree::free(){
-    root->_delete();
+    for (Node* node:to_delete){
+        delete node;
+    }
 }
 
 void pyxai::Tree::simplifyTheory(){
@@ -66,13 +68,11 @@ bool pyxai::Tree::_simplifyRedundant(Node* root, Node* node, std::vector<int>* p
         if (std::find(path->begin(), path->end(), literal) != path->end() ){
             if (path->back() < 0){
                 if (previous_previous_node != nullptr){
-                    previous_previous_node->false_branch->_delete();
                     previous_previous_node->false_branch = node;
                     change = true;
                 }
             }else if (path->back() > 0){
                 if (previous_previous_node != nullptr){
-                    previous_previous_node->true_branch->_delete();
                     previous_previous_node->true_branch = node;
                     change = true;
                 }
@@ -153,12 +153,18 @@ pyxai::Node* pyxai::Tree::_simplifyTheory(Node* node, std::vector<Lit>* stack, N
             stack->pop_back();
         }else if(come_from == 0){
             // Replace the node
+            /*if (parent->false_branch != node->true_branch){
+                to_delete.push_back(parent->false_branch);
+            }*/
             parent->false_branch = node->true_branch;
             stack->push_back(lit);
             root = _simplifyTheory(node->true_branch, stack, parent, 0, root);
             stack->pop_back();
         }else if(come_from == 1){
             // Replace the node
+            /*if (parent->true_branch != node->true_branch){
+                to_delete.push_back(parent->true_branch);
+            }*/
             parent->true_branch = node->true_branch;
             stack->push_back(lit);
             root = _simplifyTheory(node->true_branch, stack, parent, 1, root);
@@ -180,12 +186,18 @@ pyxai::Node* pyxai::Tree::_simplifyTheory(Node* node, std::vector<Lit>* stack, N
             stack->pop_back();
         }else if(come_from == 0){
             // Replace the node
+            /*if (parent->false_branch != node->false_branch){
+                to_delete.push_back(parent->false_branch);
+            }*/
             parent->false_branch = node->false_branch;
             stack->push_back(~lit);
             root = _simplifyTheory(node->false_branch, stack, parent, 0, root);
             stack->pop_back();
         }else if(come_from == 1){
             // Replace the node
+            /*if (parent->true_branch != node->false_branch){
+                to_delete.push_back(parent->true_branch);
+            }*/
             parent->true_branch = node->false_branch;
             stack->push_back(~lit);
             root = _simplifyTheory(node->false_branch, stack, parent, 1, root);
