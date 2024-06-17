@@ -75,17 +75,18 @@ print("new nTrees IA: ", len(AI.model.forest))
 print("new accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
 #exit(0)
 # Statistics
-cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 50, user)
-accuracy_user = [user.accurary(test_instances)]
-accuracy_AI = [misc.get_accuracy(AI.explainer.get_model(), test_instances)]
-accuracy_AI_user = [misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances)]
-accuracy_AI_interaction = [misc.get_accuracy(AI.explainer.get_model(), interaction_instances)]
-accuracy_user_interaction = [user.accurary(interaction_instances)]
+cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 1, user)
+#accuracy_user = [user.accurary(test_instances)]
+#accuracy_AI = [misc.get_accuracy(AI.explainer.get_model(), test_instances)]
+#accuracy_AI_user = [misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances)]
+#accuracy_AI_interaction = [misc.get_accuracy(AI.explainer.get_model(), interaction_instances)]
+#accuracy_user_interaction = [user.accurary(interaction_instances)]
 
 coverages = [cvg.coverage()]
 times = [0]
 nodes_AI = [AI.model.n_nodes()]
 all_cases = [None]
+
 
 misc.print_features(user)
 print("\n\n")
@@ -152,12 +153,12 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     coverages.append(cvg.coverage())
     constants.statistics["n_positives"] = len(user.positive_rules)
     constants.statistics["n_negatives"] = len(user.negative_rules)
-    accuracy_AI_user.append(misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances))
-    accuracy_user.append(user.accurary(test_instances))
-    accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), test_instances))
-    accuracy_AI_interaction.append(misc.get_accuracy(AI.explainer.get_model(), interaction_instances))
-    accuracy_user_interaction.append(user.accurary(interaction_instances))
-
+    #accuracy_AI_user.append(misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances))
+    #accuracy_user.append(user.accurary(test_instances))
+    #accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), test_instances))
+    #accuracy_AI_interaction.append(misc.get_accuracy(AI.explainer.get_model(), interaction_instances))
+    #accuracy_user_interaction.append(user.accurary(interaction_instances))
+    exit(0)
     if constants.trace:
         print("\n--\nc statistics", constants.statistics)
         print("\nc accuracy AI wrt user:", accuracy_AI_user)

@@ -81,7 +81,7 @@ static PyObject *rectifier_add_tree(PyObject *self, PyObject *args) {
     return Py_None;
 }
 
-static PyObject *rectifier_set_decision_rule(PyObject *self, PyObject *args) {
+static PyObject *rectifier_add_decision_rule(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *tree_obj;
     if (!PyArg_ParseTuple(args, "OO", &class_obj, &tree_obj))
@@ -92,7 +92,7 @@ static PyObject *rectifier_set_decision_rule(PyObject *self, PyObject *args) {
         return NULL;
     }
     pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
-    rectifier->setDecisionRule(tree_obj);
+    rectifier->addDecisionRule(tree_obj);
     return Py_None;
 }
 
@@ -116,13 +116,13 @@ static PyObject *rectifier_concatenate_trees_decision_rule(PyObject *self, PyObj
     return Py_None;
 }
 
-static PyObject *rectifier_neg_decision_rule(PyObject *self, PyObject *args) {
+static PyObject *rectifier_neg_decision_rules(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     if (!PyArg_ParseTuple(args, "O", &class_obj))
         return NULL;
 
     pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
-    rectifier->negatingDecisionRule();
+    rectifier->negatingDecisionRules();
     return Py_None;
 }
 
@@ -407,8 +407,8 @@ static PyMethodDef module_methods[] = {
         {"new_regression_BT", new_regression_BT, METH_VARARGS, "Create a regression BT explainer."},
         {"new_rectifier", new_rectifier, METH_VARARGS, "Create a rectifier."},
         {"rectifier_add_tree", rectifier_add_tree, METH_VARARGS, "Add a tree in the rectifier."},
-        {"rectifier_set_decision_rule", rectifier_set_decision_rule, METH_VARARGS, "Set tree."},
-        {"rectifier_neg_decision_rule", rectifier_neg_decision_rule, METH_VARARGS, "Negating tree."},
+        {"rectifier_add_decision_rule", rectifier_add_decision_rule, METH_VARARGS, "Set tree."},
+        {"rectifier_neg_decision_rules", rectifier_neg_decision_rules, METH_VARARGS, "Negating tree."},
         {"rectifier_disjoint_trees_decision_rule", rectifier_disjoint_trees_decision_rule, METH_VARARGS, "rectifier_disjoint_trees_decision_rule."},
         {"rectifier_concatenate_trees_decision_rule", rectifier_concatenate_trees_decision_rule, METH_VARARGS, "rectifier_concatenate_trees_decision_rule tree."},
         {"rectifier_get_tree", rectifier_get_tree, METH_VARARGS, "rectifier_get_tree tree."},
