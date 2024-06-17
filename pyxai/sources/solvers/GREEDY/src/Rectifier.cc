@@ -15,14 +15,13 @@
 #include "bcp/ProblemTypes.h"
 
 void pyxai::Rectifier::addTree(PyObject *tree_obj) {
-    trees.clear();
     Tree *tree = new Tree(tree_obj, pyxai::Classifier_RF);
     trees.push_back(tree);
 }
 
-void pyxai::Rectifier::setDecisionRule(PyObject *tree_obj) {
-    delete decision_rule;
-    decision_rule = new Tree(tree_obj, pyxai::Classifier_RF);
+void pyxai::Rectifier::addDecisionRule(PyObject *tree_obj) {
+    Tree *tree = new Tree(tree_obj, pyxai::Classifier_RF);
+    decision_rules.push_back(tree);
 }
 
 int pyxai::Rectifier::nNodes() {
@@ -31,8 +30,8 @@ int pyxai::Rectifier::nNodes() {
     return sum;
 }
 
-void pyxai::Rectifier::negatingDecisionRule() {
-    decision_rule->negating_tree();
+void pyxai::Rectifier::negatingDecisionRules() {
+    for (Tree *decision_rule: decision_rules) {decision_rule->negating_tree();}
 }
 
 void pyxai::Rectifier::free(){
@@ -48,12 +47,15 @@ void pyxai::Rectifier::simplifyRedundant(){
 }
 
 void pyxai::Rectifier::disjointTreesDecisionRule() {
-    for (Tree *tree: trees) {tree->disjointTreeDecisionRule(decision_rule);}
+    for (unsigned int i = 0; i < trees.size(); i++){
+        trees[i]->disjointTreeDecisionRule(decision_rules[i]);
+    }
 }
 
-
 void pyxai::Rectifier::concatenateTreesDecisionRule() {
-    for (Tree *tree: trees) {tree->concatenateTreeDecisionRule(decision_rule);}
+    for (unsigned int i = 0; i < trees.size(); i++){
+        trees[i]->concatenateTreeDecisionRule(decision_rules[i]);
+    }
 }
 
 void pyxai::Rectifier::simplifyTheory() {

@@ -64,6 +64,10 @@ class RandomForest(TreeEnsembles):
         return s
 
 
+    ###
+    # Do not use directly, as the implicant cannot coincide with the theory 
+    # (use is_implicant of explainer object instead)
+    ###
     def is_implicant(self, implicant, prediction):
         if self.n_classes == 2:
             forest_implicant = [tree.is_implicant(implicant, prediction) for tree in self.forest]
@@ -72,7 +76,6 @@ class RandomForest(TreeEnsembles):
             return n_trues > int(n_trees / 2)
 
         reachable_classes = [tree.get_reachable_classes(implicant, prediction) for tree in self.forest]
-
         count_classes = [0] * self.n_classes
         for s in reachable_classes:
             for i in s:

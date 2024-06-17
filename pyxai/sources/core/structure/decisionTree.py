@@ -362,7 +362,10 @@ class DecisionTree(BinaryMapping):
             self.display(node.left)
             self.display(node.right)
 
-
+    ###
+    # Do not use directly, as the implicant cannot coincide with the theory 
+    # (use is_implicant of explainer object instead)
+    ###
     def is_implicant(self, reason, target_prediction):
         return self.root.is_implicant(reason, target_prediction, self.map_features_to_id_binaries)
 

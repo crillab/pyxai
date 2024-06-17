@@ -18,15 +18,16 @@ namespace pyxai {
     class Rectifier {
       public:
         std::vector<Tree*> trees;
-        Tree* decision_rule;
+        std::vector<Tree*> decision_rules;
+        
         Propagator *theory_propagator = nullptr;
 
-        Rectifier(): decision_rule(NULL){};
+        Rectifier(): trees(), decision_rules(){};
 
         void addTree(PyObject *tree_obj);
-        void setDecisionRule(PyObject *tree_obj);
+        void addDecisionRule(PyObject *tree_obj);
         
-        void negatingDecisionRule();
+        void negatingDecisionRules();
         void disjointTreesDecisionRule();
         void concatenateTreesDecisionRule();
 
