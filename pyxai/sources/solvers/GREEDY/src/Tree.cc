@@ -5,6 +5,7 @@
 #include "Tree.h"
 #include<algorithm>
 #include<vector>
+#include <stdexcept>
 
 void pyxai::Tree::negating_tree() {
     root->negating_tree();
@@ -113,17 +114,35 @@ std::vector<bool>* pyxai::Tree::isNodeConsistent(Node* node, std::vector<Lit>* s
         results->push_back(false);
         return results;
     }
+    
     std::vector<bool>* results = new std::vector<bool>();
     Lit lit = node->lit > 0 ? Lit::makeLitTrue(node->lit) : Lit::makeLitFalse(-node->lit);
     // Check consistency on the left
     stack->push_back(~lit);
     bool ret_left = propagator->propagate_assumptions(*stack);
+        
+    /*if (ret_left == false){
+        std::cout << "left_consistent:";
+        for (unsigned int i = 0; i < stack->size();i++){
+            std::cout << (*stack)[i] << " ";
+        } 
+        std::cout << std::endl;
+    }*/
     stack->pop_back();
     results->push_back(ret_left);
 
     // Check consistency on the right
     stack->push_back(lit);
     bool ret_right = propagator->propagate_assumptions(*stack);
+    /*std::cout << "ret_right:" << ret_right << std::endl;
+    if (ret_right == false){
+        std::cout << "right_consistent:";
+        for (unsigned int i = 0; i < stack->size();i++){
+            std::cout << (*stack)[i] << " ";
+        } 
+        std::cout << std::endl;
+    }*/
+    
     stack->pop_back();
     results->push_back(ret_right);
     return results;
@@ -133,76 +152,85 @@ std::vector<bool>* pyxai::Tree::isNodeConsistent(Node* node, std::vector<Lit>* s
 *
 */
 pyxai::Node* pyxai::Tree::_simplifyTheory(Node* node, std::vector<Lit>* stack, Node* parent, int come_from, Node* root){
-    if (node->is_leaf())return root;
-    Lit lit = node->lit > 0 ? Lit::makeLitTrue(node->lit) : Lit::makeLitFalse(-node->lit);
+    if (node->is_leaf()){
+        return root;
+    }
+    
+    Lit lit_positif = Lit::makeLitTrue(abs(node->lit));
+    Lit lit_negatif = Lit::makeLitFalse(abs(node->lit));
     std::vector<bool>* results = isNodeConsistent(node, stack);
     bool left_consistent = (*results)[0];
     bool right_consistent = (*results)[1];
-    delete results;
-    if (left_consistent == true){
-        // The left part is consistent, simplify recursively
-        stack->push_back(~lit);
+    //delete results;
+
+    if ((left_consistent == false) && (right_consistent == false)){
+        //Impossible Case
+        throw std::invalid_argument("Impossible Case : both are inconsistent");
+    }else if ((left_consistent == true) && (right_consistent == true)){
+        stack->push_back(lit_negatif);
         root = _simplifyTheory(node->false_branch, stack, node, 0, root);
         stack->pop_back();
-    }else{
-        // The left part is inconsistent, replace this node with the right
+        stack->push_back(lit_positif);
+        root = _simplifyTheory(node->true_branch, stack, node, 1, root);
+        stack->pop_back();
+        return root;
+    }else if (left_consistent == false){
         if (come_from == -1){
             // The root change
-            stack->push_back(lit);
-            root = _simplifyTheory(node->true_branch, stack, nullptr, -1, node->true_branch);
-            stack->pop_back();
+            //stack->push_back(lit);
+            return _simplifyTheory(node->true_branch, stack, nullptr, -1, node->true_branch);
+            //stack->pop_back();
         }else if(come_from == 0){
             // Replace the node
             /*if (parent->false_branch != node->true_branch){
                 to_delete.push_back(parent->false_branch);
             }*/
+            //std::cout << "left inconsistent come from 0" << std::endl;
             parent->false_branch = node->true_branch;
-            stack->push_back(lit);
-            root = _simplifyTheory(node->true_branch, stack, parent, 0, root);
-            stack->pop_back();
+            //stack->push_back(lit);
+            return _simplifyTheory(parent->false_branch, stack, parent, 0, root);
+            //stack->pop_back();
         }else if(come_from == 1){
             // Replace the node
             /*if (parent->true_branch != node->true_branch){
                 to_delete.push_back(parent->true_branch);
             }*/
+            //std::cout << "left inconsistent come from 1" << std::endl;
             parent->true_branch = node->true_branch;
-            stack->push_back(lit);
-            root = _simplifyTheory(node->true_branch, stack, parent, 1, root);
-            stack->pop_back();
+            //stack->push_back(lit);
+            return _simplifyTheory(parent->true_branch, stack, parent, 1, root);
+            //stack->pop_back();
         }
-    }
-
-    if (right_consistent == true){
-        // The left part is consistent, simplify recursively
-        stack->push_back(lit);
-        root = _simplifyTheory(node->true_branch, stack, node, 1, root);
-        stack->pop_back();
-    }else{
-        // The left part is inconsistent, replace this node with the right
+    }else if (right_consistent == false){
         if (come_from == -1){
             // The root change
-            stack->push_back(~lit);
-            root = _simplifyTheory(node->false_branch, stack, nullptr, -1, node->false_branch);
-            stack->pop_back();
+            // stack->push_back(~lit);
+            return _simplifyTheory(node->false_branch, stack, nullptr, -1, node->false_branch);
+            // stack->pop_back();
         }else if(come_from == 0){
             // Replace the node
             /*if (parent->false_branch != node->false_branch){
                 to_delete.push_back(parent->false_branch);
             }*/
+            //std::cout << "right inconsistent come from 0" << std::endl;
             parent->false_branch = node->false_branch;
-            stack->push_back(~lit);
-            root = _simplifyTheory(node->false_branch, stack, parent, 0, root);
-            stack->pop_back();
+            //stack->push_back(~lit);
+            return _simplifyTheory(parent->false_branch, stack, parent, 0, root);
+            //stack->pop_back();
         }else if(come_from == 1){
             // Replace the node
             /*if (parent->true_branch != node->false_branch){
                 to_delete.push_back(parent->true_branch);
             }*/
+            //std::cout << "right inconsistent come from 1" << std::endl;
             parent->true_branch = node->false_branch;
-            stack->push_back(~lit);
-            root = _simplifyTheory(node->false_branch, stack, parent, 1, root);
-            stack->pop_back();
+            //stack->push_back(~lit);
+            //return root;
+            return _simplifyTheory(parent->true_branch, stack, parent, 1, root);
+            //stack->pop_back();
         }
+    }else{
+        throw std::invalid_argument("Impossible Case");
     }
     return root;
 }

@@ -561,9 +561,17 @@ class ExplainerRF(Explainer):
         print("is_implicant ?", is_implicant)
         Tools.verbose("Label:", label)
 
-        # Rectification part
+        
+
         for i, tree in enumerate(self._random_forest.forest):
             c_explainer.rectifier_add_tree(self.c_rectifier, tree.raw_data_for_CPP())
+
+        n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
+        Tools.verbose("Model - Number of nodes (initial)c++:", n_nodes_cxx) 
+
+        # Rectification part
+        
+        for i, tree in enumerate(self._random_forest.forest):
             tree_decision_rule = self._random_forest.forest[i].decision_rule_to_tree(conditions, label)
             c_explainer.rectifier_add_decision_rule(self.c_rectifier, tree_decision_rule.raw_data_for_CPP())
 
@@ -576,9 +584,19 @@ class ExplainerRF(Explainer):
             raise NotImplementedError("Multiclasses is in progress.")
         
         
+        
         n_nodes_ccx =  c_explainer.rectifier_n_nodes(self.c_rectifier)
         Tools.verbose("Model - Number of nodes (after rectification)c++:", n_nodes_ccx)    
+        for i in range(len(self._random_forest.forest)):
+            tree_tuples = c_explainer.rectifier_get_tree(self.c_rectifier, i)
+            self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
+            self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
+        is_implicant = self.is_implicant(conditions, prediction=label)
+        print("is_implicant after rectification ?", is_implicant)
+        if is_implicant is False:
+            raise ValueError("Problem 2")
         
+
         # Simplify Theory part
         theory_cnf = self.get_model().get_theory(None)
         c_explainer.rectifier_set_theory(self.c_rectifier, tuple(theory_cnf))
@@ -586,21 +604,33 @@ class ExplainerRF(Explainer):
 
         n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
         Tools.verbose("Model - Number of nodes (after simplification using the theory)c++:", n_nodes_cxx) 
-
+        for i in range(len(self._random_forest.forest)):
+            tree_tuples = c_explainer.rectifier_get_tree(self.c_rectifier, i)
+            self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
+            self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
+        is_implicant = self.is_implicant(conditions, prediction=label)
+        print("is_implicant after simplify theory ?", is_implicant)
+        if is_implicant is False:
+            raise ValueError("Problem 3")
+        
         # Simplify part
         c_explainer.rectifier_simplify_redundant(self.c_rectifier)
         n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
         Tools.verbose("Model - Number of nodes (after elimination of redundant nodes)c++:", n_nodes_cxx)
         
-        #Recuperate part
+        # Get the C++ trees and convert it :) 
         for i in range(len(self._random_forest.forest)):
             tree_tuples = c_explainer.rectifier_get_tree(self.c_rectifier, i)
             self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
             self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
-
-        # Get the C++ trees and convert it :) 
+        
+        
         c_explainer.rectifier_free(self.c_rectifier)
         Tools.verbose("Model - Number of nodes final:", self._random_forest.n_nodes())
+        is_implicant = self.is_implicant(conditions, prediction=label)
+        print("is_implicant after simplify ?", is_implicant)
+        if is_implicant is False:
+            raise ValueError("Problem 4")
         
         if self._instance is not None:
             self.set_instance(self._instance)
@@ -623,7 +653,9 @@ class ExplainerRF(Explainer):
         Returns:
             RandomForest: The rectified random forest.  
         """
-        
+        #return self.rectify_cxx(conditions=conditions, label=label)
+
+
         current_time = time.process_time()
         #print("conditions:", conditions)
         #print("conditions to features:", self.to_features(conditions, eliminate_redundant_features=False))
@@ -631,6 +663,8 @@ class ExplainerRF(Explainer):
         
         Tools.verbose("")
         Tools.verbose("-------------- C++ Rectification information:")
+        n_nodes_python = self._random_forest.n_nodes()
+        Tools.verbose("Model - Number of nodes (initial):", n_nodes_python) 
 
         is_implicant = self.is_implicant(conditions, prediction=label)
         print("is_implicant ?", is_implicant)

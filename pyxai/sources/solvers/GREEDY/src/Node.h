@@ -121,8 +121,8 @@ namespace pyxai {
         inline void concatenateTreeDecisionRule(Node* decision_rule_root){
             if (true_branch->is_leaf()){
                 if (true_branch->leaf_value.prediction == 1){
-                    //true_branch = new Node(decision_rule_root);
-                    true_branch = decision_rule_root;
+                    true_branch = new Node(decision_rule_root);
+                    //true_branch = decision_rule_root;
                 }
             }else{
                 true_branch->concatenateTreeDecisionRule(decision_rule_root);
@@ -130,8 +130,8 @@ namespace pyxai {
 
             if (false_branch->is_leaf()){
                 if (false_branch->leaf_value.prediction == 1){
-                    //false_branch = new Node(decision_rule_root);
-                    false_branch = decision_rule_root;
+                    false_branch = new Node(decision_rule_root);
+                    //false_branch = decision_rule_root;
                 }
             }else{
                 false_branch->concatenateTreeDecisionRule(decision_rule_root);
@@ -142,8 +142,8 @@ namespace pyxai {
         inline void disjointTreeDecisionRule(Node* decision_rule_root){
             if (true_branch->is_leaf()){
                 if (true_branch->leaf_value.prediction == 0){
-                    //true_branch = new Node(decision_rule_root);
-                    true_branch = decision_rule_root;
+                    true_branch = new Node(decision_rule_root);
+                    //true_branch = decision_rule_root;
                 }
             }else{
                 true_branch->disjointTreeDecisionRule(decision_rule_root);
@@ -151,8 +151,8 @@ namespace pyxai {
 
             if (false_branch->is_leaf()){
                 if (false_branch->leaf_value.prediction == 0){
-                    //false_branch = new Node(decision_rule_root);
-                    false_branch = decision_rule_root;
+                    false_branch = new Node(decision_rule_root);
+                    //false_branch = decision_rule_root;
                 }
             }else{
                 false_branch->disjointTreeDecisionRule(decision_rule_root);

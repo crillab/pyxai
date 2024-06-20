@@ -45,11 +45,16 @@ class GlucoseSolver:
             # Check consistency on the left
             stack.append(-id_literal)
             left_consistent = self.glucose.propagate(stack)[0]
+            #if left_consistent is False:
+            #    print("left_consistent:", stack)
             stack.pop()
 
             stack.append(id_literal)
             right_consistent = self.glucose.propagate(stack)[0]
+            #if right_consistent is False:
+            #    print("right_consistent:", stack)
             stack.pop()
+            
             
             return left_consistent, right_consistent
         
@@ -57,6 +62,7 @@ class GlucoseSolver:
             #print("_symplify_theory start:", stack)
             if node.is_leaf():
                 return root
+            
             id_literal = decision_tree.map_features_to_id_binaries[(node.id_feature, node.operator, node.threshold)][0]
             left_consistent, right_consistent = is_node_consistent(node, stack)
             #print("left_consistent:", left_consistent)
@@ -75,9 +81,11 @@ class GlucoseSolver:
                     root = _simplify_theory(node.right, stack=stack, parent=None, come_from=None, root=node.right)
                 elif come_from == 0:
                     #Replace the node
+                    #print("left inconsistent come from 0")
                     parent.left = node.right
                     return _simplify_theory(parent.left, stack=stack, parent=parent, come_from=0, root=root)
                 elif come_from == 1:
+                    #print("left inconsistent come from 1")
                     parent.right = node.right
                     return _simplify_theory(parent.right, stack=stack, parent=parent, come_from=1, root=root)
             elif right_consistent is False:
@@ -86,9 +94,11 @@ class GlucoseSolver:
                     return _simplify_theory(node.left, stack=stack, parent=None, come_from=None, root=node.left)
                 elif come_from == 0:
                     #Replace the node
+                    #print("right inconsistent come from 0")
                     parent.left = node.left
                     return _simplify_theory(parent.left, stack=stack, parent=parent, come_from=0, root=root)
                 elif come_from == 1:
+                    #print("right inconsistent come from 1")
                     parent.right = node.left
                     return _simplify_theory(parent.right, stack=stack, parent=parent, come_from=1, root=root)
             else:

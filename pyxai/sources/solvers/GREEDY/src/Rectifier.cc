@@ -39,6 +39,12 @@ void pyxai::Rectifier::free(){
         tree->free();
         delete tree;
     }
+    for (Tree *decision_rule: decision_rules) {
+        decision_rule->free();
+        delete decision_rule;
+    }
+
+    decision_rules.clear();
     trees.clear();
 }
 
