@@ -77,6 +77,9 @@ namespace pyxai {
         void concatenateTreeDecisionRule(Tree* decision_rule);
         void disjointTreeDecisionRule(Tree* decision_rule);
 
+        void improvedRectification(std::vector<int>* conditions, int& label);
+        void _improvedRectification(Node* node, Node* parent, int come_from, std::vector<int>* stack, std::vector<int>* appeared_conditions, std::vector<int>* in_conditions, std::vector<int>* conditions, int& label);
+        
         void simplifyTheory();
         void free();
         void simplifyRedundant();

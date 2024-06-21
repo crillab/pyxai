@@ -19,14 +19,18 @@ namespace pyxai {
       public:
         std::vector<Tree*> trees;
         std::vector<Tree*> decision_rules;
+        std::vector<int> conditions;
+        int label;
         
         Propagator *theory_propagator = nullptr;
 
-        Rectifier(): trees(), decision_rules(){};
+        Rectifier(): trees(), decision_rules(), conditions(), label(0){};
 
         void addTree(PyObject *tree_obj);
         void addDecisionRule(PyObject *tree_obj);
         
+        void improvedRectification(PyObject *conditions_obj, int _label);
+
         void negatingDecisionRules();
         void disjointTreesDecisionRule();
         void concatenateTreesDecisionRule();

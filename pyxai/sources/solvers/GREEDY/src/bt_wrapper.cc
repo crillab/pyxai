@@ -96,6 +96,20 @@ static PyObject *rectifier_add_decision_rule(PyObject *self, PyObject *args) {
     return Py_None;
 }
 
+static PyObject *rectifier_improved_rectification(PyObject *self, PyObject *args) {
+    PyObject *class_obj;
+    PyObject *conditions_tuple;
+    int label;
+
+    if (!PyArg_ParseTuple(args, "OOi", &class_obj, &conditions_tuple, &label))
+        return NULL;
+    
+    pyxai::Rectifier *rectifier = (pyxai::Rectifier *) pyobject_to_void(class_obj);
+    rectifier->improvedRectification(conditions_tuple, label); 
+    return Py_None;
+}
+
+
 static PyObject *rectifier_disjoint_trees_decision_rule(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     if (!PyArg_ParseTuple(args, "O", &class_obj))
@@ -408,6 +422,7 @@ static PyMethodDef module_methods[] = {
         {"new_rectifier", new_rectifier, METH_VARARGS, "Create a rectifier."},
         {"rectifier_add_tree", rectifier_add_tree, METH_VARARGS, "Add a tree in the rectifier."},
         {"rectifier_add_decision_rule", rectifier_add_decision_rule, METH_VARARGS, "Set tree."},
+        {"rectifier_improved_rectification", rectifier_improved_rectification, METH_VARARGS, "Improved Rectification."},
         {"rectifier_neg_decision_rules", rectifier_neg_decision_rules, METH_VARARGS, "Negating tree."},
         {"rectifier_disjoint_trees_decision_rule", rectifier_disjoint_trees_decision_rule, METH_VARARGS, "rectifier_disjoint_trees_decision_rule."},
         {"rectifier_concatenate_trees_decision_rule", rectifier_concatenate_trees_decision_rule, METH_VARARGS, "rectifier_concatenate_trees_decision_rule tree."},
