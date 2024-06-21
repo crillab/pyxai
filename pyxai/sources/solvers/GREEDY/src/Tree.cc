@@ -3,8 +3,8 @@
 //
 
 #include "Tree.h"
-#include<algorithm>
-#include<vector>
+#include <algorithm>
+#include <vector>
 #include <stdexcept>
 
 void pyxai::Tree::negating_tree() {
@@ -27,6 +27,149 @@ void pyxai::Tree::free(){
     for (Node* node:to_delete){
         delete node;
     }
+}
+
+
+const int NOT_APPEARED = -1;
+
+const int NOT_IN_CONDITION = -1;
+const int IN_CONDITION_NEGATIVELY = 0;
+const int IN_CONDITION_POSITIVELY = 1;
+
+void pyxai::Tree::improvedRectification(std::vector<int>* conditions, int& label){
+   
+    int max = 0;
+    for (Node* node: all_nodes){
+        if (!node->is_leaf()){
+            if (abs(node->lit) > max) max = abs(node->lit);
+        }
+    }
+    for (int& condition: *conditions){if (abs(condition) > max) max = abs(condition);}
+    std::vector<int>* in_conditions = new std::vector<int>(max+1, NOT_IN_CONDITION);
+    for (int& condition: *conditions){
+        if (condition > 0) (*in_conditions)[abs(condition)] = IN_CONDITION_POSITIVELY;
+        else (*in_conditions)[abs(condition)] = IN_CONDITION_NEGATIVELY;
+    }
+    std::vector<int>* appeared_conditions = new std::vector<int>(max+1, NOT_APPEARED);
+    std::vector<int>* stack = new std::vector<int>();
+    
+    _improvedRectification(root, nullptr, -1, stack, appeared_conditions, in_conditions, conditions, label);
+    
+    delete in_conditions;
+    delete appeared_conditions;
+    delete stack;
+    
+}
+
+
+
+
+/* in_conditionss: variable -> in the condition
+ * Value: 
+ * -1: NOT_IN_CONDITION: not in the condition
+ *  0: IN_CONDITION_NEGATIVELY: in the condition negatively
+ *  1: IN_CONDITION_POSITIVELY: in the condition positively
+ */
+void pyxai::Tree::_improvedRectification(Node* node, Node* parent, int come_from, std::vector<int>* stack, std::vector<int>* appeared_conditions, std::vector<int>* in_conditions, std::vector<int>* conditions, int& label){
+    
+    if (node->is_leaf()){
+        int label_leaf = node->leaf_value.prediction; 
+        /*std::cout << std::endl;
+        std::cout << "**********************************" << std::endl;
+        std::cout << "label_leaf:" << label_leaf << std::endl;
+        std::cout << "come_from:" << come_from << std::endl;
+        
+        std::cout << "stack literals:" << std::endl;
+        for (int value: *stack){
+            std::cout << value << " ";
+        }*/
+        if (label != label_leaf){ // take into account the multi-classes
+            // We have to do a change here: add the missing nodes of the rectification for this leaf 
+            // Warning: if no missing nodes, we have may be change the classification of the leave. 
+            
+            // 1: Compute the missing nodes
+            std::vector<int> missing_nodes;
+            for (int& literal: *conditions){
+                if ((*appeared_conditions)[abs(literal)] == NOT_APPEARED)missing_nodes.push_back(literal);
+            }
+
+            /*std::cout << std::endl;
+            std::cout << "missing nodes:" << std::endl;
+            for (int& value: missing_nodes){
+                std::cout << value << " ";
+            }
+            std::cout << std::endl;*/
+            
+            // Start with the last node: 
+            int last_missing_node = missing_nodes[missing_nodes.size()-1];
+            Node* right_leaf = new Node(last_missing_node > 0 ? label : label_leaf, node->tree);
+            Node* left_leaf = new Node(last_missing_node <= 0 ? label : label_leaf, node->tree);
+            Node* node = new Node(abs(last_missing_node), left_leaf, right_leaf);
+            
+            // Now we add the following
+            for (int i = missing_nodes.size()-2; i >= 0; i--){
+                Node* leaf = new Node(label_leaf, node->tree); 
+                if (missing_nodes[i] > 0){
+                    node = new Node(abs(missing_nodes[i]), leaf, node);
+                }else{
+                    node = new Node(abs(missing_nodes[i]), node, leaf);
+                }
+            }
+            /*node->display(Classifier_RF);
+            std::cout << std::endl;*/
+
+            // Now we put this subtree in the tree
+            if (come_from == 0){// come from the left side
+                parent->false_branch = node;
+            }else if (come_from == 1){// come from the right side
+                parent->true_branch = node;
+            }else{
+                std::cout << "Not implemented error: come from root" << std::endl;
+                exit(0);
+            }
+            //for (int& value: missing_nodes){
+            //    
+            //}
+        }
+        return;
+    }
+    //std::cout << "Start rectification:" << node->lit << std::endl;
+    // appeared_conditions for a variable is the position in the stack 
+    
+    if ((*in_conditions)[abs(node->lit)] == NOT_IN_CONDITION){
+        //std::cout << "NOT_IN_CONDITION" << std::endl;
+        stack->push_back(-abs(node->lit));
+        _improvedRectification(node->false_branch, node, 0, stack, appeared_conditions, in_conditions, conditions, label);
+        stack->pop_back();
+
+        stack->push_back(abs(node->lit));
+        _improvedRectification(node->true_branch, node, 1, stack, appeared_conditions, in_conditions, conditions, label);
+        stack->pop_back();
+
+    }else if ((*in_conditions)[abs(node->lit)] == IN_CONDITION_NEGATIVELY){
+        //std::cout << "IN_CONDITION_NEGATIVELY" << std::endl;
+        
+        (*appeared_conditions)[abs(node->lit)] = stack->size();
+        stack->push_back(-abs(node->lit));
+        _improvedRectification(node->false_branch, node, 0, stack, appeared_conditions, in_conditions, conditions, label);
+        stack->pop_back();
+        
+        (*appeared_conditions)[abs(node->lit)] = NOT_APPEARED;
+    }else if ((*in_conditions)[abs(node->lit)] == IN_CONDITION_POSITIVELY){
+        //std::cout << "IN_CONDITION_POSITIVELY" << std::endl;
+        (*appeared_conditions)[abs(node->lit)] = stack->size();
+        
+        stack->push_back(abs(node->lit));
+        _improvedRectification(node->true_branch, node, 1, stack, appeared_conditions, in_conditions, conditions, label);
+        stack->pop_back();
+        
+        (*appeared_conditions)[abs(node->lit)] = NOT_APPEARED;    
+    }
+
+    
+    
+    
+    
 }
 
 void pyxai::Tree::simplifyTheory(){
