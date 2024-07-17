@@ -75,7 +75,7 @@ print("new nTrees IA: ", len(AI.model.forest))
 print("new accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
 #exit(0)
 # Statistics
-cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 50, user)
+cvg = coverage.Coverage(AI.model.get_theory([]), len(AI.explainer.binary_representation), 1, user)
 accuracy_user = [user.accurary(test_instances)]
 accuracy_AI = [misc.get_accuracy(AI.explainer.get_model(), test_instances)]
 accuracy_AI_user = [misc.acuracy_wrt_user(user, AI.explainer, AI.explainer.get_model(), test_instances)]
@@ -86,6 +86,7 @@ coverages = [cvg.coverage()]
 times = [0]
 nodes_AI = [AI.model.n_nodes()]
 all_cases = [None]
+
 
 misc.print_features(user)
 print("\n\n")
@@ -110,17 +111,17 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     #print("negative", user.negative_rules)
     # All cases
     print("user: ", prediction_user, "AI: ", prediction_AI)
-    if prediction_user is None:  # cases (3) (4) (5)
-         cas = cases.cases_3_4_5(AI.explainer, rule_AI, user)
+    if prediction_user is None:  # cases (3) (4)
+         cas = cases.cases_3_4(AI.explainer, rule_AI, user)
          if cas == 3:
                 constants.statistics["cases_3"] += 1
                 all_cases.append(3)
-         if cas == 4:
+         elif cas == 4:
                 constants.statistics["cases_4"] += 1
                 all_cases.append(4)
-         if cas == 5:
-                constants.statistics["cases_5"] += 1
-                all_cases.append(5)
+         #if cas == 5:
+         #       constants.statistics["cases_5"] += 1
+         #       all_cases.append(5)
     else:
         if prediction_AI != prediction_user:  # case (1)
             cases.case_1(AI.explainer, rule_AI, user)
@@ -131,10 +132,15 @@ for detailed_instance in interaction_instances[0:nb_instances]:
             constants.statistics["cases_1"] += 1
             all_cases.append(1)
 
-        if prediction_AI == prediction_user:  # case (2)
-            cases.case_2(AI.explainer, rule_AI, user)
-            constants.statistics["cases_2"] += 1
-            all_cases.append(2)
+        if prediction_AI == prediction_user:  # case (2)(4)
+            cas = cases.case_2(AI.explainer, rule_AI, user)
+            if cas == 2:
+                constants.statistics["cases_2"] += 1
+                all_cases.append(2)
+            elif cas == 4:
+                constants.statistics["cases_4"] += 1
+                all_cases.append(4)
+            
     """
     for rule1 in user.positive_rules:
         for rule2 in user.negative_rules:
@@ -157,7 +163,7 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     accuracy_AI.append(misc.get_accuracy(AI.explainer.get_model(), test_instances))
     accuracy_AI_interaction.append(misc.get_accuracy(AI.explainer.get_model(), interaction_instances))
     accuracy_user_interaction.append(user.accurary(interaction_instances))
-
+    #exit(0)
     if constants.trace:
         print("\n--\nc statistics", constants.statistics)
         print("\nc accuracy AI wrt user:", accuracy_AI_user)
