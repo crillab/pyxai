@@ -4,6 +4,11 @@
 
 #include "Node.h"
 #include "bcp/ProblemTypes.h"
+
+void pyxai::Node::add_to_delete(){
+    tree->to_delete.insert(this);
+}
+
 double pyxai::Node::compute_weight(std::vector<bool> &instance, std::vector<bool> &active_lits, bool get_min) {
     if (is_leaf())
         return leaf_value.weight;

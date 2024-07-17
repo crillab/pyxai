@@ -38,8 +38,8 @@ namespace pyxai {
         std::vector<bool>  used_to_explain; //  related to instance: true if the lit is used to explain the tree
         std::vector<int> used_lits;
         Propagator *propagator = nullptr;
-
-
+        std::set<Node*> to_delete;
+        
         // Variables used to stored the comutation value during common is_impicant function
         // FOR Classifier_BT
         bool get_min;
@@ -55,24 +55,38 @@ namespace pyxai {
         }
 
         void display(Type _type);
-        ~Tree();
         Node* parse(PyObject *tree_obj, Type _type);
         Node* parse_recurrence(PyObject *tree_obj, Type _type);
         int nb_nodes();
 
-
+        PyObject* toTuple();
 
         void initialize_BT(std::vector<bool> &instance, bool get_min);
 
 
         bool is_implicant(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
-
+        int nNodes();
 
 
         void initialize_RF(std::vector<bool> &instance, std::vector<bool> &active_lits, int prediction);
 
+        bool equalTree(Node* node1, Node* node2);
+
         void negating_tree();
+        void concatenateTreeDecisionRule(Tree* decision_rule);
+        void disjointTreeDecisionRule(Tree* decision_rule);
+
+        void improvedRectification(std::vector<int>* conditions, int& label);
+        void _improvedRectification(Node* node, Node* parent, int come_from, std::vector<int>* stack, std::vector<int>* appeared_conditions, std::vector<int>* in_conditions, std::vector<int>* conditions, int& label);
+        
+        void simplifyTheory();
+        void free();
+        void simplifyRedundant();
+        bool _simplifyRedundant(Node* root, Node* node, std::vector<int>* path, int come_from, Node* previous_node, Node* previous_previous_node);
+
+        Node* _simplifyTheory(Node* node, std::vector<Lit>* stack, Node* parent, int come_from, Node* root);
+        std::vector<bool>* isNodeConsistent(Node* node, std::vector<Lit>* stack);
 
         void update_used_lits() {
             for(int i : used_lits)

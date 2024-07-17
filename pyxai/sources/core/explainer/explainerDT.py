@@ -40,8 +40,11 @@ class ExplainerDT(Explainer):
         return self._tree.instance_to_binaries(instance)
 
 
-    def is_implicant(self, binary_representation):
-        return self._tree.is_implicant(binary_representation, self.target_prediction)
+    def is_implicant(self, binary_representation, *, prediction=None):
+        if prediction is None: 
+            prediction = self.target_prediction
+        binary_representation = self.extend_reason_with_theory(binary_representation)
+        return self._tree.is_implicant(binary_representation, prediction)
 
 
     def predict(self, instance):
@@ -322,7 +325,11 @@ class ExplainerDT(Explainer):
         """
         Tools.verbose("")
         Tools.verbose("-------------- Rectification information:")
-        tree_decision_rule = self._tree.decision_rule_to_tree(conditions)
+
+        is_implicant = self._tree.is_implicant(conditions, label)
+        print("is_implicant before rectification ?", is_implicant)
+
+        tree_decision_rule = self._tree.decision_rule_to_tree(conditions, label)
         Tools.verbose("Classification Rule - Number of nodes:", tree_decision_rule.n_nodes())
         Tools.verbose("Model - Number of nodes:", self._tree.n_nodes())
         if label == 1:
@@ -335,8 +342,22 @@ class ExplainerDT(Explainer):
         else:
             raise NotImplementedError("Multiclasses is in progress.")
         
+        print("tree_rectified:", tree_rectified.raw_data_for_CPP())
+        print("label:", label)
+
+        is_implicant = tree_rectified.is_implicant(conditions, label)
+        print("is_implicant after rectification ?", is_implicant)
+        if is_implicant is False:
+            raise ValueError("Problem 2")
+        
         Tools.verbose("Model - Number of nodes (after rectification):", tree_rectified.n_nodes())  
         tree_rectified = self.simplify_theory(tree_rectified)
+
+        is_implicant = tree_rectified.is_implicant(conditions, label)
+        print("is_implicant after rectification ?", is_implicant)
+        if is_implicant is False:
+            raise ValueError("Problem 3")
+        
         Tools.verbose("Model - Number of nodes (after simplification using the theory):", tree_rectified.n_nodes())
         tree_rectified.simplify()
         Tools.verbose("Model - Number of nodes (after elimination of redundant nodes):", tree_rectified.n_nodes())

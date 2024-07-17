@@ -57,7 +57,7 @@ class Metric:
         return {
                 "mean_squared_error": mean_squared_error(labels, predictions),
                 "root_mean_squared_error": mean_squared_error(labels, predictions, squared=False) if check_sklearn_14() is False else sklearn.metrics.root_mean_squared_error(labels, predictions),
-                "mean_absolute_error": mean_absolute_error(labels, predictions)
+                "mean_absolute_error": mean_absolute_error(labels, predictions),   
             }
 
     @staticmethod

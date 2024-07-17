@@ -141,11 +141,6 @@ class BinaryMapping():
         self.map_categorical_features_ordinal[id_feature] = id_binaries_of_the_feature
 
 
-    """
-        
-    """
-
-
     def get_theory(self, binary_representation, *, theory_type=TypeTheory.SIMPLE, id_new_var=0):
         
         if theory_type == TypeTheory.NEW_VARIABLES:
@@ -162,6 +157,8 @@ class BinaryMapping():
         new_variables = []
 
         # For numerical features
+        #print("self.map_numerical_features:", self.map_numerical_features)
+        #print("conditions:", self.map_id_binaries_to_features)
         for key in self.map_numerical_features.keys():
             id_binaries = self.map_numerical_features[key]
             conditions = [tuple(list(self.map_id_binaries_to_features[id]) + [id]) for id in id_binaries]

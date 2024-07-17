@@ -211,5 +211,8 @@ namespace pyxai {
          * (except is its size is less than pos).
          */
         void cancelUntilPos(unsigned pos);
+
+
+        bool propagate_assumptions(std::vector<Lit> &lits);
     };
 }  // namespace rfx
