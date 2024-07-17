@@ -11,7 +11,7 @@ class LeafNode:
     def get_reachable_classes(self, reason, target_prediction, map_features_to_id_binaries):
         return set([self.value])
 
-    def is_implicant(self, reason, target_prediction, map_features_to_id_binaries):
+    def is_implicant(self, reason, target_prediction, map_features_to_id_binaries, stack=[]):
         """_summary_
 
         Args:
@@ -70,7 +70,7 @@ class DecisionNode:
         self.right = right if isinstance(right, DecisionNode) else LeafNode(right)
         self.artificial_leaf = False
 
-
+    
     def negating_tree(self):
         self.right.negating_tree()
         self.left.negating_tree()
@@ -106,7 +106,7 @@ class DecisionNode:
 
 
     def __str__(self):
-        return "f{}<{}".format(self.id_feature, self.threshold)
+        return "f{} {} {}".format(self.id_feature, self.operator, self.threshold)
 
 
     def get_reachable_classes(self, binary_representation, target_prediction, map_features_to_id_binaries):
@@ -120,7 +120,7 @@ class DecisionNode:
             left = self.left.get_reachable_classes(binary_representation, target_prediction, map_features_to_id_binaries)
             return right.union(left)
 
-    def is_implicant(self, binary_representation, target_prediction, map_features_to_id_binaries):
+    def is_implicant(self, binary_representation, target_prediction, map_features_to_id_binaries, stack=[]):
         """_summary_
 
         Args:
@@ -131,14 +131,18 @@ class DecisionNode:
         Returns:
             Boolean: True if the reason is an implicant, else False
         """
+        #print("binary_representation:", binary_representation)
+        #print("target_prediction:", target_prediction)
+        #print("map_features_to_id_binaries:", map_features_to_id_binaries)
+        
         id_variable = map_features_to_id_binaries[(self.id_feature, self.operator, self.threshold)][0]
         if id_variable in binary_representation:
-            return self.right.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries)
+            return self.right.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries, stack=stack+[id_variable])
         elif -id_variable in binary_representation:
-            return self.left.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries)
+            return self.left.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries, stack=stack+[-id_variable])
         else:
-            right = self.right.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries)
-            left = self.left.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries)
+            right = self.right.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries, stack=stack+[id_variable])
+            left = self.left.is_implicant(binary_representation, target_prediction, map_features_to_id_binaries, stack=stack+[-id_variable])
             return right and left
 
 

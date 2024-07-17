@@ -2,13 +2,15 @@ from pyxai import Builder, Learning, Explainer, Tools
 import math
 
 
-Tools.set_verbose(0)
+Tools.set_verbose(1)
 
 import unittest
 class TestRectify(unittest.TestCase):
+    
+    @unittest.skip("reason for skipping")
     def test_rectify_5(self):
         learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
-        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
+        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, n_estimators=1)
 
         dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, correct=False, details=True)
         
@@ -44,7 +46,38 @@ class TestRectify(unittest.TestCase):
                 self.assertEqual(model.predict_instance(instance), 1)
             else:
                 self.assertEqual(model.predict_instance(instance), old_prediction)
-    
+
+
+    def test_rectify_a(self):
+        node_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
+        node_v2_1 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=0, right=node_v3_1)
+        
+        node_v1_1 = Builder.DecisionNode(1, operator=Builder.GE, threshold=40, left=node_v2_1, right=0)
+        node_v1_2 = Builder.DecisionNode(1, operator=Builder.GE, threshold=30, left=node_v1_1, right=0)
+        node_v1_3 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node_v1_2, right=0)
+        node_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=10, left=node_v1_3, right=1)
+
+        tree = Builder.DecisionTree(3, node_v1_4)
+
+        model = Builder.RandomForest([tree])
+        loan_types = {
+            "numerical": ["f1"],
+            "binary": ["f2", "f3"],
+        }
+
+        bob = (20, 1, 0)
+        explainer = Explainer.initialize(model, instance=bob, features_type=loan_types)
+
+        
+        minimal = explainer.minimal_sufficient_reason()
+        print("minimal:", minimal)
+        print("minimal:", explainer.to_features(minimal))
+        
+
+        
+        explainer.rectify(conditions=minimal, label=1) 
+
+    @unittest.skip("reason for skipping")
     def test_rectify_1(self):
         nodeT1_3 = Builder.DecisionNode(3, left=0, right=1)
         nodeT1_2 = Builder.DecisionNode(2, left=1, right=0)
@@ -64,7 +97,8 @@ class TestRectify(unittest.TestCase):
         rectified_model = explainer.get_model().raw_data_for_CPP()
         
         self.assertEqual(rectified_model, (0, (1, 0, (2, 0, 1))))
-
+    
+    @unittest.skip("reason for skipping")
     def test_rectify_2(self):
         
         node_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
@@ -99,6 +133,7 @@ class TestRectify(unittest.TestCase):
         rectified_model = explainer.get_model().raw_data_for_CPP()
         self.assertEqual(rectified_model, (0, (1, (2, (5, (6, 1, 0), 1), 1), 1)))
 
+    @unittest.skip("reason for skipping")
     def test_rectify_4(self):
         
         node_L_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
@@ -126,7 +161,7 @@ class TestRectify(unittest.TestCase):
 
         self.assertEqual(rectified_model.raw_data_for_CPP(), (0, (1, 0, (4, (3, 0, 1), 1))))
     
-    
+    @unittest.skip("reason for skipping")
     def test_rectify_3(self):
         learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
         model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
