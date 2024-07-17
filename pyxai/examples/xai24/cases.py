@@ -50,12 +50,52 @@ def case_2(explainer_AI, rule_AI, user):
     # remove specialized rules by rule_AI
 
     if in_conflict is False:
+        # Add rule
+        rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+        rules.append(rule_AI)
+
         user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
+        return 4
+    else:
+        return 2
 
 
+# def case_3(explainer_AI, rule_AI, user):
+    
 
-def case_3(explainer_AI, rule_AI, user):
+# def case_4(explainer_AI, rule_AI, user):
+#     """
+#     There is no rule in conflict (case 3 does not occur)
+#     remove specialized instances
+#     """
+#     rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+#     correction = False
+
+#     for rule in rules:
+#         if u.specialize(explainer_AI, rule_AI, rule):
+#             start_time = time.time()
+#             explainer_AI.rectify(conditions=rule, label=explainer_AI.prediction)
+#             constants.statistics["rectifications"] += 1
+#             end_time = time.time()
+#             constants.statistics["rectifications_times"].append(end_time - start_time)
+#             constants.statistics["rectifications_cases"].append(4)
+#             correction = True
+#     return correction
+
+
+# def case_4(explainer_AI, rule_AI, user):
+#     """
+#     Everything is ok
+#     One can add this rule and believe in it
+#     """
+#     rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+#     rules.append(rule_AI)
+#     return True
+
+def cases_3_4(explainer_AI, rule_AI, user):
+    
     """
+    prediction_user is None
     Policy based
     rectify rules in conflict with prediction
     """
@@ -72,47 +112,20 @@ def case_3(explainer_AI, rule_AI, user):
             constants.statistics["rectifications_times"].append(end_time - start_time)
             constants.statistics["rectifications_cases"].append(3)
             correction = True
-    return correction
 
-def case_4(explainer_AI, rule_AI, user):
-    """
-    There is no rule in conflict (case 3 does not occur)
-    remove specialized instances
-    """
-    rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
-    correction = False
-
-    for rule in rules:
-        if u.specialize(explainer_AI, rule_AI, rule):
-            start_time = time.time()
-            explainer_AI.rectify(conditions=rule, label=explainer_AI.prediction)
-            constants.statistics["rectifications"] += 1
-            end_time = time.time()
-            constants.statistics["rectifications_times"].append(end_time - start_time)
-            constants.statistics["rectifications_cases"].append(4)
-            correction = True
-    return correction
-
-
-def case_5(explainer_AI, rule_AI, user):
-    """
-    Everything is ok
-    One can add this rule and believe in it
-    """
-    rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
-    rules.append(rule_AI)
-    return True
-
-def cases_3_4_5(explainer_AI, rule_AI, user):
-    """
-    User has no idea about the prediction
-    """
-    if case_3(explainer_AI, rule_AI, user):
+    if correction is True:
         return 3
+    else:
+        # Add rule
+        rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+        rules.append(rule_AI)
 
-    if case_4(explainer_AI, rule_AI, user):
+        # Simplify
+        user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
+
         return 4
+    return correction
 
-    case_5(explainer_AI, rule_AI, user)
-    return 5
+    #case_5(explainer_AI, rule_AI, user)
+    #return 5
 
