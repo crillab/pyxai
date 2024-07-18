@@ -37,19 +37,23 @@ const int IN_CONDITION_NEGATIVELY = 0;
 const int IN_CONDITION_POSITIVELY = 1;
 
 void pyxai::Tree::improvedRectification(std::vector<int>* conditions, int& label){
-   
+    
     int max = 0;
     for (Node* node: all_nodes){
         if (!node->is_leaf()){
             if (abs(node->lit) > max) max = abs(node->lit);
         }
     }
+    
     for (int& condition: *conditions){if (abs(condition) > max) max = abs(condition);}
+    
     std::vector<int>* in_conditions = new std::vector<int>(max+1, NOT_IN_CONDITION);
+    
     for (int& condition: *conditions){
         if (condition > 0) (*in_conditions)[abs(condition)] = IN_CONDITION_POSITIVELY;
         else (*in_conditions)[abs(condition)] = IN_CONDITION_NEGATIVELY;
     }
+    
     std::vector<int>* appeared_conditions = new std::vector<int>(max+1, NOT_APPEARED);
     std::vector<int>* stack = new std::vector<int>();
     
@@ -92,40 +96,50 @@ void pyxai::Tree::_improvedRectification(Node* node, Node* parent, int come_from
             for (int& literal: *conditions){
                 if ((*appeared_conditions)[abs(literal)] == NOT_APPEARED)missing_nodes.push_back(literal);
             }
-
-            /*std::cout << std::endl;
-            std::cout << "missing nodes:" << std::endl;
-            for (int& value: missing_nodes){
-                std::cout << value << " ";
-            }
-            std::cout << std::endl;*/
-            
-            // Start with the last node: 
-            int last_missing_node = missing_nodes[missing_nodes.size()-1];
-            Node* right_leaf = new Node(last_missing_node > 0 ? label : label_leaf, node->tree);
-            Node* left_leaf = new Node(last_missing_node <= 0 ? label : label_leaf, node->tree);
-            Node* node = new Node(abs(last_missing_node), left_leaf, right_leaf);
-            
-            // Now we add the following
-            for (int i = missing_nodes.size()-2; i >= 0; i--){
-                Node* leaf = new Node(label_leaf, node->tree); 
-                if (missing_nodes[i] > 0){
-                    node = new Node(abs(missing_nodes[i]), leaf, node);
-                }else{
-                    node = new Node(abs(missing_nodes[i]), node, leaf);
+            if (missing_nodes.size() > 0){
+                // We have some missing node: we construct the sub-tree for the rectification with these nodes
+                //std::cout << std::endl;
+                //std::cout << "missing_nodes len:" << missing_nodes.size() << std::endl;
+                
+                //std::cout << "missing nodes:" << std::endl;
+                //for (int& value: missing_nodes){
+                //    std::cout << value << " ";
+                //}
+                //std::cout << std::endl;
+                //std::cout << "missing_nodes len:" << missing_nodes.size() << std::endl;
+                
+                // Start with the last node: 
+                int last_missing_node = missing_nodes[missing_nodes.size()-1];
+                Node* right_leaf = new Node(last_missing_node > 0 ? label : label_leaf, node->tree);
+                Node* left_leaf = new Node(last_missing_node <= 0 ? label : label_leaf, node->tree);
+                Node* node = new Node(abs(last_missing_node), left_leaf, right_leaf);
+                
+                // Now we add the following
+                for (int i = missing_nodes.size()-2; i >= 0; i--){
+                    Node* leaf = new Node(label_leaf, node->tree); 
+                    if (missing_nodes[i] > 0){
+                        node = new Node(abs(missing_nodes[i]), leaf, node);
+                    }else{
+                        node = new Node(abs(missing_nodes[i]), node, leaf);
+                    }
                 }
-            }
-            /*node->display(Classifier_RF);
-            std::cout << std::endl;*/
+                //node->display(Classifier_RF);
+                //std::cout << std::endl;
 
-            // Now we put this subtree in the tree
-            if (come_from == 0){// come from the left side
-                parent->false_branch = node;
-            }else if (come_from == 1){// come from the right side
-                parent->true_branch = node;
+                // Now we put this subtree in the tree
+                if (come_from == 0){// come from the left side
+                    parent->false_branch = node;
+                }else if (come_from == 1){// come from the right side
+                    parent->true_branch = node;
+                }else{
+                    std::cout << "Not implemented error: come from root" << std::endl;
+                    exit(0);
+                }
             }else{
-                std::cout << "Not implemented error: come from root" << std::endl;
-                exit(0);
+                // We have no missing node: we have to change the label
+                //std::cout << "No missing node" << std::endl;
+                node->leaf_value.prediction = label;
+                //exit(0);
             }
             //for (int& value: missing_nodes){
             //    

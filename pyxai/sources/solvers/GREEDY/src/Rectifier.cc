@@ -23,6 +23,7 @@ void pyxai::Rectifier::improvedRectification(PyObject *conditions_obj, int _labe
     Py_ssize_t size_conditions_obj = PyTuple_Size(conditions_obj);
     //std::cout << "size_condition_tuple:" << size_conditions_obj << std::endl;
     conditions.clear();
+    
     for (unsigned int i = 0; i < size_conditions_obj; i++){
         PyObject *literal_obj = PyTuple_GetItem(conditions_obj, i);
         if (!PyLong_Check(literal_obj)) {
@@ -32,9 +33,11 @@ void pyxai::Rectifier::improvedRectification(PyObject *conditions_obj, int _labe
         }
         conditions.push_back(PyLong_AsLong(literal_obj));
     }
+    
     label = _label;
     //std::cout << "label:" << label << std::endl;
     for (Tree *tree: trees) {tree->improvedRectification(&conditions, label);}
+    
 }
 
 void pyxai::Rectifier::addDecisionRule(PyObject *tree_obj) {
