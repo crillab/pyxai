@@ -541,7 +541,7 @@ class ExplainerRF(Explainer):
         raise NotImplementedError("The anchored_reason() method for RF works only with binary-class datasets.")
         
 
-    def rectify_cxx(self, *, conditions, label, tests=True):
+    def rectify_cxx(self, *, conditions, label, tests=False):
         """
         C++ version
         Rectify the Decision Tree (self._tree) of the explainer according to a `conditions` and a `label`.
@@ -553,6 +553,7 @@ class ExplainerRF(Explainer):
         Returns:
             RandomForest: The rectified random forest.  
         """
+        print("rectify_cxx")
         current_time = time.process_time()
         if self.c_rectifier is None:
             self.c_rectifier = c_explainer.new_rectifier()
@@ -650,7 +651,7 @@ class ExplainerRF(Explainer):
         Tools.verbose("--------------")
         return self._random_forest
 
-    def rectify(self, *, conditions, label, cxx=True, tests=True):
+    def rectify(self, *, conditions, label, cxx=True, tests=False):
         """
         Rectify the Decision Tree (self._tree) of the explainer according to a `conditions` and a `label`.
         Simplify the model (the theory can help to eliminate some nodes).
