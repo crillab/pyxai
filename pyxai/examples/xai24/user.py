@@ -46,8 +46,12 @@ class User:
         return tmp
 
     def remove_specialized(self, reason, positive):
+
+        
         rules = self.positive_rules if positive else self.negative_rules
-        tmp = [r for r in rules if not generalize(self.explainer, reason, r)]
+        
+        tmp = [r for r in rules if len(reason) == 0 or not generalize(self.explainer, reason, r)]
+        
         if len(tmp) != len(rules):
             tmp.append(reason)
             constants.statistics["generalisations"] += 1
@@ -93,6 +97,7 @@ class UserLambda(User):
     def __init__(self, explainer, nb_v, positive_rules, negative_rules):
         self.explainer = explainer
         self.nb_variables = nb_v
+        print("self.nb_variables user:", self.nb_variables)
         self.positive_rules = positive_rules
         self.negative_rules = negative_rules
 
@@ -108,6 +113,7 @@ def generalize(explainer_AI, rule1, rule2):
     """
     tmp1 = explainer_AI.extend_reason_with_theory(rule1)
     tmp2 = explainer_AI.extend_reason_with_theory(rule2)
+    
     if len(tmp1) > len(tmp2):
         return False
 
