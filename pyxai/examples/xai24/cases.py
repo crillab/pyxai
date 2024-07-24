@@ -51,8 +51,8 @@ def case_2(explainer_AI, rule_AI, user):
 
     if in_conflict is False:
         # Add rule
-        rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
-        rules.append(rule_AI)
+        #rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+        #rules.append(rule_AI)
 
         user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)
         return 4
@@ -117,8 +117,8 @@ def cases_3_4(explainer_AI, rule_AI, user):
         return 3
     else:
         # Add rule
-        rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
-        rules.append(rule_AI)
+        #rules = user.positive_rules if explainer_AI.target_prediction == 1 else user.negative_rules
+        #rules.append(rule_AI)
 
         # Simplify
         user.remove_specialized(rule_AI, explainer_AI.target_prediction == 1)

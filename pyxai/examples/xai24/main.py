@@ -64,6 +64,10 @@ constants.statistics["n_negatives"] = len(user.negative_rules)
 constants.statistics["n_initial_positives"] = len(user.positive_rules)
 constants.statistics["n_initial_negatives"] = len(user.negative_rules)
 
+print("positive rules:", user.positive_rules)
+print("negative rules:", user.negative_rules)
+
+
 #Rend debile l'IA:
 print("nTrees IA: ", len(AI.model.forest))
 print("accuracy IA: ", misc.get_accuracy(AI.explainer.get_model(), test_instances))
@@ -103,6 +107,7 @@ for detailed_instance in interaction_instances[0:nb_instances]:
     start_time = time.time()
     instance = detailed_instance['instance']
     AI.set_instance(instance)
+    #print("instance:", instance)
     prediction_AI = AI.predict_instance(instance)
     prediction_user = user.predict_instance(AI.explainer.binary_representation)  # no they have the same representation
     rule_AI = AI.reason()
