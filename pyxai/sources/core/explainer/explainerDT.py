@@ -317,13 +317,14 @@ class ExplainerDT(Explainer):
         C++ version
         Rectify the Decision Tree (self._tree) of the explainer according to a `conditions` and a `label`.
         Simplify the model (the theory can help to eliminate some nodes).
-
-        Args:
-            conditions (list or tuple): A decision rule in the form of list of literals (binary variables representing the conditions of the tree). 
-            label (int): The label of the decision rule.   
-        Returns:
-            RandomForest: The rectified random forest.  
         """ 
+
+        #check conditions and return a list of literals
+        
+        conditions, change = self._tree.parse_conditions_for_rectify(conditions)
+        if change is True:
+            self.set_features_type(self._last_features_types)
+       
         current_time = time.process_time()
         if self.c_rectifier is None:
             self.c_rectifier = c_explainer.new_rectifier()
@@ -332,8 +333,6 @@ class ExplainerDT(Explainer):
             is_implicant = self.is_implicant(conditions, prediction=label)
             print("is_implicant ?", is_implicant)
         
-        
-
         c_explainer.rectifier_add_tree(self.c_rectifier, self._tree.raw_data_for_CPP())
         n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
         Tools.verbose("Rectify - Number of nodes - Initial (c++):", n_nodes_cxx) 
