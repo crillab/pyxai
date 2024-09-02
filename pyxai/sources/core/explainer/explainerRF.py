@@ -553,6 +553,14 @@ class ExplainerRF(Explainer):
         Returns:
             RandomForest: The rectified random forest.  
         """ 
+
+        #check conditions and return a list of literals
+        #print("conditions:", conditions)
+        
+        conditions, change = self._random_forest.parse_conditions_for_rectify(conditions)
+        if change is True:
+            self.set_features_type(self._last_features_types)
+        
         current_time = time.process_time()
         if self.c_rectifier is None:
             self.c_rectifier = c_explainer.new_rectifier()

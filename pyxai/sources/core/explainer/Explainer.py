@@ -25,6 +25,7 @@ class Explainer:
         self._visualisation = Visualisation(self, do_history)
         self._glucose = None
         self._reference_instances = None
+        self._last_features_types = None
 
     def get_model(self):
         """
@@ -103,6 +104,7 @@ class Explainer:
                 Add a theory (related to the type of features) in the explainer.
                 @param features_types (str | list): the theory selected.
         """
+        self._last_features_types = features_types
         model = self.get_model()
         # To avoid a bug when several init done :)
         model.clear_theory_features()

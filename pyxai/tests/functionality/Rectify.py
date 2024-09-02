@@ -31,9 +31,13 @@ class TestRectify(unittest.TestCase):
 
         explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
         reason = explainer.majoritary_reason(n=1)
+        #print("reason:", reason)
+        #print("reason:", explainer.to_features(reason))
+        reason = tuple([(2, Builder.GT, 0.5, True)] + [r for r in reason][1:])
+        #print("reason:", reason)
         
-        model = explainer.rectify(conditions=reason, label=1)
-        
+        model = explainer.rectify(conditions=reason, label=1, tests=True)
+        reason = (-2, -3, -7, 9)
         self.assertEqual(model.predict_instance(instance), 1)
         
         reason = set(reason)
@@ -48,6 +52,29 @@ class TestRectify(unittest.TestCase):
             else:
                 self.assertEqual(model.predict_instance(instance), old_prediction)
 
+    #@unittest.skip("reason for skipping")
+    def test_rectify_b(self):
+        node_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
+        node_v2_1 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=0, right=node_v3_1)
+        
+        node_v1_1 = Builder.DecisionNode(1, operator=Builder.GE, threshold=40, left=node_v2_1, right=0)
+        node_v1_2 = Builder.DecisionNode(1, operator=Builder.GE, threshold=30, left=node_v1_1, right=0)
+        node_v1_3 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node_v1_2, right=0)
+        node_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=10, left=node_v1_3, right=1)
+
+        model = Builder.DecisionTree(3, node_v1_4)
+
+        loan_types = {
+            "numerical": ["f1"],
+            "binary": ["f2", "f3"],
+        }
+
+        bob = (20, 1, 0)
+
+        explainer = Explainer.initialize(model, instance=bob, features_type=loan_types)
+        explainer.rectify(conditions=((1, Builder.GE, 5, False),-5), label=1, tests=True) 
+        rectified_model = explainer.get_model().raw_data_for_CPP()
+        
     #@unittest.skip("reason for skipping")
     def test_rectify_a(self):
         node_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
@@ -76,7 +103,7 @@ class TestRectify(unittest.TestCase):
         
 
         
-        explainer.rectify(conditions=minimal, label=1) 
+        explainer.rectify(conditions=minimal, label=1, tests=True) 
 
     #@unittest.skip("reason for skipping")
     def test_rectify_1(self):
@@ -92,8 +119,8 @@ class TestRectify(unittest.TestCase):
         explainer = Explainer.initialize(model, features_type=loan_types)
 
         #Alice’s expertise can be represented by the formula T = ((x1 ∧ not x3) ⇒ y) ∧ (not x2 ⇒ not y) encoding her two decision rules
-        explainer.rectify(conditions=(1, -3), label=1)  #(x1 ∧ not x3) ⇒ y
-        explainer.rectify(conditions=(-2, ), label=0)  #not x2 ⇒ not y
+        explainer.rectify(conditions=(1, -3), label=1, tests=True)  #(x1 ∧ not x3) ⇒ y
+        explainer.rectify(conditions=(-2, ), label=0, tests=True)  #not x2 ⇒ not y
 
         rectified_model = explainer.get_model().raw_data_for_CPP()
         
@@ -130,7 +157,7 @@ class TestRectify(unittest.TestCase):
         minimal = explainer.minimal_sufficient_reason()
 
         
-        explainer.rectify(conditions=minimal, label=1) 
+        explainer.rectify(conditions=minimal, label=1, tests=True) 
         rectified_model = explainer.get_model().raw_data_for_CPP()
         self.assertEqual(rectified_model, (0, (1, (2, (5, (6, 1, 0), 1), 1), 1)))
 
@@ -158,7 +185,7 @@ class TestRectify(unittest.TestCase):
         #For him/her, the following classification rule must be obeyed:
         #whenever the annual income of the client is lower than 30,
         #the demand should be rejected
-        rectified_model = explainer.rectify(conditions=(-1, ), label=0) 
+        rectified_model = explainer.rectify(conditions=(-1, ), label=0, tests=True) 
 
         self.assertEqual(rectified_model.raw_data_for_CPP(), (0, (1, 0, (4, (3, 0, 1), 1))))
     
@@ -186,7 +213,7 @@ class TestRectify(unittest.TestCase):
 
         explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
         minimal_reason = explainer.minimal_sufficient_reason(n=1)
-        model = explainer.rectify(conditions=minimal_reason, label=1)
+        model = explainer.rectify(conditions=minimal_reason, label=1, tests=True)
         
         self.assertEqual(model.predict_instance(instance), 1)
         
