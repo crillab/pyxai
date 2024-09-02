@@ -422,7 +422,7 @@ pyxai::Node *pyxai::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
     Py_ssize_t size_obj = PyTuple_Size(tree_obj);
 
     if (size_obj != 3 && size_obj != 1) {
-        std::cout << "C"<<std::endl;
+        //std::cout << "C"<<std::endl;
         PyErr_Format(PyExc_TypeError, "The size of the tuple have to be equal to 3 if it is a complete tree or 1 if it is just one leaf value !");
         return NULL;
     }
@@ -451,9 +451,9 @@ pyxai::Node *pyxai::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
         all_nodes.push_back(left_node);
     } else {
         const char* p = Py_TYPE(left_obj)->tp_name;
-        std::cout << p << std::endl;
+        //std::cout << p << std::endl;
 
-        std::cout << "err:" << PyLong_AsLong(left_obj) << std::endl;
+        std::cout << "Error:" << PyLong_AsLong(left_obj) << std::endl;
         PyErr_Format(PyExc_TypeError, "Error during passing: this element have to be float/int or tuple !");
         return NULL;
     }
@@ -465,8 +465,8 @@ pyxai::Node *pyxai::Tree::parse_recurrence(PyObject *tree_obj, Type _type) {
         all_nodes.push_back(right_node);
     } else {
         const char* p = Py_TYPE(right_obj)->tp_name;
-        std::cout << p << std::endl;
-        std::cout << "err:" << PyLong_AsLong(right_obj) << std::endl;
+        //std::cout << p << std::endl;
+        std::cout << "Error:" << PyLong_AsLong(right_obj) << std::endl;
         PyErr_Format(PyExc_TypeError, "Error during passing: this element have to be float/int or tuple !");
         return NULL;
     }
