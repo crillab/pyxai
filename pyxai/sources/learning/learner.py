@@ -142,7 +142,9 @@ class Learner:
         Tools.verbose("Dataset name:", self.dataset_name)
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
         Tools.verbose("nInstances (nObservations):", self.n_instances)
+        Tools.verbose("Labels Encoding (with indexes):", self.inverse_dict_labels)
         Tools.verbose("nLabels:", self.n_labels)
+        
         if self.n_labels == 1:
             raise ValueError("The prediction contains only one value: " + str(self.n_labels))
 
@@ -167,18 +169,18 @@ class Learner:
         self.dict_labels = OrderedDict()
         self.inverse_dict_labels = OrderedDict()
         set_labels = set(labels)
-        check_type_int = all((not isinstance(x, str) and numpy.issubdtype(x, numpy.integer)) or isinstance(x, int) or (isinstance(x, str) and x.isnumeric()) for x in set_labels)
-        if check_type_int is True:
-            for p in labels:
-                if str(p) not in self.dict_labels:
-                    self.dict_labels[str(p)] = int(p)
-                    self.inverse_dict_labels[int(p)] = str(p)
-        else:
-            for p in labels:
-                if str(p) not in self.dict_labels:
-                    self.dict_labels[str(p)] = index
-                    self.inverse_dict_labels[index] = str(p)
-                    index += 1
+        #check_type_int = all((not isinstance(x, str) and numpy.issubdtype(x, numpy.integer)) or isinstance(x, int) or (isinstance(x, str) and x.isnumeric()) for x in set_labels)
+        #if check_type_int is True:
+        #    for p in labels:
+        #        if str(p) not in self.dict_labels:
+        #            self.dict_labels[str(p)] = int(p)
+        #            self.inverse_dict_labels[int(p)] = str(p)
+        #else:
+        for p in labels:
+            if str(p) not in self.dict_labels:
+                self.dict_labels[str(p)] = index
+                self.inverse_dict_labels[index] = str(p)
+                index += 1
 
         
 
@@ -567,7 +569,6 @@ class Learner:
                       seed=0, 
                       training_indexes=None,
                       test_indexes=None, details=False):
-
         # 1: Check parameters and get the associated solver
         Tools.verbose("---------------   Instances   ----------------")
         assert isinstance(indexes, (Indexes, str)), "Bad value in the parameter 'indexes'"
