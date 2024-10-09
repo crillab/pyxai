@@ -38,7 +38,7 @@ class Scikitlearn(Learner):
         self.display_parameters(learner_options)
         learner = DecisionTreeClassifier(**learner_options)
         learner.fit(instances_training, labels_training)
-        
+       
         result = learner.predict(instances_test)
         metrics = self.compute_metrics(labels_test, result)
 
