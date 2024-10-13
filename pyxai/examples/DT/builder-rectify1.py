@@ -31,8 +31,8 @@ explainer = Explainer.initialize(model, features_type=loan_types)
 print("Original tree:", explainer.get_model().raw_data_for_CPP())
 
 #Alice’s expertise can be represented by the formula T = ((x1 ∧ not x3) ⇒ y) ∧ (not x2 ⇒ not y) encoding her two decision rules
-explainer.rectify(decision_rule=(1, -3), label=1)  #(x1 ∧ not x3) ⇒ y
-explainer.rectify(decision_rule=(-2, ), label=0)  #not x2 ⇒ not y
+explainer.rectify(conditions=(1, -3), label=1)  #(x1 ∧ not x3) ⇒ y
+explainer.rectify(conditions=(-2, ), label=0)  #not x2 ⇒ not y
 
 rectified_model = explainer.get_model().raw_data_for_CPP()
 print("Rectified_model:", rectified_model)
