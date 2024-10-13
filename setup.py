@@ -3,8 +3,14 @@ from distutils.core import Extension
 from setuptools import setup, find_packages
 
 __version__ = open(os.path.join(os.path.dirname(__file__), 'pyxai/version.txt'), encoding='utf-8').read()
+__cxx_path__ = "pyxai/sources/solvers/GREEDY/src/"
+__cxx_files__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".cc")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".cc")]
+__cxx_headers__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".h")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".h")]
 
-print("setup version", __version__)
+print("__version__", __version__)
+print("__cxx_path__:", __cxx_path__)
+print("__cxx_files__:", __cxx_files__)
+print("__cxx_headers__:", __cxx_headers__)
 
 setup(name='pyxai',
       version=__version__,
@@ -33,13 +39,9 @@ setup(name='pyxai',
       license='MIT',
       ext_modules=[Extension(
           "c_explainer",
-          ["pyxai/sources/solvers/GREEDY/src/bt_wrapper.cc", "pyxai/sources/solvers/GREEDY/src/Explainer.cc",
-           "pyxai/sources/solvers/GREEDY/src/Tree.cc", "pyxai/sources/solvers/GREEDY/src/Node.cc", 
-           "pyxai/sources/solvers/GREEDY/src/bcp/ParserDimacs.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Problem.cc",
-           "pyxai/sources/solvers/GREEDY/src/bcp/ProblemTypes.cc", "pyxai/sources/solvers/GREEDY/src/bcp/Propagator.cc",
-           ],
+          __cxx_files__,
           language="c++",
           extra_compile_args=["-std=c++11"]
       )],
-      headers=['pyxai/sources/solvers/GREEDY/src/Tree.h'],
+      headers=__cxx_headers__,
       platforms='LINUX')
