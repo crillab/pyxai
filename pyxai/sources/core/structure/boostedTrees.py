@@ -26,7 +26,6 @@ class BoostedTrees(TreeEnsembles):
         raw = tuple(tree.raw_data() for tree in self.forest)
         return (self.n_classes, raw)
 
-
     def get_set_of_variables(self, tree, node):
         output = set()
         if node.is_leaf(): return output

@@ -25,7 +25,7 @@ class RandomForest(TreeEnsembles):
     def raw_data(self):
         raw = tuple(tree.raw_data() for tree in self.forest)
         return (self.n_classes, raw)
-
+    
     def predict_votes(self, instance):
         """
         Return the number of votes for each class
