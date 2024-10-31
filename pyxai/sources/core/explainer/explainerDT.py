@@ -322,7 +322,7 @@ class ExplainerDT(Explainer):
         #check conditions and return a list of literals
         
         conditions, change = self._tree.parse_conditions_for_rectify(conditions)
-        if change is True:
+        if change is True and self._last_features_types is not None:
             self.set_features_type(self._last_features_types)
        
         current_time = time.process_time()

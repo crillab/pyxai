@@ -76,7 +76,17 @@ class DecisionTree(BinaryMapping):
         raw = tuple([self.root.value]) if self.root.is_leaf() else self.to_tuples(self.root)
         return (int(self.n_features), [int(element) for element in self.target_class], raw)
 
+    def depth(self):
+        return self._depth(self.root) 
+    
 
+    def _depth(self, node):
+        if node.is_leaf():
+            return 1  
+        left_depth = self._depth(node.left)
+        right_depth = self._depth(node.right)
+        return max(left_depth, right_depth) + 1
+        
     def to_tuples(self, node, for_cpp=False):
         """
         For example, this method can return (1, (2, (2.5,3.5)), (3 (-1.5, 0.5)))
@@ -171,6 +181,9 @@ class DecisionTree(BinaryMapping):
         tree.map_features_to_id_binaries = self.map_features_to_id_binaries
         
         return tree
+
+    
+
 
     def negating_tree(self):
         new_tree = copy.deepcopy(self)

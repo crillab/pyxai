@@ -43,7 +43,10 @@ class TreeEnsembles(BinaryMapping):
 
     def n_nodes(self):
         return sum(tree.n_nodes() for tree in self.forest)
-
+    
+    def depth(self):
+        return max(tree.depth() for tree in self.forest)
+    
     def redundancy_analysis(self):
         n_variables = len(self.map_features_to_id_binaries)
         n_alone_variables = 0
