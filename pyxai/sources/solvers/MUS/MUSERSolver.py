@@ -13,7 +13,10 @@ class MUSERSolver:
     def __init__(self, *, filenames="/tmp/muser-", _hash=str(uuid.uuid4().fields[-1])[:8]):
         self._hash = _hash
         self.filename_gcnf = filenames + self._hash + ".gcnf"
-
+        if get_os() == "darwin":
+            raise OSError("MUSER is not available on MacOS.")
+        elif get_os() == "windows":
+            raise OSError("MUSER is not available on Windows.")
 
     def write_gcnf(self, n_variables, hard_clauses, soft_clauses):
 
