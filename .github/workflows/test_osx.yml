@@ -18,6 +18,7 @@ jobs:
         python-version: '3.11'
     - name: Build a wheel via an sdist
       run: |
+        brew install libomp
         pip install build
         python -m build
         pip install dist/pyxai*.whl
