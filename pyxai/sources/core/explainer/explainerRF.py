@@ -560,16 +560,10 @@ class ExplainerRF(Explainer):
         conditions, change = self._random_forest.parse_conditions_for_rectify(conditions)
         if change is True:
             self.set_features_type(self._last_features_types)
-        
+         
         current_time = time.process_time()
         if self.c_rectifier is None:
             self.c_rectifier = c_explainer.new_rectifier()
-
-        if tests is True:
-            is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant ?", is_implicant)
-        
-        
 
         for i, tree in enumerate(self._random_forest.forest):
             c_explainer.rectifier_add_tree(self.c_rectifier, tree.raw_data_for_CPP())
@@ -587,9 +581,8 @@ class ExplainerRF(Explainer):
                 self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
                 self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after rectification ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 2")
+                raise ValueError("Problem: the rectified tree is not an implicant of the original tree!")
         
 
         # Simplify Theory part
@@ -606,9 +599,8 @@ class ExplainerRF(Explainer):
                 self._random_forest.forest[i].delete(self._random_forest.forest[i].root)
                 self._random_forest.forest[i].root = self._random_forest.forest[i].from_tuples(tree_tuples)
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after simplify theory ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 3")
+                raise ValueError("Problem: the condition is not an imlicant of the prediction after simplify theory!")
         
         # Simplify part
         c_explainer.rectifier_simplify_redundant(self.c_rectifier)
@@ -626,9 +618,8 @@ class ExplainerRF(Explainer):
         Tools.verbose("Rectify - Number of nodes - Final (c++):", self._random_forest.n_nodes())
         if tests is True:
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after simplify ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 4")
+                raise ValueError("Problem: the condition is not an imlicant of the prediction after simplify!")
         
         if self._instance is not None:
             self.set_instance(self._instance)

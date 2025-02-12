@@ -58,6 +58,7 @@ if sys.argv:
             print("Change directory to PyXAI location: ", __pyxai_location__)
             cmd = "python3 tests"+os.sep+"tests.py -f"
             cmd = cmd.split(" ")
+            print("command:", cmd)
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, errors = process.communicate()
             #stdout = process.stdout.read().decode('utf-8')

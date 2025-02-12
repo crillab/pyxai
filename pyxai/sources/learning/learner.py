@@ -132,6 +132,8 @@ class Learner:
         self.rename_attributes(self.data)
 
         self.data, self.labels = self.remove_labels(self.data, self.n_features)
+
+        #The label encoding is only for classification problems
         if self.learner_type == LearnerType.Classification and encode_labels is True:
             self.create_dict_labels(self.labels)
             self.labels = self.labels_to_values(self.labels)
@@ -142,7 +144,8 @@ class Learner:
         Tools.verbose("Dataset name:", self.dataset_name)
         Tools.verbose("nFeatures (nAttributes, with the labels):", self.n_features)
         Tools.verbose("nInstances (nObservations):", self.n_instances)
-        Tools.verbose("Labels Encoding (with indexes):", self.inverse_dict_labels)
+        if self.learner_type == LearnerType.Classification and encode_labels is True:
+            Tools.verbose("Labels Encoding (with indexes):", self.inverse_dict_labels)
         Tools.verbose("nLabels:", self.n_labels)
         
         if self.n_labels == 1:
@@ -168,7 +171,7 @@ class Learner:
         index = 0
         self.dict_labels = OrderedDict()
         self.inverse_dict_labels = OrderedDict()
-        set_labels = set(labels)
+        #set_labels = set(labels)
         #check_type_int = all((not isinstance(x, str) and numpy.issubdtype(x, numpy.integer)) or isinstance(x, int) or (isinstance(x, str) and x.isnumeric()) for x in set_labels)
         #if check_type_int is True:
         #    for p in labels:
@@ -182,7 +185,6 @@ class Learner:
                 self.inverse_dict_labels[index] = str(p)
                 index += 1
 
-        
 
 
     """

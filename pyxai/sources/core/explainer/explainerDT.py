@@ -329,9 +329,9 @@ class ExplainerDT(Explainer):
         if self.c_rectifier is None:
             self.c_rectifier = c_explainer.new_rectifier()
 
-        if tests is True:
-            is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant ?", is_implicant)
+        #if tests is True:
+        #    is_implicant = self.is_implicant(conditions, prediction=label)
+        #    print("is_implicant ?", is_implicant)
         
         c_explainer.rectifier_add_tree(self.c_rectifier, self._tree.raw_data_for_CPP())
         n_nodes_cxx = c_explainer.rectifier_n_nodes(self.c_rectifier)
@@ -348,9 +348,8 @@ class ExplainerDT(Explainer):
             self._tree.delete(self._tree.root)
             self._tree.root = self._tree.from_tuples(tree_tuples)
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after rectification ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 2")
+                raise ValueError("Problem: the condition is not an imlicant of the prediction after rectification!")
         
 
         # Simplify Theory part
@@ -366,9 +365,8 @@ class ExplainerDT(Explainer):
             self._tree.delete(self._tree.root)
             self._tree.root = self._tree.from_tuples(tree_tuples)
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after simplify theory ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 3")
+                raise ValueError("Problem: the condition is not an imlicant of the prediction after simplification with the theory!")
         
         # Simplify part
         c_explainer.rectifier_simplify_redundant(self.c_rectifier)
@@ -385,9 +383,8 @@ class ExplainerDT(Explainer):
         Tools.verbose("Rectify - Number of nodes - Final (c++):", self._tree.n_nodes())
         if tests is True:
             is_implicant = self.is_implicant(conditions, prediction=label)
-            print("is_implicant after simplify ?", is_implicant)
             if is_implicant is False:
-                raise ValueError("Problem 4")
+                raise ValueError("Problem: the decision rule is not an implicant of the tree after simplification!")
         
         if self._instance is not None:
             self.set_instance(self._instance)
