@@ -82,7 +82,7 @@ class Metric:
             "true_negative": tn,
             "false_positive": fp,
             "false_negative": fn,
-            "sklearn_confusion_matrix": confusion_matrix(labels, predictions).tolist()
+            "sklearn_confusion_matrix": confusion_matrix(labels, predictions, labels=labels).tolist()
             }
     
     @staticmethod

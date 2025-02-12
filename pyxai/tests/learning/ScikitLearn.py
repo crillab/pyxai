@@ -1,5 +1,6 @@
 from pyxai import Learning, Explainer, Tools
 import math
+import pandas
 
 Tools.set_verbose(0)
 
@@ -40,6 +41,15 @@ class TestLearningScikitlearn(unittest.TestCase):
         for model in models:
             self.assertEqual(model.raw_model.get_params()["max_depth"], 6)
             self.assertEqual(model.raw_model.get_params()["random_state"], 0)
+
+    def test_prediction_inverse(self):
+        df = pandas.read_csv("tests/dermatology.csv")
+        # Get the last column name
+        last_col = df.columns[-1]
+        # Invert the values (0 becomes 1, 1 becomes 0)
+        df[last_col] = 1 - df[last_col]
+
+        self.prediction(Learning.Scikitlearn(df, learner_type=Learning.CLASSIFICATION))
 
 
     def test_prediction_dermatology(self):

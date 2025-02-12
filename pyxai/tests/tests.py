@@ -27,30 +27,30 @@ from pyxai.tests.explaining.regressionbt import *
 def linux_tests():
     suite = unittest.TestSuite()
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestToFeatures))
-    suite.addTest(unittest.makeSuite(TestGetInstances))
-    suite.addTest(unittest.makeSuite(TestMetrics))
-    suite.addTest(unittest.makeSuite(TestRectify))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestGetInstances))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestMetrics))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestRectify))
     
-    suite.addTest(unittest.makeSuite(TestLearningScikitlearn))
-    suite.addTest(unittest.makeSuite(TestLearningXGBoost))
-    suite.addTest(unittest.makeSuite(TestLearningLightGBM))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestLearningScikitlearn))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestLearningXGBoost))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestLearningLightGBM))
     
-    suite.addTest(unittest.makeSuite(TestSaveLoadScikitlearn))
-    suite.addTest(unittest.makeSuite(TestSaveLoadXgboost))
-    suite.addTest(unittest.makeSuite(TestSaveLoadLightGBM))
-    suite.addTest(unittest.makeSuite(TestImportScikitlearn))
-    suite.addTest(unittest.makeSuite(TestImportSimpleScikitlearn))
-    suite.addTest(unittest.makeSuite(TestImportXGBoost))
-    suite.addTest(unittest.makeSuite(TestImportLightGBM))
-    suite.addTest(unittest.makeSuite(TestMisc))
-    suite.addTest(unittest.makeSuite(TestDT))
-    suite.addTest(unittest.makeSuite(TestRF))
-    suite.addTest(unittest.makeSuite(TestBT))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSaveLoadScikitlearn))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSaveLoadXgboost))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSaveLoadLightGBM))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestImportScikitlearn))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestImportSimpleScikitlearn))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestImportXGBoost))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestImportLightGBM))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestMisc))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestDT))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestRF))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestBT))
     return suite
 
 def windows_tests():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestToFeatures))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestToFeatures))
     return suite
 
 
