@@ -9,8 +9,6 @@ print("__cxx_path__:", __cxx_path__)
 print("__cxx_files__:", __cxx_files__)
 print("__cxx_headers__:", __cxx_headers__)
 
-from setuptools import setup, Extension
-
 setup(ext_modules=[Extension(
           "c_explainer",
           __cxx_files__,
