@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyxai"
+requires-python = ">= 3.7"
 dynamic = ["version"]
 authors = [
     { name = "Gilles Audemard", email = "audemard@cril.fr" },
@@ -64,7 +65,7 @@ version = { attr = "pyxai.__version__" }
 
 [tool.cibuildwheel]
 build = "*"
-skip = "pp38-* pp39-*"
+skip = "pp38-* pp39-* cp36-*"
 
 
 
