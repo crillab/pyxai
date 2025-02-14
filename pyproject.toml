@@ -62,6 +62,10 @@ find = {}
 [tool.setuptools.dynamic]
 version = { attr = "pyxai.__version__" }
 
+[tool.cibuildwheel]
+build = "*"
+skip = "pp38-*"
+
 
 
 
