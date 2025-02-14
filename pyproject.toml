@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyxai"
+dynamic = ["version"]
+authors = [
+    { name = "Gilles Audemard", email = "audemard@cril.fr" },
+    { name = "Steve Bellart", email = "bellart@cril.fr" },
+    { name = "Louenas Bounia", email = "bounia@cril.fr" },
+    { name = "Jean-Marie Lagniez", email = "lagniez@cril.fr" },
+    { name = "Pierre Marquis", email = "marquis@cril.fr" },
+    { name = "Nicolas Szczepanski", email = "szczepanski@cril.fr" }
+]
+maintainers = [
+    { name = "Gilles Audemard", email = "audemard@cril.fr" },
+    { name = "Nicolas Szczepanski", email = "szczepanski@cril.fr" }
+]
+keywords = ["XAI", "AI", "ML", "explainable", "learning"]
+classifiers = [
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Education"
+]
+dependencies = [
+    "lxml",
+    "numpy",
+    "wheel",
+    "pandas",
+    "termcolor",
+    "shap",
+    "wordfreq",
+    "python-sat[pblib,aiger]",
+    "xgboost==1.7.3",
+    "pycsp3",
+    "matplotlib",
+    "dill",
+    "lightgbm",
+    "docplex",
+    "ortools",
+    "packaging"
+]
+optional-dependencies = { gui = ["pyqt6"] }
+description = "Explaining Machine Learning Classifiers in Python"
+readme = "README.md"
+license = { text = "MIT" }
+#packages = { include = ["pyxai"] }
+#include = ["pyxai/sources/solvers/GREEDY/src/*.cc", "pyxai/sources/solvers/GREEDY/src/bcp/*.cc", "pyxai/sources/solvers/GREEDY/src/*.h", "pyxai/sources/solvers/GREEDY/src/bcp/*.h"]
+
+[project.urls]
+Documentation = "http://www.cril.univ-artois.fr/pyxai/"
+Installation = "http://www.cril.univ-artois.fr/pyxai/documentation/installation/"
+Git = "https://github.com/crillab/pyxai"
+
+[tool.setuptools]
+package-dir = { pyxai = "pyxai" }
+include-package-data = true
+
+[tool.setuptools.packages]
+find = {} 
+
+[tool.setuptools.dynamic]
+version = { attr = "pyxai.__version__" }
+
+
+
+
+
+
+
