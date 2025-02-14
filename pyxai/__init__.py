@@ -7,13 +7,17 @@ import subprocess
 import unittest
 import matplotlib
 
+__version__ = "1.0.14"
+__cxx_path__ = "pyxai/sources/solvers/GREEDY/src/"
+__cxx_files__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".cc")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".cc")]
+__cxx_headers__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".h")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".h")]
+
 matplotlib.set_loglevel("critical") #To win a lot of times. 
 
 from pyxai.sources.core.tools.option import Options
 from pyxai.sources.core.tools.utils import set_verbose, check_PyQt6
 
 __python_version__ = str(sys.version).split(os.linesep)[0].split(' ')[0]
-__pyxai_version__ = open(os.path.join(os.path.dirname(__file__), 'version.txt'), encoding='utf-8').read()
 __pyxai_location__ = os.sep.join(pyxai.__file__.split(os.sep)[:-1])
 
 Options.set_values("dataset", "model_directory", "n_iterations", "time_limit", "verbose", "types", "output", "type_references", "N")
@@ -24,7 +28,7 @@ if Options.verbose is not None: set_verbose(Options.verbose)
 if sys.argv:
         if  (len(sys.argv) != 0 and sys.argv[0] == "-m"):
                 print("Python version: ", __python_version__)
-                print("PyXAI version: ", __pyxai_version__)
+                print("PyXAI version: ", __version__)
                 print("PyXAI location: ", __pyxai_location__)
 
         if  (len(sys.argv) == 1 and sys.argv[0] == "-m") or (len(sys.argv) == 2 and sys.argv[0] == "-m" and sys.argv[1] == "-gui"):         
