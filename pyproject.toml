@@ -65,7 +65,7 @@ version = { attr = "pyxai.__version__" }
 
 [tool.cibuildwheel]
 build = "*"
-skip = "pp38-* pp39-* cp36-*"
+skip = "pp38-* pp39-* cp36-* pp310-macosx_*"
 
 
 
