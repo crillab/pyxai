@@ -54,8 +54,8 @@ def import_models(models, feature_names=None):
     
     if type(models[0]) in Scikitlearn.get_learner_types().keys():
         learner_type = Scikitlearn.get_learner_types()[type(models[0])][0]
-        evaluation_output = Scikitlearn.get_learner_types()[type(models[0])][1]
-        learner = Scikitlearn(NoneData, learner_type=learner_type)
+        models_type = Scikitlearn.get_learner_types()[type(models[0])][1]
+        learner = Scikitlearn(NoneData, learner_type=learner_type, models_type=models_type)
         if learner_type == CLASSIFICATION:
             learner.create_dict_labels(models[0].classes_)
             learner.labels = learner.labels_to_values(models[0].classes_)
@@ -67,8 +67,8 @@ def import_models(models, feature_names=None):
         }
     elif type(models[0]) in Xgboost.get_learner_types().keys():
         learner_type = Xgboost.get_learner_types()[type(models[0])][0]
-        evaluation_output = Xgboost.get_learner_types()[type(models[0])][1]
-        learner = Xgboost(NoneData, learner_type=learner_type)
+        models_type = Xgboost.get_learner_types()[type(models[0])][1]
+        learner = Xgboost(NoneData, learner_type=learner_type, models_type=models_type)
         extras = {
             "learner": str(type(models[0])),
             "learner_options": models[0].get_xgb_params(),
@@ -82,8 +82,9 @@ def import_models(models, feature_names=None):
     elif type(models[0]) in LightGBM.get_learner_types().keys():
         
         learner_type = LightGBM.get_learner_types()[type(models[0])][0]
-        evaluation_output = LightGBM.get_learner_types()[type(models[0])][1]
-        learner = LightGBM(NoneData, learner_type=learner_type)
+        models_type = LightGBM.get_learner_types()[type(models[0])][1]
+        learner = LightGBM(NoneData, learner_type=learner_type, models_type=models_type)
+        
         extras = {
             "learner": str(type(learner)),
             "learner_options": models[0].get_params(),
@@ -102,7 +103,7 @@ def import_models(models, feature_names=None):
         learner.feature_names = feature_names
         for l in learner_information: l.set_feature_names(feature_names)
     
-    result_output = learner.convert_model(evaluation_output, learner_information)
+    result_output = learner.convert_model(learner_information)
     
     Tools.verbose("---------------   Explainer   ----------------")
     for i, result in enumerate(result_output):

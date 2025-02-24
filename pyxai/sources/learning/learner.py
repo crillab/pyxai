@@ -25,22 +25,30 @@ class Learner:
     """
     Load the dataset, rename the attributes and separe the prediction from the data
     """
-    def __init__(self, data=NoneData, learner_type=None):
+    def __init__(self, data=NoneData, learner_type=None, models_type=None):
         if learner_type is None:
             raise ValueError("Please set the parameter 'learner_type' to 'Learning.CLASSIFICATION' or 'Learning.REGRESSION'.")
-        self.learner_type = learner_type
-        self.dict_labels = None
-        self.data = None
-        self.labels = None
-        self.n_labels = None
-        self.n_features = None
-        self.dataset_name = None
-        self.n_instances = None
-        self.feature_names = None
-        self.n_categorical = None
-        self.n_numerical = None
-        self.learner_information = []
         
+        self.learner_type = learner_type  # Type of the learner (e.g., classifier, regressor)
+        self.models_type = models_type  # Type of the models produced by the learner (e.g., decision tree, random forest)
+        self.evaluation_method = None  # Method used for evaluation (e.g., cross-validation)
+
+        self.dict_labels = None  # Dictionary mapping labels to their corresponding indices
+        
+        self.data = None  # The dataset containing the features
+        self.dataset_name = None  # Name of the dataset
+        self.labels = None  # The labels corresponding to the data instances
+        
+        self.n_labels = None  # Number of unique labels in the dataset
+        self.n_features = None  # Number of features in the dataset
+        self.n_instances = None  # Number of instances (rows) in the dataset
+        
+        self.feature_names = None  # Names of the features in the dataset
+        
+        self.n_categorical = None  # Number of categorical features
+        self.n_numerical = None  # Number of numerical features
+        self.learner_information = []  # List to store additional information about the learner
+
         data, name = self.parse_data(data)
         if data is not None: 
             self.load_data(data, name)
@@ -223,6 +231,9 @@ class Learner:
             raise ValueError("learner_type is unknown:", str(self.learner_type))
 
     def evaluate(self, *, method, output, n_models=10, test_size=0.3, **learner_options):
+        self.evaluation_method = method
+        self.models_type = output
+
         if "seed" not in learner_options.keys():
             learner_options["seed"] = 0
         if "max_depth" not in learner_options.keys():
@@ -230,24 +241,24 @@ class Learner:
         
         
         Tools.verbose("---------------   Evaluation   ---------------")
-        Tools.verbose("method:", str(method))
-        Tools.verbose("output:", str(output))
-        Tools.verbose("learner_type:", str(self.learner_type))
+        Tools.verbose("evaluation method:", str(self.evaluation_method))
+        Tools.verbose("learner type:", str(self.learner_type))
+        Tools.verbose("models type:", str(self.models_type))
 
-        if method == EvaluationMethod.HoldOut:
-            self.hold_out_evaluation(output, test_size=test_size, learner_options=learner_options)
-        elif method == EvaluationMethod.LeaveOneGroupOut:
-            self.leave_one_group_out_evaluation(output, n_trees=n_models, learner_options=learner_options)
-        elif method == EvaluationMethod.KFolds:
-            self.k_folds_evaluation(output, n_models=n_models, learner_options=learner_options)
+        if self.evaluation_method == EvaluationMethod.HoldOut:
+            self.hold_out_evaluation(test_size=test_size, learner_options=learner_options)
+        elif self.evaluation_method == EvaluationMethod.LeaveOneGroupOut:
+            self.leave_one_group_out_evaluation(n_trees=n_models, learner_options=learner_options)
+        elif self.evaluation_method == EvaluationMethod.KFolds:
+            self.k_folds_evaluation(n_models=n_models, learner_options=learner_options)
         else:
             assert False, "Not implemented !"
 
         for learner_information in self.learner_information:
             learner_information.set_learner_name(self.get_learner_name())
             learner_information.set_feature_names(self.feature_names)
-            learner_information.set_evaluation_method(method)
-            learner_information.set_evaluation_output(output)
+            learner_information.set_evaluation_method(self.evaluation_method)
+            learner_information.set_evaluation_output(self.models_type)
 
         Tools.verbose("---------   Evaluation Information   ---------")
         for i, result in enumerate(self.learner_information):
@@ -261,7 +272,7 @@ class Learner:
             Tools.verbose()
 
         Tools.verbose("---------------   Explainer   ----------------")
-        result_output = self.convert_model(output)
+        result_output = self.convert_model()
         # elif output == EvaluationOutput.SAVE:
         #  self.save_model(model_directory)
         #  result_output = self.to_BT()
@@ -273,31 +284,6 @@ class Learner:
         # Add the type of features
         
         return result_output if len(result_output) != 1 else result_output[0]
-
-    def convert_model(self, output, learner_information=None):
-        if learner_information is not None: 
-            self.learner_information = learner_information
-
-        if self.learner_type == LearnerType.Classification:
-            if output == EvaluationOutput.DT:
-                return self.to_DT_CLS(self.learner_information)
-            elif output == EvaluationOutput.RF:
-                return self.to_RF_CLS(self.learner_information)
-            elif output == EvaluationOutput.BT:
-                return self.to_BT_CLS(self.learner_information)
-            else:
-                raise NotImplementedError(str(output) + " not implemented.")
-        elif self.learner_type == LearnerType.Regression:
-            if output == EvaluationOutput.DT:
-                return self.to_DT_REG(self.learner_information)
-            elif output == EvaluationOutput.RF:
-                return self.to_RF_REG(self.learner_information)
-            elif output == EvaluationOutput.BT:
-                return self.to_BT_REG(self.learner_information)
-            else:
-                raise NotImplementedError(str(output) + " not implemented.")
-        else:
-            raise NotImplementedError(str(self.learner_type) + " not implemented.")
 
     def load_get_files(self, models_directory):
         assert models_directory is not None and os.path.exists(models_directory), "The path of models_directory do not exist: " + str(
@@ -327,7 +313,7 @@ class Learner:
     def load(self, *, models_directory, tests=False):
         files = self.load_get_files(models_directory)
 
-        for _, model in enumerate(files):
+        for i, model in enumerate(files):
             model_file, map_file = model
 
             # recuperate map
@@ -335,6 +321,17 @@ class Learner:
             
             data = json.loads(json.load(f))
             raw_model = self.load_model(model_file, data['extras']['learner_options'])
+            
+            if i == 0:
+                self.learner_type = LearnerType.from_str(data['learner_type'])
+                self.models_type = EvaluationOutput.from_str(data['models_type'])
+                self.evaluation_method = EvaluationMethod.from_str(data['evaluation_method'])
+                
+                self.n_features = data['n_features']
+                self.n_labels = data["n_labels"]
+                self.dict_labels = data["dict_labels"]
+                self.feature_names = data["feature_names"]
+
             learner_information = LearnerInformation(
                                     copy.deepcopy(raw_model), 
                                     data['training_index'], 
@@ -346,10 +343,10 @@ class Learner:
             learner_information.set_evaluation_method(data['evaluation_method'])
             learner_information.set_evaluation_output(data['evaluation_output'])
             learner_information.set_feature_names(data["feature_names"])
-            self.n_features = data['n_features']
-            self.n_labels = data["n_labels"]
-            self.dict_labels = data["dict_labels"]
-            self.feature_names = data["feature_names"]
+
+
+            
+           
             f.close()
 
             if self.get_learner_name() != learner_information.learner_name:
@@ -380,8 +377,8 @@ class Learner:
             Tools.verbose()
 
         Tools.verbose("---------------   Explainer   ----------------")
-        output = EvaluationOutput.from_str(self.learner_information[-1].evaluation_output)
-        result_output = self.convert_model(output)
+        #output = EvaluationOutput.from_str(self.learner_information[-1].evaluation_output)
+        result_output = self.convert_model()
 
 
         for i, result in enumerate(result_output):
@@ -417,6 +414,8 @@ class Learner:
             # map of indexes for training and test part
             data = {"learner_name": learner_information.learner_name if not generic else "Generic",
                     "learner_type": str(self.learner_type),
+                    "models_type": str(self.models_type),
+                    "evaluation_method": str(self.evaluation_method),
                     "extras": learner_information.extras,
                     "metrics": learner_information.metrics,
                     "evaluation_method": learner_information.evaluation_method,
@@ -440,30 +439,9 @@ class Learner:
         with open(filename + ".model", 'w') as outfile:
             json.dump(json_string, outfile)
 
-    def fit_and_predict(self, output, instances_training, instances_test, labels_training, labels_test, learner_options):
-        if self.learner_type == LearnerType.Classification:
-            if output == EvaluationOutput.DT:
-                return self.fit_and_predict_DT_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
-            elif output == EvaluationOutput.RF:
-                return self.fit_and_predict_RF_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
-            elif output == EvaluationOutput.BT:
-                return self.fit_and_predict_BT_CLS(instances_training, instances_test, labels_training, labels_test, learner_options)
-            else:
-                raise NotImplementedError(str(output) + " not implemented.")
-        elif self.learner_type == LearnerType.Regression:
-            if output == EvaluationOutput.DT:
-                return self.fit_and_predict_DT_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
-            elif output == EvaluationOutput.RF:
-                return self.fit_and_predict_RF_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
-            elif output == EvaluationOutput.BT:
-                return self.fit_and_predict_BT_REG(instances_training, instances_test, labels_training, labels_test, learner_options)
-            else:
-                raise NotImplementedError(str(output) + " not implemented.")
-        else:
-            raise NotImplementedError(str(self.learner_type) + " not implemented.")
-    
+            
 
-    def hold_out_evaluation(self, output, *, test_size=0.3, learner_options):
+    def hold_out_evaluation(self, *, test_size=0.3, learner_options):
         self.learner_information.clear()
         assert self.data is not None, "You have to put the dataset in the class parameters."
         # spliting
@@ -471,14 +449,14 @@ class Learner:
         instances_training, instances_test, labels_training, labels_test, training_index, test_index = train_test_split(self.data, self.labels,
                                                                                                                         indices, test_size=test_size,
                                                                                                                         random_state=learner_options["seed"])
-        models, metrics, extras = self.fit_and_predict(output, instances_training, instances_test, labels_training, labels_test, learner_options)
+        models, metrics, extras = self.fit_and_predict(instances_training, instances_test, labels_training, labels_test, learner_options)
         
         self.learner_information.append(LearnerInformation(models, training_index, test_index, None, metrics, extras))
 
         return self
 
 
-    def k_folds_evaluation(self, output, *, n_models=10, learner_options):
+    def k_folds_evaluation(self, *, n_models=10, learner_options):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_models > 1, "This k_folds_evaluation() expects at least 2 parts. For just one tree, please use hold_out_evaluation()"
         self.learner_information.clear()
@@ -492,14 +470,14 @@ class Learner:
             instances_test = [self.data[i] for i in test_index]
             labels_test = [self.labels[i] for i in test_index]
             
-            tree, metrics, extras = self.fit_and_predict(output, instances_training, instances_test, labels_training, labels_test, learner_options)
+            tree, metrics, extras = self.fit_and_predict(instances_training, instances_test, labels_training, labels_test, learner_options)
             
             # Save some information
             self.learner_information.append(LearnerInformation(tree, training_index, test_index, None, metrics, extras))
         return self
 
 
-    def leave_one_group_out_evaluation(self, output, *, n_trees=10, learner_options):
+    def leave_one_group_out_evaluation(self, *, n_trees=10, learner_options):
         assert self.data is not None, "You have to put the dataset in the class parameters."
         assert n_trees > 1, "cross_validation() expects at least 2 trees. For just one tree, please use simple_validation()"
         self.learner_information.clear()
@@ -518,7 +496,7 @@ class Learner:
             labels_test = [self.labels[i] for i in test_index]
 
             # solving
-            tree, metrics, extras = self.fit_and_predict(output, instances_training, instances_test, labels_training, labels_test, learner_options)
+            tree, metrics, extras = self.fit_and_predict(instances_training, instances_test, labels_training, labels_test, learner_options)
             
             # Save some information
             self.learner_information.append(LearnerInformation(tree, training_index, test_index, groups, metrics, extras))

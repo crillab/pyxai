@@ -67,26 +67,41 @@ class TypeCount(Enum):
 class EvaluationMethod(Enum):
     LoadModel, HoldOut, LeaveOneGroupOut, KFolds = auto(4)
 
-
     def __eq__(self, other):
         return self.value == other.value
 
+    def __hash__(self):
+        return hash(self.value)
 
     def __str__(self):
         return self.name
+    
+    def from_str(str):
+        if str == "LoadModel":
+            return EvaluationMethod.LoadModel
+        elif str == "HoldOut":
+            return EvaluationMethod.HoldOut
+        elif str == "LeaveOneGroupOut":
+            return EvaluationMethod.LeaveOneGroupOut
+        elif str == "KFolds":
+            return EvaluationMethod.KFolds
+        else:
+            assert False, "No EvaluationMethod for this string !"
+
+
 
 
 class LearnerType(Enum):
     Classification, Regression = auto(2)
 
-
     def __eq__(self, other):
         return self.value == other.value
 
+    def __hash__(self):
+        return hash(self.value)
 
     def __str__(self):
         return self.name
-
 
     def from_str(str):
         if str == "Classification":
@@ -100,14 +115,14 @@ class LearnerType(Enum):
 class EvaluationOutput(Enum):
     DT, RF, BT, SAVE = auto(4)
 
-
     def __eq__(self, other):
         return self.value == other.value
 
+    def __hash__(self):
+        return hash(self.value)
 
     def __str__(self):
         return self.name
-
 
     def from_str(str):
         if str == "DT":
