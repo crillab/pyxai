@@ -18,9 +18,22 @@ class LightGBM(Learner):
     """
     Load the dataset, rename the attributes and separe the prediction from the data
     """
+    
+    learners = {
+        LearnerType.Classification: {
+            EvaluationOutput.DT: None,
+            EvaluationOutput.RF: None,
+            EvaluationOutput.BT: None,
+        },
+        LearnerType.Regression: {
+            EvaluationOutput.DT: None,
+            EvaluationOutput.RF: None,
+            EvaluationOutput.BT: lightgbm.LGBMRegressor,
+        },
+    }
 
-    def __init__(self, data=NoneData, *, learner_type=None):
-        super().__init__(data, learner_type)
+    def __init__(self, data=NoneData, *, learner_type=None, models_type=None):
+        super().__init__(data, learner_type, models_type)
         self.has_to_display_parameters = True
 
     def display_parameters(self, learner_options):
@@ -35,30 +48,22 @@ class LightGBM(Learner):
     @staticmethod
     def get_learner_name():
         return str(LightGBM.__name__)
-
-
-    def fit_and_predict_DT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Decision Tree with classification is not implemented for LightGBM.")
+    
+    def fit_and_predict(self, instances_training, instances_test, labels_training, labels_test, learner_options):
+        learner = LightGBM.learners[self.learner_type][self.models_type]
+        if learner is None: 
+            raise NotImplementedError(str(self.models_type) + " and " + str(self.learner_type) + "is not implemented for LightGBM.")
         
-    def fit_and_predict_RF_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Random Forest with classification is not implemented for LightGBM.")
-
-    def fit_and_predict_BT_CLS(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Boosted Trees with classification is not implemented for LightGBM.")
-
-    def fit_and_predict_DT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Decision Tree with regression is not implemented for LightGBM.")
+        if "verbose" not in learner_options.keys():
+            learner_options["verbose"] = -1
         
-    def fit_and_predict_RF_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
-        raise NotImplementedError("Random Forest with regression is not implemented for LightGBM.")
-
-    def fit_and_predict_BT_REG(self, instances_training, instances_test, labels_training, labels_test, learner_options):
         self.display_parameters(learner_options)
-        learner = lightgbm.LGBMRegressor(verbose=-1, **learner_options)
+        learner = learner(**learner_options)
         learner.fit(instances_training, labels_training)
+       
         result = learner.predict(instances_test)
         metrics = self.compute_metrics(labels_test, result)
-
+        
         extras = {
             "learner": str(type(learner)),
             "learner_options": learner_options,
@@ -66,33 +71,22 @@ class LightGBM(Learner):
         }
         return (copy.deepcopy(learner), metrics, extras)
 
-    def to_DT_CLS(self, learner_information=None):
-        raise NotImplementedError("Decision Tree with classification is not implemented for LightGBM.")
-
-    def to_RF_CLS(self, learner_information=None):
-        raise NotImplementedError("Random Forest with classification is not implemented for LightGBM.")
-
-    def to_BT_CLS(self, learner_information=None):
-        raise NotImplementedError("Boosted Tree with classification is not implemented for LightGBM.")
-
-    def to_DT_REG(self, learner_information=None):
-        raise NotImplementedError("Decision Tree with regression is not implemented for LightGBM.")
-
-    def to_RF_REG(self, learner_information=None):
-        raise NotImplementedError("Random Forest with regression is not implemented for LightGBM.")
-
-    
-    def to_BT_REG(self, learner_information=None):
-        if learner_information is not None: self.learner_information = learner_information
+    def convert_model(self, learner_information=None):
+        learner = LightGBM.learners[self.learner_type][self.models_type]
+        if learner is None: 
+            raise NotImplementedError(str(self.models_type) + " and " + str(self.learner_type) + "is not implemented for LightGBM.")
+              
+        if learner_information is not None:
+            self.learner_information = learner_information 
+        
         if self.n_features is None:
             self.n_features = learner_information[0].raw_model.n_features_in_
-        
         self.id_features = {"f{}".format(i): i for i in range(self.n_features)}
-        BTs = [BoostedTreesRegression(self.results_to_trees(id_solver_results), learner_information=learner_information) for
-               id_solver_results, learner_information in enumerate(self.learner_information)]
-        return BTs
 
-    def results_to_trees(self, id_solver_results):
+        return [BoostedTreesRegression(self.to_boosted_trees(id_solver_results), learner_information=learner_information) for
+               id_solver_results, learner_information in enumerate(self.learner_information)]
+    
+    def to_boosted_trees(self, id_solver_results):
         bt = self.learner_information[id_solver_results].raw_model.booster_
         
         bt_json = self.BT_to_JSON(bt)
