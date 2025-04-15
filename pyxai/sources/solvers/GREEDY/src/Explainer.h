@@ -33,7 +33,7 @@ namespace pyxai {
 
         void addTree(PyObject *tree_obj);
         std::vector<Tree*> trees;
-        bool compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed, double theta);
+        bool compute_reason_conditions(std::vector<int> &instance, std::vector<int> &weights, int prediction, std::vector<int> &reason, long seed, double theta);
         void initializeBeforeOneRun(std::vector<bool> & polarity_instance, std::vector<bool>&active_litd, int prediction);
         void propagateActiveLits( std::vector<int> &order, std::vector<bool> &polarity_instance, std::vector<bool> &active_lits);
 
@@ -47,6 +47,8 @@ namespace pyxai {
 
         inline void set_n_iterations(int _n_iterations){n_iterations = _n_iterations;}
         inline void set_time_limit(int _time_limit){time_limit = _time_limit;}
+
+
         inline bool is_specific(int l) {return std::find(excluded_features.begin(), excluded_features.end(), l) == excluded_features.end();}
         inline void set_interval(double lb, double ub) {
             lower_bound = lb;

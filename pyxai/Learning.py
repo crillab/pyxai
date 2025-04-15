@@ -105,7 +105,7 @@ def import_models(models, feature_names=None):
     
     result_output = learner.convert_model(learner_information)
     
-    Tools.verbose("---------------   Explainer   ----------------")
+    Tools.verbose("---------------   Evaluation   ----------------")
     for i, result in enumerate(result_output):
         Tools.verbose("For the evaluation number " + str(i) + ":")
         Tools.verbose(result)

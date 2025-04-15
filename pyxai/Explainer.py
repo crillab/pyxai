@@ -24,6 +24,7 @@ from pyxai.sources.core.structure.decisionTree import DecisionTree
 from pyxai.sources.core.structure.randomForest import RandomForest
 from pyxai.sources.core.structure.type import TypeReason, TypeStatus, ReasonExpressivity, PreferredReasonMethod, TypeTheory
 
+
 def show():
     from pyxai.sources.core.tools.GUIQT import GraphicalInterface
     graphical_interface = GraphicalInterface(None)
