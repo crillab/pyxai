@@ -348,6 +348,8 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     PyObject *class_obj;
     PyObject *vector_instance_obj;
     PyObject *vector_features_obj;
+    PyObject *vector_weights_obj;
+    
     long prediction;
     long n_iterations;
     long time_limit;
@@ -355,7 +357,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     long seed;
     double theta;
 
-    if (!PyArg_ParseTuple(args, "OOOLLLLLd", &class_obj, &vector_instance_obj, &vector_features_obj, &prediction, &n_iterations, &time_limit, &features_expressivity, &seed, &theta))
+    if (!PyArg_ParseTuple(args, "OOOOLLLLLd", &class_obj, &vector_instance_obj, &vector_features_obj, &vector_weights_obj, &prediction, &n_iterations, &time_limit, &features_expressivity, &seed, &theta))
         return NULL;
 
     if (!PyTuple_Check(vector_instance_obj)) {
@@ -370,12 +372,29 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
         return NULL;
     }
 
+    if (!PyTuple_Check(vector_weights_obj)) {
+        PyErr_Format(PyExc_TypeError,
+                     "The argument 4 must be a tuple representing the features !");
+        return NULL;
+    }
+
     std::vector<int> reason;
     std::vector<int> instance;
     std::vector<int> features;
+    std::vector<int> weights;
 
     // Convert the vector of the instance 
-    Py_ssize_t size_obj = PyTuple_Size(vector_instance_obj);
+    Py_ssize_t size_obj = PyTuple_Size(vector_weights_obj);
+    if (size_obj != -1){ // -1 when the tuple is empty
+        for(int i = 0; i < size_obj; i++) {
+            PyObject *value_obj = PyTuple_GetItem(vector_weights_obj, i);
+            weights.push_back(PyLong_AsLong(value_obj));
+        }
+    }
+    
+
+    // Convert the vector of the instance 
+    size_obj = PyTuple_Size(vector_instance_obj);
     for(int i = 0; i < size_obj; i++) {
         PyObject *value_obj = PyTuple_GetItem(vector_instance_obj, i);
         instance.push_back(PyLong_AsLong(value_obj));
@@ -387,7 +406,7 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
         PyObject *value_obj = PyTuple_GetItem(vector_features_obj, i);
         features.push_back(PyLong_AsLong(value_obj));
     }
-
+    
     // Get pointer to the class
     pyxai::Explainer *explainer = (pyxai::Explainer *) pyobject_to_void(class_obj);
     explainer->set_n_iterations(n_iterations);
@@ -396,11 +415,11 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
     if (features_expressivity == 1)
       ret = explainer->compute_reason_features(instance, features, prediction, reason, theta);
     else
-      ret = explainer->compute_reason_conditions(instance, prediction, reason, seed, theta);
+      ret = explainer->compute_reason_conditions(instance, weights, prediction, reason, seed, theta);
 
     if(ret == false)
         return Py_None;
-
+    
     return vectorToTuple_Int(reason);
 }
 

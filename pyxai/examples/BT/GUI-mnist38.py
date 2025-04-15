@@ -19,6 +19,7 @@ model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.BT)
 instances = learner.get_instances(model, n=2, correct=True, predictions=[0])
 
 # Explanation part
+
 explainer = Explainer.initialize(model)
 for (instance, prediction) in instances:
     explainer.set_instance(instance)

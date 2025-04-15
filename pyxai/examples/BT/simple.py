@@ -19,8 +19,13 @@ tree_specific_reason = explainer.tree_specific_reason(n_iterations=10)
 print("\nlen tree_specific: ", len(tree_specific_reason))
 print("\ntree_specific: ", explainer.to_features(tree_specific_reason, eliminate_redundant_features=True))
 
+tree_specific_reason = explainer.tree_specific_reason(n_iterations=10, weights=[1,1,1,1,1,1,1,1,1,1,11])
+print("\nlen tree_specific: ", len(tree_specific_reason))
+print("\ntree_specific: ", explainer.to_features(tree_specific_reason, eliminate_redundant_features=True))
+
+
 explainer.set_excluded_features(["score_factor"])
-contrastive_reason = explainer.minimal_contrastive_reason(n=2)
+contrastive_reason = explainer.minimal_contrastive_reason(n=1)
 print("\n\ncontrastive reason: ", explainer.to_features(contrastive_reason, contrastive=True))
 print("is contrastive: ", explainer.is_contrastive_reason(contrastive_reason))
 print("elapsed time: ", explainer.elapsed_time)

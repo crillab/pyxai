@@ -225,7 +225,7 @@ class ExplainerBT(Explainer):
 
         return result
 
-    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True, theta=0):
+    def tree_specific_reason(self, *, n_iterations=50, time_limit=None, seed=0, history=True, theta=0, weights=None):
         """
         Tree-specific (TS) explanations are abductive explanations that can be computed in polynomial time. While tree-specific explanations are not
         subset-minimal in the general case, they turn out to be close to sufficient reasons in practice. Furthermore, because sufficient reasons can
@@ -242,9 +242,26 @@ class ExplainerBT(Explainer):
         Returns:
             list: The tree-specific reason
         """
+
+
+
         reason_expressivity = ReasonExpressivity.Conditions
         if self._instance is None:
             raise ValueError("Instance is not set")
+
+        n_features = len(self.get_feature_names())-1
+        if weights is not None:
+            if not isinstance(weights, (tuple, list)):
+                raise TypeError("The parameter weights have to be a list or a tuple of weights with this order:" + str(self.get_feature_names()[:-1]))
+            if len(weights) != n_features:
+                raise TypeError("The list of the weights parameter have to be with a size equal to the number of features: " + str(self.get_feature_names()[:-1]))
+            
+            #Tranform the list of weights into a list of weights for the binary representation 
+            weights = tuple([weights[id_features-1] for id_features in self._implicant_id_features])
+        else:
+            weights = tuple()
+
+        # print("weights:", weights)
 
         if seed is None:
             seed = -1
@@ -262,7 +279,7 @@ class ExplainerBT(Explainer):
         if self._theory:
             c_explainer.set_theory(self.c_BT, tuple(self._boosted_trees.get_theory(self._binary_representation)))
 
-        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features,
+        reason = c_explainer.compute_reason(self.c_BT, self._binary_representation, self._implicant_id_features, weights,
                                             self.target_prediction, n_iterations,
                                             time_limit,
                                             int(reason_expressivity), seed, theta)

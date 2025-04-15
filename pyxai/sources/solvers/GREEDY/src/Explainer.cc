@@ -36,12 +36,14 @@ void pyxai::Explainer::initializeBeforeOneRun(std::vector<bool> &polarity_instan
     }
 }
 
-bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int prediction, std::vector<int> &reason, long seed, double theta) {
+bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, std::vector<int> &weights, int prediction, std::vector<int> &reason, long seed, double theta) {
     if(theory_propagator == nullptr) {// No theory exists. Create a fake propagator
         theory_propagator = new Propagator();
         for(pyxai::Tree *t : trees)
             t->propagator = theory_propagator;
     }
+
+    //std::cout << "compute_reason_conditions" << std::endl; 
 
     int max = abs(*std::max_element(instance.begin(), instance.end(), abs_compare));
     reason.clear();
@@ -50,11 +52,31 @@ bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int
     std::vector<bool> polarity_instance(max + 1, true);
     std::vector<bool> active_lits(max + 1, false);
 
+    
+
     std::vector<int> order;
     for (auto l: instance)
         if (is_specific(l))
             order.push_back(l);
 
+    std::vector<std::vector<int>> instance_weights;
+    if (weights.size() != 0){
+        std::set<int> weights_set(weights.begin(), weights.end());
+        std::vector<int> weights_unique(weights_set.begin(), weights_set.end());
+        std::sort(weights_unique.begin(), weights_unique.end());
+        for (unsigned int i = 0; i < weights_unique.size(); i++){
+            int current_weight = weights_unique[i];
+            //std::cout << "current_weight:" << current_weight << std::endl;
+            std::vector<int> literals_current_weight;
+            for (unsigned int j = 0; j < instance.size(); j++){
+                if (weights[j] == current_weight){
+                    literals_current_weight.push_back(instance[j]);
+                }
+            }
+            instance_weights.push_back(literals_current_weight);
+        }
+        // Preprocessing to have the literals according to theirs weights
+    }
 
     unsigned int best_size = instance.size() + 1, current_size = instance.size();
     for (auto l: instance)
@@ -91,7 +113,23 @@ bool pyxai::Explainer::compute_reason_conditions(std::vector<int> &instance, int
             seed == -1 ? std::chrono::steady_clock::now().time_since_epoch().count() : 1);
     while (true) {
         // Create an order
-        std::shuffle(std::begin(order), std::end(order), rd);
+        
+        if (weights.size() != 0){
+            // Weights: we have to shuffle according to the weights
+            order.clear();
+            for (auto literals: instance_weights) {
+                std::vector<int> copy_literals = literals;
+                std::shuffle(std::begin(copy_literals), std::end(copy_literals), rd);
+                for (auto l: copy_literals) order.push_back(l);
+            }
+            //std::cout << "order weights:" << std::endl; 
+            //for (auto l: order) std::cout << l << " ";
+            //std::cout << std::endl; 
+            
+        }else{
+            // No weight: we just shuffle the order 
+            std::shuffle(std::begin(order), std::end(order), rd);
+        }
         for (auto l: instance) active_lits[abs(l)] = true; // Init
         for (auto l: excluded_features) active_lits[abs(l)] = false; // Do not want them
         current_size = instance.size() - excluded_features.size();

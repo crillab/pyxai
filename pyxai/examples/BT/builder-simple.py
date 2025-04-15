@@ -39,6 +39,8 @@ explainer = Explainer.initialize(BTs, instance)
 
 print("target_prediction:", explainer.target_prediction)
 print("implicant:", explainer.binary_representation)
+implicant_feature = explainer.to_features(explainer.binary_representation)
+print("to_features:", implicant_feature)
 
 print("---------------------------------------------------")
 direct = explainer.direct_reason()
@@ -60,13 +62,22 @@ contrastive_reason = explainer.minimal_contrastive_reason()
 print("contrastive reason:", explainer.to_features(contrastive_reason))
 print("is contrastive: ", explainer.is_contrastive_reason(contrastive_reason))
 
+
 print("---------------------------------------------------")
-sufficient = explainer.sufficient_reason()
-print("sufficient reason:", sufficient)
-sufficient_feature = explainer.to_features(sufficient)
-print("to_features:", sufficient_feature)
-print("is_tree_specific:", explainer.is_tree_specific_reason(sufficient))
-print("is_sufficient_reason:", explainer.is_sufficient_reason(sufficient))
+weighted_tree_specific = explainer.tree_specific_reason(weights=[1, 4, 3, 2])
+weighted_tree_specific_feature = explainer.to_features(tree_specific)
+print("to_features:", weighted_tree_specific_feature)
+print("is_tree_specific:", explainer.is_tree_specific_reason(weighted_tree_specific))
+
+#print("---------------------------------------------------")
+#sufficient = explainer.sufficient_reason()
+#print("sufficient reason:", sufficient)
+#sufficient_feature = explainer.to_features(sufficient)
+#print("to_features:", sufficient_feature)
+#print("is_tree_specific:", explainer.is_tree_specific_reason(sufficient))
+#print("is_sufficient_reason:", explainer.is_sufficient_reason(sufficient))
+
+exit()
 
 print("---------------------------------------------------")
 reason = (1, 4)

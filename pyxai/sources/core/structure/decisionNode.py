@@ -60,7 +60,22 @@ class DecisionNode:
 
     def __init__(self, id_feature, *, threshold=0.5, operator=OperatorCondition.GE, left, right, parent=None):
         """
-        Allow to construct a decision node that do not a leaf
+        Initialize a DecisionNode (it is not a leaf, see the class LeafNode for the leaves).
+
+        Parameters:
+        -----------
+        id_feature : int
+            The identifier for the feature used in the decision node.
+        threshold : float, optional
+            The threshold value for the feature. Default is 0.5.
+        operator : OperatorCondition, optional
+            The operator condition to be applied to the feature. Default is OperatorCondition.GE.
+        left : DecisionNode or the value of a LeafNode
+            The left child node of the decision node.
+        right : DecisionNode or the value of a LeafNode
+            The right child node of the decision node.
+        parent : DecisionNode or None, optional
+            The parent node of the decision node. Default is None.
         """
         self.id_feature = id_feature
         self.threshold = threshold
