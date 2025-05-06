@@ -187,11 +187,42 @@ class Learner:
         #            self.dict_labels[str(p)] = int(p)
         #            self.inverse_dict_labels[int(p)] = str(p)
         #else:
-        for p in labels:
-            if str(p) not in self.dict_labels:
-                self.dict_labels[str(p)] = index
-                self.inverse_dict_labels[index] = str(p)
-                index += 1
+        #print("here:", set(labels))
+        #self.dict_labels[str(0)] = 0
+        #self.dict_labels[str(1)] = 1
+        #self.inverse_dict_labels[0] = str(0)
+        #self.inverse_dict_labels[1] = str(1)
+        
+        set_labels = set(labels)
+        #ordered_labels = set(list(range(len(set_labels))))
+        #print("set_labels:", set_labels)
+        #print("ordered_labels:", ordered_labels)
+        if any(isinstance(label, str) for label in set_labels):
+            # There is at least one string label
+            if all(label.isdigit() for label in set_labels):
+                # if all labels can be converted into positif integers
+                for label in set_labels:
+                    self.dict_labels[str(label)] = int(label)
+                    self.inverse_dict_labels[int(label)] = str(label)
+            else:
+                index = 0
+                for p in labels:
+                    if str(p) not in self.dict_labels:
+                        self.dict_labels[str(p)] = index
+                        self.inverse_dict_labels[index] = str(p)
+                        index += 1
+        else:
+            for label in set_labels:
+                self.dict_labels[str(label)] = int(label)
+                self.inverse_dict_labels[int(label)] = str(label)
+            
+        
+        #exit(0)
+        #for p in labels:
+        #    if str(p) not in self.dict_labels:
+        #        self.dict_labels[str(p)] = index
+        #        self.inverse_dict_labels[index] = str(p)
+        #        index += 1
 
 
 
