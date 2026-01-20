@@ -106,7 +106,28 @@ class RandomForest(TreeEnsembles):
         # Each tree is represented by a new variable
         new_variables_atleast = [v for v in range(1 + n_original_variables, 1 + n_original_variables + self.n_trees)]
 
-        condition_atleast = floor(self.n_trees / 2) + 1
+        if tree_encoding == Encoding.MUS:
+            if self.n_trees % 2 == 0:
+                # even number of trees
+                if target_prediction == 0:
+                    condition_atleast = floor(self.n_trees / 2) + 1
+                else:
+                    condition_atleast = floor(self.n_trees / 2)
+            else:
+                # odd number of trees
+                condition_atleast = floor(self.n_trees / 2) + 1
+        else:
+            if self.n_trees % 2 == 0:
+                # even number of trees
+                if target_prediction == 0:
+                    condition_atleast = floor(self.n_trees / 2)
+                else:
+                    condition_atleast = floor(self.n_trees / 2) + 1
+            else:
+                # odd number of trees
+                condition_atleast = floor(self.n_trees / 2) + 1
+
+
         cardinality_encoding = EncType.seqcounter if cardinality_encoding == Encoding.SEQUENTIAL_COUNTER else EncType.totalizer
         atleast_clauses = CardEnc.atleast(lits=new_variables_atleast, encoding=cardinality_encoding, bound=condition_atleast,
                                           top_id=new_variables_atleast[-1]).clauses
