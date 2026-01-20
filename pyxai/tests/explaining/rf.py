@@ -14,7 +14,6 @@ class TestRF(unittest.TestCase):
             cls.model = cls.learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
         return cls.learner, cls.model
 
-
     def test_sufficient(self):
         learner, model = self.init()
         explainer = Explainer.initialize(model, features_type={"numerical": Learning.DEFAULT})
@@ -50,7 +49,7 @@ class TestRF(unittest.TestCase):
             majoritary_reason = explainer.minimal_majoritary_reason(time_limit=5)
             self.assertTrue(len(majoritary_reason) == 0 or explainer.is_majoritary_reason(majoritary_reason))
 
-
+    @unittest.skip("reason for skipping")
     def test_contrastive(self):
         return
         learner, model = self.init()
@@ -60,7 +59,6 @@ class TestRF(unittest.TestCase):
             explainer.set_instance(instance)
             contrastive_reason = explainer.minimal_contrastive_reason(time_limit=5)
             self.assertTrue(len(contrastive_reason) == 0 or explainer.is_contrastive_reason(contrastive_reason))
-
 
     def test_excluded(self):
         learner, model = self.init()

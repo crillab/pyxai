@@ -73,7 +73,18 @@ class RandomForest(TreeEnsembles):
             forest_implicant = [tree.is_implicant(implicant, prediction) for tree in self.forest]
             n_trees = len(forest_implicant)
             n_trues = len([element for element in forest_implicant if element])
-            return n_trues > int(n_trees / 2)
+            if n_trees % 2 == 0:
+                # Pair number of trees
+                if prediction == 0:
+                    limit = floor(n_trees / 2)
+                else:
+                    limit = floor((n_trees / 2)) + 1
+            else:
+                # Impair number of trees    
+                limit = floor(n_trees / 2) + 1
+                
+            return n_trues >= limit
+
 
         reachable_classes = [tree.get_reachable_classes(implicant, prediction) for tree in self.forest]
         count_classes = [0] * self.n_classes
