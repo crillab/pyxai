@@ -276,7 +276,7 @@ bool pyxai::Explainer::is_implicant_RF(std::vector<bool> &instance, std::vector<
             i++;
         }
 
-        if (nb > trees.size() / 2) {
+        if (nb > trees.size() / 2  || (nb*2 == trees.size() && prediction == 0) ) {
             for (auto i: new_wrong_trees)
                 trees[i]->status = CURRENTLY_WRONG;
 
