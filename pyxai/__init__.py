@@ -7,7 +7,7 @@ import subprocess
 import unittest
 import matplotlib
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 matplotlib.set_loglevel("critical") #To win a lot of times. 
 
