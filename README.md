@@ -11,7 +11,7 @@
 # PyXAI - Python eXplainable AI
 
 [![Unit tests Linux](https://github.com/crillab/pyxai/actions/workflows/tests_linux.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/tests_linux.yml)
-[![Unit tests macOS](https://github.com/crillab/pyxai/actions/workflows/test_osx.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/test_osx.yml)
+[![MacOS tests](https://github.com/crillab/pyxai/actions/workflows/test_osx.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/test_osx.yml)
 [![Wheel builder Linux](https://github.com/crillab/pyxai/actions/workflows/build_wheels_linux.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/build_wheels_linux.yml)
 [![Wheel builder macOS](https://github.com/crillab/pyxai/actions/workflows/build_wheels_macos.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/build_wheels_macos.yml)
 [![PyPI version](https://img.shields.io/pypi/v/pyxai)](https://pypi.org/project/pyxai/)
