@@ -1,5 +1,6 @@
 
-from pyxai import Builder, Explainer
+# Check V2.0: Not Ok: 'ExplainerDT' object has no attribute '_most_anchored_reason_anchored_reason'
+from pyxai import Builder, Learning, Explaining
 
 node_f1 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=0, right=1)
 node_f2 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=0)
@@ -18,7 +19,7 @@ tree = Builder.DecisionTree(4, node_r, force_features_equal_to_binaries=True, fe
 print("x = (1, 0, 0, 0):")
 x = (1, 1, 1, 1)
 
-explainer = Explainer.initialize(tree, features_type={"binary": ["a", "b", "c", "d"],})
+explainer = Explaining.initialize(tree, features_type={"binary": ["a", "b", "c", "d"],})
                 
 for a in [0, 1]:
     for b in [0, 1]:

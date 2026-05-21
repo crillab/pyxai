@@ -1,0 +1,4 @@
+-I.
+-c
+-I3rdParty/glucose-3.0/
+-DDEBUG

@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, Extension
 
-__cxx_path__ = "pyxai/sources/solvers/GREEDY/src/"
+__cxx_path__ = "pyxai/sources/c_explainers/src/"
 __cxx_files__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".cc")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".cc")]
 __cxx_headers__ = [__cxx_path__+f for f in os.listdir(__cxx_path__) if f.endswith(".h")]+[__cxx_path__+"bcp/"+f for f in os.listdir(__cxx_path__+"bcp/") if f.endswith(".h")]
 

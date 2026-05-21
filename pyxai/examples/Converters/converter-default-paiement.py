@@ -4,7 +4,7 @@ from pyxai import Learning, Explainer, Tools
 
 import datetime
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="default.payment.next.month", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(Tools.Options.dataset, target_feature="default.payment.next.month", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 preprocessor.unset_features(["ID"])
 

@@ -1,4 +1,4 @@
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 # To use with the minist dataset for example
 # (classification between 4 and 9 or between 3 and 8)
@@ -6,10 +6,12 @@ from pyxai import Learning, Explainer, Tools
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist38.csv
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist49.csv
 # Check V1.0: Ok
+# Check V2.0: Not Ok (no dataset)
+
 import numpy
 
 # Dataset
-dataset = "./examples/datasets_not_converted/cifar_cat_dog.csv"
+dataset = "./examples/datasets_not_converted/cifar_cat_dog.csv" # CSV file no longer available
 
 # Tuning
 def tuning():
@@ -46,11 +48,11 @@ best_parameters = tuning()
 print("Best parameters from tuning:", best_parameters)
 
 # Machine learning part
-learner = Learning.Scikitlearn(dataset, learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, **best_parameters)
-instances = learner.get_instances(model, n=10, correct=True)
+learner = Learning.Scikitlearn(dataset, problem_type=Learning.CLASSIFICATION)
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type='random-forest', **best_parameters)
+instances = learner.get_instances(model, n=10, is_correct=True)
 
-explainer = Explainer.initialize(model)
+explainer = Explaining.initialize(model)
     
 for (instance, prediction) in instances:
     explainer.set_instance(instance)

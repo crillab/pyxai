@@ -2,7 +2,7 @@
 
 from pyxai import Learning, Explainer, Tools
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="1636", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(Tools.Options.dataset, target_feature="1636", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 
 preprocessor.all_numerical_features()

@@ -3,8 +3,8 @@ import subprocess
 import time
 import uuid
 
-from pyxai import Explainer
-from pyxai.sources.core.tools.utils import get_os
+from pyxai import Explaining
+from pyxai.sources.tools.utils import get_os
 from pyxai.sources.solvers.MAXSAT.MAXSATSolver import MAXSATSolver
 
 OPENWBO_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep
@@ -21,7 +21,7 @@ class OPENWBOSolver(MAXSATSolver):
 
 
     def solve(self, *, time_limit=0):
-        self.WCNF.to_file(self.filename_wcnf)
+        self.WCNF.to_file(self.filename_wcnf, format="legacy")
         
         params = [OPENWBO_EXEC]
         time_used = -time.time()
@@ -36,4 +36,4 @@ class OPENWBOSolver(MAXSATSolver):
         
         status = [line.split(" ")[1] for line in p.stdout.split(os.linesep) if len(line) > 0 and line[0] == "s"][0]
         model = [int(lit) for lit in output_str[0] if lit != 'v' and lit != '']
-        return status, model, Explainer.TIMEOUT if status == "SATISFIABLE" else time_used
+        return status, model, Explaining.TIMEOUT if status == "SATISFIABLE" else time_used

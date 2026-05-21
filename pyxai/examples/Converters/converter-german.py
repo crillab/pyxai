@@ -9,7 +9,7 @@ data = pandas.read_csv(Tools.Options.dataset, names=["V"+str(i) for i in range(1
 print("names:", ["V"+str(i) for i in range(1, 22)])
 print("data:", data)
 
-preprocessor = Learning.Preprocessor(data, target_feature="V21", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="V21", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 preprocessor.set_categorical_features(columns=["V1", "V3", "V4", "V6", "V7", "V9", "V10", "V12", "V14", "V15", "V17", "V19", "V20"])
 
 preprocessor.set_numerical_features({

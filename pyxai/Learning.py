@@ -1,153 +1,89 @@
-import json
-from operator import index
-from typing import Iterable
+﻿
+from pyxai.sources.type import _check_parameter, SplittingMethod, InstancesSet, SaveFormat, TypeFeature, ClassificationType, MultiClassToBinaryMethod, EncoderType
+from pyxai.sources.type import ProblemType, ModelType, InstancesType, LabelsType
+from pyxai.sources.learners.learner import Learner, NoneData
+from pyxai.sources.learners.learner_information import LearnerInformation
+from pyxai.sources.learners.scikitlearn import Scikitlearn
+from pyxai.sources.learners.xgboost import Xgboost
+from pyxai.sources.learners.lightgbm import LightGBM
 
-from pyxai.sources.core.structure.type import EvaluationMethod, EvaluationOutput, Indexes, SaveFormat, TypeFeature, TypeClassification, MethodToBinaryClassification, TypeEncoder, LearnerType
-from pyxai.sources.learning.learner import LearnerInformation, Learner, NoneData
-from pyxai.sources.learning.generic import Generic
-from pyxai.sources.learning.scikitlearn import Scikitlearn
-from pyxai.sources.learning.xgboost import Xgboost
-from pyxai.sources.learning.lightgbm import LightGBM
-from pyxai.sources.learning.preprocessor import Preprocessor
-from pyxai import Tools
+from pyxai.sources.learners.preprocessor.tabular_preprocessor import TabularPreprocessor
+from pyxai.sources.learners.preprocessor.non_tabular_preprocessor import NonTabularPreprocessor
+
+from pyxai.sources.learners.model_io import ModelIO
+
+#Cross-Validation methods
+PREDEFINED = SplittingMethod.Predefined
+HOLD_OUT = SplittingMethod.HoldOut
+LEAVE_ONE_GROUP_OUT = SplittingMethod.LeaveOneGroupOut
+K_FOLDS = SplittingMethod.KFolds
+
+#Regression and Classification
+DT = ModelType.DecisionTree
+RF = ModelType.RandomForest
+BT = ModelType.BoostedTree
+
+#Linear Regression Type 
+LINEAR_SIMPLE = ModelType.LinearSimple
+LINEAR_LASSO = ModelType.LinearLasso
+LINEAR_ELASTIC = ModelType.LinearElastic
+
+#Linear Classification Type
+LINEAR_RIDGE = ModelType.LinearRidge
+LINEAR_LOGISTIC = ModelType.LinearLogistic
+NEURAL_NETWORK = ModelType.NeuralNetwork
 
 
-HOLD_OUT = EvaluationMethod.HoldOut
-LEAVE_ONE_GROUP_OUT = EvaluationMethod.LeaveOneGroupOut
-K_FOLDS = EvaluationMethod.KFolds
+#Save
+SAVE = ModelType.Save
 
-DT = EvaluationOutput.DT
-RF = EvaluationOutput.RF
-BT = EvaluationOutput.BT
-SAVE = EvaluationOutput.SAVE
+#Type
+CLASSIFICATION = ProblemType.Classification
+REGRESSION = ProblemType.Regression
 
-CLASSIFICATION = LearnerType.Classification
-REGRESSION = LearnerType.Regression
+#Selecting Indexes
+TRAIN = InstancesSet.Train
+TEST = InstancesSet.Test
+TRAIN_IN_PRIORITY  = InstancesSet.TrainInPriority 
+ALL = InstancesSet.All
 
-TRAINING = Indexes.Training
-TEST = Indexes.Test
-MIXED = Indexes.Mixed
-ALL = Indexes.All
-
+#Save format
 RAW_DATA = SaveFormat.RawData
 SOLVER_SPECIFIC = SaveFormat.SolverSpecific
 
-NUMERICAL = TypeFeature.NUMERICAL
-CATEGORICAL = TypeFeature.CATEGORICAL
-DEFAULT = TypeFeature.DEFAULT
+#Feature types
+NUMERICAL = TypeFeature.Numerical
+CATEGORICAL = TypeFeature.Categorical
+DEFAULT = TypeFeature.Default
 
-BINARY_CLASS = TypeClassification.BinaryClass
-MULTI_CLASS = TypeClassification.MultiClass
+#Classification types
+BINARY_CLASS = ClassificationType.BinaryClass
+MULTI_CLASS = ClassificationType.MultiClass
 
-ONE_VS_REST = MethodToBinaryClassification.OneVsRest
-ONE_VS_ONE = MethodToBinaryClassification.OneVsOne
+#Convertion Multi-classe methods
+ONE_VS_REST = MultiClassToBinaryMethod.OneVsRest
+ONE_VS_ONE = MultiClassToBinaryMethod.OneVsOne
 
-ORDINAL = TypeEncoder.OrdinalEncoder
-ONE_HOT = TypeEncoder.OneHotEncoder
+#Convertion feature types
+ORDINAL = EncoderType.OrdinalEncoder
+ONE_HOT = EncoderType.OneHotEncoder
+DISCRETIZER = EncoderType.DiscretizerEncoder
 
-def import_models(models, feature_names=None):
-        
-    if not isinstance(models, (list, tuple)):
-        models = [models]
-    if not all(type(model) == type(models[0]) for model in models):
-        raise ValueError("All models must be of the same type: " + str(type(models[0])))
-    
-    if type(models[0]) in Scikitlearn.get_learner_types().keys():
-        learner_type = Scikitlearn.get_learner_types()[type(models[0])][0]
-        models_type = Scikitlearn.get_learner_types()[type(models[0])][1]
-        learner = Scikitlearn(NoneData, learner_type=learner_type, models_type=models_type)
-        if learner_type == CLASSIFICATION:
-            learner.create_dict_labels(models[0].classes_)
-            learner.labels = learner.labels_to_values(models[0].classes_)
-            learner.n_labels = len(set(learner.labels))
-        extras = {
-            "learner": str(type(models[0])),
-            "learner_options": models[0].get_params(),
-            "base_score": 0,
-        }
-    elif type(models[0]) in Xgboost.get_learner_types().keys():
-        learner_type = Xgboost.get_learner_types()[type(models[0])][0]
-        models_type = Xgboost.get_learner_types()[type(models[0])][1]
-        learner = Xgboost(NoneData, learner_type=learner_type, models_type=models_type)
-        extras = {
-            "learner": str(type(models[0])),
-            "learner_options": models[0].get_xgb_params(),
-            "base_score": float(0.5) if models[0].base_score is None else models[0].base_score,
-        }
-            
-        if learner_type == CLASSIFICATION:
-            learner.create_dict_labels(models[0].classes_)
-            learner.labels = learner.labels_to_values(models[0].classes_)
-            learner.n_labels = len(set(learner.labels))
-    elif type(models[0]) in LightGBM.get_learner_types().keys():
-        
-        learner_type = LightGBM.get_learner_types()[type(models[0])][0]
-        models_type = LightGBM.get_learner_types()[type(models[0])][1]
-        learner = LightGBM(NoneData, learner_type=learner_type, models_type=models_type)
-        
-        extras = {
-            "learner": str(type(learner)),
-            "learner_options": models[0].get_params(),
-            "base_score": 0
-        }
-           
-        if learner_type == CLASSIFICATION:
-            learner.create_dict_labels(models[0].classes_)
-            learner.labels = learner.labels_to_values(models[0].classes_)
-            learner.n_labels = len(set(learner.labels))
-    else:
-        raise ValueError("The type of this model is unknown: "+str(type(models[0])))
+#Type of instances
+IMAGE = InstancesType.Image
+TABULAR = InstancesType.Tabular
 
-    learner_information=[LearnerInformation(model, None, None, None, None, extras) for model in models]
-    if feature_names is not None:
-        learner.feature_names = feature_names
-        for l in learner_information: l.set_feature_names(feature_names)
-    
-    result_output = learner.convert_model(learner_information)
-    
-    Tools.verbose("---------------   Evaluation   ----------------")
-    for i, result in enumerate(result_output):
-        Tools.verbose("For the evaluation number " + str(i) + ":")
-        Tools.verbose(result)
-
-    return learner, result_output if len(result_output) != 1 else result_output[0]
+#Type of labels
+CLASSES = LabelsType.Classes
+MASKS = LabelsType.Masks
+CONTOURS = LabelsType.Contours
 
 
 
 
-def load(models_directory, *,tests=False, dataset=NoneData):
-    learner = Learner(learner_type=CLASSIFICATION)
-    files = learner.load_get_files(models_directory)
-    learner_names = []
-    learner_types = []
-    evaluation_outputs = []
 
-    for _, model in enumerate(files):
-        _, map_file = model
-        f = open(map_file)
-        data = json.loads(json.load(f))
-        learner_names.append(data['learner_name'])
-        learner_types.append(data['learner_type'])
-        evaluation_outputs.append(data['evaluation_output'])
-        f.close()
-    
-    if not all(learner_name == learner_names[-1] for learner_name in learner_names):
-        raise ValueError("All learners must have the same learner name.")
-    if not all(learner_type == learner_types[-1] for learner_type in learner_types):
-        raise ValueError("All learners must have the same learner type.")
-    if not all(evaluation_output == evaluation_outputs[-1] for evaluation_output in evaluation_outputs):
-        raise ValueError("All learners must have the same learner type.")
-    
-    if learner_names[0] == Generic.__name__:
-        learner = Generic(dataset, learner_type=LearnerType.from_str(learner_types[0]))
-    elif learner_names[0] == Xgboost.__name__:
-        learner = Xgboost(dataset, learner_type=LearnerType.from_str(learner_types[0]))
-    elif learner_names[0] == Scikitlearn.__name__:
-        learner = Scikitlearn(dataset, learner_type=LearnerType.from_str(learner_types[0]))
-    elif learner_names[0] == LightGBM.__name__:
-        learner = LightGBM(dataset, learner_type=LearnerType.from_str(learner_types[0]))
-    else:
-        raise ValueError("The learner name is unknown:" + str(learner_names[0]))
 
-    models = learner.load(models_directory=models_directory, tests=tests)
-    return learner, models
+
+
+
+

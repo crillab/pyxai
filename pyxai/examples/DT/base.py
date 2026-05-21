@@ -1,12 +1,12 @@
-from pyxai import Learning, Explainer
+# Check V2.0: Not Ok with 100% of accuracy it was unable to select an incorrect instance...
 
-learner = Learning.Scikitlearn("pyxai/tests/dermatology.csv", learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
-instance, prediction = learner.get_instances(model, n=1, correct=True, predictions=[0])
+from pyxai import Learning, Explaining
 
-print("le:", learner.dict_labels)
+learner = Learning.Scikitlearn("./tests/dermatology.csv", problem_type='classification', instances_type='tabular')
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type='decision-tree')
+instance, prediction = learner.get_instances(model, n=1, is_correct=True, subset_predicted_classes=[0])
 
-explainer = Explainer.initialize(model, instance)
+explainer = Explaining.initialize(model, instance)
 print("instance:", instance)
 print("binary representation:", explainer.binary_representation)
 
@@ -14,7 +14,7 @@ sufficient_reason = explainer.sufficient_reason(n=1)
 print("sufficient_reason:", sufficient_reason)
 print("to_features:", explainer.to_features(sufficient_reason))
 
-instance, prediction = learner.get_instances(model, n=1, correct=False)
+instance, prediction = learner.get_instances(model, n=1, is_correct=False)
 explainer.set_instance(instance)
 contrastive_reason = explainer.contrastive_reason()
 print("contrastive reason", contrastive_reason)

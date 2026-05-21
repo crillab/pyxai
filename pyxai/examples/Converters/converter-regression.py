@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset)
-preprocessor = Learning.Preprocessor(data, target_feature="quality", learner_type=Learning.REGRESSION)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="quality", learner_type=Learning.REGRESSION)
 
 print("data:", preprocessor.data)
 

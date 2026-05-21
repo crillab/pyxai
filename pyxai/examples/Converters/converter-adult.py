@@ -1,11 +1,11 @@
 # dataset source: https://archive.ics.uci.edu/ml/datasets/adult
 
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=['age', 'workclass', 'fnlwgt', 'education', 'education-num','marital-status', 'occupation', 'relationship','race', 'sex', 'capital-gain','capital-loss', 'hours-per-week', 'native-country', 'salary'], skiprows=1)
-preprocessor = Learning.Preprocessor(data, target_feature="salary", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="salary", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 

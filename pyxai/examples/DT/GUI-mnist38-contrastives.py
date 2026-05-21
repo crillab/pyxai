@@ -1,4 +1,4 @@
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 # To use with the minist dataset for example
 # (classification between 4 and 9 or between 3 and 8)
@@ -6,25 +6,27 @@ from pyxai import Learning, Explainer, Tools
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist38.csv
 # http://www.cril.univ-artois.fr/expekctation/datasets/mnist49.csv
 # Check V1.0: Ok
+# Check V2.0: Ok
+
 
 # the location of the dataset
 import numpy
-dataset = "./examples/datasets_not_converted/mnist38.csv"
+dataset = "./examples/Converters/mnist/misnt_3_8.csv"
 
 # Machine learning part
-learner = Learning.Scikitlearn(dataset, learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
-instances = learner.get_instances(model, n=10, correct=False)
+learner = Learning.Scikitlearn(dataset, problem_type=Learning.CLASSIFICATION, instances_type='tabular')
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.DT)
+instances = learner.get_instances(model, n=10, is_correct=False)
 
 # Explanation part
-explainer = Explainer.initialize(model)
+explainer = Explaining.initialize(model)
 
 for (instance, prediction) in instances:
     explainer.set_instance(instance)
-    contrastive_reasons = explainer.contrastive_reason(n=Explainer.ALL)
+    contrastive_reasons = explainer.contrastive_reason(n=Explaining.ALL)
 
     # Visualisation part
-    explainer.heat_map("heat map 1", contrastive_reasons, contrastive=True)
+    explainer.visualisation.heat_map("heat map 1", contrastive_reasons, contrastive=True)
 
 def get_pixel_value(instance, x, y, shape):
     index = x * shape[0] + y 

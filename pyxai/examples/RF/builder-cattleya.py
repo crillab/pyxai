@@ -11,21 +11,23 @@
 # }
 
 # Check V1.0: Ok
+# Check V2.0: Ok
 
-from pyxai import Builder, Explainer
+
+from pyxai import Builder, Learning, Explaining
 
 nodeT1_1 = Builder.DecisionNode(1, left=0, right=1)
 nodeT1_3 = Builder.DecisionNode(3, left=0, right=nodeT1_1)
 nodeT1_2 = Builder.DecisionNode(2, left=1, right=nodeT1_3)
 nodeT1_4 = Builder.DecisionNode(4, left=0, right=nodeT1_2)
 
-tree1 = Builder.DecisionTree(4, nodeT1_4, force_features_equal_to_binaries=True)
+tree1 = Builder.DecisionTree(4, nodeT1_4, force_features_equal_to_binaries=True, class_names=['A', 'B'])
 
 nodeT2_4 = Builder.DecisionNode(4, left=0, right=1)
 nodeT2_1 = Builder.DecisionNode(1, left=0, right=nodeT2_4)
 nodeT2_2 = Builder.DecisionNode(2, left=nodeT2_1, right=1)
 
-tree2 = Builder.DecisionTree(4, nodeT2_2, force_features_equal_to_binaries=True)  # 4 features but only 3 used
+tree2 = Builder.DecisionTree(4, nodeT2_2, force_features_equal_to_binaries=True, class_names=['A', 'B'])  # 4 features but only 3 used
 
 nodeT3_1_1 = Builder.DecisionNode(1, left=0, right=1)
 nodeT3_1_2 = Builder.DecisionNode(1, left=0, right=1)
@@ -37,14 +39,15 @@ nodeT3_2_2 = Builder.DecisionNode(2, left=0, right=nodeT3_4_2)
 
 nodeT3_3_1 = Builder.DecisionNode(3, left=nodeT3_2_1, right=nodeT3_2_2)
 
-tree3 = Builder.DecisionTree(4, nodeT3_3_1, force_features_equal_to_binaries=True)
+tree3 = Builder.DecisionTree(4, nodeT3_3_1, force_features_equal_to_binaries=True, class_names=['A', 'B'])
 
-forest = Builder.RandomForest([tree1, tree2, tree3], n_classes=2)
+forest = Builder.RandomForest([tree1, tree2, tree3], n_classes=2, class_names=['A', 'B'])
+
 # For instance = (1,1,1,1)
 print("For instance = (1,1,1,1):")
 print("")
 instance = (1, 1, 1, 1)
-explainer = Explainer.initialize(forest, instance=instance)
+explainer = Explaining.initialize(forest, instance=instance)
 print("target_prediction:", explainer.target_prediction)
 
 direct = explainer.direct_reason()
@@ -63,10 +66,10 @@ assert minimal == (1, 4), "The minimal reason is not good !"
 majoritary = explainer.majoritary_reason()
 print("majoritary:", majoritary)
 
-minimal_contrastives = explainer.minimal_contrastive_reason(n=Explainer.ALL)
+minimal_contrastives = explainer.minimal_contrastive_reason(n=Explaining.ALL)
 print("minimal_contrastive: ", minimal_contrastives)
 
-minimals = explainer.preferred_majoritary_reason(method=Explainer.MINIMAL, n=10)
+minimals = explainer.preferred_majoritary_reason(method=Explaining.MINIMAL, n=10)
 print("minimals:", minimals)
 
 for c in minimal_contrastives:
@@ -92,13 +95,13 @@ minimal = explainer.minimal_sufficient_reason()
 print("minimal:", minimal)
 assert minimal == (-4,), "The minimal reason is not good !"
 
-majoritary = explainer.majoritary_reason(n=Explainer.ALL)
+majoritary = explainer.majoritary_reason(n=Explaining.ALL)
 print("majoritary:", majoritary)
 
-minimals = explainer.preferred_majoritary_reason(method=Explainer.MINIMAL, n=10)
+minimals = explainer.preferred_majoritary_reason(method=Explaining.MINIMAL, n=10)
 print("minimals:", minimals)
 
-minimal_contrastives = explainer.minimal_contrastive_reason(n=Explainer.ALL)
+minimal_contrastives = explainer.minimal_contrastive_reason(n=Explaining.ALL)
 print("minimal_contrastive: ", minimal_contrastives)
 
 for c in minimal_contrastives:

@@ -7,8 +7,9 @@
 # f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
 # Check V1.0: Ok
+# Check V2.0: Ok
 
-from pyxai import Builder, Explainer
+from pyxai import Builder, Learning, Explaining
 
 # Builder part
 
@@ -26,7 +27,8 @@ node_v1_2 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node
 node_v1_3 = Builder.DecisionNode(1, operator=Builder.GE, threshold=30, left=node_v1_2, right=1)
 node_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=40, left=node_v1_3, right=1)
 
-tree = Builder.DecisionTree(3, node_v1_4)
+learner_information = Learning.LearnerInformation(None, problem_type='classification')
+tree = Builder.DecisionTree(3, node_v1_4, learner_information=learner_information)
 
 print("base:", tree.raw_data_for_CPP())
 loan_types = {
@@ -36,7 +38,7 @@ loan_types = {
 
 print("bob = (20, 1, 0):")
 bob = (20, 1, 0)
-explainer = Explainer.initialize(tree, instance=bob, features_type=loan_types)
+explainer = Explaining.initialize(tree, instance=bob, features_type=loan_types)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)

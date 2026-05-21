@@ -3,7 +3,7 @@ from pyxai import Learning, Explainer, Tools
 
 import datetime
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="target", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(Tools.Options.dataset, target_feature="target", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 

@@ -2,9 +2,9 @@ import os
 import subprocess
 import time
 import uuid
-from pyxai.sources.core.tools.utils import get_os
+from pyxai.sources.tools.utils import get_os
 
-from pyxai import Explainer
+from pyxai import Explaining
 
 MUSER_DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep + "exec" + os.sep
 MUSER_EXEC = MUSER_DIRECTORY + "muser-" + get_os()
@@ -33,12 +33,15 @@ class MUSERSolver:
 
     def solve(self, time_limit=None):
         time_used = -time.time()
+        p = None
         try:
             p = subprocess.run([MUSER_EXEC, '-comp', '-grp', self.filename_gcnf], timeout=time_limit, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                universal_newlines=True)
             time_used += time.time()
         except subprocess.TimeoutExpired:
-            time_used = Explainer.TIMEOUT
+            time_used = Explaining.TIMEOUT
+        if p is None:
+            return None, "s UNKNOWN", Explaining.TIMEOUT
         model = [line for line in p.stdout.split('\n') if line.startswith("v")][0]
         model = [int(lit) for lit in model.split(' ')[1:-1]]
         status = [line.split(" ")[1] for line in p.stdout.split("\n") if len(line) > 0 and line[0] == "s"][0]

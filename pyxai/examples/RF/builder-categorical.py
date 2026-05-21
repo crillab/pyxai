@@ -6,7 +6,9 @@
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
 # Check V1.0: Ok but => Only one-hot encoded categorical features are take into account.
-from pyxai import Builder, Learning, Explainer
+# Check V2.0: Ok
+
+from pyxai import Builder, Learning, Explaining
 
 # Builder part
 
@@ -17,8 +19,8 @@ node_t1_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=40, left=n
 tree_1 = Builder.DecisionTree(3, node_t1_v1_4)
 
 node_t2_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
-node_t2_v3_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=2, left=node_t2_v3_1, right=1)
-node_t2_v3_3 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=3, left=node_t2_v3_2, right=1)
+node_t2_v3_2 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=node_t2_v3_1, right=1)
+node_t2_v3_3 = Builder.DecisionNode(5, operator=Builder.EQ, threshold=1, left=node_t2_v3_2, right=1)
 
 node_t2_v2 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=0, right=node_t2_v3_3)
 
@@ -29,8 +31,8 @@ tree_3 = Builder.DecisionTree(3, Builder.LeafNode(1))
 forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2)
 
 print("bob = (20, 1, 0):")
-bob = (20, 1, 0)
-explainer = Explainer.initialize(forest, instance=bob, features_type={"numerical":["f1"], "categorical": {"f3":['1','2','3']}, "binary":Learning.DEFAULT})
+bob = (20, 1, 1, 0, 0)
+explainer = Explaining.initialize(forest, instance=bob, features_type={"numerical":["f1"], "categorical": {"{f3,f4,f5}":('1','2','3')}, "binary":Learning.DEFAULT})
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -42,14 +44,14 @@ print("to_features:", explainer.to_features(minimals))
 
 print()
 print("charles = (30, 0, 2):")
-charles = (30, 0, 2)
+charles = (30, 0, 0, 0, 1)
 explainer.set_instance(charles)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
 print("to_features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
 
-contrastives = explainer.minimal_contrastive_reason(n=Explainer.ALL)
+contrastives = explainer.minimal_contrastive_reason(n=Explaining.ALL)
 print("contrastives:", contrastives)
 
 print("contrastives (to_features):", explainer.to_features(contrastives[0], contrastive=True))

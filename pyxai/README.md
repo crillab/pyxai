@@ -116,7 +116,7 @@ Here is an example (it comes from the <a href="https://www.cril.univ-artois.fr/p
 ```python
 from pyxai import Learning, Explainer
 
-learner = Learning.Scikitlearn("tests/iris.csv", learner_type=Learning.CLASSIFICATION)
+learner = Learning.Scikitlearn("tests/iris.csv", problem_type=Learning.CLASSIFICATION)
 model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
 instance, prediction = learner.get_instances(model, n=1, correct=True, predictions=[0])
 

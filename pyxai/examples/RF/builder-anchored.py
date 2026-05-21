@@ -1,5 +1,6 @@
+# Check V2.0: Not OK (But Encore must be compiled) 'ExplainerDT' object has no attribute '_most_anchored_reason_anchored_reason'
 
-from pyxai import Builder, Explainer
+from pyxai import Builder, Learning, Explaining
 
 tree_1_b = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=0)
 tree_1_a = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=0, right=tree_1_b)
@@ -23,14 +24,15 @@ unit_tree_1 = Builder.DecisionTree(4, Builder.LeafNode(1), force_features_equal_
 unit_tree_2 = Builder.DecisionTree(4, Builder.LeafNode(1), force_features_equal_to_binaries=True)
 unit_tree_3 = Builder.DecisionTree(4, Builder.LeafNode(1), force_features_equal_to_binaries=True)
 
-forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, unit_tree_1, unit_tree_2, unit_tree_3], n_classes=2, feature_names=["a", "b", "c", "d"])
+learner_information = Learning.LearnerInformation(None, problem_type='classification')
+forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, unit_tree_1, unit_tree_2, unit_tree_3], n_classes=2, feature_names=["a", "b", "c", "d"], learner_information=learner_information)
 
 
 # paper part
 print("x = (1, 0, 0, 0):")
 instance = (1, 0, 0, 0)
 
-explainer = Explainer.initialize(forest, features_type={"binary": ["a", "b", "c", "d"],})
+explainer = Explaining.initialize(forest, features_type={"binary": ["a", "b", "c", "d"],})
 explainer.set_instance(instance=instance)
 print("intance:", instance)
 print("binary representation: ", explainer.binary_representation)
@@ -42,34 +44,37 @@ reference_instances = {0:[(0,0,0,0),(0,0,1,0),(0,1,1,0)],
 
 minimal = explainer.minimal_sufficient_reason()
 print("minimal:", explainer.to_features(minimal))
-anchored_reason = explainer.anchored_reason(n_anchors=2, reference_instances=reference_instances, check=True)
+explainer.set_reference_instances(reference_instances)
+anchored_reason = explainer.most_anchored_reason(check=True)
 print("anchored_reason:", explainer.to_features(anchored_reason))
 
-# check part
-for a in [0, 1]:
-    for b in [0, 1]:
-        for c in [0, 1]:
-            for d in [0, 1]:
-                instance = (a, b, c, d)
-                explainer.set_instance(instance=instance)
-                print("-------------------------")
-                print("intance:", instance)
-                print("binary representation: ", explainer.binary_representation)
-                print("target_prediction:", explainer.target_prediction)
-                print("to_features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
-                if explainer.target_prediction == 0:
-                    reference_instances = {0:[instance], 1:[[0 if l==1 else 1 for l in instance]]}
-                else:
-                    reference_instances = {0:[[0 if l==1 else 1 for l in instance]], 1:[instance]}
-                print("reference_instances:", reference_instances)
 
-                n_anchors = 1
-                go_next = True
-                while(go_next is True):
-                    anchored_reason = explainer.anchored_reason(n_anchors=n_anchors, reference_instances=reference_instances, check=True)
-                    print(str(n_anchors)+"-anchored_reason:"+str(anchored_reason))
-                    if anchored_reason is not None:
-                        go_next = True
-                        n_anchors += 1
-                    else:
-                        break
+# check part (Ok V2)
+# for a in [0, 1]:
+#     for b in [0, 1]:
+#         for c in [0, 1]:
+#             for d in [0, 1]:
+#                 instance = (a, b, c, d)
+#                 explainer.set_instance(instance=instance)
+#                 print("-------------------------")
+#                 print("intance:", instance)
+#                 print("binary representation: ", explainer.binary_representation)
+#                 print("target_prediction:", explainer.target_prediction)
+#                 print("to_features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
+#                 if explainer.target_prediction == 0:
+#                     reference_instances = {0:[instance], 1:[[0 if l==1 else 1 for l in instance]]}
+#                 else:
+#                     reference_instances = {0:[[0 if l==1 else 1 for l in instance]], 1:[instance]}
+#                 print("reference_instances:", reference_instances)
+
+#                 n_anchors = 1
+#                 go_next = True
+#                 while(go_next is True):
+#                     explainer.set_reference_instances(reference_instances)
+#                     anchored_reason = explainer.most_anchored_reason(check=True)
+#                     print(str(n_anchors)+"-anchored_reason:"+str(anchored_reason))
+#                     if anchored_reason is not None:
+#                         go_next = True
+#                         n_anchors += 1
+#                     else:
+#                         break

@@ -1,4 +1,4 @@
-from pyxai import Tools, Learning, Explainer
+﻿from pyxai import Tools, Learning
 from sklearn import preprocessing
 from sklearn.model_selection import LeaveOneGroupOut
 import lightgbm
@@ -9,64 +9,60 @@ import functools
 import operator
 import copy
 
+from pyxai.sources.type import _check_parameter, ProblemType
+
 Tools.set_verbose(0)
 
 import unittest
 
 
 class TestImportLightGBM(unittest.TestCase):
+    def test_import_dataset_import_models(self):
+        self.do_import_dataset_import_models("tests/datasets/dermatology.csv", 'regression')
+        self.do_import_dataset_import_models("tests/datasets/winequality-red.csv", 'regression', 'tabular', 'discrete-values')
+
+    def test_import_dataset_get_instances(self):
+        self.do_import_dataset_get_instances("tests/datasets/dermatology.csv", 'regression', 'tabular', 'continuous-values')
+        self.do_import_dataset_get_instances("tests/datasets/winequality-red.csv", 'regression', 'tabular', 'discrete-values')
 
 
-    def test_import_BT_regression_dermatology(self):
-        self.do_import("tests/dermatology.csv", Learning.REGRESSION)
 
+    def do_import_dataset_import_models(self, dataset, problem_type, instances_type=None, labels_type=None):
+        data, labels, sk_models, train_indexes, test_indexes = self.load_dataset(dataset, problem_type)
 
-    def test_import_BT_regression_winequality(self):
-        self.do_import("tests/winequality-red.csv", Learning.REGRESSION)
-
-
-    def do_import(self, dataset, learner_type):
-        data, labels, feature_names = self.load_dataset(dataset, learner_type)
-        results = self.cross_validation(data, labels, learner_type, n_trees=5)
-        sk_models = [result[0] for result in results]
-        training_indexes = [result[1] for result in results]
-        test_indexes = [result[2] for result in results]
-
-        learner, models = Learning.import_models(sk_models)
+        full_dts = pandas.concat([data, labels], axis=1)
+        learner, models = Learning.ModelIO.import_models(sk_models, full_dts, instances_type=instances_type, labels_type=labels_type)
 
         for i, model in enumerate(models):
-            # instances = learner.get_instances(dataset="tests/iris.csv", model=model, n=10, indexes=Learning.TEST, test_indexes=test_indexes[i])
+            instances = learner.get_instances(model=model, n=10, indexes=Learning.TEST, test_indexes=test_indexes[i])
+            self.check_predictions(model, instances, labels_type)
+
+
+    def do_import_dataset_get_instances(self, dataset, problem_type, instances_type, labels_type):
+        data, labels, sk_models, train_indexes, test_indexes = self.load_dataset(dataset, problem_type)
+
+        learner, models = Learning.ModelIO.import_models(sk_models, instances_type=instances_type, labels_type=labels_type)
+
+        for i, model in enumerate(models):
             instances = learner.get_instances(dataset=dataset, model=model, n=10, indexes=Learning.TEST, test_indexes=test_indexes[i])
-
-            for (instance, prediction_classifier) in instances:
-                prediction_model_1 = model.predict_instance(instance)
-                implicant = model.instance_to_binaries(instance)
-                prediction_model_2 = model.predict_implicant(implicant)
-                self.assertEqual(prediction_classifier, prediction_model_1)
-                self.assertEqual(prediction_classifier, prediction_model_2)
+            self.check_predictions(model, instances, labels_type)
 
 
-    def load_dataset(self, dataset, learner_type):
+    def load_dataset(self, dataset, problem_type):
         data = pandas.read_csv(dataset).copy()
-
-        # extract labels
         labels = data[data.columns[-1]]
-        labels = numpy.array(labels)
-
         # remove the label of each instance
         data = data.drop(columns=[data.columns[-1]])
 
-        # extract the feature names
-        feature_names = list(data.columns)
-        if learner_type == Learning.CLASSIFICATION:
-            le = preprocessing.LabelEncoder()
-            le.fit(labels)
-            labels = le.transform(labels)
+        results = self.cross_validation(data, labels, problem_type, n_trees=5)
+        sk_models = [result[0] for result in results]
+        train_indexes = [result[1] for result in results]
+        test_indexes = [result[2] for result in results]
 
-        return data.values, labels, feature_names
+        return data, labels, sk_models, train_indexes, test_indexes
 
 
-    def cross_validation(self, X, Y, learner_type, n_trees=100, n_forests=10):
+    def cross_validation(self, X, Y, problem_type, n_trees=100, n_forests=10):
         n_instance = len(Y)
         quotient = n_instance // n_forests
         remain = n_instance % n_forests
@@ -86,11 +82,10 @@ class TestImportLightGBM(unittest.TestCase):
                 i += 1
             # Creation of instances (X) and labels (Y) according to the index of loo.split() 
             # for both training and test set
-            x_train = [X[x] for x in index_training]
-            y_train = [Y[x] for x in index_training]
-            x_test = [X[x] for x in index_test]
-            y_test = [Y[x] for x in index_test]
-
+            x_train = X.iloc[index_training]
+            y_train = Y.iloc[index_training]
+            x_test = X.iloc[index_test]
+            y_test = Y.iloc[index_test]
             # Training phase
             learner = lightgbm.LGBMRegressor(verbose=-1, n_estimators=5, random_state=0)
             learner.fit(x_train, y_train)
@@ -99,6 +94,17 @@ class TestImportLightGBM(unittest.TestCase):
 
             forests.append((learner, index_training, index_test))
         return forests
+
+    def check_predictions(self, model, instances, labels_type):
+        for (instance, prediction_init_model) in instances:
+            prediction_pyxai_model_1 = model.predict_instance(instance)
+            implicant = model.instance_to_binaries(instance)
+            prediction_pyxai_model_2 = model.predict_implicant(implicant)
+            if labels_type=='discrete-values':
+                prediction_init_model = round(prediction_init_model)
+            self.assertAlmostEqual(prediction_init_model, prediction_pyxai_model_1, places=14)
+            self.assertAlmostEqual(prediction_init_model, prediction_pyxai_model_2, places=14)
+
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
-from pyxai.sources.core.structure.type import TypeLeaf
-from pyxai.sources.core.structure.type import TypeLeaf
+from pyxai.sources.type import TypeLeaf
+from pyxai.sources.type import TypeLeaf
 
 
 def instance_variables(solver, bin_len):

@@ -7,10 +7,10 @@
 # or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
 # Check V1.0: Ok
+# Check V2.0: Ok
 
-from pyxai import Builder, Explainer
+from pyxai import Builder, Learning, Explaining
 
-# Builder part
 
 node_t1_v1_1 = Builder.DecisionNode(1, operator=Builder.GE, threshold=10, left=0, right=0)
 node_t1_v1_2 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node_t1_v1_1, right=0)
@@ -24,10 +24,11 @@ tree_2 = Builder.DecisionTree(3, node_t2_v2)
 
 tree_3 = Builder.DecisionTree(3, Builder.LeafNode(1))
 
-forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2)
+learner_information = Learning.LearnerInformation(None, problem_type='classification')
+forest = Builder.RandomForest([tree_1, tree_2, tree_3], n_classes=2, learner_information=learner_information)
 
 bob = (20, 1, 0)
-explainer = Explainer.initialize(forest, instance=bob, features_type={"numerical": ["f1"], "binary": ["f2", "f3"]})
+explainer = Explaining.initialize(forest, instance=bob, features_type={"numerical": ["f1"], "binary": ["f2", "f3"]})
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
@@ -46,7 +47,7 @@ print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)
 print("to_features:", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))
 
-contrastives = explainer.minimal_contrastive_reason(n=Explainer.ALL)
+contrastives = explainer.minimal_contrastive_reason(n=Explaining.ALL)
 print("contrastives:", contrastives)
 
 print("contrastives (to_features):", explainer.to_features(contrastives[0], contrastive=True))

@@ -15,7 +15,9 @@
 # has high incomes (f1) but has not reimbursed a previous loan (f2),
 # or (which looks more risky) a customer who has low incomes (f1) and has some debts (f3).
 
-from pyxai import Builder, Explainer
+# Check V2.0: Ok
+
+from pyxai import Builder, Explaining
 
 nodeT1_3 = Builder.DecisionNode(3, left=0, right=1)
 nodeT1_2 = Builder.DecisionNode(2, left=1, right=0)
@@ -26,7 +28,7 @@ loan_types = {
     "binary": ["f1", "f2", "f3"],
 }
 
-explainer = Explainer.initialize(model, features_type=loan_types)
+explainer = Explaining.initialize(model, features_type=loan_types)
 
 print("Original tree:", explainer.get_model().raw_data_for_CPP())
 

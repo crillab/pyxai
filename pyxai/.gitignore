@@ -3,6 +3,7 @@
 .idea
 tmp_diagram.png
 .vscode/
+.vs/
 examples/datasets/
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -11,6 +12,7 @@ __pycache__/
 *.pyc
 # C extensions
 *.so
+examples/ConvertersJSON/mnist/images
 
 # Distribution / packaging
 .Python

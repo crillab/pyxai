@@ -4,7 +4,7 @@ from pycsp3 import *
 
 protect()
 
-from pyxai.core.tools.utils import flatten
+from pyxai.source.tools.utils import flatten
 
 class id_node(int):
   pass
@@ -68,8 +68,8 @@ class MinimalV3():
     nodes = []
     for tree in trees: 
       dict_nodes = dict()
-      #if not tree.root.is_leaf():
-      self.compute_id_nodes(tree, tree.root, dict_nodes, 0)
+      #if not tree._root.is_leaf():
+      self.compute_id_nodes(tree, tree._root, dict_nodes, 0)
       for i in dict_nodes.keys():
         weights = self.compute_possible_weights(dict_nodes, i)
         dict_nodes[i][3] = weights if isinstance(weights, list) else [weights]
@@ -94,7 +94,7 @@ class MinimalV3():
     nodes = self.compute_data(trees)
     nNodes = [len(nodes[i]) for i in range(nTrees)]
     nNodesMax = max(nNodes)
-    data_classes = [tree.target_class for tree in trees]
+    data_classes = [tree.associated_class for tree in trees]
 
     # To clear a old model
     clear()

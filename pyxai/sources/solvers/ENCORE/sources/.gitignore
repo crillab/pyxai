@@ -1,0 +1,5 @@
+.vscode/
+3rdParty/glucose-3.0/*/*.o
+3rdParty/glucose-3.0/*/*.mk
+3rdParty/glucose-3.0/*/*.a
+build/

@@ -16,7 +16,7 @@ class TreeDecomposition():
 
         combinations = set()
         for tree in trees:
-            variables_set = BTs.get_set_of_variables(tree, tree.root)
+            variables_set = BTs.get_set_of_variables(tree, tree._root)
             variables = variables.union(variables_set)
             combinations = combinations.union(set(itertools.combinations(variables_set, 2)))
         n_vertices = len(variables)

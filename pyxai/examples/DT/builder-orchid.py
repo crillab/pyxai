@@ -13,8 +13,9 @@
 # author = {Gilles Audemard and Steve Bellart and Louenas Bounia and Frédéric Koriche and Jean-Marie Lagniez and Pierre Marquis},
 # }
 # Check V1.0: Ok
+# Check V2.0: Ok
 
-from pyxai import Builder, Explainer
+from pyxai import Builder, Learning, Explaining
 
 # Builder part
 node_x4_1 = Builder.DecisionNode(4, left=0, right=1)
@@ -36,14 +37,14 @@ tree = Builder.DecisionTree(4, node_x1_1, force_features_equal_to_binaries=True)
 
 # Explainer part for instance = (1,1,1,1)
 print("instance = (1,1,1,1):")
-explainer = Explainer.initialize(tree, instance=(1, 1, 1, 1))
+explainer = Explaining.initialize(tree, instance=(1, 1, 1, 1))
 
 print("target_prediction:", explainer.target_prediction)
 direct = explainer.direct_reason()
 print("direct:", direct)
 assert direct == (1, 2, 3, 4), "The direct reason is not good !"
 
-sufficient_reasons = explainer.sufficient_reason(n=Explainer.ALL)
+sufficient_reasons = explainer.sufficient_reason(n=Explaining.ALL)
 print("sufficient_reasons:", sufficient_reasons)
 assert sufficient_reasons == ((1, 4), (2, 3, 4)), "The sufficient reasons are not good !"
 
@@ -54,7 +55,7 @@ minimals = explainer.minimal_sufficient_reason()
 print("Minimal sufficient reasons:", minimals)
 assert minimals == (1, 4), "The minimal sufficient reasons are not good !"
 
-contrastives = explainer.contrastive_reason(n=Explainer.ALL)
+contrastives = explainer.contrastive_reason(n=Explaining.ALL)
 print("Contrastives:", contrastives)
 for contrastive in contrastives:
     assert explainer.is_contrastive_reason(contrastive), "This is not a contrastive reason !"
@@ -69,7 +70,7 @@ direct = explainer.direct_reason()
 print("direct:", direct)
 assert direct == (-1, -2), "The direct reason is not good !"
 
-sufficient_reasons = explainer.sufficient_reason(n=Explainer.ALL)
+sufficient_reasons = explainer.sufficient_reason(n=Explaining.ALL)
 print("sufficient_reasons:", sufficient_reasons)
 assert sufficient_reasons == ((-4,), (-1, -2), (-1, -3)), "The sufficient reasons are not good !"
 for sufficient in sufficient_reasons:

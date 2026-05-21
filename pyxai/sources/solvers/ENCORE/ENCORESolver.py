@@ -3,11 +3,10 @@ import subprocess
 import time
 import uuid
 
-from pyxai import Explainer
-from pyxai.sources.core.tools.utils import get_os
+from pyxai.sources.tools.utils import get_os
 
 DIRECTORY = os.sep.join(__file__.split(os.sep)[:-1]) + os.sep
-ENCORE_DIRECTORY = DIRECTORY+".."+os.sep+".."+os.sep+".."+os.sep+".."+os.sep+".."+os.sep+"encore"+os.sep 
+ENCORE_DIRECTORY = DIRECTORY+"sources"+os.sep 
 ENCORE_EXEC = ENCORE_DIRECTORY + "build"+os.sep+"encore"
 
 

@@ -1,0 +1,36 @@
+{
+  "sepal length": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "sepal width": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "petal length": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "petal width": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "Iris Plants": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "Iris-setosa",
+      "Iris-versicolor",
+      "Iris-virginica"
+    ],
+    "binary_conversion:": {
+      "Method": "OneVsOne",
+      "0": [
+        2
+      ],
+      "1": [
+        1
+      ]
+    }
+  }
+}

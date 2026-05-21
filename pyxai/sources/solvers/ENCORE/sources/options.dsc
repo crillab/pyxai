@@ -1,0 +1,8 @@
+("help,h", "Help screen")
+("input,i", boost::program_options::value<std::string>(), "(required) Path to get the input file.")
+("positive-anchor,p", boost::program_options::value<std::string>(), "(required) Path to get the file with the positive anchors.")
+("negative-anchor,n", boost::program_options::value<std::string>(), "(required) Path to get the file with the negative anchors.")
+("x,x", boost::program_options::value<std::string>(), "(required) Path to get the instance we are looking for an abductive explanation.")
+("method,m", boost::program_options::value<std::string>(), "(required) The method we want to use (anchored).")
+("k-anchored,k", boost::program_options::value<unsigned>()->default_value(1), "How deep the explanation is anchored.")
+("checker,c", boost::program_options::value<std::string>(), "Check solution given by \"v 0 1 2 3 4 0\".")

@@ -1,38 +1,40 @@
 # Check V1.0: Ok but minimal_majoritary_reason() return () problem
+# Check V2.0: Ok
 
-from pyxai import Builder, Explainer
+from pyxai import Builder, Learning, Explaining
 
 node_1_1 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=2)
 node_1_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=1, right=node_1_1)
 node_1_3 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=node_1_2)
 node_1_4 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=3, right=node_1_3)
-tree_1 = Builder.DecisionTree(6, node_1_4)
+tree_1 = Builder.DecisionTree(6, node_1_4, class_names=['A', 'B', 'C', 'D', 'E'])
 
 node_2_1 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=1, right=2)
 node_2_2 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=node_2_1)
 node_2_3 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=node_2_2, right=3)
-tree_2 = Builder.DecisionTree(6, node_2_3)
+tree_2 = Builder.DecisionTree(6, node_2_3, class_names=['A', 'B', 'C', 'D', 'E'])
 
 node_3_1 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=3, right=1)
 node_3_2 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=2, right=4)
 node_3_3 = Builder.DecisionNode(5, operator=Builder.EQ, threshold=1, left=2, right=node_3_2)
 node_3_4 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=node_3_1, right=node_3_3)
-tree_3 = Builder.DecisionTree(6, node_3_4)
+tree_3 = Builder.DecisionTree(6, node_3_4, class_names=['A', 'B', 'C', 'D', 'E'])
 
 node_4_1 = Builder.DecisionNode(6, operator=Builder.EQ, threshold=1, left=4, right=3)
-tree_4 = Builder.DecisionTree(6, node_4_1)
+tree_4 = Builder.DecisionTree(6, node_4_1, class_names=['A', 'B', 'C', 'D', 'E'])
 
 node_5_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=2, right=4)
 node_5_2 = Builder.DecisionNode(4, operator=Builder.EQ, threshold=1, left=3, right=node_5_1)
 node_5_3 = Builder.DecisionNode(1, operator=Builder.EQ, threshold=1, left=1, right=node_5_2)
-tree_5 = Builder.DecisionTree(6, node_5_3)
+tree_5 = Builder.DecisionTree(6, node_5_3, class_names=['A', 'B', 'C', 'D', 'E'])
 
-forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, tree_5], n_classes=5)
+learner_information = Learning.LearnerInformation(None, problem_type='classification')
+forest = Builder.RandomForest([tree_1, tree_2, tree_3, tree_4, tree_5], n_classes=5, learner_information=learner_information, class_names=['A', 'B', 'C', 'D', 'E'])
 
 instance = [0, 0, 1, 1, 0, 0]
 instance = [0, 0, 0, 0, 0, 0]
 instance = [1, 0, 0, 0, 1, 1]
-explainer = Explainer.initialize(forest, instance=instance)
+explainer = Explaining.initialize(forest, instance=instance)
 print("instance", instance)
 print("binary", explainer.binary_representation)
 print("to f", explainer.to_features(explainer.binary_representation, eliminate_redundant_features=False))

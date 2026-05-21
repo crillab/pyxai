@@ -1,12 +1,13 @@
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 # usage
 # python3 examples/RF/theories-types-file.py -dataset=examples/datasets_converted/australian_0.csv -types=examples/datasets_converted/australian_0.types
 # Check V1.0: Ok 
+# Check V2.0: Australian dataset not available
 
 # Machine learning part
-learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
+learner = Learning.Scikitlearn(Tools.Options.dataset, problem_type=Learning.CLASSIFICATION)
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.RF)
 instances = learner.get_instances(model, n=2)
 
 #print("instance:", instance)
@@ -22,7 +23,7 @@ australian_types = {
     "binary": ["A1", "A8", "A9", "A11"],
 }
 
-explainer = Explainer.initialize(model, features_type=australian_types)
+explainer = Explaining.initialize(model, features_type=australian_types)
 for (instance, prediction) in instances:
     explainer.set_instance(instance)
 

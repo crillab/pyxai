@@ -8,7 +8,7 @@ import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=["V"+str(i) for i in range(58)])
 
-preprocessor = Learning.Preprocessor(data, target_feature="V57", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="V57", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 print("data:", preprocessor.data)
 preprocessor.all_numerical_features()
 

@@ -6,7 +6,7 @@ import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, sep=';')
 
-preprocessor = Learning.Preprocessor(data, target_feature="Divorce", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="Divorce", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 print("data:", preprocessor.data)
 
 preprocessor.all_numerical_features()
