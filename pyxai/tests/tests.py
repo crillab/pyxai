@@ -1,3 +1,57 @@
+﻿import unittest
+import traceback
+import sys
+
+class CustomTextTestResult(unittest.TextTestResult):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_class = None
+
+    def startTest(self, test):
+        test_class = test.__class__.__name__
+        if test_class != self.current_class:
+            self.current_class = test_class
+            self.stream.writeln(f"\n=== {test_class} ===")
+        super().startTest(test)
+            
+    def _exc_info_to_string(self, err, test):
+        """Converts a sys.exc_info()-style tuple of values into a string."""
+        exctype, value, tb = err
+        if exctype is NotImplementedError:
+            msgLines = 'Not Implemented Error : ' + str(value)
+        else:
+            tb = self._clean_tracebacks(exctype, value, tb, test)
+            tb_e = traceback.TracebackException(
+                exctype, value, tb,
+                capture_locals=self.tb_locals, compact=True)
+            msgLines = list(tb_e.format())
+    
+            if self.buffer:
+                output = sys.stdout.getvalue()
+                error = sys.stderr.getvalue()
+                if output:
+                    if not output.endswith('\n'):
+                        output += '\n'
+                    msgLines.append(STDOUT_LINE % output)
+                if error:
+                    if not error.endswith('\n'):
+                        error += '\n'
+                    msgLines.append(STDERR_LINE % error)
+        return ''.join(msgLines)
+
+
+class CustomTextTestRunner(unittest.TextTestRunner):
+    def _makeResult(self):
+        return CustomTextTestResult(self.stream, self.descriptions, self.verbosity)
+
+if __name__ == "__main__":
+    loader = unittest.TestLoader()
+    tests = loader.discover('./tests', '*.py')
+    testRunner = CustomTextTestRunner()
+    testRunner.run(tests)
+
+
+""" Old method by naming old file -> Useful for linux/windows separation ? TODO REMOVE (26/11/2025)
 # import os
 import unittest
 import logging 
@@ -61,3 +115,4 @@ if __name__ == '__main__':
         runner.run(windows_tests())
     else:
         runner.run(linux_tests())
+        """

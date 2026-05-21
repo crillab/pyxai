@@ -1,6 +1,6 @@
 from random import random
 from docplex.mp.model import Model
-from pyxai.sources.core.structure.type import TypeLeaf
+from pyxai.sources.type import TypeLeaf
 import time
 
 class SufficientRegression:
@@ -37,7 +37,6 @@ class SufficientRegression:
         forest = explainer._boosted_trees.forest
 
         leaves = [tree.get_leaves() for tree in forest]
-
 
         extremum_range = explainer.extremum_range()
         model = Model()

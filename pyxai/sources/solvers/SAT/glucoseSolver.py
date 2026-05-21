@@ -26,8 +26,10 @@ class GlucoseSolver:
             timer = Timer(time_limit, interrupt, [self.glucose])
             timer.start()
             result = self.glucose.solve_limited(expect_interrupt=True)
+            timer.cancel()
         else:
             result = self.glucose.solve()
+        
         time_used += time.time()
         return None if not result else self.glucose.get_model(), time_used
 
@@ -106,5 +108,5 @@ class GlucoseSolver:
                 
             return root
         
-        decision_tree.root = _simplify_theory(decision_tree.root, stack=[], parent=None, come_from=None, root=decision_tree.root)
+        decision_tree._root = _simplify_theory(decision_tree._root, stack=[], parent=None, come_from=None, root=decision_tree._root)
         return decision_tree

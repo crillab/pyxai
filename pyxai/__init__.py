@@ -7,12 +7,12 @@ import subprocess
 import unittest
 import matplotlib
 
-__version__ = "1.1.2"
+__version__ = "1.0.14"
 
 matplotlib.set_loglevel("critical") #To win a lot of times. 
 
-from pyxai.sources.core.tools.option import Options
-from pyxai.sources.core.tools.utils import set_verbose, check_PyQt6
+from pyxai.sources.tools.option import Options
+from pyxai.sources.tools.utils import set_verbose, check_PyQt6
 
 __python_version__ = str(sys.version).split(os.linesep)[0].split(' ')[0]
 __pyxai_location__ = os.sep.join(pyxai.__file__.split(os.sep)[:-1])

@@ -12,7 +12,8 @@ authors = [
     { name = "Louenas Bounia", email = "bounia@cril.fr" },
     { name = "Jean-Marie Lagniez", email = "lagniez@cril.fr" },
     { name = "Pierre Marquis", email = "marquis@cril.fr" },
-    { name = "Nicolas Szczepanski", email = "szczepanski@cril.fr" }
+    { name = "Nicolas Szczepanski", email = "szczepanski@cril.fr" },
+    { name = "Mathis Konarski", email = "mathis.konarski@univ-artois.fr"}
 ]
 maintainers = [
     { name = "Gilles Audemard", email = "audemard@cril.fr" },
@@ -32,7 +33,7 @@ dependencies = [
     "shap",
     "wordfreq",
     "python-sat[pblib,aiger]",
-    "xgboost==1.7.3",
+    "xgboost",
     "pycsp3",
     "matplotlib",
     "dill",
@@ -65,7 +66,7 @@ version = { attr = "pyxai.__version__" }
 
 [tool.cibuildwheel]
 build = "*"
-skip = "pp38-* pp39-* cp36-* pp310-macosx_* pp311-macosx_*"
+skip = "pp38-* pp39-* cp36-* pp310-macosx_*"
 
 
 

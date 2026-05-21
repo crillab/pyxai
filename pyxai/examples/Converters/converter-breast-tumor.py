@@ -7,7 +7,7 @@ import pandas
 
 
 data = pandas.read_csv(Tools.Options.dataset, names=["age","menopause","inv-nodes","node-caps","deg-malig","breast","breast-quad","irradiation","recurrence","binaryClass"], sep=',') 
-preprocessor = Learning.Preprocessor(data, target_feature="binaryClass", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="binaryClass", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 

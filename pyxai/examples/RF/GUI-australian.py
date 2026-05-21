@@ -1,11 +1,12 @@
 # Check V1.0: Ok 
+# Check V1.0: Dataset not available
 
-from pyxai import Learning, Explainer
+from pyxai import Learning, Explaining
 
 # Machine learning part
-learner = Learning.Scikitlearn("examples/datasets_converted/australian_0.csv", learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
-instances = learner.get_instances(model, n=10, seed=11200, correct=True)
+learner = Learning.Scikitlearn("tests/datasets/australian_0.csv", problem_type=Learning.CLASSIFICATION) # Dataset deketed
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.RF)
+instances = learner.get_instances(model, n=5, seed=11200, is_correct=True)
 
 australian_types = {
     "numerical": Learning.DEFAULT,
@@ -18,10 +19,9 @@ australian_types = {
 
 # Explainer part
 
-explainer = Explainer.initialize(model, features_type=australian_types)
+explainer = Explaining.initialize(model, features_type=australian_types)
 for (instance, prediction) in instances:
     explainer.set_instance(instance)
-
     majoritary_reason = explainer.majoritary_reason(time_limit=10)
     print("majoritary_reason", len(majoritary_reason))
     #majoritary_reason = explainer.majoritary_reason(time_limit=50)

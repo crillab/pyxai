@@ -1,18 +1,21 @@
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 # usage
 # python3 pyxai/examples/RF/Simple.py -dataset=path/to/dataset.csv
 # Check V1.0: Ok 
+# Check V2.0: Not Ok if the sufficient reason time is too low
 
 # Machine learning part
-learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF)
-instance, prediction = learner.get_instances(n=1)
+learner = Learning.Scikitlearn(Tools.Options.dataset, problem_type=Learning.CLASSIFICATION)
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.RF)
+instance, prediction = learner.get_instances(model=model, n=1)
 
 print("instance:", instance)
+print("\nprediction:", prediction)
 
 # Explainer part
-explainer = Explainer.initialize(model, instance=instance, features_type=Tools.Options.types)
+explainer = Explaining.initialize(model, instance=instance, features_type=Tools.Options.types)
+
 
 direct_reason = explainer.direct_reason()
 print("len direct:", len(direct_reason))
@@ -29,20 +32,23 @@ print("\nminimal majoritary: ", explainer.to_features(minimal_majoritary))
 print("len majoritary: ", len(minimal_majoritary))
 print("is_majoritary_reason (for 50 checks):", explainer.is_majoritary_reason(minimal_majoritary))
 
-
 # can be costly
 sufficient_reason = explainer.sufficient_reason(time_limit=5)
-print("\nlen sufficient reason:", len(sufficient_reason))
-if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
-print("sufficient: ", explainer.to_features(sufficient_reason))
-print("is reason (for 50 checks)", explainer.is_reason(sufficient_reason, n_samples=50))
-
+if sufficient_reason is not None:
+    print("\nlen sufficient reason:", len(sufficient_reason))
+    if explainer.elapsed_time == Explaining.TIMEOUT: 
+        print("Time out, this is an approximation")
+    print("sufficient: ", explainer.to_features(sufficient_reason))
+    print("is reason (for 50 checks)", explainer.is_reason(sufficient_reason, n_samples=50))
+else:
+    print("The reason is None: probably because the time limit is too low")
+    
 minimal_constrative_reason = explainer.minimal_contrastive_reason(time_limit=5)
 if len(minimal_constrative_reason) == 0:
     print("\nminimal contrastive not found")
 else:
     print("\nminimal contrastive: ", len(minimal_constrative_reason))
-    if explainer.elapsed_time == Explainer.TIMEOUT: print("Time out, this is an approximation")
+    if explainer.elapsed_time == Explaining.TIMEOUT: print("Time out, this is an approximation")
     print("is  contrastive: ", explainer.is_contrastive_reason(minimal_constrative_reason))
 
 explainer.visualisation.gui()

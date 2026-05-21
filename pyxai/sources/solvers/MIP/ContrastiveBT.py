@@ -1,5 +1,5 @@
 from ortools.linear_solver import pywraplp
-from pyxai.sources.core.explainer.Explainer import Explainer
+from pyxai.sources.explainers.Explainer import Explainer
 from .help_functions import *
 
 class ContrastiveBT:

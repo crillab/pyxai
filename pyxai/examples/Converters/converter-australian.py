@@ -1,11 +1,11 @@
-# dataset source: https://archive.ics.uci.edu/ml/datasets/adult
+﻿# dataset source: https://archive.ics.uci.edu/ml/datasets/adult
 
-from pyxai import Learning, Explainer, Tools
+from pyxai import Learning, Explaining, Tools
 
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=["A"+str(i) for i in range(1,16)], sep=',') 
 
-preprocessor = Learning.Preprocessor(data, target_feature="A15", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="A15", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 
@@ -25,3 +25,5 @@ preprocessor.set_numerical_features({
 preprocessor.process()
 dataset_name = Tools.Options.dataset.split("/")[-1].split(".")[0]
 preprocessor.export(dataset_name, output_directory=Tools.Options.output)
+
+

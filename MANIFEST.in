@@ -18,4 +18,4 @@ global-exclude *.pyc
 prune __pycache__
 prune *.pyc
 
-graft pyxai/sources/solvers/GREEDY/src
+graft pyxai/sources/c_explainers/src

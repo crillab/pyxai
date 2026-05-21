@@ -1,7 +1,7 @@
 import os
 from pycsp3 import *
 
-from pyxai.sources.core.tools.utils import flatten
+from pyxai.sources.tools.utils import flatten
 from pycsp3.dashboard import options
 
 OpOverrider = protect()
@@ -22,9 +22,9 @@ class TSMinimal():
         for tree in trees:
             leaves_current_tree = []
             if tree.is_leaf():
-                leaves_current_tree.append((tree.root, tree.root, self.weight_float_to_int(tree.root.value)))
+                leaves_current_tree.append((tree._root, tree._root, self.weight_float_to_int(tree._root.value)))
             else:
-                nodes = tree.compute_nodes_with_leaves(tree.root)
+                nodes = tree.compute_nodes_with_leaves(tree._root)
                 for node in nodes:
                     if node.right.is_leaf():
                         leaves_current_tree.append((node.right, node, self.weight_float_to_int(node.right.value)))
@@ -64,7 +64,7 @@ class TSMinimal():
         map_id_features = {feature: [i for i, v in enumerate(implicant) if implicant_id_features[i] == feature] for feature in implicant_id_features}
         nTrees = len(trees)
         leaves = self.get_leaves(trees)
-        data_classes = [tree.target_class for tree in trees]
+        data_classes = [tree._associated_class for tree in trees]
         specialValues = self.get_special_values(nTrees, leaves, n_classes, prediction, data_classes)
         maxNLeaves = max([len(leaves[i]) for i in range(nTrees)])
         self.warm_start_file = None

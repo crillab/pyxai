@@ -1,5 +1,7 @@
 
-from pyxai import Builder, Explainer
+# Check V2.0: Ok
+
+from pyxai import Builder, Learning, Explaining
 
 # Builder part
 
@@ -10,7 +12,8 @@ node_R_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, rig
 node_R_2 = Builder.DecisionNode(2, operator=Builder.EQ, threshold=1, left=node_R_1, right=1)
 
 root = Builder.DecisionNode(1, operator=Builder.GT, threshold=30, left=node_L_2, right=node_R_2)
-tree = Builder.DecisionTree(3, root, feature_names=["I", "PP", "R"])
+learner_information = Learning.LearnerInformation(None, problem_type='classification')
+tree = Builder.DecisionTree(3, root, feature_names=["I", "PP", "R"], learner_information=learner_information)
 
 print("base:", tree.raw_data_for_CPP())
 loan_types = {
@@ -18,7 +21,7 @@ loan_types = {
     "binary": ["PP", "R"],
 }
 
-explainer = Explainer.initialize(tree, instance=(25, 1, 1), features_type=loan_types)
+explainer = Explaining.initialize(tree, instance=(25, 1, 1), features_type=loan_types)
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)

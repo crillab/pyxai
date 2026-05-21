@@ -1,0 +1,608 @@
+{
+  "A1": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "A2": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A3": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A4_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A4",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A4_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A4",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A4_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A4",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A5_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      5,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_6": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      6,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      7,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      8,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_9": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      9,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_10": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      10,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_11": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      11,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_12": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      12,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_13": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      13,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A5_14": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A5",
+    "original_values:": [
+      14,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    ]
+  },
+  "A6_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_4": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      4,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_5": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      5,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_7": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      7,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_8": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      8,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A6_9": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A6",
+    "original_values:": [
+      9,
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    ]
+  },
+  "A7": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A8": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "A9": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "A10": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A11": {
+    "type:": "BINARY",
+    "encoder:": "None"
+  },
+  "A12_1": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A12",
+    "original_values:": [
+      1,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A12_2": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A12",
+    "original_values:": [
+      2,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A12_3": {
+    "type:": "CATEGORICAL",
+    "encoder:": "OneHotEncoder",
+    "original_feature:": "A12",
+    "original_values:": [
+      3,
+      [
+        1,
+        2,
+        3
+      ]
+    ]
+  },
+  "A13": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A14": {
+    "type:": "NUMERICAL",
+    "encoder:": "None"
+  },
+  "A15": {
+    "type:": "Classification",
+    "encoder:": "LabelEncoder",
+    "classes:": [
+      "0",
+      "1"
+    ]
+  }
+}

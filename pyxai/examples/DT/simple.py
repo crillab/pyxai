@@ -1,14 +1,16 @@
 # Check V1.0: Ok
-from pyxai import Learning, Explainer, Tools
+# Check V2.0: Ok
+
+from pyxai import Learning, Explaining, Tools
 
 # Machine learning part
-learner = Learning.Scikitlearn(Tools.Options.dataset, learner_type=Learning.CLASSIFICATION)
+learner = Learning.Scikitlearn(Tools.Options.dataset, problem_type='classification', instances_type='tabular', labels_type='classes')
 
-model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
-instance, prediction = learner.get_instances(model, n=1, correct=True)
+model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.DT)
+instance, prediction = learner.get_instances(model, n=1, is_correct=True)
 
 # Explanation part
-explainer = Explainer.decision_tree(model, instance)
+explainer = Explaining.decision_tree(model, instance)
 print("instance:", instance)
 
 if len(explainer.binary_representation) < 15:
@@ -32,10 +34,10 @@ print("is sufficient_reason (for max 50 checks): ", explainer.is_sufficient_reas
 print("\nnecessary literals: ", explainer.necessary_literals())
 print("\nrelevant literals: ", explainer.relevant_literals())
 
-sufficient_reasons_per_attribute = explainer.n_sufficient_reasons_per_attribute()
+sufficient_reasons_per_attribute = explainer.n_sufficient_reasons_per_attribute(time_limit=5)
 print("\nsufficient_reasons_per_attribute:", sufficient_reasons_per_attribute)
 
-constractive_reasons = explainer.contrastive_reason(n=Explainer.ALL)
+constractive_reasons = explainer.contrastive_reason(n=Explaining.ALL)
 print("\nnb constractive_reasons:", len(constractive_reasons))
 
 all_are_contrastive = True

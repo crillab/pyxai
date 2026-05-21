@@ -33,3 +33,4 @@ dataframe = pandas.DataFrame(rawdata)
 dataframe.columns = [str(i) for i in range(len(dataset[b'data'][key]))]+["label"]
 dataframe.to_csv("examples/datasets_not_converted/cifar_cat_dog.csv", index=False)
 print(dataframe)
+

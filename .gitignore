@@ -24,3 +24,6 @@ requirements-download/
 wheelhouse
 pyxai.egg-info/
 pyxai_experimental.egg-info/
+/pyxai/tmp
+/pyxai/examples/ConvertersJSON/mnist/Images/
+CLAUDE.md

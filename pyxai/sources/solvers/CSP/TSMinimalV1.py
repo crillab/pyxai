@@ -16,7 +16,7 @@ class MinimalV1():
     data_literals_per_matrix = []
     data_classes = []
     for tree in explainer.boosted_trees.forest:
-      data_classes.append(tree.target_class)
+      data_classes.append(tree.associated_class)
       variables = tree.get_variables(explainer.implicant)
       #print("variables:", len(variables))
       subsets = list(chain.from_iterable(combinations(variables, r) for r in range(len(variables)+1)))
@@ -26,11 +26,11 @@ class MinimalV1():
       matrix = []
       data_domains_weights_tree = []
       for i, subset in enumerate(subsets):
-        weights = explainer.compute_weights(tree, tree.root, subset)
+        weights = explainer.compute_weights(tree, tree._root, subset)
         if explainer.boosted_trees.n_classes == 2:
           weight_value = explainer.weight_float_to_int(min(weights) if explainer.target_prediction == 1 else max(weights))
         else:
-          weight_value = explainer.weight_float_to_int(min(weights) if explainer.target_prediction == tree.target_class else max(weights))
+          weight_value = explainer.weight_float_to_int(min(weights) if explainer.target_prediction == tree.associated_class else max(weights))
         data_domains_weights_tree.append(weight_value)
         line = tuple([element for element in values_per_subset[i]] + [weight_value])
         matrix.append(line)

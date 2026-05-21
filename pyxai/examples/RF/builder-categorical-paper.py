@@ -6,7 +6,9 @@
 # The exact function, which we know, is: the loan is granted if and only if the client's annual income is at least $25k or if the client has no debts and has paid off his previous loan: f(x) = 1 <=> (v1 >= 25) and ((v2 == 1) or (v3 == 1)). 
 # @article{TODO}
 # Check V1.0: Ok
-from pyxai import Builder, Explainer, Learning
+# Check V2.0: Ok
+
+from pyxai import Builder, Explaining, Learning
 
 # Builder part
 
@@ -34,7 +36,7 @@ print("numerical_features:", forest.numerical_features)
 
 print("bob = (20, 1, 0):")
 bob = (20, 1, 0)
-explainer = Explainer.initialize(forest, instance=bob, features_type={"numerical":["f1"], "binary":Learning.DEFAULT})
+explainer = Explaining.initialize(forest, instance=bob, features_type={"numerical":["f1"], "binary":Learning.DEFAULT})
 
 print("binary representation: ", explainer.binary_representation)
 print("target_prediction:", explainer.target_prediction)

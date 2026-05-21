@@ -1,7 +1,7 @@
 import os
 from pycsp3 import *
 
-from pyxai.sources.core.tools.utils import flatten
+from pyxai.sources.tools.utils import flatten
 
 OpOverrider = protect()
 
@@ -20,7 +20,7 @@ class AbductiveModelV1():
         leaves = []
         trees = BTs.forest
         for tree in trees:
-            leaves_current_tree = leaves_current_tree.append(tree.root) if tree.is_leaf() else BTs.get_leaves(tree, tree.root, implicant, is_removed)
+            leaves_current_tree = leaves_current_tree.append(tree._root) if tree.is_leaf() else BTs.get_leaves(tree, tree._root, implicant, is_removed)
             leaves.append(leaves_current_tree)
         return leaves
 
@@ -41,16 +41,11 @@ class AbductiveModelV1():
         trees = BTs.forest
         nTrees = len(trees)
         n_classes = BTs.n_classes
-        classes = [tree.target_class for tree in trees]
+        classes = [tree._associated_class for tree in trees]
         removed_indexes = [i for i, _ in enumerate(implicant) if is_removed[i]]
         leaves = self.get_leaves(BTs, implicant, is_removed)
         weights = [[self.weight_float_to_int(leave.value) for leave in tmp_leaves] for tmp_leaves in leaves]
 
-        # print("implicant:", implicant)
-        # print("is_removed:", is_removed)
-        # print("indexes_is_removed:", removed_indexes)
-        # print("weights:", weights)
-        # print("nClasses:", n_classes)
         idVariableToLiteral = {abs(v): v for v in implicant}
         literalToPositionInImplicant = {v: i for i, v in enumerate(implicant)}  # Position of the literal in implicant
         literalToPositionInRemovedIndexes = {implicant[v]: i for i, v in enumerate(removed_indexes)}

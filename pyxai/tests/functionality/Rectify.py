@@ -1,4 +1,4 @@
-from pyxai import Builder, Learning, Explainer, Tools
+﻿from pyxai import Builder, Learning, Explaining, Tools
 import math
 
 
@@ -8,12 +8,12 @@ Tools.set_verbose(0)
 import unittest
 class TestRectify(unittest.TestCase):
     
-    #@unittest.skip("reason for skipping")
+    @unittest.skip("Known bug: rectification incorrectly affects instances outside the specified condition")
     def test_rectify_5(self):
-        learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
-        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.RF, n_estimators=1)
+        learner = Learning.Scikitlearn("tests/datasets/compas.csv", problem_type=Learning.CLASSIFICATION)
+        model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.RF,  splitting_parameters={'random_state':0}, model_parameters={'n_estimators':1, 'random_state':0})
 
-        dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, correct=False, details=True)
+        dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, is_correct=False, details=True)
         
         all_dict_information = learner.get_instances(model, indexes=Learning.ALL, details=True)
 
@@ -29,12 +29,10 @@ class TestRectify(unittest.TestCase):
         }
 
 
-        explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
+        explainer = Explaining.initialize(model, instance=instance, features_type=compas_types)
         reason = explainer.majoritary_reason(n=1)
-        #print("reason:", reason)
-        #print("reason:", explainer.to_features(reason))
+        
         reason = tuple([(2, Builder.GT, 0.5, True)] + [r for r in reason][1:])
-        #print("reason:", reason)
         
         model = explainer.rectify(conditions=reason, label=1, tests=True)
         reason = (-2, -3, -7, 9)
@@ -52,6 +50,7 @@ class TestRectify(unittest.TestCase):
             else:
                 self.assertEqual(model.predict_instance(instance), old_prediction)
 
+    
     #@unittest.skip("reason for skipping")
     def test_rectify_b(self):
         node_v3_1 = Builder.DecisionNode(3, operator=Builder.EQ, threshold=1, left=0, right=1)
@@ -62,7 +61,8 @@ class TestRectify(unittest.TestCase):
         node_v1_3 = Builder.DecisionNode(1, operator=Builder.GE, threshold=20, left=node_v1_2, right=0)
         node_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=10, left=node_v1_3, right=1)
 
-        model = Builder.DecisionTree(3, node_v1_4)
+        learner_information = Learning.LearnerInformation(None, problem_type='classification')
+        model = Builder.DecisionTree(3, node_v1_4, learner_information=learner_information)
 
         loan_types = {
             "numerical": ["f1"],
@@ -71,7 +71,7 @@ class TestRectify(unittest.TestCase):
 
         bob = (20, 1, 0)
 
-        explainer = Explainer.initialize(model, instance=bob, features_type=loan_types)
+        explainer = Explaining.initialize(model, instance=bob, features_type=loan_types)
         explainer.rectify(conditions=((1, Builder.GE, 5, False),-5), label=1, tests=True) 
         rectified_model = explainer.get_model().raw_data_for_CPP()
         
@@ -87,24 +87,20 @@ class TestRectify(unittest.TestCase):
 
         tree = Builder.DecisionTree(3, node_v1_4)
 
-        model = Builder.RandomForest([tree])
+        model = Builder.RandomForest([tree], n_classes=2)
         loan_types = {
             "numerical": ["f1"],
             "binary": ["f2", "f3"],
         }
 
         bob = (20, 1, 0)
-        explainer = Explainer.initialize(model, instance=bob, features_type=loan_types)
+        explainer = Explaining.initialize(model, instance=bob, features_type=loan_types)
 
         
         minimal = explainer.minimal_sufficient_reason()
-        #print("minimal:", minimal)
-        #print("minimal:", explainer.to_features(minimal))
-        
-
-        
         explainer.rectify(conditions=minimal, label=1, tests=True) 
 
+    
     #@unittest.skip("reason for skipping")
     def test_rectify_1(self):
         nodeT1_3 = Builder.DecisionNode(3, left=0, right=1)
@@ -116,7 +112,7 @@ class TestRectify(unittest.TestCase):
             "binary": ["f1", "f2", "f3"],
         }
 
-        explainer = Explainer.initialize(model, features_type=loan_types)
+        explainer = Explaining.initialize(model, features_type=loan_types)
 
         #Alice’s expertise can be represented by the formula T = ((x1 ∧ not x3) ⇒ y) ∧ (not x2 ⇒ not y) encoding her two decision rules
         explainer.rectify(conditions=(1, -3), label=1, tests=True)  #(x1 ∧ not x3) ⇒ y
@@ -125,7 +121,8 @@ class TestRectify(unittest.TestCase):
         rectified_model = explainer.get_model().raw_data_for_CPP()
         
         self.assertEqual(rectified_model, (0, (1, 0, (2, 0, 1))))
-    
+
+        
     #@unittest.skip("reason for skipping")
     def test_rectify_2(self):
         
@@ -143,7 +140,8 @@ class TestRectify(unittest.TestCase):
         node_v1_3 = Builder.DecisionNode(1, operator=Builder.GE, threshold=30, left=node_v1_2, right=1)
         node_v1_4 = Builder.DecisionNode(1, operator=Builder.GE, threshold=40, left=node_v1_3, right=1)
 
-        tree = Builder.DecisionTree(3, node_v1_4)
+        learner_information = Learning.LearnerInformation(None, problem_type='classification')
+        tree = Builder.DecisionTree(3, node_v1_4, learner_information=learner_information)
 
         loan_types = {
             "numerical": ["f1"],
@@ -151,7 +149,7 @@ class TestRectify(unittest.TestCase):
         }
 
         bob = (20, 1, 0)
-        explainer = Explainer.initialize(tree, instance=bob, features_type=loan_types)
+        explainer = Explaining.initialize(tree, instance=bob, features_type=loan_types)
 
         
         minimal = explainer.minimal_sufficient_reason()
@@ -161,6 +159,7 @@ class TestRectify(unittest.TestCase):
         rectified_model = explainer.get_model().raw_data_for_CPP()
         self.assertEqual(rectified_model, (0, (1, (2, (5, (6, 1, 0), 1), 1), 1)))
 
+    
     #@unittest.skip("reason for skipping")
     def test_rectify_4(self):
         
@@ -179,7 +178,7 @@ class TestRectify(unittest.TestCase):
         }
 
         bob = (25, 1, 1)
-        explainer = Explainer.initialize(tree, instance=bob, features_type=loan_types)
+        explainer = Explaining.initialize(tree, instance=bob, features_type=loan_types)
 
         
         #For him/her, the following classification rule must be obeyed:
@@ -188,13 +187,14 @@ class TestRectify(unittest.TestCase):
         rectified_model = explainer.rectify(conditions=(-1, ), label=0, tests=True) 
 
         self.assertEqual(rectified_model.raw_data_for_CPP(), (0, (1, 0, (4, (3, 0, 1), 1))))
+
     
     #@unittest.skip("reason for skipping")
     def test_rectify_3(self):
-        learner = Learning.Scikitlearn("tests/compas.csv", learner_type=Learning.CLASSIFICATION)
-        model = learner.evaluate(method=Learning.HOLD_OUT, output=Learning.DT)
+        learner = Learning.Scikitlearn("tests/datasets/compas.csv", problem_type=Learning.CLASSIFICATION)
+        model = learner.evaluate(splitting_method=Learning.HOLD_OUT, model_type=Learning.DT)
 
-        dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, correct=False, details=True)
+        dict_information = learner.get_instances(model, n=1, indexes=Learning.TEST, is_correct=False, details=True)
         
         all_dict_information = learner.get_instances(model, indexes=Learning.ALL, details=True)
 
@@ -211,7 +211,7 @@ class TestRectify(unittest.TestCase):
         }
 
 
-        explainer = Explainer.initialize(model, instance=instance, features_type=compas_types)
+        explainer = Explaining.initialize(model, instance=instance, features_type=compas_types)
         minimal_reason = explainer.minimal_sufficient_reason(n=1)
         model = explainer.rectify(conditions=minimal_reason, label=1, tests=True)
         

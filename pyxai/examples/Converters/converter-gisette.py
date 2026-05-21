@@ -7,7 +7,7 @@ import datetime
 
 import pandas
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="5000", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(Tools.Options.dataset, target_feature="5000", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 print("data:", preprocessor.data)
 
 preprocessor.all_numerical_features()

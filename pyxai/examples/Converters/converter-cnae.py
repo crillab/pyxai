@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 import datetime
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=['category']+["W"+str(i) for i in range(856)], skiprows=1)
-preprocessor = Learning.Preprocessor(data, target_feature="category", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="category", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 

@@ -5,7 +5,7 @@ from pyxai import Learning, Explainer, Tools
 import pandas
 data = pandas.read_csv(Tools.Options.dataset, names=["age","job","marital","education","default","balance","housing","loan","contact","day","month","duration","campaign","pdays","previous","poutcome","y"], skiprows=1, sep=";") 
 
-preprocessor = Learning.Preprocessor(data, target_feature="y", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(data, target_feature="y", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 print("data:", preprocessor.data)
 

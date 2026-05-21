@@ -2,7 +2,7 @@
 
 from pyxai import Learning, Explainer, Tools
 
-preprocessor = Learning.Preprocessor(Tools.Options.dataset, target_feature="Two_yr_Recidivism", learner_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
+preprocessor = Learning.TabularPreprocessor(Tools.Options.dataset, target_feature="Two_yr_Recidivism", problem_type=Learning.CLASSIFICATION, classification_type=Learning.BINARY_CLASS)
 
 
 print("data:", preprocessor.data)
