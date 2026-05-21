@@ -9,10 +9,7 @@
 #include "pythonToCMemory.h"
 
 #include "Node.h"
-#include "NeuralNetwork.h"
-
 #include "TreeBasedExplainer.h"
-#include "NeuralNetworkExplainer.h"
 
 #include "Rectifier.h"
 
@@ -27,38 +24,6 @@ const double PRECISION = 0.0000001;
 using namespace pyxai;
 
 
-PyObject* neural_network(PyObject *self, PyObject *args) {
-    char* problem_type;
-    PyObject *layers_obj;
-    
-    if (!PyArg_ParseTuple(args, "sO", &problem_type, &layers_obj))
-        return NULL;
-    NeuralNetwork* neural_network = new NeuralNetwork(problem_type, PyObject_to_Layers(layers_obj));
-    pyxai::NeuralNetworkExplainer *explainer = new pyxai::NeuralNetworkExplainer(neural_network);
-    return void_to_pyobject(explainer);
-}
-
-PyObject * predict(PyObject *self, PyObject *args) {
-    PyObject *explainer_obj;
-    PyObject *instance_obj;
-    if (!PyArg_ParseTuple(args, "OO", &explainer_obj, &instance_obj))
-        return NULL;
-    pyxai::NeuralNetworkExplainer* explainer = (pyxai::NeuralNetworkExplainer*) pyxai::pyobject_to_void(explainer_obj);
-    int n_dimensions = pyxai::countDimensions(instance_obj);
-    std::cout << "n_dimensions: " << n_dimensions << std::endl;
-        
-    if (n_dimensions == 1){
-        return PyLong_FromLong(explainer->predict(*pyxai::tupleToVectorOneDimension(instance_obj)));
-    }else if (n_dimensions == 2){
-        return PyLong_FromLong(explainer->predict(*pyxai::tupleToVectorTwoDimensions(instance_obj)));
-    }else if (n_dimensions == 3){
-        return PyLong_FromLong(explainer->predict(*pyxai::tupleToVectorThreeDimensions(instance_obj)));
-    }else {
-        PyErr_Format(PyExc_TypeError, "The instance must be a tuple of dimension 1, 2 or 3 !");
-        return NULL;
-    }
-    return NULL;
-}
 
 
 // PyObject *new_neural_network(PyObject *self, PyObject *args) {
@@ -673,9 +638,6 @@ static PyObject *compute_reason(PyObject *self, PyObject *args) {
 static PyMethodDef module_methods[] = {
 
     
-        {"neural_network", neural_network, METH_VARARGS, "Create a neural network model."},
-        {"predict", predict, METH_VARARGS, "Create a neural network model."},
-        
         //{"new_neural_network", new_neural_network, METH_VARARGS, "Create a neural network model."},
         //{"new_linear_model", new_linear_model, METH_VARARGS, "Create a linear model."},
         {"new_classifier_BT", new_classifier_BT, METH_VARARGS, "Create a Classifier_BT explainer."},

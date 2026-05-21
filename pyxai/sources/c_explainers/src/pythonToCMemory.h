@@ -3,7 +3,6 @@
 #define CPP_CODE_PYTHON_TO_C_MEMORY_H
 
 #include <Python.h>
-#include "NeuralNetwork.h"
 
 #include <sstream>
 #include <limits>
@@ -179,56 +178,6 @@ namespace pyxai {
     }
 
     
-    static std::vector<Layer*>* PyObject_to_Layers(PyObject *object) {
-        std::vector<Layer*>* layers = new std::vector<Layer*>();
-        Py_ssize_t size_obj = PyTuple_Size(object);
-        if (!PyTuple_Check(object)) {
-            throw std::logic_error("It is not a tuple");
-        }
-        for (unsigned int i = 0; i < (unsigned int)size_obj; i++) {
-            PyObject* layer_obj = PyTuple_GetItem(object, i);
-            if (!PyTuple_Check(layer_obj)) {
-                throw std::logic_error("It is not a tuple");
-            }
-            const char* layer_type;
-            PyObject* layer_data_obj;
-            if (!PyArg_ParseTuple(layer_obj, "sO", &layer_type, &layer_data_obj))
-                throw std::logic_error("It is not a tuple or this tuple is not well formatted (string, tuple)");
-            //std::cout << "layer_type:" << layer_type << std::endl;
-            if (strcmp(layer_type, "LinearLayer") == 0) {
-                std::vector<std::vector<double>>* coefficients = tupleToVectorTwoDimensions(PyTuple_GetItem(layer_data_obj,0));
-                std::vector<double>* intercepts = tupleToVectorOneDimension(PyTuple_GetItem(layer_data_obj,1));
-                Layer* layer = new LinearLayer(coefficients, intercepts);
-                layers->push_back(layer);
-            } else if (strcmp(layer_type, "ActivationLayer") == 0) {
-                const char* activation_name;
-                if (!PyArg_ParseTuple(layer_data_obj, "s", &activation_name))
-                    throw std::logic_error("It is not a tuple or this tuple is not well formatted (string)");
-                Layer* layer = new ActivationLayer(str_to_activation_type(activation_name));
-                layers->push_back(layer);
-            } else if (strcmp(layer_type, "FunctionLayer") == 0) {
-                const char* function_name;
-                if (!PyArg_ParseTuple(layer_data_obj, "s", &function_name))
-                    throw std::logic_error("It is not a tuple or this tuple is not well formatted (string)");
-                Layer* layer = new FunctionLayer(str_to_fonction_name(function_name));
-                layers->push_back(layer);
-            } else {
-                throw std::logic_error("Unknown layer type: " + std::string(layer_type));
-            }
-
-            //Py_ssize_t size_layer_obj = PyTuple_Size(layer_obj);
-            //const char* layer_type = toChars(PyTuple_GetItem(layer_obj, 1));
-            //std::cout << "layer_type:" << layer_type << std::endl;
-            //for (unsigned int j = 0;j < (unsigned int)size_layer_obj; j++) {
-            //    
-            //}
-                
-
-            //layers.push_back(layer);
-        }
-        return layers;
-    }
-
 
 }
 #endif //CPP_CODE_PYTHON_TO_C_MEMORY_H
