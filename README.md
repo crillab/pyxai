@@ -10,6 +10,11 @@
 
 # PyXAI - Python eXplainable AI
 
+[![Unit tests](https://github.com/crillab/pyxai/actions/workflows/tests_linux.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/tests_linux.yml)
+[![Wheel builder](https://github.com/crillab/pyxai/actions/workflows/build_wheels_linux.yml/badge.svg)](https://github.com/crillab/pyxai/actions/workflows/build_wheels_linux.yml)
+[![PyPI version](https://img.shields.io/pypi/v/pyxai)](https://pypi.org/project/pyxai/)
+[![Python](https://img.shields.io/badge/python-3.11%20|%203.12%20|%203.13-blue)](https://pypi.org/project/pyxai/)
+
 - Documentation: [http://www.cril.univ-artois.fr/pyxai/](http://www.cril.univ-artois.fr/pyxai/)
 - Git: [https://github.com/crillab/pyxai](https://github.com/crillab/pyxai)
 - Pypi: [https://pypi.org/project/pyxai/](https://pypi.org/project/pyxai/)
