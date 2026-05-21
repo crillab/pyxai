@@ -40,7 +40,8 @@ dependencies = [
     "lightgbm",
     "docplex",
     "ortools",
-    "packaging"
+    "packaging",
+    "opencv-python"
 ]
 optional-dependencies = { gui = ["pyqt6"] }
 description = "Explaining Machine Learning Classifiers in Python"
