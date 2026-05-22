@@ -1,9 +1,4 @@
 
-> [!WARNING]
-> **PyXAI V2 is currently being deployed and is not yet fully accessible.**
-> In the meantime, please use the stable **[V1 branch](https://github.com/crillab/pyxai/tree/V1)**.
-> The V1 documentation remains available on the [documentation website](http://www.cril.univ-artois.fr/pyxai/) by clicking **V1** in the bottom-right corner of the page.
-
 <div align="center">
   <img src="http://www.cril.univ-artois.fr/pyxai/assets/figures/logo.png" alt="pyxai" width="300"/>
 </div>

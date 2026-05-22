@@ -26,7 +26,7 @@ class TestExplainingRF(unittest.TestCase):
                 sufficient_reason = explainer.sufficient_reason(time_limit=5)
             except OSError:
                 print('OSError in TestExplainingRF')
-                pass
+                continue
             if explainer.elapsed_time == Explaining.TIMEOUT:
                 print("Timeout => no tests to determine if reason is sufficient")
                 self.assertTrue(explainer.is_reason(sufficient_reason))

@@ -371,7 +371,7 @@ class ExplainerDT(Explainer):
         # Remove excluded features
         SATsolver.add_clauses([[-prime_implicant_cnf.mapping_original_to_new[abs(lit)]]
                                for lit in self._excluded_literals
-                               if prime_implicant_cnf.mapping_original_to_new[abs(lit)] is not None])
+                               if abs(lit) < len(prime_implicant_cnf.mapping_original_to_new) and prime_implicant_cnf.mapping_original_to_new[abs(lit)] != 0])
 
 
         sufficient_reasons = []

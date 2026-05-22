@@ -23,7 +23,7 @@ class TestImportXGBoost(unittest.TestCase):
 
     def test_import_data_partial(self):
         # Special dataset creation
-        dataset = pandas.read_csv("tests/datasets/weatherAUS_encoded_small.csv", skiprows=range(1,1001), nrows=1000)
+        dataset = pandas.read_csv("tests/datasets/weatherAUS_simplified.csv", skiprows=range(1,1001), nrows=1000)
         data = dataset.copy()
         data.insert(0, 'subset', 'train')
         for i in random.sample(data.index.to_list(), k=len(data)//5):
